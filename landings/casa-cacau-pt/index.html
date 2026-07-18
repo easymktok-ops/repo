@@ -1204,26 +1204,65 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.querySelectorAll('.reveal').forEach(function(e){ io.observe(e); });
   })();
 
-  // Meta Pixel: WhatsApp clicks → Lead
-  document.querySelectorAll('a[href*="whatsapp"]').forEach(function(l){
-    l.addEventListener('click', function(){
-      if(typeof fbq!=='undefined') fbq('track','Lead',{content_name:'WhatsApp CTA',content_category:'Casa Cacau'});
-    });
-  });
-
-  // Meta Pixel: booking view → ViewContent
+  /* ============================================================
+     CAMADA DE MEDIÇÃO (dataLayer) — pronta para o GTM escutar.
+     No GTM crie os gatilhos/tags a partir destes eventos:
+       - 'wa_click'       -> conversão principal (Meta Lead/Contact + Google Ads)
+       - 'select_rooms'   -> clique em "Reservar" do hero/banda (micro)
+       - 'view_item_list' -> listado de quartos visível
+     Parâmetros disponíveis: wa_placement, room_name, property, language
+  ============================================================ */
   (function(){
-    if(!('IntersectionObserver' in window)) return;
-    var sent=false, el=document.getElementById('reservar');
-    if(!el) return;
-    var wo=new IntersectionObserver(function(e){
-      if(!sent&&e[0].isIntersecting){
-        sent=true;
-        if(typeof fbq!=='undefined') fbq('track','ViewContent',{content_name:'hBook Motor',content_category:'Casa Cacau'});
-        wo.disconnect();
-      }
-    },{threshold:.4});
-    wo.observe(el);
+    window.dataLayer = window.dataLayer || [];
+    var PROPERTY = 'casa-cacau';
+    var LANG = document.documentElement.lang || '';
+
+    function placementOf(a){
+      if(a.closest('.room-card, .rc'))   return 'room_card';
+      if(a.closest('.topbar'))           return 'topbar';
+      if(a.closest('.hero'))             return 'hero';
+      if(a.closest('.cta-band'))         return 'cta_band';
+      if(a.closest('.float-wa, .fl-wa')) return 'floating';
+      if(a.closest('footer'))            return 'footer';
+      return 'other';
+    }
+    function roomOf(a){
+      var c = a.closest('.room-card, .rc'); if(!c) return null;
+      var n = c.querySelector('.room-card__name, .rc__name');
+      return n ? n.textContent.trim() : null;
+    }
+
+    // Clique em qualquer CTA de WhatsApp -> conversão
+    document.querySelectorAll('a[href*="api.whatsapp.com"], a[href*="wa.me"]').forEach(function(a){
+      a.addEventListener('click', function(){
+        window.dataLayer.push({
+          event: 'wa_click',
+          wa_placement: placementOf(a),
+          room_name: roomOf(a),
+          property: PROPERTY,
+          language: LANG
+        });
+      });
+    });
+
+    // Clique em "Reservar" (rola para os quartos) -> micro-conversão
+    document.querySelectorAll('a.btn[href="#rooms"]').forEach(function(a){
+      a.addEventListener('click', function(){
+        window.dataLayer.push({ event:'select_rooms', wa_placement: placementOf(a), property: PROPERTY, language: LANG });
+      });
+    });
+
+    // Listado de quartos visível -> view_item_list (uma única vez)
+    (function(){
+      var el = document.getElementById('rooms'); if(!el) return;
+      function push(){ window.dataLayer.push({ event:'view_item_list', item_list_name:'rooms', property:PROPERTY, language:LANG }); }
+      if(!('IntersectionObserver' in window)){ push(); return; }
+      var sent=false;
+      var io=new IntersectionObserver(function(e){
+        if(!sent && e[0].isIntersecting){ sent=true; push(); io.disconnect(); }
+      },{threshold:0, rootMargin:'0px 0px -15% 0px'});
+      io.observe(el);
+    })();
   })();
 </script>
 </body>
