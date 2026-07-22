@@ -23,11 +23,11 @@
       <line x1="260" y1="186" x2="220" y2="330"/>
     </g>
     <!-- K: chevron -->
-    <path stroke="url(#warm)" stroke-width="30" d="M352 186 L300 258 L352 330"/>
+    <path stroke="url(#warm)" stroke-width="30" d="M354 186 L302 258 L354 330"/>
     <!-- t -->
     <g stroke="url(#red)" stroke-width="30">
-      <line x1="398" y1="180" x2="398" y2="330"/>
-      <line x1="356" y1="212" x2="424" y2="212"/>
+      <line x1="402" y1="182" x2="402" y2="330"/>
+      <line x1="356" y1="224" x2="428" y2="224"/>
     </g>
   </g>
 </svg>
