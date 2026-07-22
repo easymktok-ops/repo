@@ -27,14 +27,17 @@ Se implementaron sus tokens y assets reales:
   referenciada en `--font-heavy`.
 - **Logo**: `assets/img/easy-mkt-logo.png` (wordmark oficial) en el header de ambas
   páginas.
-- **Favicon / iconos**: generados a partir del isologo de marca sobre indigo
-  (`favicon.ico`, `favicon-16/32/48`, `apple-touch-icon-180`,
-  `android-chrome-192/512`) + `site.webmanifest`.
+- **Isotipo / favicon**: `assets/img/isotipo.svg` es el isotipo de marca (las tres
+  barras M azul→verde, el chevron K amarillo→magenta y la t roja), reconstruido como
+  **SVG limpio y auto-contenido** a partir del isotipo oficial. De ahí se rasterizó
+  el set completo de iconos: `favicon.ico`, `favicon-16/32/48` (marca transparente),
+  `apple-touch-icon-180` (marca sobre blanco) y `android-chrome-192/512` (marca sobre
+  paper, con safe zone maskable) + `site.webmanifest`. El isotipo transparente
+  (`isotipo.png`) se usa además como marca en el footer.
 
-> Nota sobre el favicon: el archivo `favicon.png` original del design system venía
-> truncado (PNG corrupto en origen), así que el set de iconos se generó con el
-> lockup de marca en blanco sobre indigo (estilo app-icon). Si prefieres el isotipo
-> aislado, reemplaza los PNG de `assets/img/` y regenera.
+> El `favicon.png` original del design system venía truncado (PNG corrupto en
+> origen), por eso el isotipo se reconstruyó como vector. Para ajustar proporciones o
+> colores, edita `assets/img/isotipo.svg` y regenera los PNG.
 
 ## Estructura
 
