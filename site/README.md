@@ -1,58 +1,76 @@
-# Easy Marketing — Sitio reconstruido (reposicionamiento IA)
+# Easy Marketing — Sitio (posicionamiento v2.0: Growth Systems)
 
-Sitio estático de dos páginas para el nuevo posicionamiento de Easy Marketing:
-**generación de demanda con automatización de IA** para negocios y organizaciones
-de servicios profesionales (headhunting, staffing, consultoría B2B).
+Sitio estático de dos páginas para el posicionamiento **v2.0** de Easy Marketing:
+una **consultora de sistemas de crecimiento comercial (Growth Systems)** para
+empresas **B2B consolidadas**. El producto ancla es el método propietario
+**Easy Growth System™** (Diagnosis → Blueprint → Activation → Optimization →
+Scale). La IA, la automatización, los Ads y el CRM se comunican como
+**componentes del sistema**, nunca como servicios sueltos.
 
-El producto ancla que se comunica: un sistema de IA que **responde en segundos,
-califica al prospecto y agenda la cita** en el calendario del cliente,
-automáticamente. La propuesta de valor es **ahorro de tiempo y dinero** (más citas,
-menos seguimiento manual), enmarcado como *generación de demanda* — no como
-servicio de agencia ni como "automatizaciones" a secas.
+> Cambio respecto a v1: v1 vendía "un sistema de IA que responde, califica y
+> agenda". v2.0 vende **el sistema de crecimiento**; la herramienta baja a ser un
+> componente. El léxico sube a ejecutivo (Growth, pipeline, CAC, MQL/SQL, ROI) y
+> el ICP sube a empresa B2B con equipo comercial.
 
-## Identidad de marca — importada del design system real
+## Arquitectura (home, 11 secciones)
 
-El look & feel proviene del **"easy MKT Design System"** de Claude Design
-(proyecto `b38baca9-b81b-4f2e-8bee-76277ae56cac`), importado vía el MCP de Design.
-Se implementaron sus tokens y assets reales:
+1. Hero — tesis: "El crecimiento predecible no es suerte. Es un sistema."
+2. El verdadero problema — más publicidad no arregla un sistema roto.
+3. Por qué las empresas no crecen — los 6 cuellos de botella.
+4. Easy Growth System™ — el método en 5 fases.
+5. Cómo funciona — un solo sistema para marketing, ventas y operaciones.
+6. Capacidades del sistema — resultados de negocio (no servicios).
+7. Casos de negocio — reto → sistema → resultado (con marcadores, sin cifras inventadas).
+8. Tecnologías — el stack como componentes del sistema.
+9. FAQ — objeciones de un director (¿por qué ustedes?, ¿por qué ahora?, ¿cómo miden?…).
+10. Diagnóstico Ejecutivo — la oferta + calificación (para quién es / no es).
+11. CTA final — Sesión Estratégica.
 
-- **Colores** (`tokens/colors.css`): electric indigo `#2E2BE6` como acento principal
-  (CTA de Calendly), la paleta *spectrum* de la marca (cyan `#16DCDC`, green
-  `#15C24D`, yellow `#FFC400`, orange `#FF6A1A`, magenta `#FF2D78`) para la
-  animación del hero y detalles, y la rampa *ink* para textos/superficies.
-- **Tipografías** (`tokens/typography.css`): **Century Gothic** (display + body),
-  auto-alojada en `assets/fonts/` (Regular/Italic/Bold/BoldItalic). Los números de
-  paso usan la familia pesada; si quieres **Archivo Black** (definida en el design
-  system para números), agrégala en `assets/fonts/ArchivoBlack.otf` y ya está
-  referenciada en `--font-heavy`.
-- **Logo**: `assets/img/easy-mkt-logo.png` (wordmark oficial) en el header de ambas
-  páginas.
-- **Isotipo / favicon**: `assets/img/isotipo.svg` es el isotipo de marca (las tres
-  barras M azul→verde, el chevron K amarillo→magenta y la t roja), reconstruido como
-  **SVG limpio y auto-contenido** a partir del isotipo oficial. De ahí se rasterizó
-  el set completo de iconos: `favicon.ico`, `favicon-16/32/48` (marca transparente),
-  `apple-touch-icon-180` (marca sobre blanco) y `android-chrome-192/512` (marca sobre
-  paper, con safe zone maskable) + `site.webmanifest`. El isotipo transparente
-  (`isotipo.png`) se usa además como marca en el footer.
+La landing `/diagnostico/` es la página del **Diagnóstico Ejecutivo** para tráfico
+de campaña (hero + calificación + proceso en 3 pasos + FAQ de conversión + CTA).
 
-> El `favicon.png` original del design system venía truncado (PNG corrupto en
-> origen), por eso el isotipo se reconstruyó como vector. Para ajustar proporciones o
-> colores, edita `assets/img/isotipo.svg` y regenera los PNG.
+## Identidad de marca (sin cambios)
 
-## Estructura
+Se conserva íntegro el design system real importado del **"easy MKT Design
+System"**: colores (electric indigo `#2E2BE6` + spectrum), **Century Gothic**
+auto-alojada, logo, isotipo/favicons y la animación del circuito del hero. El
+reposicionamiento es de copy, orden, jerarquía y CTAs —no un rediseño.
+
+## Estructura de archivos
 
 ```
 site/
-├── index.html              # Home (/)
-├── diagnostico/index.html  # Landing de campaña (/diagnostico/) — reemplaza a /free/
+├── index.html              # Home (11 secciones)
+├── diagnostico/index.html  # Diagnóstico Ejecutivo (landing de campaña)
 ├── assets/
-│   ├── css/styles.css      # Design system (tokens reales por variables CSS)
-│   ├── js/main.js          # Menú móvil; el FAQ usa <details> nativo
-│   ├── fonts/              # Century Gothic (4 variantes, auto-alojadas)
-│   └── img/                # Logo + set de favicons
+│   ├── css/styles.css      # Design system + componentes v2.0 (fases, stack, casos, oferta)
+│   ├── js/main.js          # Menú móvil
+│   ├── fonts/              # Century Gothic (4 variantes)
+│   └── img/                # Logo, isotipo.svg y set de favicons
 ├── site.webmanifest
 └── README.md
 ```
+
+## CTAs (links reales)
+
+- **Principal — Diagnóstico Ejecutivo / Sesión Estratégica (Calendly):**
+  `https://calendly.com/easymktok/asesoria`
+- **Secundario — Habla con un consultor (WhatsApp):**
+  `https://api.whatsapp.com/send/?phone=5215539787305&text=Hola%2C+solicito+informaci%C3%B3n&type=phone_number&app_absent=0`
+
+Todos los CTA llevan a una sesión estratégica; se eliminaron los genéricos
+("asesoría gratis", "agenda una llamada"). Sin formularios que compitan.
+
+## Reglas de contenido aplicadas (v2.0)
+
+- Se vende el **sistema**, no la herramienta. Ads/CRM/IA/automatización = componentes.
+- Léxico ejecutivo permitido y usado: Growth, pipeline, generación de demanda, CAC,
+  CPL, MQL/SQL, LTV, ROI, framework, optimización, escalabilidad.
+- Sin "agencia de marketing / gestión de redes / campañas / SEO como servicio" ni la
+  palabra "despacho". ICP = empresa B2B consolidada con equipo comercial.
+- Casos de negocio con estructura reto/sistema/resultado y **marcadores claros**
+  (`[Métrica … pendiente]`) — no se inventan cifras.
+- Mobile-first, sin overflow horizontal, hero con copy y CTA antes que el visual.
 
 ## Cómo verlo localmente
 
@@ -62,44 +80,7 @@ python3 -m http.server 8080
 # http://localhost:8080/  y  http://localhost:8080/diagnostico/
 ```
 
-## CTAs (links reales, ya integrados)
+## Pendiente
 
-- **Principal (Calendly)** — el botón más prominente, en header, hero, tras cada
-  sección de valor, CTA final y barra fija móvil:
-  `https://calendly.com/easymktok/asesoria`
-- **Secundario (WhatsApp)** — menor peso visual (ícono en header + repetido abajo
-  y en el CTA final):
-  `https://api.whatsapp.com/send/?phone=5215539787305&text=Hola%2C+solicito+informaci%C3%B3n&type=phone_number&app_absent=0`
-
-No hay formularios de contacto que compitan con Calendly.
-
-## Hero animado
-
-Fondo claro (no oscuro) con líneas finas en los colores de acento de la marca que
-dibujan un patrón tipo **circuito / red de nodos** (inspiración: deeddelivery.com +
-animaciones SVG sutiles). Las líneas se **trazan al cargar** (stroke-dashoffset) y
-los nodos **pulsan** en loop lento. Es SVG + CSS liviano, respeta
-`prefers-reduced-motion` y no bloquea el headline ni el CTA.
-
-## Reglas de contenido aplicadas
-
-- **Lenguaje**: sin "agencia de marketing", "gestión de redes sociales", "campañas
-  publicitarias", "SEO", "growth", "funnel", "ROAS". **Sin la palabra "despacho"**
-  (se usa "negocio" / "organización" / "empresa de servicios profesionales"). El
-  servicio se vende como **sistema/producto de generación de demanda con IA**,
-  enfocado en el resultado.
-- **Home** (audiencia fría, hooks Problema/Solución): dolor → sistema → ¿para quién?
-  → cómo funciona (pasos) → FAQ B2B → CTA final.
-- **Landing `/diagnostico/`** (audiencia que vio un anuncio, Producto/Decisión):
-  oferta de diagnóstico gratuito de 30 min, **bloque de calificación explícita**
-  que autofiltra por sector, tamaño (5–50) e iguala mensual, proceso en 3 pasos,
-  FAQ de conversión, CTA repetido.
-- **Sin sección de "Resultados de clientes"** en ninguna página (eliminada por
-  completo, sin placeholders). No se inventaron clientes, cifras ni testimonios.
-- **Mobile-first** y responsive, con barra de CTA fija inferior en celular.
-
-## Banco de hooks (pendiente)
-
-El documento `Easy_Marketing_Matriz_Hooks_Reposicionamiento.md` no estaba disponible
-en el entorno; el copy es original, escrito según el brief y las reglas de lenguaje.
-Si compartes el documento, ajusto headlines/subheads a esas frases exactas.
+Cargar métricas reales en "Casos de negocio" cuando estén disponibles (hoy con
+marcadores). El documento ejecutivo de la auditoría v2.0 acompaña este cambio.
