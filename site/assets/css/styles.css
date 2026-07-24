@@ -344,3 +344,31 @@ ul{margin:0;padding:0;list-style:none;}
   .hero-circuit .trace{animation:none;stroke-dashoffset:0;}
   .hero-circuit .node,.hero-circuit .spark,.hero-badge .dot{animation:none;opacity:.85;}
 }
+
+/* ===================== Mejora visual v2.1 — imágenes + microinteracciones = */
+/* Imágenes de apoyo */
+.media{border-radius:18px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow-md);background:var(--bg-alt);margin:0;}
+.media img{display:block;width:100%;height:100%;object-fit:cover;}
+.media--wide{max-width:940px;margin:0 auto 28px;aspect-ratio:16/10;}
+.media--portrait{aspect-ratio:3/4;}
+.offer--media{grid-template-columns:.82fr 1.18fr;}
+
+/* Microinteracciones (solo en dispositivos con hover real) */
+@media (hover:hover){
+  .card,.phase,.stack-group,.case,.step{transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;}
+  .card:hover,.phase:hover,.stack-group:hover,.case:hover,.step:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);border-color:rgba(46,43,230,.28);}
+  .media{transition:transform .3s ease, box-shadow .3s ease;}
+  .media:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg);}
+  .btn:hover{transform:translateY(-1px);}
+  .btn:active{transform:translateY(1px);}
+}
+
+/* Entrada discreta al hacer scroll (fade-up) — se activa vía JS */
+.reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease;will-change:opacity,transform;}
+.reveal.in{opacity:1;transform:none;}
+
+@media (max-width:940px){ .media--portrait{aspect-ratio:16/10;} .offer--media{grid-template-columns:1fr;} }
+@media (prefers-reduced-motion:reduce){
+  .reveal{opacity:1 !important;transform:none !important;transition:none;}
+  .card:hover,.phase:hover,.stack-group:hover,.case:hover,.step:hover,.media:hover,.btn:hover{transform:none;}
+}

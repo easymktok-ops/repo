@@ -84,3 +84,15 @@ python3 -m http.server 8080
 
 Cargar métricas reales en "Casos de negocio" cuando estén disponibles (hoy con
 marcadores). El documento ejecutivo de la auditoría v2.0 acompaña este cambio.
+
+## Mejora visual v2.1 (imágenes de apoyo + microinteracciones)
+
+- **Imágenes de apoyo** (bordes redondeados, sombra suave, animación de entrada):
+  - `assets/img/dashboard.jpg` → sección "Cómo funciona" (analítica / marketing basado en datos).
+  - `assets/img/consultoria.jpg` → sección "Diagnóstico Ejecutivo" (estrategia / acompañamiento).
+  - **Ambas son placeholders on-brand.** Para usar tus fotos reales, reemplaza esos dos
+    archivos conservando el mismo nombre y ruta; el estilo, el hover y el fade-up ya
+    están aplicados y funcionan solos.
+- **Microinteracciones** (globales, sutiles): hover con elevación + sombra en tarjetas,
+  lift suave en botones y entrada *fade-up* al hacer scroll (IntersectionObserver, mejora
+  progresiva). Todo respeta `prefers-reduced-motion`. No se modificó estructura ni copy.

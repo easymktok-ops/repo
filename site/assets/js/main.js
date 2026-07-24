@@ -27,4 +27,28 @@
       if (toggle) toggle.setAttribute("aria-expanded", "false");
     }
   });
+
+  /* Entrada discreta al hacer scroll (fade-up). Mejora progresiva:
+     sin JS o sin soporte, el contenido se ve normal. */
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduce && "IntersectionObserver" in window) {
+    var sel = ".section-head, .grid > *, .phases > *, .steps > *, .stack > *, .cases > *, .offer > *, .fit > *, .media, .cta-final";
+    var els = Array.prototype.slice.call(document.querySelectorAll(sel)).filter(function (el) {
+      return !el.closest(".hero"); // el hero se muestra de inmediato
+    });
+    els.forEach(function (el) {
+      el.classList.add("reveal");
+      var parent = el.parentElement;
+      if (parent) {
+        var i = Array.prototype.indexOf.call(parent.children, el);
+        if (i > 0) el.style.transitionDelay = Math.min(i * 60, 240) + "ms";
+      }
+    });
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+      });
+    }, { threshold: 0.12, rootMargin: "0px 0px -6% 0px" });
+    els.forEach(function (el) { io.observe(el); });
+  }
 })();
