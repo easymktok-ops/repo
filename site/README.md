@@ -47,6 +47,7 @@ site/
 │   ├── js/main.js          # Menú móvil
 │   ├── fonts/              # Century Gothic (4 variantes)
 │   └── img/                # Logo, isotipo.svg y set de favicons
+├── image/                  # Fotos de apoyo: dashboard.jpg, consultoria.jpg
 ├── site.webmanifest
 └── README.md
 ```
@@ -88,8 +89,8 @@ marcadores). El documento ejecutivo de la auditoría v2.0 acompaña este cambio.
 ## Mejora visual v2.1 (imágenes de apoyo + microinteracciones)
 
 - **Imágenes de apoyo** (bordes redondeados, sombra suave, animación de entrada):
-  - `assets/img/dashboard.jpg` → sección "Cómo funciona" (analítica / marketing basado en datos).
-  - `assets/img/consultoria.jpg` → sección "Diagnóstico Ejecutivo" (estrategia / acompañamiento).
+  - `image/dashboard.jpg` → sección "Cómo funciona" (analítica / marketing basado en datos).
+  - `image/consultoria.jpg` → sección "Diagnóstico Ejecutivo" (estrategia / acompañamiento).
   - **Ambas son placeholders on-brand.** Para usar tus fotos reales, reemplaza esos dos
     archivos conservando el mismo nombre y ruta; el estilo, el hover y el fade-up ya
     están aplicados y funcionan solos.
