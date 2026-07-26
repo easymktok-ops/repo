@@ -97,3 +97,28 @@ marcadores). El documento ejecutivo de la auditoría v2.0 acompaña este cambio.
 - **Microinteracciones** (globales, sutiles): hover con elevación + sombra en tarjetas,
   lift suave en botones y entrada *fade-up* al hacer scroll (IntersectionObserver, mejora
   progresiva). Todo respeta `prefers-reduced-motion`. No se modificó estructura ni copy.
+
+## Iteración de conversión v2.2 (formulario + casos reales + tracking)
+
+- **Formulario de calificación** en la sección `#diagnostico` (home): Nombre, Empresa,
+  Email corporativo, WhatsApp/tel, Desafío (select), Tamaño de equipo comercial (radios).
+  Botón "Solicitar Diagnóstico Ejecutivo" + microcopy. Email personal solo **advierte**
+  (no bloquea). Todos los CTA principales ahora llevan al formulario (`#diagnostico`),
+  no a WhatsApp.
+- **Envío del lead → `info@easymarketing.mx`** vía FormSubmit (sin backend). Al enviar:
+  valida → dispara evento → `fetch` a `https://formsubmit.co/ajax/info@easymarketing.mx`
+  → redirige a **`gracias.html`** (thank-you page para medir conversión). El "siguiente
+  paso" (agenda) usa el Calendly real desde la thank-you page.
+  - ⚠️ **FormSubmit requiere activación única:** en el primer envío real llega un correo
+    de confirmación a info@easymarketing.mx; hay que hacer clic una vez. El endpoint es
+    una sola línea en `index.html` (`action=`) — fácil de cambiar por tu backend/CRM.
+- **Casos de negocio reales** (sin nombres ni cifras inventadas): B2C internacional
+  (resultado cualitativo), Headhunting B2B (**+30% MQLs**), Ecommerce mobiliario
+  (**13X ROAS tras 6 meses**). Nota de transparencia reforzada.
+- **Tracking (dataLayer, listo para GTM/GA4):** `diagnostico_ejecutivo_cta`,
+  `diagnostico_ejecutivo_start`, `diagnostico_ejecutivo_submit`, `whatsapp_click`, y
+  `diagnostico_ejecutivo_success` en la thank-you page. Pega tu contenedor GTM/GA4 donde
+  está el comentario en el `<head>`.
+- **Ajustes de copy:** "Demand Activation" como componentes del sistema; "Es para ti"
+  → "capacidad comercial y operativa…"; capacidades refuerza "no son servicios sueltos".
+- Sin rediseño: se conservó identidad visual, layout, colores, tipografías y animaciones.

@@ -11,6 +11,8 @@
 <meta property="og:title" content="Easy Marketing — El crecimiento predecible es un sistema">
 <meta property="og:description" content="Consultora de Growth Systems para empresas B2B. Diseñamos el sistema que genera demanda, convierte oportunidades y escala tu pipeline.">
 <meta property="og:locale" content="es_MX">
+<!-- Tracking: dataLayer listo para GTM/GA4. Pega aquí tu contenedor cuando lo tengas. -->
+<script>window.dataLayer=window.dataLayer||[];</script>
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
 <link rel="icon" href="/assets/img/favicon.ico" sizes="any">
@@ -38,7 +40,7 @@
         <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.8 9.8 0 0 0 12.04 2Zm5.8 14.14c-.24.68-1.42 1.31-1.95 1.35-.5.05-.5.42-3.16-.66-2.67-1.08-4.35-3.8-4.48-3.97-.13-.17-1.07-1.42-1.07-2.71 0-1.29.68-1.92.92-2.19.24-.26.53-.33.7-.33.18 0 .35 0 .5.01.16.01.38-.06.59.45.24.59.81 2.03.88 2.18.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.13-.28.28-.12.55.16.27.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.21 1.37.27.13.43.11.59-.07.16-.18.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.55.73 1.81.86.27.13.44.2.51.31.07.11.07.66-.17 1.34Z"/></svg>
         Consultor
       </a>
-      <a class="btn btn--primary nav-header-primary" href="https://calendly.com/easymktok/asesoria">Diagnóstico Ejecutivo</a>
+      <a class="btn btn--primary nav-header-primary" href="#diagnostico">Diagnóstico Ejecutivo</a>
     </div>
     <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
@@ -50,7 +52,7 @@
     <a class="navlink" href="#capacidades">Capacidades</a>
     <a class="navlink" href="#casos">Casos</a>
     <a class="navlink" href="#faq">Preguntas</a>
-    <a class="btn btn--primary" href="https://calendly.com/easymktok/asesoria">Agenda un Diagnóstico Ejecutivo</a>
+    <a class="btn btn--primary" href="#diagnostico">Agenda un Diagnóstico Ejecutivo</a>
     <a class="btn btn--wa" href="https://api.whatsapp.com/send/?phone=5215539787305&text=Hola%2C+solicito+informaci%C3%B3n&type=phone_number&app_absent=0">Habla con un consultor</a>
   </div>
 </header>
@@ -86,7 +88,7 @@
       <h1>El crecimiento predecible no es suerte. Es un <span class="grad">sistema</span>.</h1>
       <p class="lead">Diseñamos, implementamos y optimizamos el sistema que genera demanda, convierte oportunidades y escala tu pipeline —conectando marketing, ventas y operaciones en un mismo proceso medible.</p>
       <div class="btn-row">
-        <a class="btn btn--primary btn--lg" href="https://calendly.com/easymktok/asesoria">Agenda un Diagnóstico Ejecutivo</a>
+        <a class="btn btn--primary btn--lg" href="#diagnostico">Agenda un Diagnóstico Ejecutivo</a>
         <a class="btn btn--wa" href="https://api.whatsapp.com/send/?phone=5215539787305&text=Hola%2C+solicito+informaci%C3%B3n&type=phone_number&app_absent=0">
           <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.8 9.8 0 0 0 12.04 2Zm5.8 14.14c-.24.68-1.42 1.31-1.95 1.35-.5.05-.5.42-3.16-.66-2.67-1.08-4.35-3.8-4.48-3.97-.13-.17-1.07-1.42-1.07-2.71 0-1.29.68-1.92.92-2.19.24-.26.53-.33.7-.33.18 0 .35 0 .5.01.16.01.38-.06.59.45.24.59.81 2.03.88 2.18.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.13-.28.28-.12.55.16.27.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.21 1.37.27.13.43.11.59-.07.16-.18.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.55.73 1.81.86.27.13.44.2.51.31.07.11.07.66-.17 1.34Z"/></svg>
           Habla con un consultor
@@ -173,12 +175,12 @@
     <div class="phases">
       <div class="phase"><div class="pn" style="background:#15C24D">1</div><span class="en">Business Diagnosis</span><h3>Diagnóstico</h3><p>Negocio, objetivos, competencia, embudo, procesos y métricas. No recomendamos sin comprender.</p></div>
       <div class="phase"><div class="pn" style="background:#16A99D">2</div><span class="en">Growth Blueprint</span><h3>Diseño</h3><p>Canales, presupuesto, CRM, automatización, medición y KPIs. Todo con una razón estratégica.</p></div>
-      <div class="phase"><div class="pn" style="background:#2E2BE6">3</div><span class="en">Demand Activation</span><h3>Activación</h3><p>Campañas, contenido, IA y automatización. La ejecución siempre responde al plan.</p></div>
+      <div class="phase"><div class="pn" style="background:#2E2BE6">3</div><span class="en">Demand Activation</span><h3>Activación</h3><p>Activamos los componentes necesarios: campañas, contenido, IA y automatización. La ejecución siempre responde al plan.</p></div>
       <div class="phase"><div class="pn" style="background:#FF6A1A">4</div><span class="en">Optimization</span><h3>Optimización</h3><p>CAC, CPL, conversión, SQL, pipeline. Cada decisión con datos; cada mejora, una hipótesis.</p></div>
       <div class="phase"><div class="pn" style="background:#FF2D78">5</div><span class="en">Scale</span><h3>Escala</h3><p>Validado el sistema, escalamos inversión, canales y procesos de forma sostenible.</p></div>
     </div>
     <div class="text-center mt-32">
-      <a class="btn btn--primary btn--lg" href="https://calendly.com/easymktok/asesoria">Descubramos dónde se fuga tu demanda</a>
+      <a class="btn btn--primary btn--lg" href="#diagnostico">Descubramos dónde se fuga tu demanda</a>
     </div>
   </div>
 </section>
@@ -220,7 +222,7 @@
     <div class="section-head">
       <span class="eyebrow">Capacidades del sistema</span>
       <h2>Lo que el sistema mueve en tu negocio.</h2>
-      <p>No vendemos Ads, ni CRM, ni IA por separado —eso son herramientas. Vendemos el resultado que producen cuando trabajan dentro de un mismo sistema.</p>
+      <p>No vendemos Ads, CRM o IA por separado: son componentes que trabajan dentro de un mismo sistema de crecimiento. Vendemos el resultado que producen cuando operan juntos.</p>
     </div>
     <div class="grid grid-3">
       <div class="card"><h3>Más demanda</h3><p>Un flujo constante y medible de oportunidades, no picos aislados.</p></div>
@@ -239,26 +241,43 @@
     <div class="section-head">
       <span class="eyebrow">Casos de negocio</span>
       <h2>Reto, sistema y resultado.</h2>
-      <p>Así estructuramos y medimos cada intervención. Estamos documentando los resultados de los primeros sistemas en operación.</p>
+      <p>Intervenciones reales. El mismo patrón en cada una: qué problema existía, qué se construyó y la métrica que demuestra el cambio.</p>
     </div>
     <div class="cases">
       <div class="case">
-        <div class="row"><span class="l">Reto</span><p>Demanda inconsistente y dependiente de referidos.</p></div>
-        <div class="row"><span class="l">Sistema</span><p>Diagnóstico, blueprint de canales y activación de demanda con medición de pipeline.</p></div>
-        <div class="res"><span class="l">Resultado</span><p>[Métrica de pipeline pendiente]</p></div>
+        <span class="eyebrow">Empresa B2C · demanda internacional</span>
+        <div class="row"><span class="l">Reto</span><p>Campañas con baja rentabilidad y un funnel con fricción. La generación de demanda funcionaba, pero una parte de las oportunidades se perdía entre adquisición, landing y proceso comercial.</p></div>
+        <div class="row"><span class="l">Sistema</span><p>Auditoría de campañas y funnel, optimización de landings, reestructuración de campañas y distribución geográfica, análisis por mercado y audiencia, alineación Marketing–Ventas y mejora del flujo mobile.</p></div>
+        <div class="metric metric--qual">
+          <span class="l">Resultado</span>
+          <span class="big">Leads de mayor calidad y un flujo de conversión más claro</span>
+          <span class="time">Mayor claridad sobre qué mercados y audiencias generan intención, con decisiones Marketing–Ventas basadas en datos. Diagnóstico → intervención → aprendizaje → mejora del sistema.</span>
+        </div>
       </div>
       <div class="case">
-        <div class="row"><span class="l">Reto</span><p>Leads que llegaban pero no se convertían en ventas.</p></div>
-        <div class="row"><span class="l">Sistema</span><p>Calificación, CRM y seguimiento automatizado conectando marketing y ventas.</p></div>
-        <div class="res"><span class="l">Resultado</span><p>[Métrica de conversión pendiente]</p></div>
+        <span class="eyebrow">Empresa B2B · Headhunting y talento</span>
+        <div class="row"><span class="l">Reto</span><p>Generación de demanda B2B con audiencias distintas y necesidad de mejorar la calidad y el volumen de oportunidades calificadas.</p></div>
+        <div class="row"><span class="l">Sistema</span><p>Landing pages específicas por audiencia B2B, adaptación del mensaje y propuesta de valor por segmento, flujos de adquisición dedicados y optimización de la generación de MQL.</p></div>
+        <div class="metric">
+          <span class="l">Resultado</span>
+          <span class="big">+30%</span>
+          <span class="unit">MQLs</span>
+          <span class="time">Incremento en la generación de leads calificados mediante landings específicas para distintas audiencias B2B.</span>
+        </div>
       </div>
       <div class="case">
-        <div class="row"><span class="l">Reto</span><p>Crecimiento estancado al intentar escalar inversión.</p></div>
-        <div class="row"><span class="l">Sistema</span><p>Optimización por hipótesis y escalamiento sostenible sobre datos validados.</p></div>
-        <div class="res"><span class="l">Resultado</span><p>[Métrica de retorno pendiente]</p></div>
+        <span class="eyebrow">Ecommerce · mobiliario</span>
+        <div class="row"><span class="l">Reto</span><p>Modelo de adquisición con ROAS negativo y necesidad de recuperar la rentabilidad de la inversión publicitaria.</p></div>
+        <div class="row"><span class="l">Sistema</span><p>Proceso de optimización de seis meses: análisis continuo de campañas, optimización progresiva de la inversión, testing y aprendizaje, y mejora de la estructura de adquisición sobre datos.</p></div>
+        <div class="metric">
+          <span class="l">Resultado</span>
+          <span class="big">13X</span>
+          <span class="unit">ROAS</span>
+          <span class="time">De ROAS negativo a 13X. Resultado alcanzado tras 6 meses de optimización continua —el crecimiento sostenible requiere proceso.</span>
+        </div>
       </div>
     </div>
-    <p class="cases-note">Nota de transparencia: no publicamos cifras que no podamos respaldar. Los resultados reales se incorporan conforme los sistemas maduran.</p>
+    <p class="cases-note">Los resultados presentados corresponden a intervenciones reales. No publicamos cifras que no podamos respaldar y documentamos cada caso conforme los sistemas maduran.</p>
   </div>
 </section>
 
@@ -343,26 +362,76 @@
       <h2>Empieza por entender dónde se fuga tu demanda.</h2>
       <p>Una sesión estratégica donde mapeamos tu embudo, detectamos los cuellos de botella y definimos las prioridades. Sales con un plan claro —trabajes con nosotros o no.</p>
     </div>
-    <div class="offer offer--media">
-      <figure class="media media--portrait">
-        <img src="image/consultoria.jpg" alt="Sesión de consultoría estratégica con un consultor de Easy Marketing" loading="lazy" width="900" height="1180">
-      </figure>
-      <div class="offer-card">
-        <h3>Qué obtienes</h3>
-        <ul class="offer-list">
+    <div class="offer offer--form">
+      <div class="offer-aside">
+        <figure class="media media--portrait">
+          <img src="image/consultoria.jpg" alt="Sesión de consultoría estratégica con un consultor de Easy Marketing" loading="lazy" width="900" height="1180">
+        </figure>
+        <ul class="value-list">
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Un mapa de dónde se pierde tu demanda hoy.</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Las prioridades de mayor impacto en tu pipeline.</li>
           <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Una recomendación clara del sistema a construir.</li>
         </ul>
-        <a class="btn btn--primary btn--lg" href="https://calendly.com/easymktok/asesoria">Agenda un Diagnóstico Ejecutivo</a>
       </div>
+      <form class="diag-form" id="diag-form" method="POST" novalidate
+            action="https://formsubmit.co/ajax/info@easymarketing.mx" data-thankyou="gracias.html">
+        <h3>Solicita tu Diagnóstico Ejecutivo</h3>
+        <p class="diag-form__sub">Cuéntanos tu contexto. Revisamos primero si existe una oportunidad real de construir un sistema de crecimiento.</p>
+        <div class="form-grid">
+          <div class="field">
+            <label for="f-nombre">Nombre</label>
+            <input id="f-nombre" name="nombre" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="f-empresa">Empresa</label>
+            <input id="f-empresa" name="empresa" type="text" autocomplete="organization" required>
+          </div>
+          <div class="field">
+            <label for="f-email">Email corporativo</label>
+            <input id="f-email" name="email" type="email" autocomplete="email" required>
+            <small class="field-hint" data-email-hint hidden>Usa tu correo corporativo para agilizar el diagnóstico.</small>
+          </div>
+          <div class="field">
+            <label for="f-tel">WhatsApp / teléfono</label>
+            <input id="f-tel" name="telefono" type="tel" inputmode="tel" autocomplete="tel" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="f-desafio">¿Dónde está hoy tu principal desafío?</label>
+          <select id="f-desafio" name="desafio" required>
+            <option value="" disabled selected>Selecciona una opción…</option>
+            <option>Generar demanda</option>
+            <option>Mejorar la calidad de los leads</option>
+            <option>Convertir más oportunidades en ventas</option>
+            <option>Automatizar seguimiento y procesos comerciales</option>
+            <option>Alinear Marketing y Ventas</option>
+            <option>Escalar lo que ya funciona</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="field">
+          <span class="field-legend">¿Cuántas personas forman tu equipo comercial?</span>
+          <div class="radio-row" role="radiogroup" aria-label="Tamaño del equipo comercial">
+            <label class="radio"><input type="radio" name="equipo" value="1-3" required><span>1–3</span></label>
+            <label class="radio"><input type="radio" name="equipo" value="4-10"><span>4–10</span></label>
+            <label class="radio"><input type="radio" name="equipo" value="11-25"><span>11–25</span></label>
+            <label class="radio"><input type="radio" name="equipo" value="+25"><span>+25</span></label>
+          </div>
+        </div>
+        <input type="hidden" name="_subject" value="Nuevo Diagnóstico Ejecutivo — easymarketing.mx">
+        <input type="hidden" name="_template" value="table">
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
+        <button class="btn btn--primary btn--lg" type="submit">Solicitar Diagnóstico Ejecutivo</button>
+        <p class="form-note">Sin compromiso. Revisamos primero si existe una oportunidad real para construir un sistema de crecimiento.</p>
+        <p class="form-error" data-form-error hidden>No pudimos enviar el formulario. Inténtalo de nuevo o escríbenos por WhatsApp.</p>
+      </form>
     </div>
     <div class="fit" style="margin-top:22px">
         <div class="fit-col is-yes">
           <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="24" height="24" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Es para ti si…</h3>
           <ul class="fit-list">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Eres una empresa B2B consolidada con equipo comercial.</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Tienes flujo de caja saludable y capacidad de atender más demanda.</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Tienes capacidad comercial y operativa para atender nuevas oportunidades.</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg> Buscas construir un sistema de crecimiento de largo plazo, no un pico.</li>
           </ul>
         </div>
@@ -384,7 +453,7 @@
     <h2>Construyamos tu sistema de crecimiento.</h2>
     <p>Analicemos juntos tu proceso comercial y dónde se fuga la demanda. El primer paso es una sesión estratégica, sin compromiso.</p>
     <div class="btn-row">
-      <a class="btn btn--primary btn--lg" href="https://calendly.com/easymktok/asesoria">Solicita tu Sesión Estratégica</a>
+      <a class="btn btn--primary btn--lg" href="#diagnostico">Agenda un Diagnóstico Ejecutivo</a>
       <a class="btn btn--wa btn--solid" href="https://api.whatsapp.com/send/?phone=5215539787305&text=Hola%2C+solicito+informaci%C3%B3n&type=phone_number&app_absent=0">
         <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.8 9.8 0 0 0 12.04 2Zm5.8 14.14c-.24.68-1.42 1.31-1.95 1.35-.5.05-.5.42-3.16-.66-2.67-1.08-4.35-3.8-4.48-3.97-.13-.17-1.07-1.42-1.07-2.71 0-1.29.68-1.92.92-2.19.24-.26.53-.33.7-.33.18 0 .35 0 .5.01.16.01.38-.06.59.45.24.59.81 2.03.88 2.18.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.13-.28.28-.12.55.16.27.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.21 1.37.27.13.43.11.59-.07.16-.18.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.55.73 1.81.86.27.13.44.2.51.31.07.11.07.66-.17 1.34Z"/></svg>
         Habla con un consultor
@@ -414,7 +483,7 @@
         </div>
         <div class="footer-col">
           <h4>Empieza aquí</h4>
-          <a href="https://calendly.com/easymktok/asesoria">Diagnóstico Ejecutivo</a>
+          <a href="#diagnostico">Diagnóstico Ejecutivo</a>
           <a href="https://api.whatsapp.com/send/?phone=5215539787305&text=Hola%2C+solicito+informaci%C3%B3n&type=phone_number&app_absent=0">
             <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.8 9.8 0 0 0 12.04 2Z"/></svg>
             Habla con un consultor
@@ -431,7 +500,7 @@
 
 <!-- Sticky CTA móvil -->
 <div class="mobile-cta">
-  <a class="btn btn--primary" href="https://calendly.com/easymktok/asesoria">Agenda un Diagnóstico Ejecutivo</a>
+  <a class="btn btn--primary" href="#diagnostico">Agenda un Diagnóstico Ejecutivo</a>
   <a class="wa-icon" href="https://api.whatsapp.com/send/?phone=5215539787305&text=Hola%2C+solicito+informaci%C3%B3n&type=phone_number&app_absent=0" aria-label="Habla con un consultor por WhatsApp">
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.8 9.8 0 0 0 12.04 2Zm5.8 14.14c-.24.68-1.42 1.31-1.95 1.35-.5.05-.5.42-3.16-.66-2.67-1.08-4.35-3.8-4.48-3.97-.13-.17-1.07-1.42-1.07-2.71 0-1.29.68-1.92.92-2.19.24-.26.53-.33.7-.33.18 0 .35 0 .5.01.16.01.38-.06.59.45.24.59.81 2.03.88 2.18.07.15.12.32.02.51-.09.19-.14.31-.28.48-.14.17-.29.37-.42.5-.14.13-.28.28-.12.55.16.27.71 1.17 1.53 1.9 1.05.94 1.94 1.23 2.21 1.37.27.13.43.11.59-.07.16-.18.68-.79.86-1.06.18-.27.36-.22.6-.13.24.09 1.55.73 1.81.86.27.13.44.2.51.31.07.11.07.66-.17 1.34Z"/></svg>
   </a>
