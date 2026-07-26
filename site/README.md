@@ -122,3 +122,5 @@ marcadores). El documento ejecutivo de la auditoría v2.0 acompaña este cambio.
 - **Ajustes de copy:** "Demand Activation" como componentes del sistema; "Es para ti"
   → "capacidad comercial y operativa…"; capacidades refuerza "no son servicios sueltos".
 - Sin rediseño: se conservó identidad visual, layout, colores, tipografías y animaciones.
+
+- **Formulario también en la landing de campaña** `/diagnostico/` (sección `#diagnostico` local, redirige a `../gracias.html`); sus CTAs apuntan al formulario de la propia página.
