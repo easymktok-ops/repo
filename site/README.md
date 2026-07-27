@@ -116,8 +116,10 @@ marcadores). El documento ejecutivo de la auditoría v2.0 acompaña este cambio.
   (**13X ROAS tras 6 meses**). Nota de transparencia reforzada.
 - **Tracking (dataLayer, listo para GTM/GA4):** `diagnostico_ejecutivo_cta`,
   `diagnostico_ejecutivo_start`, `diagnostico_ejecutivo_submit`, `whatsapp_click`, y
-  `diagnostico_ejecutivo_success` en la thank-you page. Pega tu contenedor GTM/GA4 donde
-  está el comentario en el `<head>`.
+  `diagnostico_ejecutivo_success` en la thank-you page. **Contenedor GTM `GTM-K73GRX5H`
+  instalado** en las tres páginas (`<script>` en `<head>` + `<noscript>` tras `<body>`);
+  en GTM basta con crear triggers de "Evento personalizado" con esos nombres y enviarlos a
+  GA4 / conversiones.
 - **Ajustes de copy:** "Demand Activation" como componentes del sistema; "Es para ti"
   → "capacidad comercial y operativa…"; capacidades refuerza "no son servicios sueltos".
 - Sin rediseño: se conservó identidad visual, layout, colores, tipografías y animaciones.
