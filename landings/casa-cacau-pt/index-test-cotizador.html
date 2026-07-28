@@ -610,25 +610,24 @@
        — apenas o "quadro" (design system Caminué); o widget interno
          é do hBook e não é alterado.
     ============================================================ */
-    .hero .container { display:flex; flex-wrap:wrap; align-items:flex-end; justify-content:space-between; gap:2rem clamp(1.5rem,4vw,3.5rem); }
-    .hero__content { flex:1 1 440px; max-width:560px; }
+    /* Barra full-width abaixo do conteúdo do hero (padrão Booking) */
+    .hero .container { display:flex; flex-direction:column; align-items:stretch; gap:clamp(1.5rem,4vw,2.5rem); }
+    .hero__content { max-width:680px; }
     .hero__cotizador {
-      flex:0 1 440px; width:100%; max-width:460px; align-self:flex-end;
-      position:relative; z-index:3;
-      background:#FFFFFF; border-radius:28px;               /* --radius-xl */
-      box-shadow:0 18px 48px rgba(26,24,20,.12);            /* --shadow-lg */
-      padding:clamp(1.35rem,2.4vw,1.9rem);
+      width:100%; max-width:none; position:relative; z-index:3;
+      background:#FFFFFF; border-radius:24px;                /* --radius-lg/xl */
+      box-shadow:0 18px 48px rgba(26,24,20,.14);            /* --shadow-lg */
+      padding:clamp(1.15rem,2.2vw,1.6rem) clamp(1.35rem,2.4vw,1.9rem);
     }
-    .hero__cotizador__eyebrow { font-family:'Montserrat',Arial,sans-serif; text-transform:uppercase; letter-spacing:.18em; font-size:.7rem; font-weight:600; color:#846649; margin-bottom:.45rem; }
-    .hero__cotizador__title   { font-family:'Playfair Display',Georgia,serif; font-size:clamp(1.25rem,2vw,1.55rem); font-weight:700; color:#103050; line-height:1.15; margin-bottom:1.05rem; }
+    .hero__cotizador__eyebrow { font-family:'Montserrat',Arial,sans-serif; text-transform:uppercase; letter-spacing:.18em; font-size:.7rem; font-weight:600; color:#846649; margin-bottom:.35rem; }
+    .hero__cotizador__title   { font-family:'Playfair Display',Georgia,serif; font-size:clamp(1.2rem,1.8vw,1.5rem); font-weight:700; color:#103050; line-height:1.15; margin-bottom:.9rem; }
     .hero__cotizador__mount   { min-height:56px; }
-    .hero__cotizador__hint    { margin-top:.9rem; font-size:.72rem; color:#6A6258; line-height:1.5; }
+    .hero__cotizador__hint    { margin-top:.8rem; font-size:.72rem; color:#6A6258; line-height:1.5; }
+    /* garante que a barra interna do hBook ocupe toda a largura */
+    .hero__cotizador__mount #HSystemSearchBoxInline .container { max-width:none !important; width:100% !important; padding:0 clamp(10px,1.4vw,20px) !important; }
 
     @media (max-width:860px){
       .hero { align-items:flex-start; padding-top:clamp(2rem,8vw,3rem); }
-      .hero .container { flex-direction:column; align-items:stretch; }
-      .hero__content { flex:1 1 auto; max-width:none; }
-      .hero__cotizador { flex:1 1 auto; max-width:none; margin-top:.25rem; }
     }
 
     /* Quando o relocador move o search box do hBook para dentro do card,
@@ -659,6 +658,48 @@
       display:flex !important; align-items:center; justify-content:center;
     }
     #HSystemSearchBoxInline#HSystemSearchBoxInline a.btn:hover { background:#0E2A47 !important; }
+
+    /* ============================================================
+       CALENDÁRIO (jQuery UI Datepicker) — estilo próprio para não
+       depender do tema do jQuery UI (que às vezes não carrega e fica
+       com fundo transparente/ilegível). O popup é anexado ao <body>. */
+    #ui-datepicker-div.ui-datepicker {
+      background:#FFFFFF !important; border:1px solid #E4DDD2 !important;
+      border-radius:12px !important; box-shadow:0 18px 48px rgba(26,24,20,.22) !important;
+      padding:.5rem !important; width:18em !important; max-width:92vw !important; margin-top:6px !important;
+      font-family:'Lato',Arial,sans-serif !important; z-index:2147483647 !important;
+    }
+    #ui-datepicker-div table.ui-datepicker-calendar { width:100% !important; table-layout:fixed !important; }
+    #ui-datepicker-div .ui-datepicker-header {
+      background:transparent !important; border:none !important;
+      color:#103050 !important; padding:.15rem .25rem .4rem !important; position:relative;
+    }
+    #ui-datepicker-div .ui-datepicker-title {
+      font-family:'Montserrat',Arial,sans-serif !important; font-weight:700 !important;
+      font-size:.85rem !important; color:#103050 !important; text-align:center !important;
+    }
+    #ui-datepicker-div .ui-datepicker-prev, #ui-datepicker-div .ui-datepicker-next {
+      cursor:pointer !important; top:2px !important; height:1.6em !important; width:1.6em !important;
+      background:#F1EAE0 !important; border-radius:6px !important;
+    }
+    #ui-datepicker-div .ui-datepicker-prev { left:2px !important; }
+    #ui-datepicker-div .ui-datepicker-next { right:2px !important; }
+    #ui-datepicker-div table.ui-datepicker-calendar { background:transparent !important; border-collapse:separate !important; border-spacing:2px !important; margin:0 !important; }
+    #ui-datepicker-div .ui-datepicker-calendar th {
+      color:#846649 !important; font-family:'Montserrat',Arial,sans-serif !important;
+      font-size:.62rem !important; font-weight:600 !important; text-transform:uppercase !important; padding:.25rem !important;
+    }
+    #ui-datepicker-div .ui-datepicker-calendar td { padding:0 !important; border:none !important; }
+    #ui-datepicker-div .ui-datepicker-calendar td a.ui-state-default,
+    #ui-datepicker-div .ui-datepicker-calendar td span.ui-state-default {
+      display:block !important; text-align:center !important; text-decoration:none !important;
+      background:#F8F4ED !important; border:1px solid #EAE3D6 !important; color:#2C3E35 !important;
+      padding:.4rem .1rem !important; border-radius:6px !important; font-size:.8rem !important;
+    }
+    #ui-datepicker-div .ui-datepicker-calendar td a.ui-state-hover { background:#E3EAF1 !important; border-color:#C2D2DF !important; }
+    #ui-datepicker-div .ui-datepicker-calendar td a.ui-state-active,
+    #ui-datepicker-div .ui-datepicker-calendar td a.ui-state-highlight { background:#103050 !important; color:#FFFFFF !important; border-color:#103050 !important; }
+    #ui-datepicker-div .ui-datepicker-calendar td.ui-datepicker-unselectable span.ui-state-default { background:#F4F1EA !important; color:#C4BCB0 !important; border-color:#EFEAE2 !important; }
   </style>
   <!-- Dados estruturados schema.org -->
   <!-- NOTA: aggregateRating usa valores PLACEHOLDER (4.9 / 40). Reemplazar por los reales de Google. -->
