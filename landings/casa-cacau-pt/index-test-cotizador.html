@@ -60,6 +60,43 @@
       } catch(e){ window.mobileAndTabletcheck = alwaysDesktop; }
     })();
   </script>
+  <!-- ===== UTM: rastreia a origem do tráfego no link do cotizador =====
+       O envio do cotizador abre a URL de reservas do hBook via window.open
+       (hbook.hsystem.com.br/.../Booking). Interceptamos esse window.open e
+       ENCAMINHAMOS os UTMs / click-ids que o visitante trouxe do anúncio para
+       essa URL, atribuindo a origem. Defaults para tráfego direto; persiste na
+       sessão caso o usuário navegue antes de reservar.
+       >>> Ajuste os defaults (utm_source/medium/campaign) se quiser. -->
+  <script>
+    (function(){
+      var KEYS = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content',
+                  'gclid','fbclid','gbraid','wbraid','ttclid','msclkid'];
+      var qs = new URLSearchParams(location.search), utm = {};
+      KEYS.forEach(function(k){ var v = qs.get(k); if(v) utm[k] = v; });
+      try {
+        if(Object.keys(utm).length) sessionStorage.setItem('cc_utm', JSON.stringify(utm));
+        else { var s = sessionStorage.getItem('cc_utm'); if(s) utm = JSON.parse(s); }
+      } catch(e){}
+      // defaults se o visitante não trouxe UTM do anúncio (tráfego direto/orgânico)
+      if(!utm.utm_source){
+        utm.utm_source   = 'landing';
+        utm.utm_medium   = utm.utm_medium   || 'cotizador_hero';
+        utm.utm_campaign = utm.utm_campaign || 'casa-cacau';
+      }
+      function withUTM(url){
+        try {
+          var u = new URL(url, location.href);
+          Object.keys(utm).forEach(function(k){ if(!u.searchParams.has(k)) u.searchParams.set(k, utm[k]); });
+          return u.toString();
+        } catch(e){ return url; }
+      }
+      var _open = window.open;
+      window.open = function(url, name, feat){
+        if(typeof url === 'string' && /hbook\.hsystem\.com\.br/i.test(url)) url = withUTM(url);
+        return _open.call(window, url, name, feat);
+      };
+    })();
+  </script>
 
   <style>
     /* ======================================================

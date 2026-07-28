@@ -100,6 +100,28 @@ función ya devolvía `false`, así que es un no-op ahí (sin regresión).
 **Validación (UA Android real, 375px, touch):** 5/5 PASS — box construido, reubicado en el
 hero, datepicker anclado (incluso con shift de layout).
 
+## 4c. UTM — atribución de origen en el link del cotizador
+
+**Objetivo:** cuando el usuario envía el cotizador (abre la URL de reservas del hBook), saber
+de qué fuente/anuncio vino.
+
+**Cómo:** el envío abre `https://hbook.hsystem.com.br/.../Booking?...` vía `window.open`
+(código interno de hBook). Interceptamos `window.open` y, si la URL es la de hBook, le
+**agregamos los UTMs**:
+- **Reenvía** los que el visitante trajo del anuncio (`utm_source/medium/campaign/term/content`
+  + `gclid`, `fbclid`, `gbraid`, `wbraid`, `ttclid`, `msclkid`). Se persisten en `sessionStorage`.
+- Si no vino ninguno (directo/orgánico), aplica **defaults**:
+  `utm_source=landing`, `utm_medium=cotizador_hero`, `utm_campaign=casa-cacau` (ajustables).
+
+**Validado (arnés local):**
+- Con `?utm_source=facebook&utm_campaign=verano2026&fbclid=…` → la URL de reserva sale con
+  esos UTMs reenviados.
+- Sin UTMs → sale con los defaults.
+
+> Para leer estos UTMs y atribuir la reserva, el motor de hBook (o el GA/Tag Manager en el
+> dominio `hbook.hsystem.com.br`) debe estar configurado para capturarlos. Del lado de la
+> landing ya viajan en la URL.
+
 ## 5. Limitación honesta (pendiente de tu lado)
 
 No pude correr la validación final **en el servidor real** (`grupocaminue.com.br`): la red de
