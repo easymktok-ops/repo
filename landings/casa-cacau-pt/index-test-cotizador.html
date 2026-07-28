@@ -1375,25 +1375,91 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     })();
   })();
 </script>
-<!-- ===== RELOCADOR DO COTIZADOR hBook PARA DENTRO DO HERO ===== -->
+<!-- ===== RELOCADOR + CORREÇÃO DE POSIÇÃO DO DATEPICKER hBook =====
+     hBook cria #HSystemSearchBoxInline no fim do <body> e inicializa o
+     jQuery UI Datepicker, que anexa #ui-datepicker-div ao <body> e o posiciona
+     por offset do input NO MOMENTO do show. Ao reubicar o box no hero e com
+     shifts de layout (fontes/imagem carregando), o cálculo inicial fica errado
+     (canto sup. esquerdo / desalinhado na 1ª abertura). Tratamos hBook/jQuery UI
+     como caixa-preta e RE-ANCORAMOS #ui-datepicker-div ao input real sempre que
+     ele aparece ou o layout muda. -->
 <script>
 (function(){
   var mount = document.querySelector('.hero__cotizador__mount');
-  if(!mount) return;
-  var tries = 0, MAX = 160; // ~40s
+
+  /* ---- 1) Relocador: move o search box para dentro do card do hero ---- */
   function relocate(){
     var box = document.getElementById('HSystemSearchBoxInline');
-    if(!box) return false;
-    if(box.parentElement !== mount){
-      box.classList.remove('hidden');
-      mount.appendChild(box);
-    }
+    if(box && mount && box.parentElement !== mount){ box.classList.remove('hidden'); mount.appendChild(box); }
+    return !!box;
+  }
+  if(mount && !relocate()){
+    var moBox = new MutationObserver(function(){ if(relocate()) moBox.disconnect(); });
+    moBox.observe(document.body, { childList:true, subtree:true });
+  }
+
+  /* ---- 2) Correção de posição do #ui-datepicker-div ---- */
+  function currentInput(){
+    // input "atual" segundo o próprio jQuery UI (fonte de verdade), com fallbacks
+    try {
+      var ci = window.jQuery && window.jQuery.datepicker && window.jQuery.datepicker._curInst;
+      if(ci && ci.input && ci.input[0] && document.body.contains(ci.input[0])) return ci.input[0];
+    } catch(e){}
+    var el = document.activeElement;
+    if(el && /^HSystemSearchBoxInline_Form_(Checkin|Checkout)$/.test(el.id||'')) return el;
+    return null;
+  }
+  function reposition(){
+    var dp = document.getElementById('ui-datepicker-div');
+    if(!dp || getComputedStyle(dp).display === 'none') return;
+    var inp = currentInput();
+    if(!inp){ dp.style.display = 'none'; return; }              // show "órfão" (BUG 1) -> esconde
+    var r = inp.getBoundingClientRect();
+    var dph = dp.offsetHeight || 300, dpw = dp.offsetWidth || 288;
+    var top = window.scrollY + r.bottom + 4;
+    var left = window.scrollX + r.left;
+    if(r.bottom + dph + 8 > window.innerHeight && r.top - dph - 4 > 0)  // sem espaço abaixo -> vira p/ cima
+      top = window.scrollY + r.top - dph - 4;
+    if(left + dpw > window.scrollX + window.innerWidth - 8)
+      left = window.scrollX + window.innerWidth - dpw - 8;
+    dp.style.position = 'absolute';
+    dp.style.top  = Math.max(window.scrollY + 4, top) + 'px';
+    dp.style.left = Math.max(8, left) + 'px';
+  }
+  var rafRepo = function(){ requestAnimationFrame(function(){ requestAnimationFrame(reposition); }); };
+
+  function watchDatepicker(){
+    var dp = document.getElementById('ui-datepicker-div');
+    if(!dp) return false;
+    // reposiciona toda vez que o popup muda de estado (mostrar/atualizar mês)
+    new MutationObserver(rafRepo).observe(dp, { attributes:true, attributeFilter:['style','class'] });
     return true;
   }
-  if(relocate()) return;
-  var mo = new MutationObserver(function(){ if(relocate()) mo.disconnect(); });
-  mo.observe(document.body, { childList:true, subtree:true });
-  var iv = setInterval(function(){ if(relocate() || ++tries > MAX){ clearInterval(iv); mo.disconnect(); } }, 250);
+  if(!watchDatepicker()){
+    var moDp = new MutationObserver(function(){ if(watchDatepicker()) moDp.disconnect(); });
+    moDp.observe(document.body, { childList:true, subtree:true });
+  }
+
+  /* ---- 3) Re-ancora em qualquer shift de layout (fontes/imagem/resize/scroll) ---- */
+  window.addEventListener('resize', rafRepo, { passive:true });
+  window.addEventListener('scroll', reposition, true);
+  if('ResizeObserver' in window){
+    try { new ResizeObserver(rafRepo).observe(document.documentElement); } catch(e){}
+  }
+  if(document.fonts && document.fonts.ready) document.fonts.ready.then(rafRepo);
+  var heroImg = document.querySelector('.hero__bg');
+  if(heroImg){ heroImg.addEventListener('load', rafRepo); if(heroImg.decode) heroImg.decode().then(rafRepo).catch(function(){}); }
+  window.addEventListener('load', function(){ rafRepo(); });
+
+  /* ---- 4) Depois que o datepicker inicializa, tira o foco e mata popup prematuro ---- */
+  var tries = 0, iv = setInterval(function(){
+    if((window.jQuery && window.jQuery.datepicker) || ++tries > 60){
+      clearInterval(iv);
+      try { var ci = document.getElementById('HSystemSearchBoxInline_Form_Checkin'); if(ci) ci.blur(); } catch(e){}
+      var dp = document.getElementById('ui-datepicker-div');
+      if(dp && !currentInput()) dp.style.display = 'none';
+    }
+  }, 200);
 })();
 </script>
 </body>
