@@ -392,8 +392,18 @@
       .hero__cotizador { flex:1 1 auto; max-width:none; margin-top:.25rem; }
     }
 
-    /* Estilo do search box inline do hBook, SE renderizar aqui
-       (alta especificidade para pisar os estilos padrão do hBook) */
+    /* Quando o relocador move o search box do hBook para dentro do card,
+       anulamos o posicionamento flutuante/fixo padrão do widget (.bottom, hidden). */
+    .hero__cotizador__mount #HSystemSearchBoxInline,
+    .hero__cotizador__mount #HSystemSearchBoxInline.bottom,
+    .hero__cotizador__mount #HSystemSearchBoxInline.top {
+      position:static !important; inset:auto !important; transform:none !important;
+      width:100% !important; max-width:none !important; margin:0 !important;
+      box-shadow:none !important; background:transparent !important; z-index:auto !important;
+    }
+    .hero__cotizador__mount #HSystemSearchBoxInline.hidden { display:block !important; }
+
+    /* Estilo do search box inline do hBook (alta especificidade p/ pisar o padrão) */
     #HSystemSearchBoxInline#HSystemSearchBoxInline { margin:0 !important; }
     #HSystemSearchBoxInline#HSystemSearchBoxInline .HSystemForm-Control {
       height:44px !important; border:1px solid #E2DAD0 !important; border-radius:8px !important;
@@ -665,9 +675,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <p class="hero__cotizador__eyebrow">Reserve direto</p>
       <h2 class="hero__cotizador__title">Reserve sua estadia</h2>
       <div class="hero__cotizador__mount">
-        <!-- Ponto de montagem do widget de reservas do hBook -->
-        <div id="HSystemSearchBoxInline"></div>
-        <!-- Widget hBook — NÃO alterar o src nem os parâmetros -->
+        <!-- O hBook injeta #HSystemSearchBoxInline no fim do <body>; o relocador
+             (script no fim da página) move esse widget para dentro deste contêiner.
+             NÃO alterar o src nem os parâmetros do widget.
+             OBS: este ID (6875d905…) é o loader de CHAT do hBook (sem cotizador).
+             Trocar pelo ID do widget "search box / motor inline" de Canoa. -->
         <script async src="https://s3-sa-east-1.amazonaws.com/hbook-universal-js/js/6875d90513003294de8d41ad.js"></script>
       </div>
       <p class="hero__cotizador__hint">Melhor preço garantido · sem custos ocultos</p>
@@ -1151,6 +1163,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       io.observe(el);
     })();
   })();
+</script>
+<!-- ===== RELOCADOR DO COTIZADOR hBook PARA DENTRO DO HERO =====
+     O hBook cria #HSystemSearchBoxInline dentro de #HSystem-Container no fim do
+     <body>. Este script espera o widget renderizar e move o MESMO nó (preservando
+     handlers/datepicker) para dentro do card do hero. Se o script hBook não
+     renderizar um search box (ex.: ID de chat), simplesmente expira sem efeito. -->
+<script>
+(function(){
+  var mount = document.querySelector('.hero__cotizador__mount');
+  if(!mount) return;
+  var tries = 0, MAX = 160; // ~40s
+  function relocate(){
+    var box = document.getElementById('HSystemSearchBoxInline');
+    if(!box) return false;
+    if(box.parentElement !== mount){
+      box.classList.remove('hidden');
+      mount.appendChild(box);
+    }
+    return true;
+  }
+  if(relocate()) return;
+  var mo = new MutationObserver(function(){ if(relocate()) mo.disconnect(); });
+  mo.observe(document.body, { childList:true, subtree:true });
+  var iv = setInterval(function(){ if(relocate() || ++tries > MAX){ clearInterval(iv); mo.disconnect(); } }, 250);
+})();
 </script>
 </body>
 </html>
