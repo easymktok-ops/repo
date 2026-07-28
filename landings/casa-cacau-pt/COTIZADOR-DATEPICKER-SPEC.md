@@ -75,6 +75,31 @@ flip arriba).
 **Resultado:** `FIX` → **10/10 PASS** (desktop ×5 + mobile ×5, 0 fallas). `CONTROL` (sin la
 capa) → **FAIL** en (C), reproduciendo BUG 2.
 
+## 4b. BUG 3 — El cotizador NO aparece en móvil (card vacío)
+
+**Síntoma (confirmado en dispositivo real):** en el celular el card "Reserve sua estadia"
+aparece **vacío** (sin campos) y sale un **botón flotante con ícono de calendario** abajo a
+la derecha.
+
+**Causa raíz (confirmada en el código y reproducida con UA Android):** en
+`StructSearchBoxInline` el box inline completo está detrás de
+`if (!mobileAndTabletcheck() && ...)` (línea 456). En móvil/tablet
+`mobileAndTabletcheck()` devuelve `true`, así que hBook **no construye el box inline** —
+en su lugar arma un botón flotante (`#HSystemSearchBox_Popup`, rama `else`, línea 605-608)
+que abre un popup / redirige a la página de reservas. Como `#HSystemSearchBoxInline` nunca
+existe, el relocador no tiene qué mover → card vacío.
+Repro (UA Android): `mobileAndTabletcheck()===true`, `#HSystemSearchBoxInline` ausente,
+`#HSystemSearchBox_Popup` presente, card vacío.
+
+**Fix:** forzar `window.mobileAndTabletcheck` a devolver `false` **antes** de que corra el
+script de hBook, con `Object.defineProperty` (getter fijo + setter que ignora la
+redefinición interna de hBook). Así hBook construye el box inline en todos los tamaños;
+nuestro CSS responsivo lo apila en móvil y el fix del datepicker lo ancla. En desktop la
+función ya devolvía `false`, así que es un no-op ahí (sin regresión).
+
+**Validación (UA Android real, 375px, touch):** 5/5 PASS — box construido, reubicado en el
+hero, datepicker anclado (incluso con shift de layout).
+
 ## 5. Limitación honesta (pendiente de tu lado)
 
 No pude correr la validación final **en el servidor real** (`grupocaminue.com.br`): la red de

@@ -41,6 +41,25 @@
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap"></noscript>
   <!-- Montserrat para labels do cotizador (design system Caminué) -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <!-- ===== FORÇA O COTIZADOR INLINE TAMBÉM NO MOBILE =====
+       Por padrão o hBook esconde o search box inline em mobile/tablet
+       (mobileAndTabletcheck() === true) e mostra só um botão flutuante, então o
+       card do hero fica vazio no celular. Forçamos a checagem para false — assim
+       o hBook constrói o box inline em todos os tamanhos (nosso CSS responsivo e
+       o fix do datepicker cuidam do resto). Definido ANTES do script do hBook e
+       com getter/setter para sobreviver à redefinição interna do hBook. -->
+  <script>
+    (function(){
+      var alwaysDesktop = function(){ return false; };
+      try {
+        Object.defineProperty(window, 'mobileAndTabletcheck', {
+          configurable: true,
+          get: function(){ return alwaysDesktop; },
+          set: function(){ /* ignora a redefinição do próprio hBook */ }
+        });
+      } catch(e){ window.mobileAndTabletcheck = alwaysDesktop; }
+    })();
+  </script>
 
   <style>
     /* ======================================================
