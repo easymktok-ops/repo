@@ -40,13 +40,16 @@ reposicionamiento es de copy, orden, jerarquía y CTAs —no un rediseño.
 
 ```
 site/
-├── index.html              # Home (11 secciones)
-├── diagnostico/index.html  # Diagnóstico Ejecutivo (landing de campaña)
+├── index.html                     # Home (11 secciones + card del autodiagnóstico)
+├── diagnostico/index.html         # Diagnóstico Ejecutivo (landing de campaña)
+├── diagnostico-negocio/index.html # Diagnosticador "7 Puntos" (autodiagnóstico / lead magnet)
+├── gracias.html                   # Thank-you page (Diagnóstico Ejecutivo)
 ├── assets/
-│   ├── css/styles.css      # Design system + componentes v2.0 (fases, stack, casos, oferta)
-│   ├── js/main.js          # Menú móvil
-│   ├── fonts/              # Century Gothic (4 variantes)
-│   └── img/                # TODAS las imágenes: logo, isotipo, favicons y fotos (dashboard.webp, consultoria.webp)
+│   ├── css/styles.css             # Design system + componentes (incl. .dx- del diagnosticador)
+│   ├── js/main.js                 # Menú móvil + reveal + tracking + formulario ejecutivo
+│   ├── js/diagnostico-negocio.js  # Wizard + puntaje + reporte + PDF del diagnosticador 7 Puntos
+│   ├── fonts/                     # Century Gothic (4 variantes)
+│   └── img/                       # TODAS las imágenes: logo, isotipo, favicons y fotos (dashboard.webp, consultoria.webp)
 ├── site.webmanifest
 └── README.md
 ```
@@ -125,3 +128,37 @@ marcadores). El documento ejecutivo de la auditoría v2.0 acompaña este cambio.
 - Sin rediseño: se conservó identidad visual, layout, colores, tipografías y animaciones.
 
 - **Formulario también en la landing de campaña** `/diagnostico/` (sección `#diagnostico` local, redirige a `../gracias.html`); sus CTAs apuntan al formulario de la propia página.
+
+## Diagnosticador "7 Puntos" (`/diagnostico-negocio/`) — autodiagnóstico + lead magnet
+
+Herramienta de autoevaluación (no es investigación de Claude: **el visitante responde**
+sobre su propio negocio) basada en los 7 puntos de por qué un cliente compra o no:
+**Público, Problema, Solución, Diferenciales, Testimonios, Objeciones, Garantía.**
+
+- **Wizard, un punto a la vez** con barra de progreso "Punto X de 7". 13 preguntas
+  (1–2 por punto), mayormente opción múltiple / escala 1–5 y 2 preguntas abiertas cortas
+  (problema y diferenciador, ambas opcionales). ~3 min. Todo corre en el cliente.
+- **Modelo híbrido de captura:**
+  1. Al terminar muestra **resumen GRATIS sin pedir datos**: semáforo 🟢🟡🔴 por punto +
+     el cuello de botella #1 destacado (gancho).
+  2. Para el **reporte completo** pide Nombre, Email, WhatsApp, Negocio (opcional) y
+     un checkbox de consentimiento.
+  3. **Reporte** (post-captura): cada punto con puntaje, explicación y **1–2
+     recomendaciones accionables personalizadas** según las respuestas (usa las frases
+     abiertas del usuario cuando existen); prioridad #1 = punto más débil; **botón
+     "Descargar PDF"** (imprime con `@media print` on-brand: logo, colores) y CTA a
+     Calendly con copy dinámico ("…resolvemos juntos tu {punto más débil}") + WhatsApp
+     secundario.
+- **Puntaje**: cada respuesta aporta 0–100; el punto es el promedio ponderado de sus
+  preguntas. Semáforo: ≥70 verde, 45–69 amarillo, <45 rojo. El más bajo = prioridad #1.
+  **No inventa nada**: todo se deriva de lo respondido; abiertas vacías no bloquean.
+- **Leads → mismo FormSubmit** (`info@easymarketing.mx`) con asunto propio
+  *"Nuevo diagnóstico 7 Puntos"* para distinguirlos del Diagnóstico Ejecutivo. El correo
+  del lead **incluye el resultado del diagnóstico** (puntaje por punto, punto más débil,
+  índice general y las frases abiertas) como campos ocultos inyectados al enviar.
+- **Tracking (dataLayer / GTM):** `dx_start`, `dx_complete`, `dx_lead_submit`,
+  `dx_report_unlocked`, `dx_pdf_download`, `dx_calendly_click`.
+- **Entrada desde el home**: card "3.5" entre "Por qué no crecen" y "El método", con
+  copy de curiosidad + botón a `diagnostico-negocio/`.
+- Reglas de lenguaje respetadas: "negocio/organización" (no "despacho"); se comunica como
+  herramienta de **diagnóstico de negocio**, no como "análisis de marketing".
