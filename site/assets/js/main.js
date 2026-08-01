@@ -66,7 +66,8 @@
     var a = e.target.closest && e.target.closest("a");
     if (!a) return;
     var href = a.getAttribute("href") || "";
-    if (href.indexOf("#diagnostico") !== -1) track("diagnostico_ejecutivo_cta", { cta_text: (a.textContent || "").trim() });
+    if (href.indexOf("diagnostico-negocio") !== -1) track("diagnostico_negocio_cta", { cta_text: (a.textContent || "").trim() });
+    else if (href.indexOf("#diagnostico") !== -1) track("diagnostico_ejecutivo_cta", { cta_text: (a.textContent || "").trim() });
     if (/wa\.me|api\.whatsapp\.com/.test(href)) track("whatsapp_click", { location: href });
   });
 

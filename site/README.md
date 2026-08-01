@@ -162,3 +162,9 @@ sobre su propio negocio) basada en los 7 puntos de por qué un cliente compra o 
   copy de curiosidad + botón a `diagnostico-negocio/`.
 - Reglas de lenguaje respetadas: "negocio/organización" (no "despacho"); se comunica como
   herramienta de **diagnóstico de negocio**, no como "análisis de marketing".
+
+- **CTA primario del hero (home)**: cambiado de "Agenda un Diagnóstico Ejecutivo" a
+  **"Hacer mi diagnóstico gratuito"**, que ahora abre el diagnosticador (`diagnostico-negocio/`)
+  como entrada de menor fricción (top-of-funnel). Los demás CTA principales del sitio siguen
+  llevando al Diagnóstico Ejecutivo (`#diagnostico`). Nuevo evento de tracking
+  `diagnostico_negocio_cta` para clics hacia el diagnosticador.
