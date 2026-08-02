@@ -468,6 +468,42 @@
       if (answers.prob_frase && answers.prob_frase.v) hidden("Problema que resuelve (en sus palabras)", answers.prob_frase.v);
       if (answers.dif_frase && answers.dif_frase.v) hidden("Diferenciador (en sus palabras)", answers.dif_frase.v);
 
+      /* --- Envío paralelo a Make (fire-and-forget, NO bloquea el flujo) ---
+         Reutiliza exactamente los mismos valores que van a FormSubmit,
+         empaquetados como JSON. Si falla o tarda, no afecta al usuario. */
+      (function () {
+        function fv(name) { var el = form.querySelector('[name="' + name + '"]'); return el ? (el.value || "") : ""; }
+        var byKey = {};
+        results.forEach(function (r) { byKey[r.key] = r.score + "/100"; });
+        var overall = Math.round(results.reduce(function (s, r) { return s + r.score; }, 0) / results.length);
+        var consentEl = form.querySelector('[name="consentimiento"]');
+        var payload = {
+          nombre: fv("nombre"),
+          negocio: fv("negocio"),
+          email: fv("email"),
+          whatsapp: fv("whatsapp"),
+          consentimiento: (consentEl && consentEl.checked) ? (consentEl.value || "Sí") : "No",
+          punto_1_publico: byKey.publico,
+          punto_2_problema: byKey.problema,
+          punto_3_solucion: byKey.solucion,
+          punto_4_diferenciales: byKey.diferenciales,
+          punto_5_testimonios: byKey.testimonios,
+          punto_6_objeciones: byKey.objeciones,
+          punto_7_garantia: byKey.garantia,
+          punto_mas_debil: weak.name + " (" + weak.score + "/100)",
+          indice_general: overall + "/100",
+          problema_respuesta: (answers.prob_frase && answers.prob_frase.v) || "",
+          diferenciador_respuesta: (answers.dif_frase && answers.dif_frase.v) || ""
+        };
+        try {
+          fetch("https://hook.us2.make.com/75gb150bmqtepgh5jypy29gu7fkpb8zk", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          }).catch(function (err) { console.error("Error enviando a Make:", err); });
+        } catch (err) { console.error("Error enviando a Make:", err); }
+      })();
+
       var btn = form.querySelector("button[type=submit]");
       var original = btn ? btn.textContent : "";
       if (btn) { btn.disabled = true; btn.textContent = "Generando tu reporte…"; }

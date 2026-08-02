@@ -168,3 +168,12 @@ sobre su propio negocio) basada en los 7 puntos de por qué un cliente compra o 
   como entrada de menor fricción (top-of-funnel). Los demás CTA principales del sitio siguen
   llevando al Diagnóstico Ejecutivo (`#diagnostico`). Nuevo evento de tracking
   `diagnostico_negocio_cta` para clics hacia el diagnosticador.
+
+- **Envío paralelo a Make (webhook):** al enviar el formulario, además del POST a
+  FormSubmit, se dispara un segundo POST **fire-and-forget** en JSON al webhook
+  `https://hook.us2.make.com/75gb150bmqtepgh5jypy29gu7fkpb8zk` con los mismos valores
+  (nombre, negocio, email, whatsapp, consentimiento, `punto_1_publico`…`punto_7_garantia`
+  como "NN/100", `punto_mas_debil`, `indice_general`, `problema_respuesta`,
+  `diferenciador_respuesta`). No bloquea ni retrasa el flujo: el reporte y el PDF se
+  muestran de inmediato; si el webhook falla o tarda, se ignora en silencio (solo
+  `console.error`). No reemplaza a FormSubmit —es un envío adicional para automatización.
