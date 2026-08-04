@@ -52,6 +52,35 @@
     els.forEach(function (el) { io.observe(el); });
   }
 
+  /* -------- Count-up en métricas de casos (progressive enhancement) ------
+     El valor real ya está en el HTML (extraíble por crawlers/GEO). Solo si
+     hay motion y soporte, animamos 0 -> valor al entrar en viewport. */
+  if (!reduce && "IntersectionObserver" in window) {
+    var nums = document.querySelectorAll("[data-count]");
+    if (nums.length) {
+      var numObs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          var el = e.target; numObs.unobserve(el);
+          var target = parseFloat(el.getAttribute("data-count")) || 0;
+          var pre = el.getAttribute("data-prefix") || "";
+          var suf = el.getAttribute("data-suffix") || "";
+          var dur = 1100, t0 = null;
+          el.textContent = pre + "0" + suf;
+          requestAnimationFrame(function step(ts) {
+            if (t0 === null) t0 = ts;
+            var p = Math.min((ts - t0) / dur, 1);
+            var eased = 1 - Math.pow(1 - p, 4); // ease-out-quart
+            el.textContent = pre + Math.round(eased * target) + suf;
+            if (p < 1) requestAnimationFrame(step);
+            else el.textContent = pre + target + suf;
+          });
+        });
+      }, { threshold: 0.6 });
+      nums.forEach(function (el) { numObs.observe(el); });
+    }
+  }
+
   /* ---------------- Tracking (dataLayer / GA4, no-op si no existen) ------- */
   function track(event, params) {
     try {

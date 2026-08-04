@@ -177,3 +177,19 @@ sobre su propio negocio) basada en los 7 puntos de por qué un cliente compra o 
   `diferenciador_respuesta`). No bloquea ni retrasa el flujo: el reporte y el PDF se
   muestran de inmediato; si el webhook falla o tarda, se ignora en silencio (solo
   `console.error`). No reemplaza a FormSubmit —es un envío adicional para automatización.
+
+## Actualización de home v2.3 (SEO/GEO, motion, carrusel de marcas)
+
+- **SEO:** `<title>` y `meta description` (150-160) reenfocados a generación de demanda + IA;
+  `canonical`, Open Graph completo (`og:url`/`og:image`/`site_name`) y Twitter Card en home,
+  `/diagnostico/` y `/diagnostico-negocio/`. `sitemap.xml` y `robots.txt` nuevos.
+- **GEO:** datos estructurados `ProfessionalService` + `FAQPage` (JSON-LD) en la home; FAQ con
+  preguntas extraíbles ("¿Qué es Easy Marketing?", "¿Para quién es?") como texto real, no imagen.
+- **Motion (skill impeccable · bolder+animate):** tokens de easing (`--ease-out-quart/quint/expo`);
+  count-up de las métricas reales de casos (+30%, 13X) al entrar en viewport; todo con
+  `prefers-reduced-motion`. Sin reinventar identidad.
+- **Carrusel de marcas** (`#marcas`, bajo el hero): marquee CSS ligero, logos en escala de grises
+  que colorizan al hover, pausa en `prefers-reduced-motion`. **Los logos van en
+  `assets/img/brands/` (`bait.svg`, `getnet.svg`, `framesi.svg`).** Mientras no existan, el
+  carrusel muestra el nombre de la marca en texto (fallback), nunca un logo falso. Ver
+  `assets/img/brands/README.md`.

@@ -46,6 +46,11 @@
   --leading-tight:1.06; --leading-normal:1.55;
   --tracking-tight:-.02em; --tracking-caps:.14em;
 
+  /* ---- Easing (motion) ---- */
+  --ease-out-quart:cubic-bezier(.25,1,.5,1);
+  --ease-out-quint:cubic-bezier(.22,1,.36,1);
+  --ease-out-expo:cubic-bezier(.16,1,.3,1);
+
   --maxw:1140px; --radius:16px; --radius-sm:11px;
   --shadow-sm:0 1px 2px rgba(14,20,45,.06),0 2px 6px rgba(14,20,45,.05);
   --shadow-md:0 10px 30px rgba(14,20,45,.09);
@@ -609,3 +614,34 @@ ul{margin:0;padding:0;list-style:none;}
   .dx-home-card{grid-template-columns:1fr;gap:24px;padding:28px 20px;}
   .dx-home-visual{order:2;}
 }
+
+/* =========================================================================
+   Carrusel de marcas / clientes (home) — marquee ligero, CSS puro
+   ========================================================================= */
+.brands{padding:40px 0 8px;}
+.brands-title{text-align:center;font-family:var(--font-display);font-weight:var(--fw-bold);
+  font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-faint);margin:0 0 22px;}
+.marquee{overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);
+  mask-image:linear-gradient(90deg,transparent,#000 7%,#000 93%,transparent);}
+.marquee-track{display:flex;align-items:center;gap:clamp(38px,7vw,84px);width:max-content;
+  animation:marquee-scroll 26s linear infinite;will-change:transform;}
+.marquee:hover .marquee-track{animation-play-state:paused;}
+@keyframes marquee-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.brand-logo{flex:none;display:inline-flex;align-items:center;justify-content:center;height:44px;}
+.brand-logo img{height:100%;width:auto;object-fit:contain;filter:grayscale(1);opacity:.55;
+  transition:filter .35s var(--ease-out-quart,cubic-bezier(.22,1,.36,1)),opacity .35s ease;}
+.brand-logo:hover img{filter:grayscale(0);opacity:1;}
+.brand-word{font-family:var(--font-display);font-weight:var(--fw-bold);font-size:22px;letter-spacing:.02em;
+  color:var(--ink-400);white-space:nowrap;transition:color .35s ease;}
+.brand-logo:hover .brand-word{color:var(--brand-indigo);}
+@media(hover:none){ .brand-logo img{opacity:.72;} } /* touch: sin hover, algo más visibles */
+
+@media (prefers-reduced-motion: reduce){
+  .marquee{-webkit-mask-image:none;mask-image:none;}
+  .marquee-track{animation:none;width:100%;flex-wrap:wrap;justify-content:center;
+    gap:clamp(28px,6vw,64px);}
+  .brand-logo[data-clone]{display:none;} /* sin loop, no dupliques */
+}
+
+/* Count-up: evita salto de layout reservando el ancho del número */
+.case .metric .big[data-count]{font-variant-numeric:tabular-nums;}
