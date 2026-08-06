@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="cool" x1="0" y1="180" x2="0" y2="336" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1857B8"/>
+      <stop offset=".46" stop-color="#16A99D"/>
+      <stop offset="1" stop-color="#15C24D"/>
+    </linearGradient>
+    <linearGradient id="warm" x1="0" y1="180" x2="0" y2="336" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#FFC400"/>
+      <stop offset=".5" stop-color="#FF6A1A"/>
+      <stop offset="1" stop-color="#FF2D78"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" y1="180" x2="0" y2="336" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#F7481E"/>
+      <stop offset="1" stop-color="#ED1C24"/>
+    </linearGradient>
+  </defs>
+  <g stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <!-- M: tres barras diagonales -->
+    <g stroke="url(#cool)" stroke-width="30">
+      <line x1="150" y1="186" x2="110" y2="330"/>
+      <line x1="205" y1="186" x2="165" y2="330"/>
+      <line x1="260" y1="186" x2="220" y2="330"/>
+    </g>
+    <!-- K: chevron -->
+    <path stroke="url(#warm)" stroke-width="30" d="M354 186 L302 258 L354 330"/>
+    <!-- t -->
+    <g stroke="url(#red)" stroke-width="30">
+      <line x1="402" y1="182" x2="402" y2="330"/>
+      <line x1="356" y1="224" x2="428" y2="224"/>
+    </g>
+  </g>
+</svg>
