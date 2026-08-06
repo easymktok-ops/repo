@@ -58,6 +58,9 @@ body{
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
+/* neural-network background layer */
+#neural{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.7}
+body>section,body>footer{position:relative;z-index:1}
 h1,h2,h3,h4,.disp{font-family:'Montserrat',system-ui,sans-serif;color:var(--ink);line-height:1.08;letter-spacing:-.02em;text-wrap:balance}
 p{text-wrap:pretty}
 .wrap{width:100%;max-width:var(--maxw);margin-inline:auto;padding-inline:var(--pad)}
@@ -131,7 +134,7 @@ section{position:relative}
 /* ============ generic section ============ */
 .band{padding:clamp(3.5rem,8vw,6.5rem) 0}
 .band-alt{background:
-   radial-gradient(120% 90% at 50% -10%,rgba(65,26,231,.10),transparent 60%),var(--bg-2);
+   radial-gradient(120% 90% at 50% -10%,rgba(65,26,231,.10),transparent 60%),rgba(13,11,23,.62);
    border-block:1px solid var(--line)}
 .sec-head{max-width:44ch;margin-bottom:clamp(2rem,4vw,3rem)}
 .sec-head.center{margin-inline:auto;text-align:center}
@@ -225,14 +228,14 @@ section{position:relative}
 
 /* ============ cta final ============ */
 .final{position:relative;text-align:center;padding:clamp(4rem,9vw,7rem) 0;overflow:hidden;
-  background:radial-gradient(90% 120% at 50% 0%,rgba(65,26,231,.28),transparent 60%),var(--bg-2);border-top:1px solid var(--line)}
+  background:radial-gradient(90% 120% at 50% 0%,rgba(65,26,231,.28),transparent 60%),rgba(13,11,23,.7);border-top:1px solid var(--line)}
 .final h2{font-weight:800;font-size:clamp(2.1rem,5vw,3.6rem);margin-bottom:1rem;max-width:18ch;margin-inline:auto}
 .final p{max-width:52ch;margin:0 auto 2rem;font-size:clamp(1.05rem,1.8vw,1.24rem)}
 .final .hero-cta{justify-content:center}
 .final .trust{justify-content:center;margin-top:1.3rem}
 
 /* ============ footer ============ */
-.footer{background:var(--bg);border-top:1px solid var(--line);padding:clamp(2.5rem,5vw,3.5rem) 0 2rem}
+.footer{background:rgba(10,9,18,.72);border-top:1px solid var(--line);padding:clamp(2.5rem,5vw,3.5rem) 0 2rem}
 .footer-top{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:2rem;align-items:start}
 .footer img.flogo{height:40px;width:auto;margin-bottom:1rem}
 .footer .fdesc{color:var(--ink-mut);font-size:.96rem;max-width:34ch}
@@ -298,6 +301,7 @@ section{position:relative}
 </script>
 </head>
 <body>
+<canvas id="neural" aria-hidden="true"></canvas>
 
 <!-- ============ HEADER ============ -->
 <header class="header" id="top">
@@ -677,6 +681,86 @@ section{position:relative}
   function closeM(){ mm.classList.remove('open'); mb.setAttribute('aria-expanded','false'); document.body.style.overflow=''; }
   if(mb){ mb.addEventListener('click',openM); mc.addEventListener('click',closeM);
     mm.querySelectorAll('[data-close]').forEach(function(a){ a.addEventListener('click',closeM); }); }
+})();
+
+/* ===== subtle neural-network background with scroll parallax ===== */
+(function(){
+  var c=document.getElementById('neural'); if(!c||!c.getContext) return;
+  var ctx=c.getContext('2d');
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var DPR=Math.min(window.devicePixelRatio||1,2);
+  // violet-weighted line color; nodes take real logo hues sprinkled in
+  var NODE_COLORS=['#7c5cff','#9c86ff','#6b4bff','#8f74ff','#00a890','#189078','#e0b93a','#d8622a','#2a7fd6'];
+  var W=0,H=0,nodes=[],connDist=130,par=0,targetPar=0,running=false,raf=null;
+
+  function build(){
+    W=c.clientWidth; H=c.clientHeight;
+    c.width=Math.round(W*DPR); c.height=Math.round(H*DPR);
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    connDist=Math.max(108,Math.min(150,W/9));
+    var area=W*H;
+    var count=Math.round(Math.min(70,area/16500));
+    if(W<640) count=Math.round(Math.min(30,area/15000));
+    nodes=[];
+    for(var i=0;i<count;i++){
+      nodes.push({
+        x:Math.random()*W, y:Math.random()*H,
+        vx:(Math.random()-.5)*0.16, vy:(Math.random()-.5)*0.16,
+        r:Math.random()*1.5+1,
+        col:NODE_COLORS[(Math.random()*NODE_COLORS.length)|0]
+      });
+    }
+  }
+
+  function frame(){
+    ctx.clearRect(0,0,W,H);
+    if(!reduce) par+=(targetPar-par)*0.09;
+    var off=par%H; if(off<0) off+=H;
+    var i,j,n;
+    for(i=0;i<nodes.length;i++){
+      n=nodes[i];
+      if(!reduce){
+        n.x+=n.vx; n.y+=n.vy;
+        if(n.x<0)n.x+=W; else if(n.x>W)n.x-=W;
+        if(n.y<0)n.y+=H; else if(n.y>H)n.y-=H;
+      }
+      var ry=n.y+off; if(ry>H)ry-=H;
+      n._x=n.x; n._y=ry;
+    }
+    // connections (rendered space; short threshold hides the wrap seam)
+    ctx.lineWidth=1;
+    for(i=0;i<nodes.length;i++){
+      for(j=i+1;j<nodes.length;j++){
+        var a=nodes[i],b=nodes[j];
+        var dx=a._x-b._x, dy=a._y-b._y, d2=dx*dx+dy*dy;
+        if(d2<connDist*connDist){
+          var al=(1-Math.sqrt(d2)/connDist)*0.16;
+          ctx.strokeStyle='rgba(130,104,255,'+al.toFixed(3)+')';
+          ctx.beginPath(); ctx.moveTo(a._x,a._y); ctx.lineTo(b._x,b._y); ctx.stroke();
+        }
+      }
+    }
+    // nodes
+    ctx.globalAlpha=0.55;
+    for(i=0;i<nodes.length;i++){
+      n=nodes[i];
+      ctx.beginPath(); ctx.arc(n._x,n._y,n.r,0,6.2832);
+      ctx.fillStyle=n.col; ctx.fill();
+    }
+    ctx.globalAlpha=1;
+  }
+
+  function loop(){ frame(); raf=requestAnimationFrame(loop); }
+  function start(){ if(running||reduce)return; running=true; raf=requestAnimationFrame(loop); }
+  function stop(){ running=false; if(raf)cancelAnimationFrame(raf); raf=null; }
+
+  window.addEventListener('scroll',function(){ targetPar=-window.scrollY*0.32; },{passive:true});
+  document.addEventListener('visibilitychange',function(){ document.hidden?stop():start(); });
+  var rt=null;
+  window.addEventListener('resize',function(){ clearTimeout(rt); rt=setTimeout(function(){ build(); if(reduce)frame(); },180); });
+
+  build();
+  if(reduce){ frame(); } else { start(); }
 })();
 </script>
 </body>
