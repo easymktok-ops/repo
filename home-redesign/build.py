@@ -1,10 +1,13 @@
 #!/usr/bin/env python3
-import base64, io, os
+import base64, io, os, re
 from PIL import Image
 
+BASE = "/tmp/claude-0/-home-user-repo/69cb0942-2f14-55e1-a36e-13d034232862/scratchpad/build"
 IMG = "/tmp/claude-0/-home-user-repo/69cb0942-2f14-55e1-a36e-13d034232862/scratchpad/site_zip/images"
-SRC = "/tmp/claude-0/-home-user-repo/69cb0942-2f14-55e1-a36e-13d034232862/scratchpad/build/home_src.html"
-OUT = "/tmp/claude-0/-home-user-repo/69cb0942-2f14-55e1-a36e-13d034232862/scratchpad/build/index.html"
+SRC = f"{BASE}/home_src.html"
+OUT = f"{BASE}/index.html"
+SRV_SRC = f"{BASE}/servicios_src.html"
+SRV_OUT = f"{BASE}/Servicios.html"
 
 def datauri(path, mime):
     with open(path, "rb") as f:
@@ -46,14 +49,25 @@ tokens = {
     "__NORMAN__":  jpg_cover(f"{IMG}/Norman-Oswald-White-Compressed.jpg", 360),
 }
 
-with open(SRC, encoding="utf-8") as f:
-    html = f.read()
-for k, v in tokens.items():
-    html = html.replace(k, v)
+def fill(html):
+    for k, v in tokens.items():
+        html = html.replace(k, v)
+    return html
 
-with open(OUT, "w", encoding="utf-8") as f:
-    f.write(html)
-
+# ---- build home ----
+home_src = open(SRC, encoding="utf-8").read()
+home = fill(home_src)
+open(OUT, "w", encoding="utf-8").write(home)
 print("Wrote", OUT, f"({os.path.getsize(OUT)/1024:.0f} KB)")
-for k, v in tokens.items():
-    print(f"  {k:12} {len(v)/1024:6.1f} KB (base64)")
+
+# ---- shared design system extracted from the home source ----
+shared_style = re.search(r"<style>.*?</style>", home_src, re.S).group(0)
+shared_js = re.search(r"<script>\s*\(function\(\)\{\s*var mo.*?</script>", home_src, re.S).group(0)
+
+# ---- build servicios ----
+if os.path.exists(SRV_SRC):
+    srv = open(SRV_SRC, encoding="utf-8").read()
+    srv = srv.replace("__STYLE__", shared_style).replace("__NEURAL_JS__", shared_js)
+    srv = fill(srv)
+    open(SRV_OUT, "w", encoding="utf-8").write(srv)
+    print("Wrote", SRV_OUT, f"({os.path.getsize(SRV_OUT)/1024:.0f} KB)")

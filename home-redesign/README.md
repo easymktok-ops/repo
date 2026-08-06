@@ -9,9 +9,14 @@ SVG**, sin Three.js/WebGL, sin frameworks, sin video.
 
 | Archivo | Qué es |
 |---|---|
-| `index.html` | **El entregable.** Página autónoma (~450 KB): todos los logos y la foto están incrustados en base64. Se puede subir tal cual y funciona sin la carpeta `images/`. |
-| `home_src.html` | Plantilla fuente con tokens `__ASSET__` (código limpio, sin base64). |
-| `build.py` | Reduce/optimiza las imágenes y las incrusta en la plantilla para generar `index.html`. |
+| `index.html` | **La home.** Página autónoma: logos y foto incrustados en base64. Se sube tal cual y funciona sin la carpeta `images/`. |
+| `Servicios.html` | **La página de Servicios.** Misma familia visual y fondo neuronal que la home, pero estructura propia (catálogo de servicios). Reemplaza la vieja `Servicios.html` que tiraba 404. |
+| `home_src.html` | Plantilla fuente de la home con tokens `__ASSET__` (código limpio, sin base64). Es la fuente única del design system (estilo + script neural compartidos). |
+| `servicios_src.html` | Plantilla fuente de Servicios. Usa `__STYLE__` y `__NEURAL_JS__`, que el build inyecta desde `home_src.html` (un solo lugar para el CSS). |
+| `build.py` | Optimiza/incrusta las imágenes y genera `index.html` **y** `Servicios.html`. |
+
+> Los enlaces internos usan `index.html` y `Servicios.html` (con S mayúscula, como el
+> archivo original). Súbelos con esos nombres exactos para que el menú no rompa.
 
 ## Regenerar `index.html`
 
