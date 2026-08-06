@@ -18,3 +18,8 @@ el marquee se detiene y los logos se centran.
 3. Si es blanco (para fondo oscuro), se recolorea a `#141A33` para que se vea en la tira clara.
 4. Agrega un bloque `.brand-logo` en el grupo visible y su copia en el grupo `data-clone`
    de `index.html` (el segundo grupo es solo para el loop continuo).
+
+## Pendientes (página Servicios) — muestran texto hasta subir el logo
+Sube estos si quieres que aparezcan como logo (SVG o PNG transparente, oscuro/color):
+`alzatalent.svg`, `rh-hunting.svg`, `karma.svg`, `refinated.svg`, `bbs.svg`,
+`the-spa-mita.svg`, `five-linq.svg`.
