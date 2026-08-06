@@ -91,8 +91,8 @@ section{position:relative}
   background:rgba(10,9,18,.72);border-bottom:1px solid transparent;transition:border-color .3s,background .3s}
 .header.scrolled{border-bottom-color:var(--line);background:rgba(10,9,18,.88)}
 .header .wrap{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;height:72px}
-.brand{display:flex;align-items:center}
-.brand img{height:34px;width:auto}
+.brand{display:flex;align-items:center;flex:none}
+.brand img{height:34px;width:auto;max-width:none;object-fit:contain}
 .nav{display:flex;align-items:center;gap:.35rem}
 .nav a{font-family:'Montserrat';font-weight:600;font-size:.95rem;color:var(--ink-soft);padding:.55rem .85rem;border-radius:10px;transition:color .2s,background .2s}
 .nav a:hover{color:#fff;background:rgba(255,255,255,.05)}
@@ -291,6 +291,12 @@ section{position:relative}
 .mmenu .btn{margin-top:1.5rem;justify-content:center}
 .mclose{width:44px;height:44px;display:grid;place-items:center;border:1px solid var(--line);border-radius:10px}
 
+@media(max-width:400px){
+  .header .wrap{gap:.55rem}
+  .brand img{height:28px}
+  .header-cta{gap:.5rem}
+  .header-cta .btn-primary{padding:.52rem .75rem;font-size:.82rem}
+}
 @media(prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
   *,*::before,*::after{animation:none!important;transition-duration:.001ms!important}
