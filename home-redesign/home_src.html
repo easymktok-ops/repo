@@ -200,9 +200,20 @@ section{position:relative}
 /* ============ prueba social ============ */
 .logos-strip{margin-top:.5rem;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
   mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);overflow:hidden}
-.logos-track{display:flex;align-items:center;gap:clamp(2.5rem,6vw,5rem);width:max-content;animation:marquee 34s linear infinite}
-.logos-track img{height:clamp(30px,4vw,44px);width:auto;opacity:.7;filter:grayscale(1) brightness(1.6);transition:opacity .3s,filter .3s}
+.logos-track{display:flex;align-items:center;gap:clamp(2rem,5vw,4rem);width:max-content;animation:marquee 36s linear infinite}
+/* normalize logos: cap both dimensions so wide wordmarks and tall marks read at similar mass */
+.logos-track img{height:auto;width:auto;max-height:clamp(24px,3.1vw,34px);max-width:clamp(96px,12vw,134px);object-fit:contain;opacity:.72;filter:grayscale(1) brightness(1.7);transition:opacity .3s,filter .3s}
 .logos-track img:hover{opacity:1;filter:grayscale(0) brightness(1.1)}
+/* per-brand optical balance (aspect ratios differ a lot) */
+.logos-track .bl-alza{max-height:clamp(15px,2vw,20px);max-width:clamp(120px,15vw,158px)}
+.logos-track .bl-spa{max-height:clamp(22px,2.8vw,30px);max-width:clamp(110px,14vw,150px)}
+.logos-track .bl-linq{max-height:clamp(22px,2.9vw,31px)}
+.logos-track .bl-getnet{max-height:clamp(24px,3vw,33px)}
+.logos-track .bl-bbs{max-height:clamp(28px,3.6vw,40px);max-width:60px}
+.logos-track .bl-rf{max-height:clamp(26px,3.4vw,38px)}
+.logos-track .bl-bait{max-height:clamp(27px,3.5vw,39px)}
+.logos-track .bl-karma{max-height:clamp(24px,3.1vw,34px)}
+.logos-track .bl-framesi{max-height:clamp(24px,3.1vw,34px)}
 @keyframes marquee{to{transform:translateX(-50%)}}
 .logos-strip:hover .logos-track{animation-play-state:paused}
 
@@ -545,24 +556,24 @@ section{position:relative}
   </div>
   <div class="logos-strip" data-reveal data-delay="1">
     <div class="logos-track">
-      <img src="__L_ALZA__" alt="Alza Talent">
-      <img src="__L_BBS__" alt="BBS">
-      <img src="__L_KARMA__" alt="Karma Fiscal Asesores">
-      <img src="__L_RF__" alt="RF">
-      <img src="__L_SPA__" alt="The Spa">
-      <img src="__L_LINQ__" alt="5 Linq">
-      <img src="__L_GETNET__" alt="Getnet">
-      <img src="__L_BAIT__" alt="Bait">
-      <img src="__L_FRAMESI__" alt="Framesi">
-      <img src="__L_ALZA__" alt="" aria-hidden="true">
-      <img src="__L_BBS__" alt="" aria-hidden="true">
-      <img src="__L_KARMA__" alt="" aria-hidden="true">
-      <img src="__L_RF__" alt="" aria-hidden="true">
-      <img src="__L_SPA__" alt="" aria-hidden="true">
-      <img src="__L_LINQ__" alt="" aria-hidden="true">
-      <img src="__L_GETNET__" alt="" aria-hidden="true">
-      <img src="__L_BAIT__" alt="" aria-hidden="true">
-      <img src="__L_FRAMESI__" alt="" aria-hidden="true">
+      <img class="bl-alza" src="__L_ALZA__" alt="Alza Talent">
+      <img class="bl-bbs" src="__L_BBS__" alt="BBS">
+      <img class="bl-karma" src="__L_KARMA__" alt="Karma Fiscal Asesores">
+      <img class="bl-rf" src="__L_RF__" alt="RF">
+      <img class="bl-spa" src="__L_SPA__" alt="The Spa">
+      <img class="bl-linq" src="__L_LINQ__" alt="5 Linq">
+      <img class="bl-getnet" src="__L_GETNET__" alt="Getnet">
+      <img class="bl-bait" src="__L_BAIT__" alt="Bait">
+      <img class="bl-framesi" src="__L_FRAMESI__" alt="Framesi">
+      <img class="bl-alza" src="__L_ALZA__" alt="" aria-hidden="true">
+      <img class="bl-bbs" src="__L_BBS__" alt="" aria-hidden="true">
+      <img class="bl-karma" src="__L_KARMA__" alt="" aria-hidden="true">
+      <img class="bl-rf" src="__L_RF__" alt="" aria-hidden="true">
+      <img class="bl-spa" src="__L_SPA__" alt="" aria-hidden="true">
+      <img class="bl-linq" src="__L_LINQ__" alt="" aria-hidden="true">
+      <img class="bl-getnet" src="__L_GETNET__" alt="" aria-hidden="true">
+      <img class="bl-bait" src="__L_BAIT__" alt="" aria-hidden="true">
+      <img class="bl-framesi" src="__L_FRAMESI__" alt="" aria-hidden="true">
     </div>
   </div>
   <div class="wrap">
