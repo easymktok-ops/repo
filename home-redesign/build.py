@@ -18,6 +18,11 @@ def png_resized(path, max_w):
     buf = io.BytesIO(); im.save(buf, "PNG", optimize=True)
     return "data:image/png;base64," + base64.b64encode(buf.getvalue()).decode()
 
+def svg_uri(path):
+    with open(path, encoding="utf-8") as f:
+        data = f.read().encode("utf-8")
+    return "data:image/svg+xml;base64," + base64.b64encode(data).decode()
+
 def jpg_cover(path, size):
     im = Image.open(path).convert("RGB")
     # center-crop to square then resize
@@ -35,6 +40,9 @@ tokens = {
     "__L_RF__":    png_resized(f"{IMG}/RF-Logo_PNG-W-Fit.png", 320),
     "__L_SPA__":   png_resized(f"{IMG}/THe-Spa-logo.png", 480),
     "__L_LINQ__":  png_resized(f"{IMG}/logo-5-linq.png", 520),
+    "__L_GETNET__":  svg_uri(f"{IMG}/getnet.svg"),
+    "__L_FRAMESI__": svg_uri(f"{IMG}/framesi.svg"),
+    "__L_BAIT__":    png_resized(f"{IMG}/bait.png", 360),
     "__NORMAN__":  jpg_cover(f"{IMG}/Norman-Oswald-White-Compressed.jpg", 360),
 }
 
