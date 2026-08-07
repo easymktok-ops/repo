@@ -257,6 +257,45 @@ section{position:relative}
 .footer .fcol svg{width:17px;height:17px;flex:none;color:var(--brand-3)}
 .footer-bottom{margin-top:2.5rem;padding-top:1.4rem;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:center;color:var(--ink-mut);font-size:.88rem}
 
+/* ============ animated brand-color word cycle (slow, gradual) ============ */
+.hl-cycle{color:var(--brand-3);animation:hueCycle 18s ease-in-out infinite}
+@keyframes hueCycle{
+  0%,100%{color:#7c5cff}
+  14%{color:#2a7fd6}
+  28%{color:#00a890}
+  42%{color:#189078}
+  56%{color:#e0b93a}
+  70%{color:#d8622a}
+  84%{color:#9c86ff}
+}
+
+/* ============ case-study cards ============ */
+.cases{display:grid;grid-template-columns:1fr 1fr;gap:1.1rem;margin-bottom:clamp(2rem,4vw,3rem)}
+.case{position:relative;overflow:hidden;border:1px solid var(--line-brand);border-radius:var(--r);padding:clamp(1.4rem,3vw,2rem);
+  background:radial-gradient(130% 130% at 12% 0%,rgba(65,26,231,.22),transparent 55%),var(--surface);text-align:left}
+.case .sector{font-family:'Montserrat';font-weight:700;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--brand-3)}
+.case .cname{font-family:'Montserrat';font-weight:800;color:#fff;font-size:1.2rem;margin:.2rem 0 1.1rem}
+.case .metric{display:flex;align-items:baseline;gap:.7rem;flex-wrap:wrap}
+.case .from{color:var(--ink-mut);font-size:1.3rem;text-decoration:line-through;text-decoration-color:rgba(255,255,255,.28)}
+.case .arrow{color:var(--brand-3);font-size:1.4rem;font-weight:700}
+.case .to{font-family:'Montserrat';font-weight:900;color:#fff;font-size:clamp(2.1rem,4.8vw,3rem);line-height:1}
+.case .unit{color:var(--ink-mut);font-size:1rem;font-weight:600}
+.case .badge{display:inline-block;margin-top:.8rem;font-family:'Montserrat';font-weight:700;font-size:.82rem;color:#c9ffe6;
+  background:rgba(37,211,102,.12);border:1px solid rgba(37,211,102,.32);border-radius:999px;padding:.32rem .75rem}
+.case .cdesc{margin-top:.95rem;color:var(--ink-soft);font-size:.98rem}
+.case .conf{margin-top:.85rem;font-size:.78rem;color:var(--ink-mut)}
+
+/* ============ free-diagnostic band ============ */
+.diag{display:flex;align-items:center;justify-content:space-between;gap:1.6rem;flex-wrap:wrap;
+  border:1px solid var(--line-brand);border-radius:var(--r);padding:clamp(1.6rem,4vw,2.6rem);
+  background:radial-gradient(120% 160% at 0% 0%,rgba(65,26,231,.32),transparent 55%),linear-gradient(180deg,var(--surface-hi),var(--surface));
+  box-shadow:0 24px 70px -34px var(--glow)}
+.diag .dtext{max-width:46ch}
+.diag h3{font-size:clamp(1.35rem,2.8vw,2rem);font-weight:800;color:#fff;margin:.7rem 0 .5rem}
+.diag p{color:var(--ink-soft)}
+.diag .btn{flex:none}
+@media(max-width:760px){.cases{grid-template-columns:1fr}}
+
 /* ============ reveal (enhances an already-visible default) ============ */
 .js [data-reveal]{opacity:0;transform:translateY(26px);transition:opacity .7s var(--ease),transform .7s var(--ease)}
 .js [data-reveal].in{opacity:1;transform:none}
@@ -265,6 +304,7 @@ section{position:relative}
 .js [data-reveal][data-delay="3"]{transition-delay:.24s}
 
 /* ============ responsive ============ */
+@media(max-width:1040px){ .header-cta .btn-ghost{display:none} }
 @media(max-width:900px){
   .hero-grid{grid-template-columns:1fr;gap:2.5rem}
   .engine{max-width:400px;order:-1}
@@ -330,7 +370,6 @@ __GTM_BODY__
       <a href="#propuesta">El motor</a>
       <a href="#proceso">Cómo funciona</a>
       <a href="#casos">Casos</a>
-      <a href="#faq">Preguntas</a>
       <a href="Servicios.html">Servicios</a>
       <a href="Contact.html">Contacto</a>
     </nav>
@@ -366,7 +405,7 @@ __GTM_BODY__
   <div class="wrap hero-grid">
     <div>
       <span class="eyebrow" data-reveal><span class="dot"></span>Generación de demanda con IA</span>
-      <h1 data-reveal data-delay="1">Generamos la <span class="hl">demanda</span> que tu negocio necesita.</h1>
+      <h1 data-reveal data-delay="1">Generamos la <span class="hl hl-cycle">demanda</span> que tu negocio necesita.</h1>
       <p class="lead" data-reveal data-delay="2">Convertimos anuncios, contenido y automatización en un solo motor que te trae clientes listos para comprar. Para PyMEs que quieren resultados, no reportes bonitos.</p>
       <div class="hero-cta" data-reveal data-delay="3">
         <a class="btn btn-primary btn-lg" href="https://calendly.com/easymktok/asesoria" target="_blank" rel="noopener">
@@ -549,8 +588,22 @@ __GTM_BODY__
         <p>Lo lanzamos, medimos y ajustamos cada semana. Tú ves clientes llegar, nosotros movemos las palancas.</p>
       </div>
     </div>
-    <div style="margin-top:2rem" data-reveal>
-      <a class="btn btn-primary btn-lg" href="https://calendly.com/easymktok/asesoria" target="_blank" rel="noopener">Empieza con el diagnóstico</a>
+  </div>
+</section>
+
+<!-- ============ DIAGNÓSTICO GRATUITO ============ -->
+<section class="band" id="diagnostico" style="padding-top:0">
+  <div class="wrap">
+    <div class="diag" data-reveal>
+      <div class="dtext">
+        <span class="eyebrow"><span class="dot"></span>Gratis · sin registro pesado</span>
+        <h3>¿No sabes por dónde empezar? Haz tu diagnóstico gratis.</h3>
+        <p>Responde unas preguntas y descubre en minutos qué está frenando la demanda de tu negocio y qué palancas mover primero.</p>
+      </div>
+      <a class="btn btn-primary btn-lg" href="https://easymarketing.mx/demand/#diagnostico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        Haz tu diagnóstico gratis
+      </a>
     </div>
   </div>
 </section>
@@ -559,8 +612,36 @@ __GTM_BODY__
 <section class="band band-alt" id="casos">
   <div class="wrap">
     <div class="sec-head center" data-reveal>
-      <span class="eyebrow"><span class="dot"></span>Confían en nosotros</span>
-      <h2>Negocios que ya crecen con Easy Marketing.</h2>
+      <span class="eyebrow"><span class="dot"></span>Casos reales</span>
+      <h2>Resultados que ya conseguimos.</h2>
+      <p class="muted" style="margin-inline:auto">Dos casos reales de clientes. Cambiamos los nombres por confidencialidad, no los números.</p>
+    </div>
+    <div class="cases" data-reveal data-delay="1">
+      <article class="case">
+        <div class="sector">E-commerce · Moda</div>
+        <div class="cname">Boutique Aurora</div>
+        <div class="metric">
+          <span class="from">$50K</span>
+          <span class="arrow">→</span>
+          <span class="to">$270K</span>
+        </div>
+        <div class="muted" style="font-size:.9rem;margin-top:.35rem">Facturación, mismo periodo del año anterior</div>
+        <span class="badge">5.4× en ventas</span>
+        <p class="cdesc">Reestructuramos sus campañas de Meta y Google Ads y automatizamos el seguimiento de cada prospecto. Misma temporada, otro nivel de ventas.</p>
+        <p class="conf">Caso real. Nombre cambiado por confidencialidad del cliente.</p>
+      </article>
+      <article class="case">
+        <div class="sector">Servicios B2B</div>
+        <div class="cname">Núcleo Consultores</div>
+        <div class="metric">
+          <span class="to">+30%</span>
+          <span class="unit">leads calificados</span>
+        </div>
+        <div class="muted" style="font-size:.9rem;margin-top:.35rem">Con nuestro sistema de growth</div>
+        <span class="badge">Growth + IA</span>
+        <p class="cdesc">Implementamos calificación automática de prospectos con IA. No solo llegaron más leads: llegaron los que sí compran.</p>
+        <p class="conf">Caso real. Nombre cambiado por confidencialidad del cliente.</p>
+      </article>
     </div>
   </div>
   <div class="logos-strip" data-reveal data-delay="1">
