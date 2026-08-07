@@ -34,7 +34,19 @@ def jpg_cover(path, size):
     buf = io.BytesIO(); im.save(buf, "JPEG", quality=82, optimize=True, progressive=True)
     return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode()
 
+GTM_ID = "GTM-K73GRX5H"
+GTM_HEAD = ("<!-- Google Tag Manager -->\n"
+    "<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});"
+    "var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;"
+    "j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})"
+    "(window,document,'script','dataLayer','" + GTM_ID + "');</script>\n<!-- End Google Tag Manager -->")
+GTM_BODY = ('<!-- Google Tag Manager (noscript) --><noscript><iframe src="https://www.googletagmanager.com/ns.html?id='
+    + GTM_ID + '" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>'
+    '<!-- End Google Tag Manager (noscript) -->')
+
 tokens = {
+    "__GTM_HEAD__": GTM_HEAD,
+    "__GTM_BODY__": GTM_BODY,
     "__FAVICON__": datauri(f"{IMG}/favicon.png", "image/png"),
     "__LOGO__":    png_resized(f"{IMG}/Logo-easy-mkt-transparente-blanco.png", 540),
     "__L_ALZA__":  png_resized(f"{IMG}/Logo-Alzatalent-horizontal.png", 500),
@@ -64,10 +76,15 @@ print("Wrote", OUT, f"({os.path.getsize(OUT)/1024:.0f} KB)")
 shared_style = re.search(r"<style>.*?</style>", home_src, re.S).group(0)
 shared_js = re.search(r"<script>\s*\(function\(\)\{\s*var mo.*?</script>", home_src, re.S).group(0)
 
-# ---- build servicios ----
-if os.path.exists(SRV_SRC):
-    srv = open(SRV_SRC, encoding="utf-8").read()
-    srv = srv.replace("__STYLE__", shared_style).replace("__NEURAL_JS__", shared_js)
-    srv = fill(srv)
-    open(SRV_OUT, "w", encoding="utf-8").write(srv)
-    print("Wrote", SRV_OUT, f"({os.path.getsize(SRV_OUT)/1024:.0f} KB)")
+# ---- build pages that share the design system ----
+for src_name, out_name in [("servicios_src.html", "Servicios.html"),
+                           ("contact_src.html",  "Contact.html"),
+                           ("gracias_src.html",  "gracias.html")]:
+    src_path = f"{BASE}/{src_name}"
+    if os.path.exists(src_path):
+        page = open(src_path, encoding="utf-8").read()
+        page = page.replace("__STYLE__", shared_style).replace("__NEURAL_JS__", shared_js)
+        page = fill(page)
+        out_path = f"{BASE}/{out_name}"
+        open(out_path, "w", encoding="utf-8").write(page)
+        print("Wrote", out_path, f"({os.path.getsize(out_path)/1024:.0f} KB)")
