@@ -212,10 +212,16 @@ __GTM_BODY__
       .then(function(r){return r.json();})
       .then(function(j){
         if(j && j.success){ window.location.href='gracias.html'; }
-        else { throw new Error((j&&j.message)||'error'); }
+        else { var er=new Error((j&&j.message)||'Envío rechazado'); er.server=true; throw er; }
       })
-      .catch(function(){
-        if(err) err.style.display='block';
+      .catch(function(e){
+        if(err){
+          // e.server = Web3Forms respondió con un motivo real; si no, es fallo de red / CSP
+          err.textContent = (e && e.server && e.message)
+            ? ('No se pudo enviar: ' + e.message)
+            : 'No se pudo conectar. Si estás en una vista previa, pruébalo en tu sitio o escríbenos por WhatsApp.';
+          err.style.display='block';
+        }
         if(btn){btn.disabled=false;btn.textContent=label||'Enviar mensaje';}
       });
   });
