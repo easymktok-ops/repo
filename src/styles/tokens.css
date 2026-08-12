@@ -1,0 +1,141 @@
+/* =========================================================================
+   The Spa Mita — Design tokens
+   Fuente de verdad del sistema visual. Clonado del tono de bodhispa.com:
+   blanco puro, DM Sans ligero, serif itálico de acento, terracota apagado
+   en distintas luminosidades (mismo cromatismo, no colores nuevos por capa).
+   ========================================================================= */
+
+:root {
+  /* ---- Color: base neutra ---- */
+  --color-bg: #ffffff;            /* blanco PURO, no crema/beige */
+  --color-surface: #ffffff;
+  --color-text: #2b2320;          /* casi-negro cálido para cuerpo */
+  --color-text-muted: #6f645d;    /* texto secundario */
+  --color-line: #e7ded8;          /* separadores de 1px */
+
+  /* ---- Color: acento terracota / arcilla apagado ----
+     Un solo tono (~18°) en cuatro luminosidades. NO son colores distintos. */
+  --clay-050: #faf4f0;            /* fondos muy claros de sección */
+  --clay-100: #f1e5dd;            /* fondos de tarjetas / chips */
+  --clay-500: #b57a62;            /* acento medio */
+  --clay-700: #8a533d;            /* texto de acento, hovers */
+  --clay-900: #5f3a2c;            /* footer, botones sólidos, pie de menú */
+
+  --color-accent: var(--clay-700);
+  --color-accent-solid: var(--clay-900);
+
+  /* ---- Tipografía ---- */
+  --font-sans: 'DM Sans', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  --font-serif: 'DM Serif Display', Georgia, 'Times New Roman', serif;
+
+  --fw-light: 300;   /* peso base del cuerpo — la ligereza es clave */
+  --fw-regular: 400;
+  --fw-medium: 500;
+
+  /* Escala tipográfica fluida */
+  --fs-xs: 0.78rem;
+  --fs-sm: 0.9rem;
+  --fs-base: 1.02rem;
+  --fs-lg: 1.2rem;
+  --fs-xl: clamp(1.5rem, 1.1rem + 1.6vw, 2.1rem);
+  --fs-2xl: clamp(2rem, 1.3rem + 3vw, 3.4rem);
+  --fs-3xl: clamp(2.6rem, 1.6rem + 4.5vw, 4.8rem);
+
+  --lh-tight: 1.12;
+  --lh-body: 1.7;
+  --tracking-wide: 0.12em;   /* para eyebrows/labels en mayúsculas */
+
+  /* ---- Layout ---- */
+  --sidebar-w: 300px;
+  --content-max: 1180px;
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
+  --section-y: clamp(3.5rem, 7vw, 7rem);
+
+  /* ---- Motion ---- */
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1); /* nada elástico, nada de rebote */
+  --dur: 0.7s;
+
+  /* ---- Radios (mínimos; sin cards con esquinas muy redondeadas) ---- */
+  --radius-none: 0;
+  --radius-xs: 2px;
+}
+
+/* ---- Reset ligero ---- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  font-weight: var(--fw-light);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, .display {
+  font-family: var(--font-serif);
+  font-weight: var(--fw-regular);
+  font-style: italic;            /* serif itálico de acento */
+  line-height: var(--lh-tight);
+  margin: 0 0 0.5em;
+  color: var(--color-text);
+}
+
+p { margin: 0 0 1.1em; max-width: 62ch; }
+
+a { color: inherit; text-decoration: none; }
+
+img { max-width: 100%; height: auto; display: block; }
+
+.eyebrow {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-medium);
+  font-style: normal;
+  font-size: var(--fs-xs);
+  letter-spacing: var(--tracking-wide);
+  text-transform: uppercase;
+  color: var(--clay-700);
+  margin-bottom: 0.9rem;
+}
+
+/* ---- Utilidades de sección ---- */
+.section { padding-block: var(--section-y); }
+.container { max-width: var(--content-max); margin-inline: auto; padding-inline: var(--gutter); }
+
+/* ---- Botones ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-sans);
+  font-weight: var(--fw-medium);
+  font-size: var(--fs-sm);
+  letter-spacing: 0.02em;
+  padding: 0.85rem 1.6rem;
+  border: 1px solid var(--clay-900);
+  border-radius: var(--radius-none);
+  cursor: pointer;
+  transition: background var(--dur) var(--ease-soft), color var(--dur) var(--ease-soft);
+  background: transparent;
+  color: var(--clay-900);
+}
+.btn--solid { background: var(--clay-900); color: #fff; }
+.btn--solid:hover { background: var(--clay-700); border-color: var(--clay-700); }
+.btn--ghost:hover { background: var(--clay-050); }
+
+/* ---- Motion: fade-in sutil al entrar en viewport ----
+   Progressive enhancement: el contenido es visible por defecto. Sólo se
+   oculta para animar si hay JS (html.js), evitando contenido invisible
+   si el JS falla o no ha cargado. */
+html.js .reveal { opacity: 0; transform: translateY(14px); transition: opacity var(--dur) var(--ease-soft), transform var(--dur) var(--ease-soft); }
+html.js .reveal.is-visible { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  * { animation: none !important; }
+}

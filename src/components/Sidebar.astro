@@ -1,0 +1,139 @@
+---
+// Menú lateral fijo (desktop) / drawer (mobile).
+// UX mobile: un menú lateral fijo no cabe en pantallas chicas, así que en
+// mobile se colapsa en un drawer accesible por botón hamburguesa.
+import { useTranslations, type Lang } from '../i18n/ui';
+import { site } from '../i18n/site';
+import LangToggle from './LangToggle.astro';
+
+const { lang, path = '' } = Astro.props as { lang: Lang; path?: string };
+const t = useTranslations(lang);
+const base = `/${lang}`;
+
+const nav = [
+  { href: `${base}/`, label: t('nav.inicio') },
+  { href: `${base}/servicios/`, label: t('nav.servicios') },
+  { href: `${base}/nosotros/`, label: t('nav.nosotros') },
+  { href: `${base}/galeria/`, label: t('nav.galeria') },
+  { href: `${base}/contacto/`, label: t('nav.contacto') },
+];
+---
+<button class="sidebar-toggle" aria-label="Menú" aria-controls="sidebar" aria-expanded="false" data-sidebar-toggle>
+  <span></span><span></span><span></span>
+</button>
+
+<aside class="sidebar" id="sidebar" data-sidebar>
+  <div class="sidebar__inner">
+    <a class="sidebar__logo" href={`${base}/`}>
+      <span class="sidebar__logo-name">The Spa Mita</span>
+      <span class="sidebar__logo-sub">{t('side.tagline')}</span>
+    </a>
+
+    <nav class="sidebar__nav" aria-label="Principal">
+      {nav.map((item) => (
+        <a href={item.href} class="sidebar__link">{item.label}</a>
+      ))}
+    </nav>
+
+    <a href={`${base}/contacto/`} class="btn btn--solid sidebar__cta">{t('nav.reservar')}</a>
+
+    <div class="sidebar__foot">
+      <LangToggle lang={lang} path={path} />
+      <p class="sidebar__meta">
+        <span class="sidebar__meta-label">{t('side.horario.label')}</span>
+        {t('side.horario.valor')}
+      </p>
+      <p class="sidebar__meta">
+        <span class="sidebar__meta-label">{t('side.tel.label')}</span>
+        <a href={`mailto:${site.email}`}>{site.email}</a><br />
+        <a href={site.whatsapp} target="_blank" rel="noopener noreferrer">{site.phoneDisplay}</a>
+      </p>
+    </div>
+  </div>
+</aside>
+<div class="sidebar__scrim" data-sidebar-scrim aria-hidden="true"></div>
+
+<script>
+  const btn = document.querySelector('[data-sidebar-toggle]');
+  const bar = document.querySelector('[data-sidebar]');
+  const scrim = document.querySelector('[data-sidebar-scrim]');
+  function close() {
+    bar?.classList.remove('is-open');
+    scrim?.classList.remove('is-open');
+    btn?.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('no-scroll');
+  }
+  btn?.addEventListener('click', () => {
+    const open = bar?.classList.toggle('is-open');
+    scrim?.classList.toggle('is-open', open);
+    btn.setAttribute('aria-expanded', String(!!open));
+    document.body.classList.toggle('no-scroll', !!open);
+  });
+  scrim?.addEventListener('click', close);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+</script>
+
+<style>
+  .sidebar {
+    position: fixed; inset-block: 0; inset-inline-start: 0;
+    width: var(--sidebar-w);
+    background: var(--color-bg);
+    border-inline-end: 1px solid var(--color-line);
+    z-index: 50;
+    overflow-y: auto;
+  }
+  .sidebar__inner {
+    display: flex; flex-direction: column;
+    min-height: 100%;
+    padding: clamp(1.75rem, 3vw, 2.5rem) clamp(1.5rem, 2.5vw, 2rem);
+    gap: 2rem;
+  }
+  .sidebar__logo { display: block; }
+  .sidebar__logo-name { font-family: var(--font-serif); font-style: italic; font-size: 1.5rem; color: var(--clay-900); }
+  .sidebar__logo-sub { display: block; font-size: var(--fs-xs); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-text-muted); margin-top: 0.35rem; }
+
+  .sidebar__nav { display: flex; flex-direction: column; gap: 0.15rem; }
+  .sidebar__link {
+    font-size: var(--fs-lg); font-weight: var(--fw-light);
+    padding: 0.4rem 0; color: var(--color-text);
+    border-bottom: 1px solid transparent;
+    transition: color 0.3s var(--ease-soft);
+    width: max-content;
+  }
+  .sidebar__link:hover { color: var(--clay-700); }
+  .sidebar__link[aria-current="page"] { color: var(--clay-900); }
+
+  .sidebar__cta { justify-content: center; }
+
+  .sidebar__foot { margin-top: auto; display: flex; flex-direction: column; gap: 1rem; padding-top: 1.5rem; border-top: 1px solid var(--color-line); }
+  .sidebar__meta { font-size: var(--fs-sm); color: var(--color-text-muted); margin: 0; line-height: 1.6; }
+  .sidebar__meta-label { display: block; font-size: var(--fs-xs); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--clay-700); margin-bottom: 0.2rem; }
+  .sidebar__meta a:hover { color: var(--clay-700); }
+
+  /* Toggle hamburguesa (sólo mobile) */
+  .sidebar-toggle {
+    position: fixed; top: 1rem; inset-inline-start: 1rem; z-index: 55;
+    width: 44px; height: 44px; display: none; flex-direction: column; gap: 5px;
+    align-items: center; justify-content: center;
+    background: var(--color-bg); border: 1px solid var(--color-line); cursor: pointer;
+  }
+  .sidebar-toggle span { width: 20px; height: 1.5px; background: var(--color-text); transition: 0.3s var(--ease-soft); }
+  .sidebar__scrim { display: none; }
+
+  @media (max-width: 900px) {
+    .sidebar-toggle { display: flex; }
+    .sidebar {
+      transform: translateX(-100%);
+      transition: transform 0.4s var(--ease-soft);
+      width: min(84vw, 320px);
+      box-shadow: 0 0 40px rgba(0,0,0,0.12);
+    }
+    .sidebar.is-open { transform: translateX(0); }
+    .sidebar__scrim {
+      display: block; position: fixed; inset: 0; z-index: 45;
+      background: rgba(0,0,0,0.35); opacity: 0; pointer-events: none;
+      transition: opacity 0.4s var(--ease-soft);
+    }
+    .sidebar__scrim.is-open { opacity: 1; pointer-events: auto; }
+  }
+</style>

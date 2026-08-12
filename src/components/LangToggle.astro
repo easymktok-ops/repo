@@ -1,0 +1,31 @@
+---
+// Toggle de idioma ES/EN. Cambia de ruta (/es <-> /en) conservando la sub-ruta,
+// y guarda la preferencia en localStorage para futuras visitas.
+import type { Lang } from '../i18n/ui';
+const { lang, path } = Astro.props as { lang: Lang; path: string };
+// path = ruta sin el prefijo de idioma, p.ej. '' para home, 'servicios' etc.
+const esHref = `/es/${path}`.replace(/\/+$/, '/');
+const enHref = `/en/${path}`.replace(/\/+$/, '/');
+---
+<div class="lang-toggle" role="group" aria-label="Idioma / Language">
+  <a href={esHref} class:list={['lang-toggle__opt', { 'is-active': lang === 'es' }]} data-set-lang="es" hreflang="es">ES</a>
+  <span class="lang-toggle__sep" aria-hidden="true">/</span>
+  <a href={enHref} class:list={['lang-toggle__opt', { 'is-active': lang === 'en' }]} data-set-lang="en" hreflang="en">EN</a>
+</div>
+
+<script>
+  // Persistencia de idioma
+  document.querySelectorAll('[data-set-lang]').forEach((el) => {
+    el.addEventListener('click', () => {
+      try { localStorage.setItem('spamita_lang', el.getAttribute('data-set-lang') || 'es'); } catch (e) {}
+    });
+  });
+</script>
+
+<style>
+  .lang-toggle { display: inline-flex; align-items: center; gap: 0.4rem; font-size: var(--fs-xs); letter-spacing: 0.1em; }
+  .lang-toggle__opt { color: var(--color-text-muted); padding: 0.1rem 0.15rem; transition: color 0.3s var(--ease-soft); }
+  .lang-toggle__opt.is-active { color: var(--clay-900); font-weight: var(--fw-medium); }
+  .lang-toggle__opt:hover { color: var(--clay-700); }
+  .lang-toggle__sep { color: var(--color-line); }
+</style>

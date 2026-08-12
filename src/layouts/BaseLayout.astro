@@ -1,0 +1,127 @@
+---
+import '../styles/tokens.css';
+import Sidebar from '../components/Sidebar.astro';
+import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+import { site } from '../i18n/site';
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  title: string;
+  description: string;
+  path?: string;      // sub-ruta sin prefijo de idioma ('' para home)
+  ogImage?: string;
+}
+const { lang, title, description, path = '', ogImage = '/img/brand/og-default.jpg' } = Astro.props;
+
+const canonical = new URL(`/${lang}/${path}`.replace(/\/+$/, '/'), Astro.site).href;
+const esUrl = new URL(`/es/${path}`.replace(/\/+$/, '/'), Astro.site).href;
+const enUrl = new URL(`/en/${path}`.replace(/\/+$/, '/'), Astro.site).href;
+
+// schema.org — DaySpa (subtipo de HealthAndBeautyBusiness/LocalBusiness)
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'DaySpa',
+  name: site.name,
+  description,
+  image: new URL(ogImage, Astro.site).href,
+  telephone: site.phoneDisplay,
+  email: site.email,
+  url: canonical,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: site.address.locality,
+    addressRegion: site.address.region,
+    addressCountry: site.address.country,
+  },
+  areaServed: [
+    'Punta de Mita', 'Bahía de Banderas', 'Sayulita', 'Nuevo Vallarta',
+    'Nayarit', 'Puerto Vallarta',
+  ],
+  openingHours: 'Mo-Su 09:00-20:00',
+  makesOffer: [
+    'Masajes', 'Faciales', 'Exfoliación corporal', 'Tratamientos corporales',
+    'Depilación', 'Manicure y pedicure',
+  ].map((s) => ({ '@type': 'Offer', itemOffered: { '@type': 'Service', name: s } })),
+};
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- hreflang ES/EN -->
+    <link rel="alternate" hreflang="es" href={esUrl} />
+    <link rel="alternate" hreflang="en" href={enUrl} />
+    <link rel="alternate" hreflang="x-default" href={esUrl} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
+    <meta property="og:image" content={new URL(ogImage, Astro.site).href} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Fuentes (font-display: swap via Google Fonts) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@1&display=swap"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+    <!-- Marca que hay JS (habilita animaciones sin ocultar contenido sin JS) -->
+    <script is:inline>document.documentElement.classList.add('js');</script>
+
+    <!-- Redirige a idioma guardado si el usuario abre la raíz de otro idioma -->
+    <script is:inline>
+      (function () {
+        try {
+          var saved = localStorage.getItem('spamita_lang');
+          var cur = document.documentElement.lang;
+          if (saved && saved !== cur && /^\/(es|en)(\/|$)/.test(location.pathname)) {
+            location.pathname = location.pathname.replace(/^\/(es|en)/, '/' + saved);
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <Sidebar lang={lang} path={path} />
+    <main class="app-main" id="contenido">
+      <slot />
+    </main>
+    <WhatsAppFloat />
+
+    <script>
+      // Fade-in al entrar en viewport (motion sutil, sin rebotes)
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-visible'); io.unobserve(e.target); } });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+
+      // Marca el link activo en el menú
+      const here = location.pathname.replace(/\/+$/, '/');
+      document.querySelectorAll('.sidebar__link').forEach((a) => {
+        const href = a.getAttribute('href')?.replace(/\/+$/, '/');
+        if (href === here) a.setAttribute('aria-current', 'page');
+      });
+    </script>
+
+    <style is:global>
+      .app-main { margin-inline-start: var(--sidebar-w); min-height: 100vh; }
+      body.no-scroll { overflow: hidden; }
+      @media (max-width: 900px) {
+        .app-main { margin-inline-start: 0; padding-top: 4rem; }
+      }
+    </style>
+  </body>
+</html>

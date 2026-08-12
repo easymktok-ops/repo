@@ -1,16 +1,22 @@
 {
-  "name": "markitdown-cli",
+  "name": "the-spa-mita",
   "version": "1.0.0",
-  "description": "CLI wrapper for Microsoft's MarkItDown — convert files to Markdown",
-  "main": "index.js",
+  "description": "Sitio web bilingüe (ES/EN) de The Spa Mita — spa de lujo en Punta de Mita, Nayarit.",
+  "type": "module",
   "bin": {
     "markitdown": "./cli.js"
   },
   "scripts": {
-    "start": "node cli.js"
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
   },
   "dependencies": {
-    "commander": "^12.0.0"
+    "astro": "^4.16.18",
+    "commander": "^12.0.0",
+    "sharp": "^0.33.5"
   },
   "engines": {
     "node": ">=18.0.0"
