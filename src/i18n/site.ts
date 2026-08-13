@@ -14,6 +14,9 @@ export const site = {
     region: 'Nayarit',
     country: 'MX',
   },
-  // Reemplazar cuando el cliente confirme el endpoint de Formspree:
-  formEndpoint: 'https://formspree.io/f/REEMPLAZAR_ID',
+  // Backend del formulario: Web3Forms (gratis, ilimitado, sin dashboard).
+  // Para activarlo: entra a https://web3forms.com, escribe info@thespamita.com,
+  // te llega un "access key" por correo y lo pegas aquí. Sin cuenta ni login.
+  formEndpoint: 'https://api.web3forms.com/submit',
+  web3formsKey: 'REEMPLAZAR_ACCESS_KEY',
 };

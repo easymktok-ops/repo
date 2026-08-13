@@ -7,13 +7,16 @@ const t = useTranslations(lang);
 const thankyou = `/${lang}/gracias/`;
 ---
 <form class="cform" action={site.formEndpoint} method="POST" novalidate>
-  <!-- Redirección a la thank-you page tras envío exitoso (Formspree) -->
-  <input type="hidden" name="_next" value={new URL(thankyou, Astro.site).href} />
-  <input type="hidden" name="_language" value={lang} />
+  <!-- Web3Forms -->
+  <input type="hidden" name="access_key" value={site.web3formsKey} />
+  <input type="hidden" name="subject" value={lang === 'es' ? 'Nueva solicitud — The Spa Mita' : 'New request — The Spa Mita'} />
+  <input type="hidden" name="from_name" value="The Spa Mita — Web" />
+  <!-- Redirección a la thank-you page tras envío exitoso -->
+  <input type="hidden" name="redirect" value={new URL(thankyou, Astro.site).href} />
   <input type="hidden" name="idioma_seleccionado" value={lang === 'es' ? 'Español' : 'English'} />
   <input type="hidden" name="pagina_origen" value="" data-origin />
-  <!-- Honeypot anti-spam -->
-  <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="cform__hp" aria-hidden="true" />
+  <!-- Honeypot anti-spam (Web3Forms) -->
+  <input type="checkbox" name="botcheck" class="cform__hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
 
   <div class="cform__field">
     <label for="nombre">{t('form.nombre')} *</label>
