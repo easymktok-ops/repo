@@ -27,15 +27,21 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
 
 ---
 
-## 💡 Ideas / decisiones pendientes (requieren tu OK antes de implementar)
+## 💡 Ideas — APROBADAS para el próximo ataque
 
 - [ ] **Formulario también por WhatsApp** (con nombre/servicio/fecha prefilled).
-      Ver respuesta en el chat. Recomendación: botón "Enviar por WhatsApp" que
-      arma un mensaje con todos los datos. Gratis, sin backend. Falta tu OK.
-- [ ] **Música de fondo chill (loop).** Ver respuesta en el chat. Técnicamente sí,
-      pero el navegador NO permite autoplay con sonido: iría con un toggle 🎵
-      apagado por defecto. Requiere una pista con licencia/royalty-free. Falta tu OK
-      y la pista de audio.
+      Botón "Enviar por WhatsApp" que arma un mensaje con todos los datos.
+      Gratis, sin backend. ✔ Aprobado — se implementa en el próximo ataque.
+- [ ] **Música de fondo chill (loop).** Toggle 🎵 apagado por defecto (el navegador
+      no permite autoplay con sonido). ✔ Aprobado.
+      ⚠️ **Dependencia:** hace falta la pista de audio. Si el cliente no da una,
+      uso una royalty-free/libre; si el proxy bloquea la descarga, pediré que
+      suban el MP3 al repo (`public/audio/`). Se resuelve en el ataque.
+
+---
+
+## ▶️ Orden del cliente
+La próxima interacción es la señal para **atacar TODO** lo anterior de una sola vez.
 
 ---
 
