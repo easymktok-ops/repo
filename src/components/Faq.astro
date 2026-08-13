@@ -1,0 +1,57 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+const { lang } = Astro.props as { lang: Lang };
+const t = useTranslations(lang);
+const qa = [
+  ['faq.q1', 'faq.a1'], ['faq.q2', 'faq.a2'], ['faq.q3', 'faq.a3'],
+  ['faq.q4', 'faq.a4'], ['faq.q5', 'faq.a5'], ['faq.q6', 'faq.a6'],
+] as const;
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: qa.map(([q, a]) => ({
+    '@type': 'Question',
+    name: t(q),
+    acceptedAnswer: { '@type': 'Answer', text: t(a) },
+  })),
+};
+---
+<section class="section faq">
+  <div class="container faq__inner">
+    <div class="faq__head reveal">
+      <p class="eyebrow">{t('faq.eyebrow')}</p>
+      <h2>{t('faq.title')}</h2>
+    </div>
+    <div class="faq__list reveal">
+      {qa.map(([q, a]) => (
+        <details class="faq__item">
+          <summary class="faq__q">{t(q)}<span class="faq__icon" aria-hidden="true"></span></summary>
+          <p class="faq__a">{t(a)}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+<style>
+  .faq__inner { display: grid; grid-template-columns: 1fr 1.4fr; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+  .faq__head h2 { font-size: var(--fs-xl); }
+  .faq__item { border-bottom: 1px solid var(--color-line); }
+  .faq__q {
+    display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+    cursor: pointer; list-style: none; padding: 1.1rem 0; font-size: var(--fs-lg);
+  }
+  .faq__q::-webkit-details-marker { display: none; }
+  .faq__icon { position: relative; width: 14px; height: 14px; flex-shrink: 0; }
+  .faq__icon::before, .faq__icon::after {
+    content: ''; position: absolute; background: var(--clay-700); transition: transform 0.3s var(--ease-soft);
+  }
+  .faq__icon::before { top: 6px; left: 0; width: 14px; height: 1.5px; }
+  .faq__icon::after { left: 6px; top: 0; width: 1.5px; height: 14px; }
+  .faq__item[open] .faq__icon::after { transform: scaleY(0); }
+  .faq__a { color: var(--color-text-muted); margin: 0 0 1.1rem; max-width: 60ch; }
+  @media (max-width: 800px) { .faq__inner { grid-template-columns: 1fr; } }
+</style>

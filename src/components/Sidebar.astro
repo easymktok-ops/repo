@@ -24,8 +24,8 @@ const nav = [
 
 <aside class="sidebar" id="sidebar" data-sidebar>
   <div class="sidebar__inner">
-    <a class="sidebar__logo" href={`${base}/`}>
-      <span class="sidebar__logo-name">The Spa Mita</span>
+    <a class="sidebar__logo" href={`${base}/`} aria-label="The Spa Mita">
+      <img class="sidebar__logo-img" src="/img/optimized/full/THe-Spa-logo.webp" alt="The Spa Mita" width="260" height="70" />
       <span class="sidebar__logo-sub">{t('side.tagline')}</span>
     </a>
 
@@ -89,8 +89,8 @@ const nav = [
     gap: 2rem;
   }
   .sidebar__logo { display: block; }
-  .sidebar__logo-name { font-family: var(--font-serif); font-style: italic; font-size: 1.5rem; color: var(--clay-900); }
-  .sidebar__logo-sub { display: block; font-size: var(--fs-xs); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-text-muted); margin-top: 0.35rem; }
+  .sidebar__logo-img { width: 200px; max-width: 100%; height: auto; }
+  .sidebar__logo-sub { display: block; font-size: var(--fs-xs); letter-spacing: var(--tracking-wide); text-transform: uppercase; color: var(--color-text-muted); margin-top: 0.5rem; }
 
   .sidebar__nav { display: flex; flex-direction: column; gap: 0.15rem; }
   .sidebar__link {

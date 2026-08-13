@@ -1,6 +1,7 @@
 ---
 import { useTranslations, type Lang } from '../i18n/ui';
 import { site } from '../i18n/site';
+import Team from './Team.astro';
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
 const benefits = ['nosotros.b1','nosotros.b2','nosotros.b3','nosotros.b4','nosotros.b5','nosotros.b6'] as const;
@@ -28,6 +29,8 @@ const benefits = ['nosotros.b1','nosotros.b2','nosotros.b3','nosotros.b4','nosot
     </ul>
   </div>
 </section>
+
+<Team lang={lang} />
 
 <style>
   .about { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }

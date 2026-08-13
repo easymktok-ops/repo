@@ -1,6 +1,8 @@
 ---
 import { useTranslations, type Lang } from '../i18n/ui';
 import { site } from '../i18n/site';
+import Brands from './Brands.astro';
+import Faq from './Faq.astro';
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
 const base = `/${lang}`;
@@ -69,6 +71,12 @@ const servicios = [
     <a href={`${base}/servicios/`} class="btn btn--ghost serv__more">{t('nav.servicios')}</a>
   </div>
 </section>
+
+<!-- MARCAS -->
+<Brands lang={lang} />
+
+<!-- FAQ -->
+<Faq lang={lang} />
 
 <!-- CTA CONTACTO -->
 <section class="section cta">

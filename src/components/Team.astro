@@ -1,0 +1,47 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+const { lang } = Astro.props as { lang: Lang };
+const t = useTranslations(lang);
+// Retratos reales del equipo (nombres tomados de los archivos del cliente).
+const team = [
+  { file: 'ABigailedit', name: 'Abigail' },
+  { file: 'Gerogia', name: 'Georgia' },
+  { file: 'Lucy.-edit-PM', name: 'Lucy' },
+  { file: 'Maggie-edit', name: 'Maggie' },
+  { file: 'Montserrat2.07-PM', name: 'Montserrat' },
+  { file: 'Yazin-edit', name: 'Yazin' },
+];
+---
+<section class="section container">
+  <div class="team__head reveal">
+    <p class="eyebrow">{t('team.eyebrow')}</p>
+    <h2>{t('team.title')}</h2>
+    <p class="team__lead">{t('team.lead')}</p>
+  </div>
+  <ul class="team__grid reveal">
+    {team.map((m) => (
+      <li class="team__member">
+        <img src={`/img/optimized/thumb/${m.file}.webp`}
+             srcset={`/img/optimized/thumb/${m.file}.webp 640w, /img/optimized/full/${m.file}.webp 1600w`}
+             sizes="(max-width: 700px) 50vw, 200px"
+             alt={m.name} loading="lazy" width="640" height="640" />
+        <span class="team__name">{m.name}</span>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .team__head { margin-bottom: 2rem; }
+  .team__head h2 { font-size: var(--fs-xl); }
+  .team__lead { color: var(--color-text-muted); }
+  .team__grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: clamp(1rem, 2.5vw, 1.75rem);
+  }
+  .team__member { text-align: center; }
+  .team__member img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+  .team__name { display: block; margin-top: 0.7rem; font-family: var(--font-serif); font-style: italic; color: var(--clay-900); font-size: var(--fs-lg); }
+  @media (max-width: 800px) { .team__grid { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 420px) { .team__grid { grid-template-columns: repeat(2, 1fr); } }
+</style>

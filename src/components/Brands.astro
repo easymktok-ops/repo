@@ -1,0 +1,42 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+const { lang } = Astro.props as { lang: Lang };
+const t = useTranslations(lang);
+const brands = [
+  { file: 'bioderma-seeklogo-transparente', name: 'Bioderma' },
+  { file: 'eau-thermale-avene-transp', name: 'Avène' },
+  { file: 'la-roche-posay-trans', name: 'La Roche-Posay' },
+  { file: 'morgan-taylor-trans', name: 'Morgan Taylor' },
+  { file: 'opi-trans1', name: 'OPI' },
+  { file: 'sally-hansen-transp', name: 'Sally Hansen' },
+];
+---
+<section class="section brands">
+  <div class="container">
+    <p class="eyebrow brands__eyebrow">{t('brands.title')}</p>
+    <ul class="brands__row reveal">
+      {brands.map((b) => (
+        <li class="brands__item">
+          <img src={`/img/optimized/full/${b.file}.webp`} alt={b.name} loading="lazy" />
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .brands__eyebrow { text-align: center; }
+  .brands__row {
+    list-style: none; margin: 1.5rem 0 0; padding: 0;
+    display: grid; grid-template-columns: repeat(6, 1fr); gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: center;
+  }
+  .brands__item { display: flex; justify-content: center; }
+  .brands__item img {
+    max-height: 46px; width: auto; max-width: 100%;
+    opacity: 0.55; filter: grayscale(1);
+    transition: opacity 0.4s var(--ease-soft), filter 0.4s var(--ease-soft);
+  }
+  .brands__item img:hover { opacity: 1; filter: grayscale(0); }
+  @media (max-width: 760px) { .brands__row { grid-template-columns: repeat(3, 1fr); row-gap: 2rem; } }
+</style>
