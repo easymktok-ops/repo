@@ -44,10 +44,13 @@ export const ui = {
     'serv.4': 'Tratamientos corporales',
     'serv.5': 'Depilación',
     'serv.6': 'Manicure y pedicure',
+    'serv.7': 'Niños',
+    'serv.8': 'Más servicios',
 
     // --- Formulario ---
     'form.eyebrow': 'Contacto',
     'form.title': 'Reserva tu experiencia',
+    'form.intro': 'Cuéntanos qué buscas y te contactamos para confirmar tu cita.',
     'form.nombre': 'Nombre',
     'form.telefono': 'Teléfono / WhatsApp',
     'form.servicio': 'Servicio de interés',
@@ -58,6 +61,8 @@ export const ui = {
     'form.primera': 'Es mi primera vez en The Spa Mita',
     'form.enviar': 'Enviar',
     'form.req': 'Este campo es obligatorio',
+    'seo.contacto.title': 'Contacto y reservas — The Spa Mita, Punta de Mita',
+    'seo.contacto.desc': 'Reserva tu experiencia en The Spa Mita, Punta de Mita. Escríbenos o agenda por WhatsApp.',
 
     // --- Thank you ---
     'ty.title': '¡Gracias! Hemos recibido tu mensaje.',
