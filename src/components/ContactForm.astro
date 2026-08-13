@@ -64,6 +64,16 @@ const thankyou = wb(`/${lang}/gracias/`);
   if (form) {
     const origin = form.querySelector('[data-origin]');
     if (origin) origin.value = location.href;
+
+    // Preselección de servicio desde la URL (?servicio=...)
+    try {
+      const pre = new URLSearchParams(location.search).get('servicio');
+      if (pre) {
+        const sel = form.querySelector('#servicio');
+        const match = Array.from(sel.options).find((o) => o.value === pre);
+        if (match) { sel.value = pre; sel.classList.add('is-prefilled'); }
+      }
+    } catch (e) {}
     form.addEventListener('submit', (e) => {
       let ok = true;
       form.querySelectorAll('[required]').forEach((el) => {
@@ -96,6 +106,7 @@ const thankyou = wb(`/${lang}/gracias/`);
   }
   .cform textarea { resize: vertical; }
 
+  .cform select.is-prefilled { border-bottom-color: var(--clay-700); color: var(--clay-900); }
   .cform__err { display: none; font-size: var(--fs-xs); color: #b23b3b; }
   .cform__field.is-invalid .cform__err { display: block; }
   .cform__field.is-invalid input, .cform__field.is-invalid select { border-bottom-color: #b23b3b; }

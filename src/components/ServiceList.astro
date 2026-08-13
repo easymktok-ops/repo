@@ -1,8 +1,11 @@
 ---
 import { services, fxNote, type Lang } from '../i18n/services';
 import { useTranslations } from '../i18n/ui';
+import { wb } from '../lib/paths';
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
+const bookHref = (servicio: string) =>
+  wb(`/${lang}/contacto/`) + `?servicio=${encodeURIComponent(servicio)}`;
 ---
 <div class="container">
   {services.map((cat) => (
@@ -13,15 +16,18 @@ const t = useTranslations(lang);
       </div>
       <ul class="svc__list">
         {cat.items.map((it) => (
-          <li class="svc__row">
-            <div class="svc__info">
-              <span class="svc__name">{it.name}</span>
-              {it.desc && <span class="svc__desc">{it.desc[lang]}</span>}
-            </div>
-            <div class="svc__meta">
-              {it.duration && <span class="svc__dur">{it.duration}</span>}
-              <span class="svc__price">{it.price}</span>
-            </div>
+          <li>
+            <a class="svc__row" href={bookHref(cat.name.es)} aria-label={`${it.name} — ${t('nav.reservar')}`}>
+              <div class="svc__info">
+                <span class="svc__name">{it.name}</span>
+                {it.desc && <span class="svc__desc">{it.desc[lang]}</span>}
+              </div>
+              <div class="svc__meta">
+                {it.duration && <span class="svc__dur">{it.duration}</span>}
+                <span class="svc__price">{it.price}</span>
+                <span class="svc__book" aria-hidden="true">{t('nav.reservar')}</span>
+              </div>
+            </a>
           </li>
         ))}
       </ul>
@@ -40,18 +46,32 @@ const t = useTranslations(lang);
   .svc__list { list-style: none; margin: 0; padding: 0; }
   .svc__row {
     display: flex; justify-content: space-between; align-items: baseline; gap: 1.5rem;
-    padding: 0.85rem 0; border-bottom: 1px solid var(--color-line);
+    padding: 0.85rem 0.6rem; margin-inline: -0.6rem;
+    border-bottom: 1px solid var(--color-line);
+    color: inherit; text-decoration: none;
+    transition: background 0.3s var(--ease-soft);
   }
+  .svc__row:hover { background: var(--clay-050); }
   .svc__info { display: flex; flex-direction: column; gap: 0.15rem; }
   .svc__name { font-size: var(--fs-base); }
   .svc__desc { font-size: var(--fs-sm); color: var(--color-text-muted); max-width: 60ch; }
   .svc__meta { display: flex; align-items: baseline; gap: 1.1rem; white-space: nowrap; flex-shrink: 0; }
   .svc__dur { font-size: var(--fs-sm); color: var(--color-text-muted); }
   .svc__price { font-family: var(--font-serif); font-style: italic; color: var(--clay-700); font-size: var(--fs-lg); }
+  .svc__book {
+    font-size: var(--fs-xs); letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--clay-700); border-bottom: 1px solid var(--clay-500);
+    opacity: 0; transition: opacity 0.3s var(--ease-soft); align-self: center;
+  }
+  .svc__row:hover .svc__book, .svc__row:focus-visible .svc__book { opacity: 1; }
   .svc__foot { font-size: var(--fs-sm); color: var(--color-text); margin-top: 1rem; }
   .svc__fx { font-size: var(--fs-xs); color: var(--color-text-muted); margin-top: 0.6rem; }
   @media (max-width: 520px) {
     .svc__row { flex-direction: column; gap: 0.25rem; }
     .svc__meta { gap: 0.8rem; }
+  }
+  /* En dispositivos táctiles no hay hover: mostrar el CTA de reserva */
+  @media (hover: none) {
+    .svc__book { opacity: 0.85; }
   }
 </style>

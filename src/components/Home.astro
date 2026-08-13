@@ -2,22 +2,13 @@
 import { useTranslations, type Lang } from '../i18n/ui';
 import { site } from '../i18n/site';
 import { wb } from '../lib/paths';
+import { services } from '../i18n/services';
 import Brands from './Brands.astro';
 import Faq from './Faq.astro';
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
 const base = wb(`/${lang}`);
-
-const servicios = [
-  { key: 'serv.1', n: '01' },
-  { key: 'serv.2', n: '02' },
-  { key: 'serv.3', n: '03' },
-  { key: 'serv.4', n: '04' },
-  { key: 'serv.5', n: '05' },
-  { key: 'serv.6', n: '06' },
-  { key: 'serv.7', n: '07' },
-  { key: 'serv.8', n: '08' },
-] as const;
+const bookHref = (servicio: string) => wb(`/${lang}/contacto/`) + `?servicio=${encodeURIComponent(servicio)}`;
 ---
 <!-- HERO -->
 <section class="hero">
@@ -27,6 +18,7 @@ const servicios = [
       alt=""
       fetchpriority="high"
       width="1600" height="900"
+      data-parallax
     />
     <div class="hero__scrim"></div>
   </div>
@@ -61,14 +53,15 @@ const servicios = [
       <p class="eyebrow">{t('serv.eyebrow')}</p>
       <h2>{t('serv.title')}</h2>
     </div>
-    <ul class="serv__grid reveal">
-      {servicios.map((s) => (
-        <li class="serv__item">
-          <span class="serv__n">{s.n}</span>
-          <span class="serv__name">{t(s.key)}</span>
-        </li>
+    <div class="serv__grid reveal">
+      {services.map((c, i) => (
+        <a class="serv__item" href={bookHref(c.name.es)}>
+          <span class="serv__n">{String(i + 1).padStart(2, '0')}</span>
+          <span class="serv__name">{c.name[lang]}</span>
+          <span class="serv__arrow" aria-hidden="true">→</span>
+        </a>
       ))}
-    </ul>
+    </div>
     <a href={`${base}/servicios/`} class="btn btn--ghost serv__more">{t('nav.servicios')}</a>
   </div>
 </section>
@@ -95,14 +88,23 @@ const servicios = [
   .hero { position: relative; min-height: 84vh; display: flex; align-items: flex-end; overflow: hidden; }
   .hero__media { position: absolute; inset: 0; z-index: 0; }
   .hero__media img {
-    width: 100%; height: 100%; object-fit: cover;
-    animation: heroZoom 20s var(--ease-soft) infinite alternate; /* zoom lento */
+    position: absolute; left: 0; top: -8%;
+    width: 100%; height: 116%; object-fit: cover;
+    transform: translate3d(0,0,0) scale(1.02); will-change: transform;
   }
+  /* Doble scrim: horizontal para desktop + vertical para mobile, garantiza
+     contraste del texto sin importar la imagen. */
   .hero__scrim {
     position: absolute; inset: 0;
-    background: linear-gradient(90deg, rgba(255,255,255,0.94) 0%, rgba(255,255,255,0.72) 34%, rgba(255,255,255,0.15) 62%, rgba(95,58,44,0.12) 100%);
+    background:
+      linear-gradient(92deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.82) 38%, rgba(255,255,255,0.32) 66%, rgba(95,58,44,0.14) 100%);
   }
-  @keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.07); } }
+  @media (max-width: 760px) {
+    .hero__scrim {
+      background:
+        linear-gradient(0deg, rgba(255,255,255,0.96) 8%, rgba(255,255,255,0.7) 42%, rgba(255,255,255,0.4) 100%);
+    }
+  }
   .hero__content { position: relative; z-index: 1; padding-block: clamp(3rem, 8vh, 6rem); width: 100%; }
   .hero__title { font-size: var(--fs-3xl); max-width: 16ch; }
   .hero__subtitle { font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 46ch; }
@@ -123,16 +125,23 @@ const servicios = [
     border-left: 1px solid var(--color-line);
   }
   .serv__item {
+    position: relative;
     display: flex; align-items: baseline; gap: 0.9rem;
     padding: clamp(1.5rem, 3vw, 2.4rem);
     border-right: 1px solid var(--color-line);
     border-bottom: 1px solid var(--color-line);
-    background: #fff;
+    background: #fff; color: inherit; text-decoration: none;
     transition: background 0.4s var(--ease-soft);
   }
   .serv__item:hover { background: var(--clay-050); }
   .serv__n { font-family: var(--font-serif); font-style: italic; color: var(--clay-500); font-size: 1.1rem; }
   .serv__name { font-size: var(--fs-lg); }
+  .serv__arrow {
+    position: absolute; right: clamp(1.2rem, 2.5vw, 1.8rem); top: 50%; margin-top: -0.7em;
+    color: var(--clay-700); opacity: 0; transform: translateX(-4px);
+    transition: opacity 0.3s var(--ease-soft), transform 0.3s var(--ease-soft);
+  }
+  .serv__item:hover .serv__arrow { opacity: 1; transform: none; }
   .serv__more { margin-top: 2rem; }
   @media (max-width: 800px) { .serv__grid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 480px) { .serv__grid { grid-template-columns: 1fr; } }

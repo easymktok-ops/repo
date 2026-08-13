@@ -23,6 +23,9 @@ const nav = [
   <span></span><span></span><span></span>
 </button>
 
+<!-- Selector de idioma en el top (solo mobile, sin abrir el menú) -->
+<div class="lang-topbar"><LangToggle lang={lang} path={path} /></div>
+
 <aside class="sidebar" id="sidebar" data-sidebar>
   <div class="sidebar__inner">
     <a class="sidebar__logo" href={`${base}/`} aria-label="The Spa Mita">
@@ -121,8 +124,14 @@ const nav = [
   .sidebar-toggle span { width: 20px; height: 1.5px; background: var(--color-text); transition: 0.3s var(--ease-soft); }
   .sidebar__scrim { display: none; }
 
+  /* Selector de idioma superior (solo mobile) */
+  .lang-topbar { display: none; }
+
   @media (max-width: 900px) {
     .sidebar-toggle { display: flex; }
+    .lang-topbar {
+      display: block; position: fixed; top: 1rem; inset-inline-end: 1rem; z-index: 56;
+    }
     .sidebar {
       transform: translateX(-100%);
       transition: transform 0.4s var(--ease-soft);

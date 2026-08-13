@@ -3,29 +3,24 @@ import type { Lang } from '../i18n/ui';
 import { wb } from '../lib/paths';
 const { lang } = Astro.props as { lang: Lang };
 
-// Selección curada de fotos reales de instalaciones y tratamientos.
+// Selección curada de 5 fotos reales (instalaciones y experiencia).
 const photos = [
-  'WhatsAppImage2024-09-25at3.37.13PM', 'IMG-20211215-WA0004', 'IMG-20211216-WA0032',
-  'WhatsAppImage2024-09-25at3.37.14PM', 'IMG-20211214-WA0031', 'WhatsAppImage2024-09-25at3.37.12PM',
-  'IMG-20211214-WA0030', 'WhatsAppImage2024-09-25at3.37.16PM', 'WhatsAppImage2024-09-25at3.49.15PM',
-  'IMG-20211214-WA0026', 'WhatsAppImage2024-09-25at9.54.20AM', 'WhatsAppImage2024-09-25at9.55.43AM',
-  'WhatsAppImage2024-09-25at9.56.31AM', 'WhatsAppImage2024-09-25at3.37.15PM1', 'WhatsAppImage2024-09-25at3.37.13PM2',
-  '454688961_122094352094478255_2460638138660793416_n', 'WhatsAppImage2024-10-02at11.14.49AM',
-  'dg', 'fdh-min', 'fgxty-min', 'dsf-min', 'awerrt-min',
-  'photo-1506126613408-eca07ce68773', 'photo-1515377905703-c4788e51af15', 'photo-1580489944761-15a19d654956',
-  'photo-1610289982320-3891f7c9fd6d', 'photo-1614275703364-fd8193229051', 'photo-1639162906614-0603b0ae95fd',
-  'spa-composition-with-care-items-light-wall_169016-1509', 'rt', 'wer',
+  'WhatsAppImage2024-09-25at3.37.14PM',   // montaje en playa (feature)
+  'IMG-20211216-WA0032',                  // recepción / mural de árbol
+  'IMG-20211215-WA0004',                  // sala de tratamiento
+  '454688961_122094352094478255_2460638138660793416_n', // velas / masaje
+  'WhatsAppImage2024-09-25at3.37.13PM2',  // camilla frente al jardín/mar
 ];
 const alt = lang === 'es' ? 'The Spa Mita en Punta de Mita' : 'The Spa Mita in Punta de Mita';
 ---
 <section class="section container">
   <div class="gallery">
     {photos.map((name, i) => (
-      <figure class="gallery__item">
+      <figure class:list={['gallery__item', { 'gallery__item--feature': i === 0 }]}>
         <img
           src={wb(`/img/optimized/thumb/${name}.webp`)}
           srcset={`${wb(`/img/optimized/thumb/${name}.webp`)} 640w, ${wb(`/img/optimized/full/${name}.webp`)} 1600w`}
-          sizes="(max-width: 700px) 100vw, 33vw"
+          sizes={i === 0 ? '(max-width: 700px) 100vw, 50vw' : '(max-width: 700px) 50vw, 25vw'}
           alt={`${alt} — ${i + 1}`}
           loading="lazy" decoding="async"
         />
@@ -35,9 +30,19 @@ const alt = lang === 'es' ? 'The Spa Mita en Punta de Mita' : 'The Spa Mita in P
 </section>
 
 <style>
-  .gallery { columns: 3; column-gap: 12px; }
-  .gallery__item { margin: 0 0 12px; break-inside: avoid; }
-  .gallery__item img { width: 100%; display: block; }
-  @media (max-width: 900px) { .gallery { columns: 2; } }
-  @media (max-width: 520px) { .gallery { columns: 1; } }
+  .gallery {
+    display: grid; gap: 12px;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    aspect-ratio: 2 / 1;              /* 4 col x 2 filas de celdas cuadradas */
+  }
+  .gallery__item { margin: 0; overflow: hidden; }
+  .gallery__item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.6s var(--ease-soft); }
+  .gallery__item:hover img { transform: scale(1.04); }
+  .gallery__item--feature { grid-column: span 2; grid-row: span 2; }
+  @media (max-width: 700px) {
+    .gallery { grid-template-columns: repeat(2, 1fr); grid-template-rows: none; aspect-ratio: auto; }
+    .gallery__item { aspect-ratio: 1; }
+    .gallery__item--feature { grid-column: span 2; aspect-ratio: 16 / 10; }
+  }
 </style>

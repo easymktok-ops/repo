@@ -1,6 +1,7 @@
 ---
 import '../styles/tokens.css';
 import Sidebar from '../components/Sidebar.astro';
+import Footer from '../components/Footer.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
 import { site } from '../i18n/site';
 import { wb, BASE } from '../lib/paths';
@@ -32,10 +33,14 @@ const schema = {
   url: canonical,
   address: {
     '@type': 'PostalAddress',
+    streetAddress: site.address.street,
     addressLocality: site.address.locality,
     addressRegion: site.address.region,
+    postalCode: site.address.postalCode,
     addressCountry: site.address.country,
   },
+  sameAs: [site.instagram, site.facebook, site.tripadvisor],
+  hasMap: site.mapLink,
   areaServed: [
     'Punta de Mita', 'Bahía de Banderas', 'Sayulita', 'Nuevo Vallarta',
     'Nayarit', 'Puerto Vallarta',
@@ -102,8 +107,47 @@ const schema = {
     <Sidebar lang={lang} path={path} />
     <main class="app-main" id="contenido">
       <slot />
+      <Footer lang={lang} />
     </main>
     <WhatsAppFloat />
+
+    <button class="to-top" data-to-top aria-label="Volver arriba" title="Volver arriba">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 19V5M5 12l7-7 7 7"/></svg>
+    </button>
+
+    <script>
+      // Parallax sutil en imágenes de hero (respeta reduced-motion)
+      const px = Array.from(document.querySelectorAll('[data-parallax]'));
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (px.length && !reduce) {
+        let ticking = false;
+        const apply = () => {
+          const vh = window.innerHeight;
+          px.forEach((el) => {
+            const parent = el.parentElement;
+            const r = parent.getBoundingClientRect();
+            if (r.bottom < 0 || r.top > vh) return; // fuera de vista
+            const progress = (r.top + r.height / 2 - vh / 2) / (vh / 2 + r.height / 2);
+            const maxShift = parent.offsetHeight * 0.06;
+            const y = Math.max(-maxShift, Math.min(maxShift, -progress * maxShift));
+            el.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0) scale(1.03)`;
+          });
+          ticking = false;
+        };
+        window.addEventListener('scroll', () => { if (!ticking) { requestAnimationFrame(apply); ticking = true; } }, { passive: true });
+        window.addEventListener('resize', apply, { passive: true });
+        apply();
+      }
+
+      // Back to top
+      const toTop = document.querySelector('[data-to-top]');
+      if (toTop) {
+        const onScroll = () => toTop.classList.toggle('is-visible', window.scrollY > 600);
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+        toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: reduce ? 'auto' : 'smooth' }));
+      }
+    </script>
 
     <script>
       // Fade-in al entrar en viewport (motion sutil, sin rebotes)
@@ -125,6 +169,23 @@ const schema = {
       body.no-scroll { overflow: hidden; }
       @media (max-width: 900px) {
         .app-main { margin-inline-start: 0; padding-top: 4rem; }
+      }
+
+      /* Back to top — sutil, esquina inferior izquierda (no choca con WhatsApp) */
+      .to-top {
+        position: fixed; left: clamp(1rem, 3vw, 1.75rem); bottom: clamp(1rem, 3vw, 1.75rem);
+        z-index: 55; width: 44px; height: 44px; display: grid; place-items: center;
+        background: var(--color-bg); color: var(--clay-900);
+        border: 1px solid var(--color-line); border-radius: 999px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.08); cursor: pointer;
+        opacity: 0; visibility: hidden; transform: translateY(8px);
+        transition: opacity .35s var(--ease-soft), transform .35s var(--ease-soft), visibility .35s;
+      }
+      .to-top.is-visible { opacity: 1; visibility: visible; transform: none; }
+      .to-top:hover { color: var(--clay-700); border-color: var(--clay-500); }
+      @media (min-width: 901px) {
+        /* En desktop lo dejamos junto al borde del contenido */
+        .to-top { left: calc(var(--sidebar-w) + 1.25rem); }
       }
     </style>
   </body>
