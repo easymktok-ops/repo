@@ -30,5 +30,5 @@ export const site = {
   // Para activarlo: entra a https://web3forms.com, escribe info@thespamita.com,
   // te llega un "access key" por correo y lo pegas aquí. Sin cuenta ni login.
   formEndpoint: 'https://api.web3forms.com/submit',
-  web3formsKey: 'REEMPLAZAR_ACCESS_KEY',
+  web3formsKey: '50dc2be4-57d8-410c-a0d5-db1dfbc03af7',
 };
