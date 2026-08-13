@@ -1,6 +1,7 @@
 ---
 import { useTranslations, type Lang } from '../i18n/ui';
 import { site } from '../i18n/site';
+import { wb } from '../lib/paths';
 import Team from './Team.astro';
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
@@ -10,11 +11,11 @@ const benefits = ['nosotros.b1','nosotros.b2','nosotros.b3','nosotros.b4','nosot
   <div class="about__text reveal">
     <p>{t('nosotros.p1')}</p>
     <p>{t('nosotros.p2')}</p>
-    <a href={`/${lang}/contacto/`} class="btn btn--solid">{t('nav.reservar')}</a>
+    <a href={wb(`/${lang}/contacto/`)} class="btn btn--solid">{t('nav.reservar')}</a>
   </div>
   <figure class="about__media reveal">
     <img
-      src="/img/optimized/full/IMG-20211215-WA0004.webp"
+      src={wb('/img/optimized/full/IMG-20211215-WA0004.webp')}
       alt={lang === 'es' ? 'Sala de tratamientos de The Spa Mita' : 'Treatment room at The Spa Mita'}
       loading="lazy" width="1600" height="1067"
     />

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { site } from '../../i18n/site';
+import { wb } from '../../lib/paths';
 import { useTranslations } from '../../i18n/ui';
 const t = useTranslations('en');
 ---
@@ -13,7 +14,7 @@ const t = useTranslations('en');
     <p class="ty__body">{t('ty.body')}</p>
     <div class="ty__actions">
       <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" class="btn btn--solid">{t('ty.wa')}</a>
-      <a href="/en/" class="btn btn--ghost">{t('ty.back')}</a>
+      <a href={wb('/en/')} class="btn btn--ghost">{t('ty.back')}</a>
     </div>
   </section>
 </BaseLayout>

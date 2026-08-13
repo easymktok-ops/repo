@@ -1,5 +1,6 @@
 ---
 import type { Lang } from '../i18n/ui';
+import { wb } from '../lib/paths';
 const { lang } = Astro.props as { lang: Lang };
 
 // Selección curada de fotos reales de instalaciones y tratamientos.
@@ -22,8 +23,8 @@ const alt = lang === 'es' ? 'The Spa Mita en Punta de Mita' : 'The Spa Mita in P
     {photos.map((name, i) => (
       <figure class="gallery__item">
         <img
-          src={`/img/optimized/thumb/${name}.webp`}
-          srcset={`/img/optimized/thumb/${name}.webp 640w, /img/optimized/full/${name}.webp 1600w`}
+          src={wb(`/img/optimized/thumb/${name}.webp`)}
+          srcset={`${wb(`/img/optimized/thumb/${name}.webp`)} 640w, ${wb(`/img/optimized/full/${name}.webp`)} 1600w`}
           sizes="(max-width: 700px) 100vw, 33vw"
           alt={`${alt} — ${i + 1}`}
           loading="lazy" decoding="async"

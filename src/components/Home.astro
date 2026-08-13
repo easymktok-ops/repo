@@ -1,11 +1,12 @@
 ---
 import { useTranslations, type Lang } from '../i18n/ui';
 import { site } from '../i18n/site';
+import { wb } from '../lib/paths';
 import Brands from './Brands.astro';
 import Faq from './Faq.astro';
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
-const base = `/${lang}`;
+const base = wb(`/${lang}`);
 
 const servicios = [
   { key: 'serv.1', n: '01' },
@@ -22,7 +23,7 @@ const servicios = [
 <section class="hero">
   <div class="hero__media" aria-hidden="true">
     <img
-      src="/img/optimized/full/WhatsAppImage2024-09-25at3.37.13PM.webp"
+      src={wb('/img/optimized/full/WhatsAppImage2024-09-25at3.37.13PM.webp')}
       alt=""
       fetchpriority="high"
       width="1600" height="900"

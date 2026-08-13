@@ -1,5 +1,6 @@
 ---
 import { useTranslations, type Lang } from '../i18n/ui';
+import { wb } from '../lib/paths';
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
 // Retratos reales del equipo (nombres tomados de los archivos del cliente).
@@ -21,8 +22,8 @@ const team = [
   <ul class="team__grid reveal">
     {team.map((m) => (
       <li class="team__member">
-        <img src={`/img/optimized/thumb/${m.file}.webp`}
-             srcset={`/img/optimized/thumb/${m.file}.webp 640w, /img/optimized/full/${m.file}.webp 1600w`}
+        <img src={wb(`/img/optimized/thumb/${m.file}.webp`)}
+             srcset={`${wb(`/img/optimized/thumb/${m.file}.webp`)} 640w, ${wb(`/img/optimized/full/${m.file}.webp`)} 1600w`}
              sizes="(max-width: 700px) 50vw, 200px"
              alt={m.name} loading="lazy" width="640" height="640" />
         <span class="team__name">{m.name}</span>

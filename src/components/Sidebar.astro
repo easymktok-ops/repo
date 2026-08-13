@@ -4,11 +4,12 @@
 // mobile se colapsa en un drawer accesible por botón hamburguesa.
 import { useTranslations, type Lang } from '../i18n/ui';
 import { site } from '../i18n/site';
+import { wb } from '../lib/paths';
 import LangToggle from './LangToggle.astro';
 
 const { lang, path = '' } = Astro.props as { lang: Lang; path?: string };
 const t = useTranslations(lang);
-const base = `/${lang}`;
+const base = wb(`/${lang}`);
 
 const nav = [
   { href: `${base}/`, label: t('nav.inicio') },
@@ -25,7 +26,7 @@ const nav = [
 <aside class="sidebar" id="sidebar" data-sidebar>
   <div class="sidebar__inner">
     <a class="sidebar__logo" href={`${base}/`} aria-label="The Spa Mita">
-      <img class="sidebar__logo-img" src="/img/optimized/full/THe-Spa-logo.webp" alt="The Spa Mita" width="260" height="70" />
+      <img class="sidebar__logo-img" src={wb('/img/optimized/full/THe-Spa-logo.webp')} alt="The Spa Mita" width="260" height="70" />
       <span class="sidebar__logo-sub">{t('side.tagline')}</span>
     </a>
 

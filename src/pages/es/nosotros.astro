@@ -3,13 +3,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import About from '../../components/About.astro';
 import { useTranslations } from '../../i18n/ui';
+import { wb } from '../../lib/paths';
 const t = useTranslations('es');
 ---
 <BaseLayout lang="es" title={t('seo.nosotros.title')} description={t('seo.nosotros.desc')} path="nosotros">
   <PageHero
     eyebrow={t('nosotros.eyebrow')}
     title={t('nosotros.title')}
-    image="/img/optimized/full/IMG-20211216-WA0032.webp"
+    image={wb('/img/optimized/full/IMG-20211216-WA0032.webp')}
   />
   <About lang="es" />
 </BaseLayout>

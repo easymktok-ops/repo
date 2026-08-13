@@ -3,6 +3,7 @@ import '../styles/tokens.css';
 import Sidebar from '../components/Sidebar.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
 import { site } from '../i18n/site';
+import { wb, BASE } from '../lib/paths';
 import type { Lang } from '../i18n/ui';
 
 interface Props {
@@ -12,11 +13,12 @@ interface Props {
   path?: string;      // sub-ruta sin prefijo de idioma ('' para home)
   ogImage?: string;
 }
-const { lang, title, description, path = '', ogImage = '/img/brand/og-default.jpg' } = Astro.props;
+const { lang, title, description, path = '', ogImage = '/img/optimized/full/WhatsAppImage2024-09-25at3.37.13PM.webp' } = Astro.props;
+const ogImageUrl = new URL(wb(ogImage), Astro.site).href;
 
-const canonical = new URL(`/${lang}/${path}`.replace(/\/+$/, '/'), Astro.site).href;
-const esUrl = new URL(`/es/${path}`.replace(/\/+$/, '/'), Astro.site).href;
-const enUrl = new URL(`/en/${path}`.replace(/\/+$/, '/'), Astro.site).href;
+const canonical = new URL(wb(`/${lang}/${path}`).replace(/\/+$/, '/'), Astro.site).href;
+const esUrl = new URL(wb(`/es/${path}`).replace(/\/+$/, '/'), Astro.site).href;
+const enUrl = new URL(wb(`/en/${path}`).replace(/\/+$/, '/'), Astro.site).href;
 
 // schema.org — DaySpa (subtipo de HealthAndBeautyBusiness/LocalBusiness)
 const schema = {
@@ -24,7 +26,7 @@ const schema = {
   '@type': 'DaySpa',
   name: site.name,
   description,
-  image: new URL(ogImage, Astro.site).href,
+  image: ogImageUrl,
   telephone: site.phoneDisplay,
   email: site.email,
   url: canonical,
@@ -53,7 +55,7 @@ const schema = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="icon" type="image/png" href={wb('/favicon.png')} />
 
     <!-- hreflang ES/EN -->
     <link rel="alternate" hreflang="es" href={esUrl} />
@@ -66,7 +68,7 @@ const schema = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
-    <meta property="og:image" content={new URL(ogImage, Astro.site).href} />
+    <meta property="og:image" content={ogImageUrl} />
     <meta name="twitter:card" content="summary_large_image" />
 
     <!-- Fuentes (font-display: swap via Google Fonts) -->
@@ -83,13 +85,14 @@ const schema = {
     <script is:inline>document.documentElement.classList.add('js');</script>
 
     <!-- Redirige a idioma guardado si el usuario abre la raíz de otro idioma -->
-    <script is:inline>
+    <script define:vars={{ base: BASE }}>
       (function () {
         try {
           var saved = localStorage.getItem('spamita_lang');
           var cur = document.documentElement.lang;
-          if (saved && saved !== cur && /^\/(es|en)(\/|$)/.test(location.pathname)) {
-            location.pathname = location.pathname.replace(/^\/(es|en)/, '/' + saved);
+          var head = new RegExp('^' + base + '/(es|en)(/|$)');
+          if (saved && saved !== cur && head.test(location.pathname)) {
+            location.pathname = location.pathname.replace(new RegExp('^' + base + '/(es|en)'), base + '/' + saved);
           }
         } catch (e) {}
       })();

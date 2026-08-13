@@ -1,4 +1,22 @@
 ---
-// La raíz redirige al español (idioma por defecto).
-return Astro.redirect('/es/');
+// Raíz del sitio: redirige al idioma por defecto (es) de forma RELATIVA, para
+// que funcione igual en la raíz del dominio, en /demo, o en pruebas locales,
+// sin depender del dominio de producción.
 ---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="0; url=./es/" />
+    <meta name="robots" content="noindex" />
+    <link rel="canonical" href="https://thespamita.com/es/" />
+    <title>The Spa Mita</title>
+    <script is:inline>
+      // Asegura slash final y agrega es/ (maneja /demo y /demo/).
+      location.replace(location.pathname.replace(/\/?$/, '/') + 'es/' + location.search + location.hash);
+    </script>
+  </head>
+  <body>
+    <a href="./es/">The Spa Mita — Punta de Mita</a>
+  </body>
+</html>

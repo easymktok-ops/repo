@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { BASE } from '../lib/paths';
 
 const SITE = 'https://thespamita.com';
 const paths = ['', 'servicios', 'nosotros', 'galeria', 'contacto'];
@@ -6,8 +7,8 @@ const paths = ['', 'servicios', 'nosotros', 'galeria', 'contacto'];
 export const GET: APIRoute = () => {
   const urls = paths
     .map((p) => {
-      const es = `${SITE}/es/${p}`.replace(/\/+$/, '/');
-      const en = `${SITE}/en/${p}`.replace(/\/+$/, '/');
+      const es = `${SITE}${BASE}/es/${p}`.replace(/\/+$/, '/');
+      const en = `${SITE}${BASE}/en/${p}`.replace(/\/+$/, '/');
       return [es, en]
         .map(
           (loc) => `  <url>

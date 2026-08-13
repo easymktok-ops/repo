@@ -1,5 +1,6 @@
 ---
 import { useTranslations, type Lang } from '../i18n/ui';
+import { wb } from '../lib/paths';
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
 const brands = [
@@ -17,7 +18,7 @@ const brands = [
     <ul class="brands__row reveal">
       {brands.map((b) => (
         <li class="brands__item">
-          <img src={`/img/optimized/full/${b.file}.webp`} alt={b.name} loading="lazy" />
+          <img src={wb(`/img/optimized/full/${b.file}.webp`)} alt={b.name} loading="lazy" />
         </li>
       ))}
     </ul>

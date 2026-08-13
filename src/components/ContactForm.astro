@@ -1,10 +1,11 @@
 ---
 import { services } from '../i18n/services';
 import { site } from '../i18n/site';
+import { wb } from '../lib/paths';
 import { useTranslations, type Lang } from '../i18n/ui';
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
-const thankyou = `/${lang}/gracias/`;
+const thankyou = wb(`/${lang}/gracias/`);
 ---
 <form class="cform" action={site.formEndpoint} method="POST" novalidate>
   <!-- Web3Forms -->

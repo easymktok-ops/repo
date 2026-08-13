@@ -2,10 +2,11 @@
 // Toggle de idioma ES/EN. Cambia de ruta (/es <-> /en) conservando la sub-ruta,
 // y guarda la preferencia en localStorage para futuras visitas.
 import type { Lang } from '../i18n/ui';
+import { wb } from '../lib/paths';
 const { lang, path } = Astro.props as { lang: Lang; path: string };
 // path = ruta sin el prefijo de idioma, p.ej. '' para home, 'servicios' etc.
-const esHref = `/es/${path}`.replace(/\/+$/, '/');
-const enHref = `/en/${path}`.replace(/\/+$/, '/');
+const esHref = (wb(`/es/${path}`).replace(/\/+$/, '') || '/') + '/';
+const enHref = (wb(`/en/${path}`).replace(/\/+$/, '') || '/') + '/';
 ---
 <div class="lang-toggle" role="group" aria-label="Idioma / Language">
   <a href={esHref} class:list={['lang-toggle__opt', { 'is-active': lang === 'es' }]} data-set-lang="es" hreflang="es">ES</a>
