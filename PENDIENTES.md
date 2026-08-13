@@ -14,7 +14,28 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
 
 ## 🔴 Pendientes (por implementar)
 
-_(vacío por ahora — agrega detalles y aparecerán aquí)_
+- [ ] **Hero — bajar intensidad del shade.** Casi no se aprecia la imagen.
+      Buscar equilibrio entre legibilidad del H1 y presencia de la foto
+      (reducir opacidad del gradiente blanco, quizá 0.96→~0.75 en la zona del texto).
+- [ ] **Texto de personalización (Servicios/Precios) — quitar "color de cabina".**
+      La clienta quiere que diga: **"Fragancia ambiental, música y aromaterapia."**
+      Quitar definitivamente la cromoterapia / color de cabina.
+      Revisar TODAS las apariciones para consistencia:
+      - `serv.page.lead` (lead de la página de Servicios)
+      - copy de intro del home (`intro.p2`) que menciona "color de la cabina (cromoterapia)"
+      - FAQ `faq.a3` que también menciona cromoterapia
+
+---
+
+## 💡 Ideas / decisiones pendientes (requieren tu OK antes de implementar)
+
+- [ ] **Formulario también por WhatsApp** (con nombre/servicio/fecha prefilled).
+      Ver respuesta en el chat. Recomendación: botón "Enviar por WhatsApp" que
+      arma un mensaje con todos los datos. Gratis, sin backend. Falta tu OK.
+- [ ] **Música de fondo chill (loop).** Ver respuesta en el chat. Técnicamente sí,
+      pero el navegador NO permite autoplay con sonido: iría con un toggle 🎵
+      apagado por defecto. Requiere una pista con licencia/royalty-free. Falta tu OK
+      y la pista de audio.
 
 ---
 
