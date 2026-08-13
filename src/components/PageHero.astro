@@ -1,0 +1,29 @@
+---
+// Encabezado editorial para páginas internas.
+interface Props { eyebrow?: string; title: string; lead?: string; image?: string; }
+const { eyebrow, title, lead, image } = Astro.props;
+---
+<header class:list={['pagehero', { 'pagehero--img': !!image }]}>
+  {image && (
+    <div class="pagehero__media" aria-hidden="true">
+      <img src={image} alt="" width="1600" height="700" fetchpriority="high" />
+      <div class="pagehero__scrim"></div>
+    </div>
+  )}
+  <div class="container pagehero__inner">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1 class="pagehero__title">{title}</h1>
+    {lead && <p class="pagehero__lead">{lead}</p>}
+  </div>
+</header>
+
+<style>
+  .pagehero { position: relative; padding-block: clamp(3rem, 7vw, 6rem); overflow: hidden; }
+  .pagehero--img { min-height: 46vh; display: flex; align-items: flex-end; }
+  .pagehero__media { position: absolute; inset: 0; z-index: 0; }
+  .pagehero__media img { width: 100%; height: 100%; object-fit: cover; }
+  .pagehero__scrim { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.6) 45%, rgba(95,58,44,0.1) 100%); }
+  .pagehero__inner { position: relative; z-index: 1; }
+  .pagehero__title { font-size: var(--fs-2xl); max-width: 18ch; }
+  .pagehero__lead { font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 52ch; }
+</style>

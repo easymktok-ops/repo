@@ -1,0 +1,26 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { site } from '../../i18n/site';
+import { useTranslations } from '../../i18n/ui';
+const t = useTranslations('en');
+---
+<BaseLayout lang="en" title={`${t('ty.title')} — The Spa Mita`} description={t('ty.body')} path="gracias">
+  {/* CONVERSION HOOK: Google Ads / Meta Pixel conversion event would go here
+      when the client requests it. Do not implement without explicit confirmation. */}
+  <section class="section container ty">
+    <p class="eyebrow">The Spa Mita</p>
+    <h1 class="ty__title">{t('ty.title')}</h1>
+    <p class="ty__body">{t('ty.body')}</p>
+    <div class="ty__actions">
+      <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" class="btn btn--solid">{t('ty.wa')}</a>
+      <a href="/en/" class="btn btn--ghost">{t('ty.back')}</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .ty { min-height: 60vh; display: flex; flex-direction: column; justify-content: center; }
+  .ty__title { font-size: var(--fs-2xl); max-width: 18ch; }
+  .ty__body { font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 46ch; }
+  .ty__actions { display: flex; gap: 0.9rem; flex-wrap: wrap; margin-top: 1.5rem; }
+</style>

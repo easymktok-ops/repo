@@ -1,0 +1,57 @@
+---
+import { services, fxNote, type Lang } from '../i18n/services';
+import { useTranslations } from '../i18n/ui';
+const { lang } = Astro.props as { lang: Lang };
+const t = useTranslations(lang);
+---
+<div class="container">
+  {services.map((cat) => (
+    <section class="svc reveal" id={cat.slug}>
+      <div class="svc__head">
+        <h2 class="svc__title">{cat.name[lang]}</h2>
+        {cat.intro && <p class="svc__intro">{cat.intro[lang]}</p>}
+      </div>
+      <ul class="svc__list">
+        {cat.items.map((it) => (
+          <li class="svc__row">
+            <div class="svc__info">
+              <span class="svc__name">{it.name}</span>
+              {it.desc && <span class="svc__desc">{it.desc[lang]}</span>}
+            </div>
+            <div class="svc__meta">
+              {it.duration && <span class="svc__dur">{it.duration}</span>}
+              <span class="svc__price">{it.price}</span>
+            </div>
+          </li>
+        ))}
+      </ul>
+      {cat.fragrances && <p class="svc__foot">{cat.fragrances[lang]}</p>}
+      <p class="svc__fx">{fxNote[lang]}</p>
+    </section>
+  ))}
+</div>
+
+<style>
+  .svc { padding-block: clamp(2rem, 4vw, 3.2rem); border-top: 1px solid var(--color-line); }
+  .svc:first-child { border-top: 0; }
+  .svc__head { margin-bottom: 1.4rem; }
+  .svc__title { font-size: var(--fs-xl); }
+  .svc__intro { color: var(--color-text-muted); max-width: 60ch; margin: 0; }
+  .svc__list { list-style: none; margin: 0; padding: 0; }
+  .svc__row {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 1.5rem;
+    padding: 0.85rem 0; border-bottom: 1px solid var(--color-line);
+  }
+  .svc__info { display: flex; flex-direction: column; gap: 0.15rem; }
+  .svc__name { font-size: var(--fs-base); }
+  .svc__desc { font-size: var(--fs-sm); color: var(--color-text-muted); max-width: 60ch; }
+  .svc__meta { display: flex; align-items: baseline; gap: 1.1rem; white-space: nowrap; flex-shrink: 0; }
+  .svc__dur { font-size: var(--fs-sm); color: var(--color-text-muted); }
+  .svc__price { font-family: var(--font-serif); font-style: italic; color: var(--clay-700); font-size: var(--fs-lg); }
+  .svc__foot { font-size: var(--fs-sm); color: var(--color-text); margin-top: 1rem; }
+  .svc__fx { font-size: var(--fs-xs); color: var(--color-text-muted); margin-top: 0.6rem; }
+  @media (max-width: 520px) {
+    .svc__row { flex-direction: column; gap: 0.25rem; }
+    .svc__meta { gap: 0.8rem; }
+  }
+</style>

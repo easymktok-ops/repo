@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Gallery from '../../components/Gallery.astro';
+import { useTranslations } from '../../i18n/ui';
+const t = useTranslations('en');
+---
+<BaseLayout lang="en" title={t('seo.galeria.title')} description={t('seo.galeria.desc')} path="galeria">
+  <PageHero eyebrow={t('galeria.eyebrow')} title={t('galeria.title')} />
+  <Gallery lang="en" />
+</BaseLayout>

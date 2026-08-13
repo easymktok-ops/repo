@@ -1,0 +1,51 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+import { site } from '../i18n/site';
+const { lang } = Astro.props as { lang: Lang };
+const t = useTranslations(lang);
+const benefits = ['nosotros.b1','nosotros.b2','nosotros.b3','nosotros.b4','nosotros.b5','nosotros.b6'] as const;
+---
+<section class="section container about">
+  <div class="about__text reveal">
+    <p>{t('nosotros.p1')}</p>
+    <p>{t('nosotros.p2')}</p>
+    <a href={`/${lang}/contacto/`} class="btn btn--solid">{t('nav.reservar')}</a>
+  </div>
+  <figure class="about__media reveal">
+    <img
+      src="/img/optimized/full/IMG-20211215-WA0004.webp"
+      alt={lang === 'es' ? 'Sala de tratamientos de The Spa Mita' : 'Treatment room at The Spa Mita'}
+      loading="lazy" width="1600" height="1067"
+    />
+  </figure>
+</section>
+
+<section class="section benefits">
+  <div class="container">
+    <h2 class="benefits__title reveal">{t('nosotros.benefits.title')}</h2>
+    <ul class="benefits__list reveal">
+      {benefits.map((b) => <li>{t(b)}</li>)}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .about { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  .about__media img { width: 100%; aspect-ratio: 3/2; object-fit: cover; }
+  @media (max-width: 800px) { .about { grid-template-columns: 1fr; } }
+
+  .benefits { background: var(--clay-050); }
+  .benefits__title { font-size: var(--fs-xl); margin-bottom: 1.5rem; }
+  .benefits__list {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--color-line); border-left: 1px solid var(--color-line);
+  }
+  .benefits__list li {
+    padding: 1.4rem; background: #fff;
+    border-right: 1px solid var(--color-line); border-bottom: 1px solid var(--color-line);
+    font-size: var(--fs-base);
+  }
+  @media (max-width: 700px) { .benefits__list { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 440px) { .benefits__list { grid-template-columns: 1fr; } }
+</style>

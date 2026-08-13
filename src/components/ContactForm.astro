@@ -1,0 +1,102 @@
+---
+import { services } from '../i18n/services';
+import { site } from '../i18n/site';
+import { useTranslations, type Lang } from '../i18n/ui';
+const { lang } = Astro.props as { lang: Lang };
+const t = useTranslations(lang);
+const thankyou = `/${lang}/gracias/`;
+---
+<form class="cform" action={site.formEndpoint} method="POST" novalidate>
+  <!-- Redirección a la thank-you page tras envío exitoso (Formspree) -->
+  <input type="hidden" name="_next" value={new URL(thankyou, Astro.site).href} />
+  <input type="hidden" name="_language" value={lang} />
+  <input type="hidden" name="idioma_seleccionado" value={lang === 'es' ? 'Español' : 'English'} />
+  <input type="hidden" name="pagina_origen" value="" data-origin />
+  <!-- Honeypot anti-spam -->
+  <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" class="cform__hp" aria-hidden="true" />
+
+  <div class="cform__field">
+    <label for="nombre">{t('form.nombre')} *</label>
+    <input id="nombre" name="nombre" type="text" required autocomplete="name" />
+    <span class="cform__err" data-err>{t('form.req')}</span>
+  </div>
+
+  <div class="cform__field">
+    <label for="telefono">{t('form.telefono')} *</label>
+    <input id="telefono" name="telefono" type="tel" required autocomplete="tel" />
+    <span class="cform__err" data-err>{t('form.req')}</span>
+  </div>
+
+  <div class="cform__field">
+    <label for="servicio">{t('form.servicio')} *</label>
+    <select id="servicio" name="servicio" required>
+      <option value="" selected disabled>{t('form.servicio.placeholder')}</option>
+      {services.map((c) => <option value={c.name.es}>{c.name[lang]}</option>)}
+      <option value="Otro">{t('form.servicio.otro')}</option>
+    </select>
+    <span class="cform__err" data-err>{t('form.req')}</span>
+  </div>
+
+  <div class="cform__field">
+    <label for="fecha">{t('form.fecha')}</label>
+    <input id="fecha" name="fecha_preferida" type="datetime-local" />
+  </div>
+
+  <div class="cform__field">
+    <label for="mensaje">{t('form.mensaje')}</label>
+    <textarea id="mensaje" name="mensaje" rows="4"></textarea>
+  </div>
+
+  <label class="cform__check">
+    <input type="checkbox" name="primera_vez" value="Sí" />
+    <span>{t('form.primera')}</span>
+  </label>
+
+  <button type="submit" class="btn btn--solid cform__submit">{t('form.enviar')}</button>
+</form>
+
+<script>
+  const form = document.querySelector('.cform');
+  if (form) {
+    const origin = form.querySelector('[data-origin]');
+    if (origin) origin.value = location.href;
+    form.addEventListener('submit', (e) => {
+      let ok = true;
+      form.querySelectorAll('[required]').forEach((el) => {
+        const field = el.closest('.cform__field');
+        const invalid = !el.value || (el.type !== 'checkbox' && !String(el.value).trim());
+        field?.classList.toggle('is-invalid', invalid);
+        if (invalid) ok = false;
+      });
+      if (!ok) { e.preventDefault(); form.querySelector('.is-invalid input, .is-invalid select')?.focus(); }
+    });
+  }
+</script>
+
+<style>
+  .cform { max-width: 560px; display: flex; flex-direction: column; gap: 1.5rem; }
+  .cform__hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .cform__field { display: flex; flex-direction: column; gap: 0.4rem; }
+  .cform label { font-size: var(--fs-sm); letter-spacing: 0.04em; color: var(--color-text); }
+
+  /* Campos tipo "underline", sin cajas con border-radius */
+  .cform input, .cform select, .cform textarea {
+    font-family: var(--font-sans); font-weight: var(--fw-light); font-size: var(--fs-base);
+    color: var(--color-text); background: transparent;
+    border: 0; border-bottom: 1px solid var(--color-line);
+    border-radius: 0; padding: 0.5rem 0; width: 100%;
+    transition: border-color 0.3s var(--ease-soft);
+  }
+  .cform input:focus, .cform select:focus, .cform textarea:focus {
+    outline: none; border-bottom-color: var(--clay-700);
+  }
+  .cform textarea { resize: vertical; }
+
+  .cform__err { display: none; font-size: var(--fs-xs); color: #b23b3b; }
+  .cform__field.is-invalid .cform__err { display: block; }
+  .cform__field.is-invalid input, .cform__field.is-invalid select { border-bottom-color: #b23b3b; }
+
+  .cform__check { flex-direction: row; align-items: center; gap: 0.6rem; cursor: pointer; }
+  .cform__check input { width: auto; }
+  .cform__submit { align-self: flex-start; margin-top: 0.5rem; }
+</style>
