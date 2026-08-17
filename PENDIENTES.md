@@ -24,6 +24,8 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
       - `serv.page.lead` (lead de la página de Servicios)
       - copy de intro del home (`intro.p2`) que menciona "color de la cabina (cromoterapia)"
       - FAQ `faq.a3` que también menciona cromoterapia
+- [ ] **Página 404** personalizada (bilingüe, con el diseño del sitio: menú,
+      mensaje amable y botón de volver al inicio / WhatsApp).
 
 ---
 
