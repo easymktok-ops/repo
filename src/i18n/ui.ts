@@ -31,7 +31,7 @@ export const ui = {
     // --- Intro (copy de marca) ---
     'intro.eyebrow': 'The Spa',
     'intro.p1': 'En Bahía de Banderas hay un lugar donde tus sentidos se agudizan, acompañado por las hermosas playas y resorts, se encuentra “The Spa”, en Punta de Mita el mejor lugar para que te tomes un día libre dedicado para resaltar tu belleza y liberar el estrés.',
-    'intro.p2': 'En The Spa queremos satisfacer sus necesidades y expectativas. Es por eso que le brindamos servicios personalizados en función de su gusto, estado de ánimo y necesidades específicas. Puede elegir el color de la cabina (cromoterapia), la música (musicoterapia), el aroma (aromaterapia), el masaje a presión, el aceite o crema de masaje, y el sabor del té.',
+    'intro.p2': 'En The Spa queremos satisfacer sus necesidades y expectativas. Es por eso que le brindamos servicios personalizados en función de su gusto, estado de ánimo y necesidades específicas. Puede elegir la fragancia ambiental, la música (musicoterapia) y la aromaterapia, el masaje a presión, el aceite o crema de masaje, y el sabor del té.',
     'intro.p3': 'Con estos elementos logramos crear un ambiente que te permita relajarte, rejuvenecer o equilibrarte. Todo depende de cómo se sienta y de lo que deba hacer después del tratamiento.',
     'intro.p4': 'Nuestras instalaciones cuentan con todas las comodidades para que te sientas como en casa, además de que cumplimos con todas las normas de sanitización y esterilización de nuestros instrumentos e instalaciones.',
 
@@ -59,7 +59,9 @@ export const ui = {
     'form.mensaje': 'Mensaje (opcional)',
     'form.fecha': 'Fecha y hora tentativa (opcional)',
     'form.primera': 'Es mi primera vez en The Spa Mita',
-    'form.enviar': 'Enviar',
+    'form.enviar': 'Enviar por correo',
+    'form.wa': 'Enviar por WhatsApp',
+    'form.or': 'o',
     'form.req': 'Este campo es obligatorio',
     'seo.contacto.title': 'Contacto y reservas — The Spa Mita, Punta de Mita',
     'seo.contacto.desc': 'Reserva tu experiencia en The Spa Mita, Punta de Mita. Escríbenos o agenda por WhatsApp.',
@@ -72,7 +74,7 @@ export const ui = {
 
     // --- Páginas secundarias ---
     'serv.page.title': 'Servicios y precios',
-    'serv.page.lead': 'Cada tratamiento se personaliza a tu gusto: color de cabina, música, aroma, presión y aceite. Precios en pesos mexicanos.',
+    'serv.page.lead': 'Cada tratamiento se personaliza a tu gusto: fragancia ambiental, música y aromaterapia. Precios en pesos mexicanos.',
     'serv.dur': 'Duración',
     'nosotros.eyebrow': 'Nosotras',
     'nosotros.title': 'Un espacio pensado para ti',
@@ -98,7 +100,7 @@ export const ui = {
     'faq.q2': '¿Dónde están ubicados?',
     'faq.a2': 'Estamos en Punta de Mita, Bahía de Banderas, Nayarit, a pocos minutos de Sayulita, Nuevo Vallarta y Puerto Vallarta.',
     'faq.q3': '¿Puedo personalizar mi tratamiento?',
-    'faq.a3': 'Claro. Puedes elegir el color de la cabina (cromoterapia), la música, el aroma, la presión del masaje, el aceite o crema y el sabor del té.',
+    'faq.a3': 'Claro. Puedes elegir la fragancia ambiental, la música y la aromaterapia, además de la presión del masaje, el aceite o crema y el sabor del té.',
     'faq.q4': '¿Ofrecen servicio a domicilio?',
     'faq.a4': 'Sí, contamos con servicio a domicilio. Escríbenos por WhatsApp para conocer cobertura y disponibilidad.',
     'faq.q5': '¿Atienden a niños?',
@@ -120,7 +122,7 @@ export const ui = {
 
     // --- SEO ---
     'seo.home.title': 'The Spa Mita — Spa de lujo en Punta de Mita, Nayarit',
-    'seo.home.desc': 'Day spa en Punta de Mita, Bahía de Banderas. Masajes, faciales y tratamientos personalizados con cromoterapia, aromaterapia y musicoterapia.',
+    'seo.home.desc': 'Day spa en Punta de Mita, Bahía de Banderas. Masajes, faciales y tratamientos personalizados con fragancia ambiental, aromaterapia y musicoterapia.',
   },
   en: {
     'nav.inicio': 'Home',
@@ -143,7 +145,7 @@ export const ui = {
 
     'intro.eyebrow': 'The Spa',
     'intro.p1': 'In Bahía de Banderas there is a place where your senses become sharper, surrounded by beautiful beaches and resorts, you’ll find “The Spa”, in Punta de Mita the best place to take a day off dedicated to enhancing your beauty and releasing stress.',
-    'intro.p2': 'At The Spa we want to satisfy your needs and expectations. That’s why we offer personalized services based on your taste, mood and specific needs. You can choose the color of the room (chromotherapy), the music (music therapy), the scent (aromatherapy), massage pressure, massage oil or cream, and the flavor of your tea.',
+    'intro.p2': 'At The Spa we want to satisfy your needs and expectations. That’s why we offer personalized services based on your taste, mood and specific needs. You can choose the ambient fragrance, the music (music therapy) and aromatherapy, massage pressure, massage oil or cream, and the flavor of your tea.',
     'intro.p3': 'With these elements we create an environment that allows you to relax, rejuvenate or find balance. It all depends on how you feel and what you need to do after the treatment.',
     'intro.p4': 'Our facilities have all the comforts to make you feel at home, in addition to complying with all sanitation and sterilization standards for our instruments and facilities. At The Spa you will feel comfortable, safe and well cared for.',
 
@@ -166,7 +168,9 @@ export const ui = {
     'form.mensaje': 'Message (optional)',
     'form.fecha': 'Preferred date & time (optional)',
     'form.primera': 'This is my first time at The Spa Mita',
-    'form.enviar': 'Send',
+    'form.enviar': 'Send by email',
+    'form.wa': 'Send via WhatsApp',
+    'form.or': 'or',
     'form.req': 'This field is required',
 
     'ty.title': 'Thank you! We received your message.',
@@ -202,7 +206,7 @@ export const ui = {
     'faq.q2': 'Where are you located?',
     'faq.a2': 'We are in Punta de Mita, Bahía de Banderas, Nayarit, a few minutes from Sayulita, Nuevo Vallarta and Puerto Vallarta.',
     'faq.q3': 'Can I personalize my treatment?',
-    'faq.a3': 'Of course. You can choose the room color (chromotherapy), music, scent, massage pressure, oil or cream, and the flavor of your tea.',
+    'faq.a3': 'Of course. You can choose the ambient fragrance, music and aromatherapy, plus massage pressure, oil or cream, and the flavor of your tea.',
     'faq.q4': 'Do you offer at-home service?',
     'faq.a4': 'Yes, we offer at-home service. Message us on WhatsApp for coverage and availability.',
     'faq.q5': 'Do you serve children?',
@@ -223,7 +227,7 @@ export const ui = {
     'seo.galeria.desc': 'Discover our facilities and treatments in Punta de Mita through our gallery.',
 
     'seo.home.title': 'The Spa Mita — Luxury day spa in Punta de Mita, Nayarit',
-    'seo.home.desc': 'Day spa in Punta de Mita, Bahía de Banderas. Massages, facials and personalized treatments with chromotherapy, aromatherapy and music therapy.',
+    'seo.home.desc': 'Day spa in Punta de Mita, Bahía de Banderas. Massages, facials and personalized treatments with ambient fragrance, aromatherapy and music therapy.',
   },
 } as const;
 

@@ -3,6 +3,7 @@ import '../styles/tokens.css';
 import Sidebar from '../components/Sidebar.astro';
 import Footer from '../components/Footer.astro';
 import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+import MusicToggle from '../components/MusicToggle.astro';
 import { site } from '../i18n/site';
 import { wb, BASE } from '../lib/paths';
 import type { Lang } from '../i18n/ui';
@@ -14,7 +15,7 @@ interface Props {
   path?: string;      // sub-ruta sin prefijo de idioma ('' para home)
   ogImage?: string;
 }
-const { lang, title, description, path = '', ogImage = '/img/optimized/full/WhatsAppImage2024-09-25at3.37.13PM.webp' } = Astro.props;
+const { lang, title, description, path = '', ogImage = '/img/brand/og-card.jpg' } = Astro.props;
 const ogImageUrl = new URL(wb(ogImage), Astro.site).href;
 
 const canonical = new URL(wb(`/${lang}/${path}`).replace(/\/+$/, '/'), Astro.site).href;
@@ -75,6 +76,7 @@ const schema = {
     <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
     <meta property="og:image" content={ogImageUrl} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content={ogImageUrl} />
 
     <!-- Fuentes (font-display: swap via Google Fonts) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -110,6 +112,7 @@ const schema = {
       <Footer lang={lang} />
     </main>
     <WhatsAppFloat />
+    <MusicToggle />
 
     <button class="to-top" data-to-top aria-label="Volver arriba" title="Volver arriba">
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 19V5M5 12l7-7 7 7"/></svg>

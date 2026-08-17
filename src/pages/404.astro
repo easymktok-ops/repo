@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../i18n/site';
+import { wb } from '../lib/paths';
+---
+<BaseLayout
+  lang="es"
+  title="Página no encontrada · Page not found — The Spa Mita"
+  description="La página que buscas no existe o se movió."
+  path=""
+>
+  <section class="section container nf">
+    <p class="eyebrow">Error 404</p>
+    <h1 class="nf__title">Esta página se tomó el día libre.</h1>
+    <p class="nf__body">
+      La página que buscas no existe o cambió de lugar.<br />
+      <span class="nf__en">The page you’re looking for doesn’t exist or has moved.</span>
+    </p>
+    <div class="nf__actions">
+      <a href={wb('/es/')} class="btn btn--solid">Volver al inicio · Home</a>
+      <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" class="btn btn--ghost">WhatsApp</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf { min-height: 62vh; display: flex; flex-direction: column; justify-content: center; }
+  .nf__title { font-size: var(--fs-2xl); max-width: 16ch; }
+  .nf__body { font-size: var(--fs-lg); color: var(--color-text-muted); max-width: 48ch; }
+  .nf__en { color: var(--color-text-muted); font-size: var(--fs-base); }
+  .nf__actions { display: flex; gap: 0.9rem; flex-wrap: wrap; margin-top: 1.5rem; }
+</style>

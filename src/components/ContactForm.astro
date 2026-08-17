@@ -56,7 +56,14 @@ const thankyou = wb(`/${lang}/gracias/`);
     <span>{t('form.primera')}</span>
   </label>
 
-  <button type="submit" class="btn btn--solid cform__submit">{t('form.enviar')}</button>
+  <div class="cform__actions">
+    <button type="submit" class="btn btn--solid">{t('form.enviar')}</button>
+    <span class="cform__or">{t('form.or')}</span>
+    <button type="button" class="btn btn--ghost cform__wa" data-wa data-phone={site.whatsappPhone} data-lang={lang}>
+      <svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.8 1.9 6.8L3 29l6.7-2.1c2 1.1 4.2 1.7 6.4 1.7 7 0 12.7-5.7 12.7-12.7S23 3 16 3zm0 23c-2 0-3.9-.6-5.6-1.6l-.4-.2-4 1.2 1.2-3.9-.3-.4A10.4 10.4 0 0 1 5.6 15.7C5.6 10 10.3 5.3 16 5.3S26.4 10 26.4 15.7 21.7 26 16 26zm5.9-7.8c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.6 8.6 0 0 1-2.5-1.6 9.5 9.5 0 0 1-1.8-2.2c-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.6s.1-.4 0-.6-.7-1.7-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4a3.5 3.5 0 0 0-1.1 2.6c0 1.5 1.1 3 1.3 3.2s2.2 3.4 5.3 4.7c2 .8 2.7.9 3.7.8.6-.1 1.9-.8 2.1-1.5.3-.8.3-1.4.2-1.5s-.3-.2-.6-.4z"/></svg>
+      {t('form.wa')}
+    </button>
+  </div>
 </form>
 
 <script>
@@ -74,6 +81,37 @@ const thankyou = wb(`/${lang}/gracias/`);
         if (match) { sel.value = pre; sel.classList.add('is-prefilled'); }
       }
     } catch (e) {}
+
+    // Enviar por WhatsApp: arma un mensaje con los datos del formulario
+    const waBtn = form.querySelector('[data-wa]');
+    if (waBtn) {
+      waBtn.addEventListener('click', () => {
+        let ok = true;
+        form.querySelectorAll('[required]').forEach((el) => {
+          const f = el.closest('.cform__field');
+          const bad = !el.value || !String(el.value).trim();
+          f?.classList.toggle('is-invalid', bad);
+          if (bad) ok = false;
+        });
+        if (!ok) { form.querySelector('.is-invalid input, .is-invalid select')?.focus(); return; }
+        const lng = waBtn.getAttribute('data-lang') || 'es';
+        const phone = waBtn.getAttribute('data-phone');
+        const g = (n) => (form.querySelector('[name="' + n + '"]')?.value || '').trim();
+        const L = lng === 'en'
+          ? { intro: 'Hi, I would like to book at The Spa Mita.', nombre: 'Name', telefono: 'Phone', servicio: 'Service', fecha: 'Preferred date', mensaje: 'Message', primera: 'First time', yes: 'Yes' }
+          : { intro: 'Hola, quiero reservar en The Spa Mita.', nombre: 'Nombre', telefono: 'Teléfono', servicio: 'Servicio', fecha: 'Fecha tentativa', mensaje: 'Mensaje', primera: 'Primera vez', yes: 'Sí' };
+        const lines = [L.intro, ''];
+        lines.push(L.nombre + ': ' + g('nombre'));
+        lines.push(L.telefono + ': ' + g('telefono'));
+        lines.push(L.servicio + ': ' + g('servicio'));
+        if (g('fecha_preferida')) lines.push(L.fecha + ': ' + g('fecha_preferida'));
+        if (g('mensaje')) lines.push(L.mensaje + ': ' + g('mensaje'));
+        if (form.querySelector('[name="primera_vez"]')?.checked) lines.push(L.primera + ': ' + L.yes);
+        const text = encodeURIComponent(lines.join('\n'));
+        window.open('https://api.whatsapp.com/send?phone=' + phone + '&text=' + text, '_blank', 'noopener');
+      });
+    }
+
     form.addEventListener('submit', (e) => {
       let ok = true;
       form.querySelectorAll('[required]').forEach((el) => {
@@ -113,5 +151,7 @@ const thankyou = wb(`/${lang}/gracias/`);
 
   .cform__check { flex-direction: row; align-items: center; gap: 0.6rem; cursor: pointer; }
   .cform__check input { width: auto; }
-  .cform__submit { align-self: flex-start; margin-top: 0.5rem; }
+  .cform__actions { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; }
+  .cform__or { color: var(--color-text-muted); font-size: var(--fs-sm); }
+  .cform__wa { display: inline-flex; align-items: center; gap: 0.5rem; }
 </style>

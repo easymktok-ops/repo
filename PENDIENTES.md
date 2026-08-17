@@ -1,12 +1,7 @@
 # 📝 Pendientes — The Spa Mita
 
-Lista de ajustes y detalles por implementar. Se va llenando conforme el cliente
-marca cosas. **No se implementa nada hasta orden explícita** ("dale",
-"ataquemos", "implementa", etc.).
-
-**Cómo usar:** pásame los detalles en cualquier momento y los agrego aquí.
-Cuando digas la orden, los ataco todos juntos, marco cada uno como hecho y
-hago un solo push.
+Lista de ajustes y detalles. **No se implementa nada hasta orden explícita**
+("dale", "ataquemos", etc.). Pásame detalles cuando quieras y los apunto aquí.
 
 Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
 
@@ -14,69 +9,36 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
 
 ## 🔴 Pendientes (por implementar)
 
-- [ ] **Hero — bajar intensidad del shade.** Casi no se aprecia la imagen.
-      Buscar equilibrio entre legibilidad del H1 y presencia de la foto
-      (reducir opacidad del gradiente blanco, quizá 0.96→~0.75 en la zona del texto).
-- [ ] **Texto de personalización (Servicios/Precios) — quitar "color de cabina".**
-      La clienta quiere que diga: **"Fragancia ambiental, música y aromaterapia."**
-      Quitar definitivamente la cromoterapia / color de cabina.
-      Revisar TODAS las apariciones para consistencia:
-      - `serv.page.lead` (lead de la página de Servicios)
-      - copy de intro del home (`intro.p2`) que menciona "color de la cabina (cromoterapia)"
-      - FAQ `faq.a3` que también menciona cromoterapia
-- [ ] **Página 404** personalizada (bilingüe, con el diseño del sitio: menú,
-      mensaje amable y botón de volver al inicio / WhatsApp).
-- [ ] **Imagen de compartir (Open Graph) → logo de marca.** Hoy usa la foto
-      costera (barranco/playa) y la clienta dice que confunde: piensan que el
-      spa queda ahí. Cambiar `og:image` / `twitter:image` por una **tarjeta con
-      el logo** sobre fondo neutro (idealmente 1200×630 px). Afecta
-      `BaseLayout.astro` (default `ogImage`) y el `image` del schema.org.
-      Nota: en Google (SERP) el ícono es el favicon (ya es el árbol de The Spa);
-      esto corrige sobre todo los previews al compartir el enlace.
-
----
-
-## 💡 Ideas — APROBADAS para el próximo ataque
-
-- [ ] **Formulario también por WhatsApp** (con nombre/servicio/fecha prefilled).
-      Botón "Enviar por WhatsApp" que arma un mensaje con todos los datos.
-      Gratis, sin backend. ✔ Aprobado — se implementa en el próximo ataque.
-- [ ] **Música de fondo chill (loop).** Toggle 🎵 apagado por defecto (el navegador
-      no permite autoplay con sonido). ✔ Aprobado.
-      ⚠️ **Dependencia:** hace falta la pista de audio. Si el cliente no da una,
-      uso una royalty-free/libre; si el proxy bloquea la descarga, pediré que
-      suban el MP3 al repo (`public/audio/`). Se resuelve en el ataque.
-
----
-
-## ▶️ Orden del cliente
-La próxima interacción es la señal para **atacar TODO** lo anterior de una sola vez.
+_(vacío — agrega detalles y aparecerán aquí)_
 
 ---
 
 ## ⚙️ Operativos / esperando algo del cliente
 
-- [ ] **Probar formulario en el hosting** — subir `/demo`, enviar el formulario
-      y confirmar que el correo llega a info@thespamita.com.
-- [ ] **Pasar a producción en la raíz** — cuando se apruebe, cambiar `base`
-      de `/demo` a `/` en `astro.config.mjs`, recompilar y entregar ZIP final.
+- [ ] **Subir pista de música** a `public/audio/ambient.mp3` (chill, con licencia
+      /royalty-free). El reproductor 🎵 ya está listo y aparece solo cuando el
+      archivo exista. Sin él, el botón queda oculto (nada se rompe).
+- [ ] **Probar formulario en el hosting** — enviar por correo y por WhatsApp y
+      confirmar que llegan.
+- [ ] **Pasar a producción en la raíz** — cambiar `base` de `/demo` a `/`,
+      recompilar y entregar ZIP final.
 
 ---
 
 ## ✅ Hecho (histórico)
 
-- [x] Estructura Astro bilingüe (ES/EN) con rutas separadas + hreflang
-- [x] Sistema de diseño (blanco, DM Sans 300, DM Serif Display, terracota)
-- [x] Menú lateral fijo + drawer mobile, toggle de idioma persistente
-- [x] Home, Servicios (precios completos), Nosotras, Galería, Contacto, Gracias
-- [x] 55 imágenes optimizadas a WebP (2 tamaños)
-- [x] SEO: schema.org DaySpa, Open Graph, sitemap, robots, hreflang
-- [x] WhatsApp flotante + botón back-to-top
-- [x] Hero con parallax + shade; nuevo hero (foto Punta de Mita del cliente)
-- [x] Selector de idioma con banderas (visible en mobile sin abrir menú)
-- [x] Logos de marcas más grandes
-- [x] Cada servicio enlaza a reservar cita (con servicio preseleccionado)
-- [x] Galería a 5 fotos (mosaico)
-- [x] Footer con Google Maps, TripAdvisor, Instagram y Facebook
-- [x] Formulario conectado a Web3Forms (info@thespamita.com)
-- [x] Sitio base-aware para desplegar en /demo o en la raíz
+- [x] Sitio Astro bilingüe (ES/EN), rutas separadas + hreflang, base-aware (/demo)
+- [x] Sistema de diseño, menú lateral, toggle idioma con banderas
+- [x] Home, Servicios (precios), Nosotras, Galería (5 fotos), Contacto, Gracias
+- [x] Imágenes WebP, hero nuevo (foto Punta de Mita), parallax + shade
+- [x] SEO: schema.org DaySpa, sitemap, robots, hreflang
+- [x] WhatsApp flotante, back-to-top, footer (Maps/TripAdvisor/redes)
+- [x] Formulario Web3Forms conectado a info@thespamita.com (+ preselección de servicio)
+- [x] **Hero: shade más ligero** (equilibrio legibilidad H1 ↔ imagen)
+- [x] **Texto de personalización** sin "color de cabina/cromoterapia"
+      → "fragancia ambiental, música y aromaterapia" (Servicios, home, FAQ, meta)
+- [x] **Página 404** personalizada bilingüe
+- [x] **og:image / twitter:image** = tarjeta con el logo (1200×630), evita
+      confusión de ubicación
+- [x] **Formulario también por WhatsApp** (botón que arma el mensaje con los datos)
+- [x] **Reproductor de música 🎵** con toggle (apagado por defecto; requiere el MP3)
