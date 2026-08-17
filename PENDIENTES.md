@@ -26,6 +26,13 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
       - FAQ `faq.a3` que también menciona cromoterapia
 - [ ] **Página 404** personalizada (bilingüe, con el diseño del sitio: menú,
       mensaje amable y botón de volver al inicio / WhatsApp).
+- [ ] **Imagen de compartir (Open Graph) → logo de marca.** Hoy usa la foto
+      costera (barranco/playa) y la clienta dice que confunde: piensan que el
+      spa queda ahí. Cambiar `og:image` / `twitter:image` por una **tarjeta con
+      el logo** sobre fondo neutro (idealmente 1200×630 px). Afecta
+      `BaseLayout.astro` (default `ogImage`) y el `image` del schema.org.
+      Nota: en Google (SERP) el ícono es el favicon (ya es el árbol de The Spa);
+      esto corrige sobre todo los previews al compartir el enlace.
 
 ---
 
