@@ -1,0 +1,219 @@
+# =============================================================================
+# Decap CMS - configuracion del panel de autoadministracion
+# -----------------------------------------------------------------------------
+# Cada coleccion mapea 1:1 al schema de src/content.config.ts. Los campos son
+# tipados y acotados: el dueno del negocio NO puede inyectar HTML/CSS ni romper
+# el maquetado. Solo edita datos.
+#
+# BACKEND: en desarrollo se usa el proxy local (`npm run cms:proxy`) via
+# local_backend, sin OAuth. Para produccion en Hostinger se finaliza en Fase 5
+# el backend GitHub (requiere un OAuth provider/proxy, ya que Hostinger no trae
+# identidad como Netlify). repo/branch se ajustan alli. Nada de esto es dominio.
+# =============================================================================
+
+backend:
+  name: github
+  repo: easymktok-ops/repo # se confirma en Fase 5 (identidad de repo, no dominio)
+  branch: main # rama de publicacion; ajustable en el corte a produccion
+
+# Edicion local inmediata sin OAuth: `npm run cms:proxy` + abrir /admin en dev.
+local_backend: true
+
+# Medios: los uploads del dueno van aqui. El binding fino con el pipeline de
+# imagen optimizada de Astro (image()) se cierra en Fase 2 con assets reales.
+media_folder: "src/assets/uploads"
+public_folder: "/src/assets/uploads"
+
+locale: "es"
+
+collections:
+  # --- PAQUETES DE VUELO ---------------------------------------------------
+  - name: "packages"
+    label: "Paquetes de vuelo"
+    label_singular: "Paquete"
+    folder: "src/content/packages"
+    create: true
+    slug: "{{fields.slug}}"
+    summary: "{{title.es}}"
+    fields:
+      - {
+          label: "Título",
+          name: "title",
+          widget: "object",
+          fields:
+            [
+              { label: "Español", name: "es", widget: "string" },
+              { label: "English", name: "en", widget: "string", required: false },
+            ],
+        }
+      - { label: "Slug (URL, estable)", name: "slug", widget: "string", pattern: ["^[a-z0-9-]+$", "solo minúsculas, números y guiones"] }
+      - {
+          label: "Resumen",
+          name: "summary",
+          widget: "object",
+          fields:
+            [
+              { label: "Español", name: "es", widget: "text" },
+              { label: "English", name: "en", widget: "text", required: false },
+            ],
+        }
+      - { label: "Precio desde (MXN)", name: "priceFrom", widget: "number", required: false, value_type: "int", min: 0, hint: "Déjalo vacío para mostrar 'Consultar'." }
+      - { label: "Moneda", name: "currency", widget: "hidden", default: "MXN" }
+      - { label: "Duración (minutos)", name: "durationMinutes", widget: "number", required: false, value_type: "int", min: 1 }
+      - {
+          label: "Capacidad",
+          name: "capacity",
+          widget: "object",
+          required: false,
+          fields:
+            [
+              { label: "Mínimo", name: "min", widget: "number", value_type: "int", min: 1 },
+              { label: "Máximo", name: "max", widget: "number", value_type: "int", min: 1 },
+            ],
+        }
+      - { label: "Disponible", name: "available", widget: "boolean", default: true }
+      - {
+          label: "Puntos destacados",
+          name: "highlights",
+          widget: "list",
+          required: false,
+          field:
+            {
+              label: "Punto",
+              name: "punto",
+              widget: "object",
+              fields:
+                [
+                  { label: "Español", name: "es", widget: "string" },
+                  { label: "English", name: "en", widget: "string", required: false },
+                ],
+            },
+        }
+      - { label: "Imagen principal", name: "heroImage", widget: "image", choose_url: false }
+      - {
+          label: "Texto alterno de la imagen (alt)",
+          name: "heroImageAlt",
+          widget: "object",
+          fields:
+            [
+              { label: "Español", name: "es", widget: "string" },
+              { label: "English", name: "en", widget: "string", required: false },
+            ],
+        }
+      - { label: "Orden", name: "order", widget: "number", default: 0, value_type: "int" }
+      - { label: "Destacado", name: "featured", widget: "boolean", default: false }
+      - { label: "Borrador (no publicar)", name: "draft", widget: "boolean", default: false }
+
+  # --- PREGUNTAS FRECUENTES ------------------------------------------------
+  - name: "faq"
+    label: "Preguntas frecuentes"
+    label_singular: "Pregunta"
+    folder: "src/content/faq"
+    create: true
+    fields:
+      - {
+          label: "Pregunta",
+          name: "question",
+          widget: "object",
+          fields:
+            [
+              { label: "Español", name: "es", widget: "string" },
+              { label: "English", name: "en", widget: "string", required: false },
+            ],
+        }
+      - {
+          label: "Respuesta (clara y autocontenida)",
+          name: "answer",
+          widget: "object",
+          hint: "Responde la pregunta completa en una idea clara. Ayuda al SEO y a que ChatGPT/Perplexity te citen.",
+          fields:
+            [
+              { label: "Español", name: "es", widget: "text" },
+              { label: "English", name: "en", widget: "text", required: false },
+            ],
+        }
+      - {
+          label: "Categoría",
+          name: "category",
+          widget: "select",
+          options: ["reservas", "vuelo", "clima", "pagos", "seguridad", "general"],
+          default: "general",
+        }
+      - { label: "Orden", name: "order", widget: "number", default: 0, value_type: "int" }
+      - { label: "Borrador (no publicar)", name: "draft", widget: "boolean", default: false }
+
+  # --- TESTIMONIOS ---------------------------------------------------------
+  - name: "testimonials"
+    label: "Testimonios"
+    label_singular: "Testimonio"
+    folder: "src/content/testimonials"
+    create: true
+    fields:
+      - { label: "Autor", name: "author", widget: "string" }
+      - {
+          label: "Reseña (corta)",
+          name: "quote",
+          widget: "object",
+          fields:
+            [
+              { label: "Español", name: "es", widget: "text" },
+              { label: "English", name: "en", widget: "text", required: false },
+            ],
+        }
+      - { label: "Calificación", name: "rating", widget: "number", default: 5, value_type: "int", min: 1, max: 5 }
+      - { label: "Fuente", name: "source", widget: "select", options: ["google", "tripadvisor", "directo"], default: "google" }
+      - { label: "Fecha", name: "date", widget: "datetime", required: false, date_format: "YYYY-MM-DD", time_format: false }
+      - { label: "Orden", name: "order", widget: "number", default: 0, value_type: "int" }
+      - { label: "Borrador (no publicar)", name: "draft", widget: "boolean", default: false }
+
+  # --- PROMOCIONES ---------------------------------------------------------
+  - name: "promos"
+    label: "Promociones"
+    label_singular: "Promoción"
+    folder: "src/content/promos"
+    create: true
+    fields:
+      - {
+          label: "Título",
+          name: "title",
+          widget: "object",
+          fields:
+            [
+              { label: "Español", name: "es", widget: "string" },
+              { label: "English", name: "en", widget: "string", required: false },
+            ],
+        }
+      - {
+          label: "Texto",
+          name: "body",
+          widget: "object",
+          fields:
+            [
+              { label: "Español", name: "es", widget: "text" },
+              { label: "English", name: "en", widget: "text", required: false },
+            ],
+        }
+      - { label: "Inicia", name: "startsAt", widget: "datetime", required: false }
+      - { label: "Termina", name: "endsAt", widget: "datetime", required: false }
+      - { label: "Activa", name: "active", widget: "boolean", default: false }
+
+  # --- GALERIA -------------------------------------------------------------
+  - name: "gallery"
+    label: "Galería"
+    label_singular: "Foto"
+    folder: "src/content/gallery"
+    create: true
+    fields:
+      - { label: "Imagen", name: "image", widget: "image" }
+      - {
+          label: "Texto alterno (alt)",
+          name: "alt",
+          widget: "object",
+          fields:
+            [
+              { label: "Español", name: "es", widget: "string" },
+              { label: "English", name: "en", widget: "string", required: false },
+            ],
+        }
+      - { label: "Orden", name: "order", widget: "number", default: 0, value_type: "int" }
+      - { label: "Borrador (no publicar)", name: "draft", widget: "boolean", default: false }

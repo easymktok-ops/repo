@@ -1,0 +1,228 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import { site } from "@config/site";
+
+/**
+ * FASE 1 - pagina de fundamentos (design system vivo). No es el sitio final.
+ * Sirve para verificar tokens, fuentes y contraste antes de construir las
+ * secciones de conversion (Fase 2). Se reemplaza por el Home real en Fase 2.
+ */
+
+const swatches = [
+  { name: "bg", label: "Fondo", varName: "--bg" },
+  { name: "surface", label: "Superficie", varName: "--surface" },
+  { name: "surface-raised", label: "Elevada", varName: "--surface-raised" },
+  { name: "ink", label: "Tinta", varName: "--ink" },
+  { name: "muted", label: "Secundario", varName: "--muted" },
+  { name: "line", label: "Linea", varName: "--line" },
+  { name: "accent", label: "Acento (cielo alto)", varName: "--accent" },
+  { name: "ember", label: "Ember (raro)", varName: "--ember" },
+];
+
+const typeScale = [
+  { step: "--step-5", label: "Display / Hero", sample: "Teotihuacan al amanecer" },
+  { step: "--step-3", label: "Titulo de seccion", sample: "Explora los vuelos" },
+  { step: "--step-1", label: "Subtitulo", sample: "Desde el valle hasta el cielo" },
+  { step: "--step-0", label: "Cuerpo", sample: "Texto de lectura, 16 a 18px fluido." },
+];
+---
+
+<BaseLayout
+  title={site.name}
+  description={site.brand.tagline.es}
+  logicalPath="/"
+>
+  <section class="hero container">
+    <p class="kicker">Fundamentos · Fase 1</p>
+    <h1>Aerodiverti</h1>
+    <p class="tagline measure">{site.brand.tagline.es}</p>
+    <p class="note measure">
+      Esta es la base de diseño (tokens, tipografía y color) del proyecto. Las
+      secciones de conversión se construyen en la Fase 2. Página de referencia
+      interna, no el sitio final.
+    </p>
+  </section>
+
+  <section class="container block">
+    <h2>Paleta Obsidiana</h2>
+    <div class="swatches">
+      {
+        swatches.map((s) => (
+          <figure class="swatch">
+            <div class="chip" style={`background: var(${s.varName})`} />
+            <figcaption>
+              <span class="swatch-label">{s.label}</span>
+              <code>{s.varName}</code>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="container block">
+    <h2>Escala tipográfica</h2>
+    <ul class="type-list">
+      {
+        typeScale.map((row) => (
+          <li>
+            <span class="type-meta">
+              <code>{row.step}</code>
+              <span>{row.label}</span>
+            </span>
+            <span class="type-sample" style={`font-size: var(${row.step})`}>
+              {row.sample}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="container block">
+    <h2>Acento y movimiento</h2>
+    <div class="demo-row">
+      <button class="btn-accent" type="button">Reservar vuelo</button>
+      <button class="btn-ghost" type="button">Ver vuelos</button>
+      <span class="mono-figure">ALT 2 300 m · 06:20</span>
+    </div>
+    <p class="note measure">
+      Botón primario con curva <code>--ease-out</code> y feedback de presión
+      (<code>scale 0.97</code>). Las cifras usan Geist Mono, acotado al motivo de
+      boarding pass.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+  .kicker {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-label);
+    color: var(--accent);
+    margin-bottom: var(--space-sm);
+  }
+  h1 {
+    font-size: var(--step-5);
+    font-weight: 700;
+  }
+  .tagline {
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+    margin-top: var(--space-sm);
+  }
+  .note {
+    color: var(--muted);
+    margin-top: var(--space-md);
+  }
+  .block {
+    padding-block: var(--space-xl);
+    border-top: 1px solid var(--line-faint);
+  }
+  h2 {
+    font-size: var(--step-2);
+    margin-bottom: var(--space-lg);
+  }
+
+  .swatches {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: var(--space-md);
+  }
+  .swatch {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xs);
+  }
+  .chip {
+    aspect-ratio: 16 / 10;
+    border-radius: var(--radius-card);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-sm);
+  }
+  figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .swatch-label {
+    font-weight: 600;
+  }
+  code {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--faint);
+  }
+
+  .type-list {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: var(--space-lg);
+  }
+  .type-list li {
+    display: grid;
+    gap: var(--space-2xs);
+  }
+  .type-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+  .type-sample {
+    font-family: var(--font-display);
+    line-height: var(--leading-tight);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .demo-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+  }
+  .btn-accent {
+    background: var(--accent);
+    color: var(--accent-ink);
+    border: none;
+    border-radius: var(--radius-pill);
+    padding: 0.85rem 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform var(--dur-press) var(--ease-out),
+      background var(--dur-pop) var(--ease-out);
+  }
+  .btn-accent:hover {
+    background: var(--accent-strong);
+  }
+  .btn-accent:active {
+    transform: scale(0.97);
+  }
+  .btn-ghost {
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-pill);
+    padding: 0.85rem 1.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color var(--dur-pop) var(--ease-out),
+      transform var(--dur-press) var(--ease-out);
+  }
+  .btn-ghost:hover {
+    border-color: var(--accent);
+  }
+  .btn-ghost:active {
+    transform: scale(0.97);
+  }
+  .mono-figure {
+    font-family: var(--font-mono);
+    color: var(--muted);
+    letter-spacing: 0.04em;
+  }
+</style>

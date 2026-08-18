@@ -1,0 +1,161 @@
+/* =============================================================================
+   AERODIVERTI - DESIGN TOKENS (fuente de verdad unica)
+   -----------------------------------------------------------------------------
+   Registro de diseno: BRAND (impeccable/brand.md). Estrategia de color:
+   COMMITTED / tirando a DRENCHED en oscuro. Tema unico bloqueado: "Obsidiana".
+   No hay variante clara: la marca ES oscuro-cinematografico (Page Theme Lock).
+
+   Todo en OKLCH. La lectura cultural (Teotihuacan, amanecer, altitud) NO viene
+   de un dorado turistico generico -> viene de la tipografia, la imagen y el
+   copy. La paleta es obsidiana + cal + un solo acento de cielo a gran altura.
+
+   Contraste verificado sobre --bg (L 0.17):
+     - ink   (L 0.94) sobre bg  -> ~15:1  (AAA)
+     - muted (L 0.72) sobre bg  -> ~6.4:1 (AA cuerpo, objetivo)
+     - accent(L 0.82) sobre bg  -> ~9:1   (AA large + AA cuerpo)
+     - ink   (L 0.17) sobre accent(L 0.82) -> boton solido, ~9:1
+   La verificacion formal por componente es parte de la Fase 4 (audit).
+============================================================================= */
+
+:root {
+  color-scheme: dark;
+
+  /* --- SUPERFICIES (obsidiana: negro volcanico con matiz frio) ------------ */
+  --bg: oklch(0.17 0.014 258); /* fondo base del sitio */
+  --bg-deep: oklch(0.13 0.014 260); /* pozos, footer, letterbox del hero */
+  --surface: oklch(0.215 0.016 256); /* cards de paquete, paneles */
+  --surface-raised: oklch(0.255 0.018 254); /* hover/elevacion, popovers */
+  --surface-sunken: oklch(0.155 0.014 260); /* inputs, tracks */
+
+  /* --- TINTA / TEXTO (cal / piedra) -------------------------------------- */
+  --ink: oklch(0.94 0.006 240); /* texto principal, casi bone frio */
+  --ink-soft: oklch(0.86 0.008 240); /* subtitulos */
+  --muted: oklch(0.72 0.012 245); /* texto secundario (pasa AA sobre bg) */
+  --faint: oklch(0.58 0.012 250); /* metadatos, captions (uso grande) */
+
+  /* --- LINEAS (hairlines de 1px, patron theenglishbus) ------------------- */
+  --line: oklch(0.32 0.014 255); /* borde estandar hairline */
+  --line-strong: oklch(0.42 0.016 253); /* borde en hover/foco */
+  --line-faint: oklch(0.26 0.012 258); /* separadores muy sutiles */
+
+  /* --- ACENTO UNICO: "cielo alto" (aqua palido del amanecer en altura) ---- */
+  /* Es EL acento. Color Consistency Lock: se usa igual en toda la pagina. */
+  --accent: oklch(0.82 0.1 205);
+  --accent-strong: oklch(0.86 0.12 200); /* hover del acento */
+  --accent-dim: oklch(0.5 0.06 210); /* acento apagado (bordes/estados) */
+  --accent-ink: oklch(0.17 0.02 240); /* texto SOBRE un fondo de acento */
+  --accent-wash: oklch(0.82 0.1 205 / 0.1); /* velo translucido del acento */
+
+  /* --- EMBER (terracota de las piramides): TERCIARIO RARO ----------------- */
+  /* NO es un segundo acento. Reservado a UN solo momento de marca: la palabra
+     que atraviesa la doble exposicion, o un realce puntual. No aparece como
+     color de UI (nada de CTAs ember, badges ember, etc.). */
+  --ember: oklch(0.68 0.15 45);
+
+  /* --- ESTADOS SEMANTICOS (derivados, no compiten con el acento) ---------- */
+  --ok: oklch(0.78 0.13 155);
+  --warn: oklch(0.82 0.13 85);
+  --danger: oklch(0.68 0.19 25);
+  --danger-ink: oklch(0.97 0.01 25);
+
+  /* --- SCRIM del hero (gradiente direccional, sin rectangulo generico) ---- */
+  --scrim-from: oklch(0.11 0.014 260 / 0.86);
+  --scrim-mid: oklch(0.13 0.014 260 / 0.42);
+  --scrim-to: oklch(0.13 0.014 260 / 0);
+
+  /* =========================================================================
+     TIPOGRAFIA
+     Familias: display = Bricolage Grotesque (caracter, inktraps, aire de
+     senaletica/precision -> altitud, no invitacion de boda). Cuerpo = Geist
+     (neutral, workhorse). Contraste display-caracter / texto-neutral = eje real.
+     Mono = Geist Mono, ACOTADO al motivo boarding-pass (cifras tabulares,
+     folios de vuelo). Nunca como disfraz "tecnico" en cuerpo.
+  ========================================================================= */
+  --font-display: "Bricolage Grotesque Variable", "Bricolage Grotesque",
+    ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Geist Variable", "Geist", ui-sans-serif, system-ui, -apple-system,
+    "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, "SF Mono",
+    "Cascadia Code", monospace;
+
+  /* Escala tipografica fluida (clamp, ratio >= 1.25). Tope display <= 6rem. */
+  --step--1: clamp(0.83rem, 0.8rem + 0.15vw, 0.9rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.125rem);
+  --step-1: clamp(1.25rem, 1.16rem + 0.45vw, 1.55rem);
+  --step-2: clamp(1.56rem, 1.4rem + 0.8vw, 2.15rem);
+  --step-3: clamp(1.95rem, 1.66rem + 1.45vw, 3rem);
+  --step-4: clamp(2.44rem, 1.94rem + 2.5vw, 4.2rem);
+  --step-5: clamp(3rem, 2.900rem + 4.4vw, 5.75rem); /* tope ~92px < 96px */
+
+  --leading-tight: 1.05;
+  --leading-snug: 1.18;
+  --leading-body: 1.6;
+  --tracking-display: -0.03em; /* piso -0.04em, no cruzarlo */
+  --tracking-flat: 0;
+  --tracking-label: 0.02em;
+  --measure: 68ch; /* 65-75ch */
+
+  /* =========================================================================
+     ESPACIADO (ritmo variable; base 4px)
+  ========================================================================= */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6rem;
+  --space-3xl: clamp(5rem, 3.5rem + 7vw, 10rem); /* separaciones de seccion */
+
+  /* Ancho de contenido */
+  --container: 1400px;
+  --container-narrow: 1080px;
+  --gutter: clamp(1.25rem, 0.9rem + 1.75vw, 2.5rem);
+
+  /* =========================================================================
+     RADIOS (Shape Consistency Lock, motivo "boleto/boarding pass")
+     Regla documentada: cards 14px, inputs 10px, botones pill, sellos 999px.
+  ========================================================================= */
+  --radius-xs: 6px;
+  --radius-input: 10px;
+  --radius-card: 14px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  /* =========================================================================
+     ELEVACION (sombras tintadas al fondo, nunca negro puro)
+  ========================================================================= */
+  --shadow-sm: 0 1px 2px oklch(0.1 0.02 260 / 0.4);
+  --shadow-md: 0 8px 24px -8px oklch(0.08 0.02 260 / 0.55);
+  --shadow-lg: 0 24px 60px -18px oklch(0.06 0.02 260 / 0.7);
+  --glow-accent: 0 0 0 1px var(--accent-wash), 0 8px 30px -10px oklch(0.82 0.1 205 / 0.35);
+
+  /* =========================================================================
+     MOTION (emil-design-eng): curvas custom + duraciones por elemento.
+     Nunca `transition: all`. Nunca ease-in en UI. Reduced-motion obligatorio.
+  ========================================================================= */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1); /* entradas/UI, "fuerte" */
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1); /* movimiento en pantalla */
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1); /* drawers estilo iOS */
+
+  --dur-press: 140ms; /* feedback de :active */
+  --dur-pop: 200ms; /* tooltips, popovers chicos */
+  --dur-menu: 240ms; /* dropdowns/selects */
+  --dur-panel: 320ms; /* modales/drawers */
+  --dur-hero: 700ms; /* choreografia de entrada del hero */
+
+  /* =========================================================================
+     Z-INDEX (escala semantica, sin 999 magicos)
+  ========================================================================= */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sidebar: 100;
+  --z-dropdown: 200;
+  --z-sticky: 300;
+  --z-backdrop: 400;
+  --z-modal: 500;
+  --z-toast: 600;
+  --z-tooltip: 700;
+  --z-grain: 800; /* overlay de grano, pointer-events:none */
+}

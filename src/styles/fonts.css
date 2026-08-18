@@ -1,0 +1,14 @@
+/* =============================================================================
+   Fuentes self-hosted via Fontsource (nada de <link> a Google Fonts en prod).
+   Solo se importan los ejes/pesos que usamos, con font-display: swap para no
+   bloquear el FCP. Los .woff2 los sirve el propio build (dominio-agnostico).
+
+   - Bricolage Grotesque Variable: display (200-800, opsz).
+   - Geist Variable: cuerpo (100-900).
+   - Geist Mono Variable: cifras del boarding-pass (100-900).
+   Fontsource ya declara font-display: swap y unicode-range en estos paquetes.
+============================================================================= */
+
+@import "@fontsource-variable/bricolage-grotesque";
+@import "@fontsource-variable/geist";
+@import "@fontsource-variable/geist-mono";

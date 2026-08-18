@@ -1,0 +1,78 @@
+---
+import "@styles/global.css";
+import { site, absoluteUrl } from "@config/site";
+import { getLocaleFromUrl, hreflangAlternates } from "@i18n/utils";
+import { useTranslations } from "@i18n/ui";
+
+/**
+ * Layout base: cabeza SEO/OG/hreflang dominio-agnostica. Todo lo absoluto se
+ * construye con site.url (de env). Ninguna URL de dominio hardcodeada aqui.
+ */
+interface Props {
+  title: string;
+  description: string;
+  /** Ruta logica SIN prefijo de idioma, para calcular hreflang (ej. "/vuelos"). */
+  logicalPath?: string;
+  /** Imagen OG relativa o absoluta; cae a un OG por defecto. */
+  ogImage?: string;
+  /** noindex para paginas transaccionales (pasos de checkout). */
+  noindex?: boolean;
+}
+
+const { title, description, logicalPath = "/", ogImage, noindex = false } = Astro.props;
+
+const locale = getLocaleFromUrl(Astro.url);
+const t = useTranslations(locale);
+const canonical = absoluteUrl(Astro.url.pathname);
+const alternates = hreflangAlternates(logicalPath);
+const ogImageUrl = ogImage
+  ? ogImage.startsWith("http")
+    ? ogImage
+    : absoluteUrl(ogImage)
+  : absoluteUrl("/images/og-default.jpg");
+const fullTitle = title === site.name ? title : `${title} · ${site.name}`;
+---
+
+<!doctype html>
+<html lang={locale === "es" ? "es-MX" : "en"} class="antialiased">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <!-- hreflang es/en + x-default -->
+    {alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content={locale === "es" ? "es_MX" : "en_US"} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <meta name="theme-color" content="#1a1c24" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main">{t("a11y.skip")}</a>
+    <slot name="chrome-start" />
+    <main id="main">
+      <slot />
+    </main>
+    <slot name="chrome-end" />
+  </body>
+</html>
