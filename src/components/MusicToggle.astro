@@ -5,7 +5,7 @@
 // El botón se oculta automáticamente si no hay archivo de audio disponible.
 import { wb } from '../lib/paths';
 ---
-<button class="music" data-music aria-label="Música de fondo" aria-pressed="false" hidden>
+<button class="music" data-music aria-label="Música de fondo" aria-pressed="false">
   <span class="music__icon" aria-hidden="true">
     <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M9 17.5a2.5 2.5 0 1 1-2.5-2.5c.4 0 .8.1 1.1.2V6.3l8-1.6v8.3a2.5 2.5 0 1 1-2.5-2.5c.4 0 .8.1 1.1.2V6.5L9 7.6v9.9z"/></svg>
   </span>
@@ -19,15 +19,10 @@ import { wb } from '../lib/paths';
   const audio = document.querySelector('[data-music-audio]');
   if (btn && audio) {
     audio.volume = 0.35;
-    let available = false;
 
-    // Sólo mostrar el botón si el audio se puede cargar
-    audio.addEventListener('canplaythrough', reveal, { once: true });
-    audio.addEventListener('loadedmetadata', reveal, { once: true });
+    // El botón se muestra por defecto; se oculta sólo si el audio falla
+    // (por ejemplo, si el archivo no existe).
     audio.addEventListener('error', () => { btn.hidden = true; });
-    function reveal() { available = true; btn.hidden = false; }
-    // Forzar la comprobación
-    try { audio.load(); } catch (e) {}
 
     const setState = (on) => {
       btn.classList.toggle('is-playing', on);

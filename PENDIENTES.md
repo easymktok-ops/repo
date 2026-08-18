@@ -15,9 +15,8 @@ _(vacío — agrega detalles y aparecerán aquí)_
 
 ## ⚙️ Operativos / esperando algo del cliente
 
-- [ ] **Subir pista de música** a `public/audio/ambient.mp3` (chill, con licencia
-      /royalty-free). El reproductor 🎵 ya está listo y aparece solo cuando el
-      archivo exista. Sin él, el botón queda oculto (nada se rompe).
+- [x] **Pista de música** subida (`public/audio/ambient.mp3`, 56 s, loop, vol. 35%).
+      Reproductor 🎵 activo y verificado.
 - [ ] **Probar formulario en el hosting** — enviar por correo y por WhatsApp y
       confirmar que llegan.
 - [ ] **Pasar a producción en la raíz** — cambiar `base` de `/demo` a `/`,
