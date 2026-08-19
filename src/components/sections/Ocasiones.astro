@@ -1,0 +1,228 @@
+---
+import { Image } from "astro:assets";
+import Icon from "@components/ui/Icon.astro";
+import { localizedPath, type Locale } from "@config/site";
+import { img } from "@lib/media";
+
+/**
+ * Ocasiones (decision de negocio: navegacion de primer nivel). Grid asimetrico
+ * (no fila de cards identicas): pedida como tarjeta destacada + aniversario y
+ * cumpleanos apiladas. Hover con ease-out en el punto de decision.
+ * Copy = encuadre de seccion (no datos de negocio: sin precios ni cifras).
+ */
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const t = {
+  es: {
+    heading: "Un motivo para volar",
+    sub: "Cada vuelo puede ser el escenario de algo que se recuerda.",
+    all: "Ver todas las ocasiones",
+  },
+  en: {
+    heading: "A reason to fly",
+    sub: "Every flight can be the setting for something you will remember.",
+    all: "See all occasions",
+  },
+}[locale];
+
+const occasions = [
+  {
+    slug: "pedida-de-mano",
+    image: "ocasion-pedida.jpg",
+    featured: true,
+    title: { es: "Pedida de mano", en: "Marriage proposal" },
+    tagline: {
+      es: "Pedir matrimonio a la altura del momento.",
+      en: "Propose at the height of the moment.",
+    },
+    alt: {
+      es: "Pareja en una pedida de mano junto al globo iluminado",
+      en: "Couple during a proposal beside the lit balloon",
+    },
+  },
+  {
+    slug: "aniversario",
+    image: "ocasion-aniversario.jpg",
+    featured: false,
+    title: { es: "Aniversario", en: "Anniversary" },
+    tagline: {
+      es: "Celebrar los años donde el cielo se abre.",
+      en: "Celebrate the years where the sky opens up.",
+    },
+    alt: {
+      es: "Pareja celebrando su aniversario en la canastilla del globo",
+      en: "Couple celebrating their anniversary in the balloon basket",
+    },
+  },
+  {
+    slug: "cumpleanos",
+    image: "ocasion-cumpleanos.jpg",
+    featured: false,
+    title: { es: "Cumpleaños", en: "Birthday" },
+    tagline: {
+      es: "Un año más, con la mejor vista.",
+      en: "One more year, with the best view.",
+    },
+    alt: {
+      es: "Festejo de cumpleaños con globos al amanecer",
+      en: "Birthday celebration with balloons at sunrise",
+    },
+  },
+];
+
+const href = localizedPath("/ocasiones", locale);
+---
+
+<section class="oc container" aria-labelledby="oc-h">
+  <header class="oc-head">
+    <div>
+      <h2 id="oc-h">{t.heading}</h2>
+      <p class="oc-sub measure">{t.sub}</p>
+    </div>
+    <a class="oc-all" href={href}>
+      <span>{t.all}</span>
+      <Icon name="arrow-up-right" />
+    </a>
+  </header>
+
+  <ul class="oc-grid">
+    {
+      occasions.map((o) => (
+        <li class:list={["oc-card", { featured: o.featured }]}>
+          <a href={href} class="oc-link">
+            <Image
+              class="oc-img"
+              src={img(o.image)}
+              alt={o.alt[locale]}
+              widths={[480, 800, 1200]}
+              sizes="(min-width: 900px) 40vw, 100vw"
+              format="avif"
+            />
+            <div class="oc-veil" />
+            <div class="oc-meta">
+              <h3>{o.title[locale]}</h3>
+              <p>{o.tagline[locale]}</p>
+            </div>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .oc {
+    padding-block: var(--space-3xl);
+  }
+  .oc-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+  h2 {
+    font-size: var(--step-3);
+  }
+  .oc-sub {
+    margin-top: var(--space-xs);
+    color: var(--muted);
+    font-size: var(--step-1);
+  }
+  .oc-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--accent);
+    font-weight: 600;
+    white-space: nowrap;
+    transition: gap var(--dur-pop) var(--ease-out);
+  }
+  .oc-all:hover {
+    gap: 0.85rem;
+  }
+
+  .oc-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-md);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 900px) {
+    .oc-grid {
+      grid-template-columns: 7fr 5fr;
+      grid-auto-rows: minmax(230px, 1fr);
+    }
+    .oc-card.featured {
+      grid-row: span 2;
+    }
+  }
+
+  .oc-card {
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    min-height: 230px;
+  }
+  .oc-link {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+  }
+  .oc-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 600ms var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .oc-link:hover .oc-img {
+      transform: scale(1.05);
+    }
+  }
+  .oc-veil {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      oklch(0.11 0.02 260 / 0.86) 4%,
+      oklch(0.11 0.02 260 / 0.12) 46%,
+      transparent 72%
+    );
+  }
+  .oc-meta {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    padding: var(--space-md);
+  }
+  .oc-meta h3 {
+    font-size: var(--step-2);
+    color: var(--ink);
+  }
+  .oc-meta p {
+    margin-top: 0.15rem;
+    color: var(--ink-soft);
+    font-size: var(--step-0);
+  }
+  .oc-card.featured .oc-meta h3 {
+    font-size: var(--step-3);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .oc-img {
+      transition: none;
+    }
+  }
+</style>

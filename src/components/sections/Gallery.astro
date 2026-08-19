@@ -1,0 +1,126 @@
+---
+import { Image } from "astro:assets";
+import Icon from "@components/ui/Icon.astro";
+import { localizedPath, type Locale } from "@config/site";
+import { img } from "@lib/media";
+
+/**
+ * Galeria en masonry (columnas CSS): respeta las proporciones reales (retrato y
+ * paisaje conviven) en vez de recortar todo a cuadros iguales. Hover ease-out.
+ */
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const t = {
+  es: { heading: "Galería", all: "Ver galería completa" },
+  en: { heading: "Gallery", all: "See full gallery" },
+}[locale];
+
+const shots = [
+  { file: "galeria-03.jpg", alt: { es: "Globo sobre las pirámides de Teotihuacán", en: "Balloon over the Teotihuacán pyramids" } },
+  { file: "galeria-05.jpg", alt: { es: "Pasajeras en la canastilla con la pirámide al fondo", en: "Passengers in the basket with the pyramid behind" } },
+  { file: "galeria-04.jpg", alt: { es: "Globo sobre un mar de nubes al amanecer", en: "Balloon above a sea of clouds at sunrise" } },
+  { file: "galeria-07.jpg", alt: { es: "Silueta al contraluz mirando un globo al amanecer", en: "Backlit silhouette watching a balloon at sunrise" } },
+  { file: "galeria-02.jpg", alt: { es: "Quemador encendido dentro del globo", en: "Burner firing inside the balloon" } },
+  { file: "galeria-06.jpg", alt: { es: "Pasajera señalando el amanecer desde la canastilla", en: "Passenger pointing at the sunrise from the basket" } },
+  { file: "galeria-01.jpg", alt: { es: "Globos de Aerodiverti en vuelo", en: "Aerodiverti balloons in flight" } },
+];
+
+const href = localizedPath("/galeria", locale);
+---
+
+<section class="ga container" aria-labelledby="ga-h">
+  <header class="ga-head">
+    <h2 id="ga-h">{t.heading}</h2>
+    <a class="ga-all" href={href}>
+      <span>{t.all}</span>
+      <Icon name="arrow-up-right" />
+    </a>
+  </header>
+
+  <div class="ga-masonry">
+    {
+      shots.map((s) => (
+        <figure class="ga-item">
+          <Image
+            src={img(s.file)}
+            alt={s.alt[locale]}
+            widths={[360, 640, 900]}
+            sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+            format="avif"
+          />
+        </figure>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .ga {
+    padding-block: var(--space-3xl);
+  }
+  .ga-head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+  h2 {
+    font-size: var(--step-3);
+  }
+  .ga-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--accent);
+    font-weight: 600;
+    white-space: nowrap;
+    transition: gap var(--dur-pop) var(--ease-out);
+  }
+  .ga-all:hover {
+    gap: 0.85rem;
+  }
+
+  /* Masonry con columnas CSS: conserva proporciones reales. */
+  .ga-masonry {
+    columns: 1;
+    column-gap: var(--space-md);
+  }
+  @media (min-width: 640px) {
+    .ga-masonry {
+      columns: 2;
+    }
+  }
+  @media (min-width: 1024px) {
+    .ga-masonry {
+      columns: 3;
+    }
+  }
+  .ga-item {
+    break-inside: avoid;
+    margin: 0 0 var(--space-md);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .ga-item :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 600ms var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .ga-item:hover :global(img) {
+      transform: scale(1.045);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ga-item :global(img) {
+      transition: none;
+    }
+  }
+</style>

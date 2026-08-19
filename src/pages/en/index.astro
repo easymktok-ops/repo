@@ -2,11 +2,11 @@
 import PageShell from "@layouts/PageShell.astro";
 import Hero from "@components/sections/Hero.astro";
 import BoardingPassBar from "@components/sections/BoardingPassBar.astro";
+import Ocasiones from "@components/sections/Ocasiones.astro";
+import DoubleExposure from "@components/sections/DoubleExposure.astro";
+import Gallery from "@components/sections/Gallery.astro";
 import { site } from "@config/site";
 
-/**
- * Home (en). Mirror of the es home. More sections land through Phase 2.
- */
 const locale = "en" as const;
 ---
 
@@ -18,4 +18,7 @@ const locale = "en" as const;
 >
   <Hero locale={locale} />
   <BoardingPassBar locale={locale} />
+  <Ocasiones locale={locale} />
+  <DoubleExposure locale={locale} />
+  <Gallery locale={locale} />
 </PageShell>

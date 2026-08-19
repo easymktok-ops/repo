@@ -1,0 +1,211 @@
+---
+import { getImage } from "astro:assets";
+import Button from "@components/ui/Button.astro";
+import { localizedPath, type Locale } from "@config/site";
+import { img } from "@lib/media";
+
+/**
+ * Doble exposicion (patron 5.4): la silueta del globo es la mascara (clipPath)
+ * de una foto real del cielo que ve el pasajero. Momento de marca, no adorno.
+ * Palabra de lugar atravesando la composicion, solida (sin gradiente en texto).
+ * Reveal por scroll con animation-timeline: view() (cero JS; degrada a visible).
+ */
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const t = {
+  es: {
+    heading: "Lo que se ve allá arriba",
+    sub: "no cabe en una sola foto. Por eso te llevamos a verlo en persona.",
+    cta: "Reservar vuelo",
+  },
+  en: {
+    heading: "What you see up there",
+    sub: "does not fit in a single photo. So we take you to see it in person.",
+    cta: "Book a flight",
+  },
+}[locale];
+
+// Imagen dentro de la silueta (cielo/nubes reales), optimizada a webp.
+const inside = await getImage({
+  src: img("galeria-04.jpg"),
+  width: 1100,
+  format: "webp",
+});
+const bookHref = localizedPath("/reservar", locale);
+---
+
+<section class="de">
+  <span class="de-word" aria-hidden="true">TEOTIHUACÁN</span>
+
+  <div class="de-inner container">
+    <div class="de-copy">
+      <h2 class="de-h">{t.heading}</h2>
+      <p class="de-sub measure">{t.sub}</p>
+      <Button href={bookHref} size="lg" icon="arrow-up-right">{t.cta}</Button>
+    </div>
+
+    <div class="de-stage">
+      <svg
+        class="de-balloon"
+        viewBox="0 0 420 620"
+        role="img"
+        aria-label={locale === "es"
+          ? "El cielo del amanecer visto a traves de la silueta de un globo"
+          : "The dawn sky seen through a balloon silhouette"}
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <clipPath id="deEnv">
+            <path
+              d="M210,18 C332,18 402,120 402,252 C402,352 332,416 272,436 L252,454 L168,454 L148,436 C88,416 18,352 18,252 C18,120 88,18 210,18 Z"
+            ></path>
+          </clipPath>
+        </defs>
+
+        <g clip-path="url(#deEnv)">
+          <image
+            href={inside.src}
+            x="-40"
+            y="-30"
+            width="500"
+            height="520"
+            preserveAspectRatio="xMidYMid slice"
+          ></image>
+          <rect x="0" y="0" width="420" height="470" fill="rgba(18,22,40,0.14)"></rect>
+        </g>
+
+        <g class="de-gores" clip-path="url(#deEnv)">
+          <path d="M210,18 C150,150 120,300 158,452" fill="none"></path>
+          <path d="M210,18 L210,454" fill="none"></path>
+          <path d="M210,18 C270,150 300,300 262,452" fill="none"></path>
+        </g>
+
+        <path
+          class="de-rim"
+          d="M210,18 C332,18 402,120 402,252 C402,352 332,416 272,436 L252,454 L168,454 L148,436 C88,416 18,352 18,252 C18,120 88,18 210,18 Z"
+          fill="none"
+        ></path>
+
+        <g class="de-rigging">
+          <line x1="168" y1="454" x2="182" y2="516"></line>
+          <line x1="252" y1="454" x2="238" y2="516"></line>
+          <rect x="176" y="514" width="68" height="44" rx="7" fill="none"></rect>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  .de {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-deep);
+    padding-block: var(--space-3xl);
+    border-block: 1px solid var(--line-faint);
+  }
+  /* Palabra de lugar atravesando, solida y tenue (sin gradiente en texto). */
+  .de-word {
+    position: absolute;
+    left: 50%;
+    top: 46%;
+    translate: -50% -50%;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(3.5rem, 13vw, 12rem);
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    opacity: 0.05;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .de-inner {
+    position: relative;
+    z-index: var(--z-raised);
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .de-inner {
+      grid-template-columns: 1fr 0.9fr;
+    }
+  }
+
+  .de-h {
+    font-size: var(--step-4);
+    line-height: 1.02;
+  }
+  .de-sub {
+    margin-top: var(--space-sm);
+    margin-bottom: var(--space-lg);
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+  }
+
+  .de-stage {
+    justify-self: center;
+    width: min(100%, 420px);
+  }
+  .de-balloon {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 30px 60px oklch(0.05 0.02 260 / 0.65));
+  }
+  .de-gores path {
+    stroke: oklch(0.9 0.03 220 / 0.28);
+    stroke-width: 1.1;
+  }
+  .de-rim {
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    opacity: 0.5;
+  }
+  .de-rigging line,
+  .de-rigging rect {
+    stroke: var(--ink-soft);
+    stroke-width: 2;
+    opacity: 0.7;
+  }
+
+  /* Reveal por scroll (cero JS). Estado base = visible; en navegadores con
+     soporte, se anima al entrar. Sin soporte, se ve normal. */
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .de-copy,
+      .de-stage {
+        animation: deRise linear both;
+        animation-timeline: view();
+        animation-range: entry 5% cover 32%;
+      }
+      .de-stage {
+        animation-name: deRiseStage;
+      }
+    }
+  }
+  @keyframes deRise {
+    from {
+      opacity: 0;
+      transform: translateY(26px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes deRiseStage {
+    from {
+      opacity: 0;
+      transform: translateY(30px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+</style>
