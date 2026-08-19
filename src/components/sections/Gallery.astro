@@ -10,8 +10,10 @@ import { img } from "@lib/media";
  */
 interface Props {
   locale: Locale;
+  /** true cuando se usa como pagina dedicada (oculta el enlace "ver galeria"). */
+  page?: boolean;
 }
-const { locale } = Astro.props;
+const { locale, page = false } = Astro.props;
 
 const t = {
   es: { heading: "Galería", all: "Ver galería completa" },
@@ -31,14 +33,18 @@ const shots = [
 const href = localizedPath("/galeria", locale);
 ---
 
-<section class="ga container" aria-labelledby="ga-h">
-  <header class="ga-head">
-    <h2 id="ga-h">{t.heading}</h2>
-    <a class="ga-all" href={href}>
-      <span>{t.all}</span>
-      <Icon name="arrow-up-right" />
-    </a>
-  </header>
+<section class="ga container" aria-label={t.heading}>
+  {
+    !page && (
+      <header class="ga-head">
+        <h2>{t.heading}</h2>
+        <a class="ga-all" href={href}>
+          <span>{t.all}</span>
+          <Icon name="arrow-up-right" />
+        </a>
+      </header>
+    )
+  }
 
   <div class="ga-masonry">
     {

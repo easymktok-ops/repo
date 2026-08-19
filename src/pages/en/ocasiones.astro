@@ -1,0 +1,20 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import PageHeader from "@components/ui/PageHeader.astro";
+import Ocasiones from "@components/sections/Ocasiones.astro";
+
+const locale = "en" as const;
+---
+
+<PageShell
+  title="Occasions"
+  description="Balloon flights for proposals, anniversaries and birthdays over Teotihuacán."
+  logicalPath="/ocasiones"
+  activeId="occasions"
+>
+  <PageHeader
+    title="A reason to fly"
+    lead="Every flight can be the setting for something you will remember. These are the occasions we celebrate most in the air."
+  />
+  <Ocasiones locale={locale} page />
+</PageShell>

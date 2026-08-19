@@ -1,0 +1,39 @@
+---
+/**
+ * Encabezado de pagina interior: h1 + lead opcional. Mantiene jerarquia (un
+ * solo h1 por pagina) y ritmo consistente entre secciones.
+ */
+interface Props {
+  title: string;
+  lead?: string;
+  eyebrow?: string;
+}
+const { title, lead, eyebrow } = Astro.props;
+---
+
+<header class="page-header container">
+  {eyebrow && <p class="ph-eyebrow">{eyebrow}</p>}
+  <h1>{title}</h1>
+  {lead && <p class="ph-lead measure">{lead}</p>}
+</header>
+
+<style>
+  .page-header {
+    padding-block: var(--space-2xl) var(--space-lg);
+  }
+  .ph-eyebrow {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    letter-spacing: var(--tracking-label);
+    color: var(--accent);
+    margin-bottom: var(--space-xs);
+  }
+  h1 {
+    font-size: var(--step-4);
+  }
+  .ph-lead {
+    margin-top: var(--space-sm);
+    font-size: var(--step-1);
+    color: var(--muted);
+  }
+</style>

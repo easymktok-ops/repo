@@ -1,0 +1,20 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import PageHeader from "@components/ui/PageHeader.astro";
+import Gallery from "@components/sections/Gallery.astro";
+
+const locale = "es" as const;
+---
+
+<PageShell
+  title="Galería"
+  description="Fotos reales de vuelos en globo de Aerodiverti sobre el valle de Teotihuacán."
+  logicalPath="/galeria"
+  activeId="gallery"
+>
+  <PageHeader
+    title="Galería"
+    lead="Amaneceres, pirámides y el valle visto desde el aire. Fotos reales de nuestros vuelos."
+  />
+  <Gallery locale={locale} page />
+</PageShell>
