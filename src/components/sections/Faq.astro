@@ -1,0 +1,162 @@
+---
+import { getCollection } from "astro:content";
+import Icon from "@components/ui/Icon.astro";
+import { type Locale } from "@config/site";
+
+/**
+ * FAQ en acordeon nativo (<details>/<summary>): cero JS, accesible por teclado.
+ * Respuestas autocontenidas (LLMO) + JSON-LD FAQPage para citabilidad en
+ * buscadores y LLMs. Contenido editable desde el CMS.
+ */
+interface Props {
+  locale: Locale;
+  page?: boolean;
+}
+const { locale, page = false } = Astro.props;
+
+const items = (await getCollection("faq", ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+
+const t = {
+  es: { heading: "Preguntas frecuentes", sub: "Lo que más nos preguntan antes de volar." },
+  en: { heading: "Frequently asked questions", sub: "What people ask us most before flying." },
+}[locale];
+
+const faqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: items.map((it) => ({
+    "@type": "Question",
+    name: it.data.question[locale] ?? it.data.question.es,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: it.data.answer[locale] ?? it.data.answer.es,
+    },
+  })),
+};
+---
+
+<section class="faq container-narrow" aria-label={t.heading}>
+  {
+    !page && (
+      <header class="faq-head">
+        <h2>{t.heading}</h2>
+        <p class="faq-sub">{t.sub}</p>
+      </header>
+    )
+  }
+
+  <div class="faq-list">
+    {
+      items.map((it) => (
+        <details class="faq-item">
+          <summary class="faq-q">
+            <span>{it.data.question[locale] ?? it.data.question.es}</span>
+            <Icon name="caret-down" class="faq-caret" />
+          </summary>
+          <div class="faq-a">
+            <p>{it.data.answer[locale] ?? it.data.answer.es}</p>
+          </div>
+        </details>
+      ))
+    }
+  </div>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+</section>
+
+<style>
+  .faq {
+    padding-block: var(--space-3xl);
+  }
+  .faq-head {
+    text-align: center;
+    margin-bottom: var(--space-xl);
+  }
+  h2 {
+    font-size: var(--step-3);
+  }
+  .faq-sub {
+    margin-top: var(--space-xs);
+    color: var(--muted);
+    font-size: var(--step-1);
+  }
+
+  .faq-list {
+    display: grid;
+    gap: var(--space-xs);
+  }
+  .faq-item {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: var(--surface);
+    overflow: hidden;
+    transition: border-color var(--dur-menu) var(--ease-out);
+  }
+  .faq-item[open] {
+    border-color: var(--line-strong);
+  }
+  .faq-item:hover {
+    border-color: var(--line-strong);
+  }
+
+  .faq-q {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    cursor: pointer;
+    list-style: none;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-1);
+    color: var(--ink);
+  }
+  .faq-q::-webkit-details-marker {
+    display: none;
+  }
+  .faq-caret {
+    flex-shrink: 0;
+    font-size: 1.35rem;
+    color: var(--accent);
+    transition: transform var(--dur-menu) var(--ease-out);
+  }
+  .faq-item[open] .faq-caret {
+    transform: rotate(180deg);
+  }
+
+  .faq-a {
+    padding: 0 var(--space-lg) var(--space-md);
+    color: var(--muted);
+    font-size: var(--step-0);
+    max-width: 68ch;
+  }
+  .faq-a p {
+    margin: 0;
+  }
+
+  /* Aparicion suave del contenido al abrir (respetando reduced-motion) */
+  @media (prefers-reduced-motion: no-preference) {
+    .faq-item[open] .faq-a {
+      animation: faqReveal var(--dur-menu) var(--ease-out) both;
+    }
+  }
+  @keyframes faqReveal {
+    from {
+      opacity: 0;
+      transform: translateY(-4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-caret {
+      transition: none;
+    }
+  }
+</style>
