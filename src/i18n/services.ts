@@ -177,10 +177,10 @@ export const services: ServiceCategory[] = [
     items: [
       { name: 'Reflexology', price: '$600', duration: '30 min' },
       { name: 'Nail polish remover', price: '$140', duration: '20 min' },
-      { name: 'Regular nail polish', price: '$140', duration: '20 min' },
+      { name: 'Regular nail polish', price: '$160', duration: '20 min' },
       { name: 'Gel nail polish', price: '$300', duration: '35 min' },
       { name: 'French nail polish', price: '$300', duration: '40 min' },
-      { name: 'Nail polish hardener', price: '$140', duration: '10 min' },
+      { name: 'Nail polish hardener', price: '$160', duration: '10 min' },
     ],
   },
 ];

@@ -9,12 +9,9 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
 
 ## 🔴 Pendientes (por implementar)
 
-- [ ] **Más servicios — precio a $160.** En la lista de precios, los ítems
-      **subrayados** en la foto del cliente pasan de $140 → **$160**:
-      - `Regular nail polish` $140 → **$160** (20 min)
-      - `Nail polish hardener` $140 → **$160** (10 min)
-      ⚠️ Confirmar: `Nail polish remover` también está a $140 pero **no** parecía
-      subrayado — se queda en $140 salvo que el cliente diga lo contrario.
+- [x] **Más servicios — precio a $160** (subrayados): `Regular nail polish` y
+      `Nail polish hardener` pasaron de $140 → $160. `Nail polish remover`
+      se queda en $140 (confirmado por el cliente).
 
 ### ✔ Validado (sin acción)
 - Frase "Si logra relajar la mente también lo hace." → NO se pasó a la nueva
