@@ -19,8 +19,8 @@ export const site = {
   brand: {
     // Descripcion factual y citable por LLMs (LLMO). Sin cifras no confirmadas.
     tagline: {
-      es: "Vuelos en globo aerostatico al amanecer sobre el valle de Teotihuacan.",
-      en: "Sunrise hot-air balloon flights over the Teotihuacan valley.",
+      es: "Vuelos en globo aerostático al amanecer sobre el valle de Teotihuacán.",
+      en: "Sunrise hot-air balloon flights over the Teotihuacán valley.",
     },
     // Placeholders explicitos: el negocio los edita en el CMS / .env.
     whatsappDisplay: import.meta.env.PUBLIC_WHATSAPP_DISPLAY_NUMBER ?? "",

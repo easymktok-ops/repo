@@ -162,6 +162,14 @@ a {
 /* -----------------------------------------------------------------------------
    UTILIDADES DE PROYECTO
 ----------------------------------------------------------------------------- */
+/* Offset del contenido cuando hay riel fijo (desktop). El riel es position:fixed,
+   asi que el padding del body desplaza main + footer sin afectar al riel. */
+@media (min-width: 1024px) {
+  body.has-rail {
+    padding-left: var(--rail-w);
+  }
+}
+
 .container {
   width: 100%;
   max-width: var(--container);

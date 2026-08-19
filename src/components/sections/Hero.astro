@@ -1,0 +1,272 @@
+---
+import Button from "@components/ui/Button.astro";
+import { localizedPath, type Locale } from "@config/site";
+
+/**
+ * Hero (patron 5.1 + 5.4 del brief). Composicion cinematografica poster-first:
+ * la silueta del globo es una ventana (clipPath) hacia la escena del amanecer.
+ * Sin foto todavia -> escena atmosferica a medida (intencional, no relleno).
+ * Cuando llegue la foto/video del valle, entra en <image href> dentro del clip
+ * (doble exposicion) o a sangre completa detras, sin rehacer el layout.
+ *
+ * Stack del hero (<=4 elementos): titular + subtexto + 2 CTA. Sin eyebrow, sin
+ * scroll cue. Movimiento de entrada por CSS, con alternativa reduced-motion.
+ */
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const copy = {
+  es: {
+    title: "Un amanecer que solo se vive volando",
+    subtitle:
+      "Vuelos en globo sobre el valle de Teotihuacán. Pilotos certificados AFAC y reprogramación sin costo.",
+    primary: "Reservar vuelo",
+    secondary: "Ver vuelos",
+  },
+  en: {
+    title: "A sunrise you only live by flying",
+    subtitle:
+      "Hot-air balloon flights over the Teotihuacán valley. AFAC-certified pilots and free rescheduling.",
+    primary: "Book a flight",
+    secondary: "See flights",
+  },
+}[locale];
+
+const bookHref = localizedPath("/reservar", locale);
+const flightsHref = localizedPath("/vuelos", locale);
+---
+
+<section class="hero">
+  <div class="hero-grid container">
+    <div class="hero-copy">
+      <h1 class="hero-title">{copy.title}</h1>
+      <p class="hero-sub measure">{copy.subtitle}</p>
+      <div class="hero-cta">
+        <Button href={bookHref} size="lg" icon="arrow-up-right">{copy.primary}</Button>
+        <Button href={flightsHref} size="lg" variant="ghost">{copy.secondary}</Button>
+      </div>
+    </div>
+
+    <div class="hero-stage" aria-hidden="true">
+      <!-- Silueta del globo = ventana a la escena del amanecer (doble exposicion).
+           TODO(assets): al subir la foto/video del valle, colocar <image href>
+           dentro de #dawnScene para la doble exposicion real. -->
+      <svg
+        class="balloon"
+        viewBox="0 0 420 620"
+        role="img"
+        aria-label="Globo aerostatico al amanecer sobre el valle"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <clipPath id="envClip">
+            <path
+              d="M210,18 C332,18 402,120 402,252 C402,352 332,416 272,436 L252,454 L168,454 L148,436 C88,416 18,352 18,252 C18,120 88,18 210,18 Z"
+            ></path>
+          </clipPath>
+          <!-- Colores en hex/rgba: los atributos SVG no soportan oklch de forma
+               fiable en todos los navegadores (a diferencia del CSS). -->
+          <linearGradient id="dawnSky" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stop-color="#1a1d28"></stop>
+            <stop offset="0.45" stop-color="#2b3350"></stop>
+            <stop offset="0.8" stop-color="#4f6f8a"></stop>
+            <stop offset="1" stop-color="#84c2cf"></stop>
+          </linearGradient>
+          <radialGradient id="sun" cx="0.5" cy="0.86" r="0.5">
+            <stop offset="0" stop-color="#cdf2ef"></stop>
+            <stop offset="0.35" stop-color="rgba(143,220,224,0.55)"></stop>
+            <stop offset="1" stop-color="rgba(143,220,224,0)"></stop>
+          </radialGradient>
+        </defs>
+
+        <!-- Escena dentro de la silueta -->
+        <g clip-path="url(#envClip)">
+          <rect id="dawnScene" x="0" y="0" width="420" height="470" fill="url(#dawnSky)"></rect>
+          <g class="sun-layer">
+            <ellipse cx="210" cy="410" rx="230" ry="150" fill="url(#sun)"></ellipse>
+          </g>
+          <!-- Silueta del valle / horizonte al fondo -->
+          <path
+            d="M0,392 L70,372 L150,388 L230,360 L300,384 L360,368 L420,388 L420,470 L0,470 Z"
+            fill="rgba(22,25,42,0.85)"
+          ></path>
+          <!-- Insinuacion de piramide (silueta escalonada), se reemplaza por foto real -->
+          <path
+            d="M250,384 L268,384 L268,372 L286,372 L286,360 L322,360 L322,372 L340,372 L340,384 L358,384 L358,392 L250,392 Z"
+            fill="rgba(17,19,32,0.92)"
+          ></path>
+        </g>
+
+        <!-- Costuras (gores) del globo, tenues -->
+        <g clip-path="url(#envClip)" class="gores">
+          <path d="M210,18 C150,150 120,300 158,452" fill="none"></path>
+          <path d="M210,18 C185,150 175,300 190,454" fill="none"></path>
+          <path d="M210,18 L210,454" fill="none"></path>
+          <path d="M210,18 C235,150 245,300 230,454" fill="none"></path>
+          <path d="M210,18 C270,150 300,300 262,452" fill="none"></path>
+        </g>
+
+        <!-- Borde inferior del sobre con acento -->
+        <path
+          class="env-rim"
+          d="M148,436 C88,416 18,352 18,252 M402,252 C402,352 332,416 272,436"
+          fill="none"
+        ></path>
+
+        <!-- Cuerdas + canastilla -->
+        <g class="rigging">
+          <line x1="168" y1="454" x2="182" y2="516"></line>
+          <line x1="252" y1="454" x2="238" y2="516"></line>
+          <rect x="176" y="514" width="68" height="44" rx="7" fill="none"></rect>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Horizonte atmosferico al pie del hero -->
+  <div class="hero-horizon" aria-hidden="true"></div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: calc(100dvh - var(--topbar-h));
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 90% at 82% 18%, oklch(0.24 0.03 250 / 0.55), transparent 60%),
+      var(--bg);
+  }
+  @media (min-width: 1024px) {
+    .hero {
+      min-height: 100dvh;
+    }
+  }
+
+  .hero-grid {
+    position: relative;
+    z-index: var(--z-raised);
+    display: grid;
+    gap: var(--space-xl);
+    padding-block: var(--space-2xl);
+    align-items: center;
+  }
+  @media (min-width: 900px) {
+    .hero-grid {
+      /* Split asimetrico (VARIANCE 8): copy pesa mas que la escena */
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+  }
+
+  .hero-title {
+    /* Escala propia del hero: mas contenida que --step-5 para caer en <=2
+       lineas en desktop (regla de altura del hero). */
+    font-size: clamp(2.4rem, 1.5rem + 3vw, 4rem);
+    font-weight: 700;
+    max-width: 19ch;
+    /* Entrada por CSS (MOTION 7): sube y aparece */
+    animation: rise var(--dur-hero) var(--ease-out) both;
+  }
+  .hero-sub {
+    margin-top: var(--space-md);
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+    animation: rise var(--dur-hero) var(--ease-out) 0.08s both;
+  }
+  .hero-cta {
+    margin-top: var(--space-lg);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    animation: rise var(--dur-hero) var(--ease-out) 0.16s both;
+  }
+
+  .hero-stage {
+    justify-self: center;
+    width: min(100%, 460px);
+  }
+  .balloon {
+    width: 100%;
+    height: auto;
+    filter: drop-shadow(0 30px 60px oklch(0.06 0.02 260 / 0.6));
+    animation: floatIn 1s var(--ease-out) both;
+  }
+  .balloon .gores path {
+    stroke: oklch(0.85 0.06 210 / 0.22);
+    stroke-width: 1.2;
+  }
+  .balloon .env-rim {
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    opacity: 0.55;
+  }
+  .balloon .rigging line,
+  .balloon .rigging rect {
+    stroke: var(--ink-soft);
+    stroke-width: 2;
+    opacity: 0.7;
+  }
+  .sun-layer {
+    transform-origin: 210px 410px;
+    animation: sunDrift 9s var(--ease-in-out) infinite alternate;
+  }
+
+  .hero-horizon {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 26%;
+    background: linear-gradient(
+      to top,
+      oklch(0.13 0.02 262 / 0.9),
+      transparent
+    );
+    pointer-events: none;
+  }
+
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes floatIn {
+    from {
+      opacity: 0;
+      transform: translateY(24px) scale(0.97);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  @keyframes sunDrift {
+    from {
+      transform: translateY(6px);
+      opacity: 0.85;
+    }
+    to {
+      transform: translateY(-6px);
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-title,
+    .hero-sub,
+    .hero-cta,
+    .balloon {
+      animation: none;
+    }
+    .sun-layer {
+      animation: none;
+    }
+  }
+</style>

@@ -17,9 +17,18 @@ interface Props {
   ogImage?: string;
   /** noindex para paginas transaccionales (pasos de checkout). */
   noindex?: boolean;
+  /** true cuando la pagina usa el menu lateral persistente (offset del riel). */
+  chrome?: boolean;
 }
 
-const { title, description, logicalPath = "/", ogImage, noindex = false } = Astro.props;
+const {
+  title,
+  description,
+  logicalPath = "/",
+  ogImage,
+  noindex = false,
+  chrome = false,
+} = Astro.props;
 
 const locale = getLocaleFromUrl(Astro.url);
 const t = useTranslations(locale);
@@ -67,7 +76,7 @@ const fullTitle = title === site.name ? title : `${title} · ${site.name}`;
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
 
-  <body>
+  <body class:list={[{ "has-rail": chrome }]}>
     <a class="skip-link" href="#main">{t("a11y.skip")}</a>
     <slot name="chrome-start" />
     <main id="main">

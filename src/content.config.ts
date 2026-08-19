@@ -115,4 +115,34 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { packages, faq, testimonials, promos, gallery, pages };
+/* --- OCASIONES (pedida de mano, aniversario, cumpleanos) ----------------- */
+/* Decision de negocio: el sitio se estructura tambien por ocasion. Es el
+   gancho de regalo / alto ticket y aprovecha el material real del negocio. */
+const occasions = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/occasions" }),
+  schema: ({ image }) =>
+    z.object({
+      title: localized, // "Pedida de mano", "Aniversario", "Cumpleanos"
+      slug: z.string(),
+      // Titular emocional corto para la tarjeta/hero de la ocasion.
+      tagline: localized,
+      summary: localized,
+      heroImage: image(),
+      heroImageAlt: localized,
+      // Paquetes de vuelo sugeridos para esta ocasion (referencias cruzadas).
+      suggestedPackages: z.array(reference("packages")).default([]),
+      order: z.number().int().default(0),
+      featured: z.boolean().default(true),
+      draft: z.boolean().default(false),
+    }),
+});
+
+export const collections = {
+  packages,
+  occasions,
+  faq,
+  testimonials,
+  promos,
+  gallery,
+  pages,
+};

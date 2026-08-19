@@ -25,7 +25,7 @@ export const ui = {
     en: "AFAC-certified pilots",
   },
   "trust.reschedule": {
-    es: "Reprogramacion sin costo",
+    es: "Reprogramación sin costo",
     en: "Free rescheduling",
   },
   "trust.securePay": { es: "Pago seguro", en: "Secure payment" },

@@ -1,48 +1,21 @@
 ---
-import BaseLayout from "@layouts/BaseLayout.astro";
+import PageShell from "@layouts/PageShell.astro";
+import Hero from "@components/sections/Hero.astro";
+import BoardingPassBar from "@components/sections/BoardingPassBar.astro";
 import { site } from "@config/site";
 
 /**
- * FASE 1 - English foundation page (mirror of the es specimen). Replaced by the
- * real localized Home in Fase 2.
+ * Home (en). Mirror of the es home. More sections land through Phase 2.
  */
+const locale = "en" as const;
 ---
 
-<BaseLayout title={site.name} description={site.brand.tagline.en} logicalPath="/">
-  <section class="hero container">
-    <p class="kicker">Foundations · Phase 1</p>
-    <h1>Aerodiverti</h1>
-    <p class="tagline measure">{site.brand.tagline.en}</p>
-    <p class="note measure">
-      This is the project's design foundation (tokens, type and color).
-      Conversion sections are built in Phase 2. Internal reference page, not the
-      final site.
-    </p>
-  </section>
-</BaseLayout>
-
-<style>
-  .hero {
-    padding-block: var(--space-2xl) var(--space-xl);
-  }
-  .kicker {
-    font-family: var(--font-mono);
-    font-size: var(--step--1);
-    letter-spacing: var(--tracking-label);
-    color: var(--accent);
-    margin-bottom: var(--space-sm);
-  }
-  h1 {
-    font-size: var(--step-5);
-    font-weight: 700;
-  }
-  .tagline {
-    font-size: var(--step-1);
-    color: var(--ink-soft);
-    margin-top: var(--space-sm);
-  }
-  .note {
-    color: var(--muted);
-    margin-top: var(--space-md);
-  }
-</style>
+<PageShell
+  title={site.name}
+  description={site.brand.tagline.en}
+  logicalPath="/"
+  activeId="home"
+>
+  <Hero locale={locale} />
+  <BoardingPassBar locale={locale} />
+</PageShell>

@@ -1,0 +1,38 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import SideNav from "@components/layout/SideNav.astro";
+import Footer from "@components/layout/Footer.astro";
+import { getLocaleFromUrl } from "@i18n/utils";
+
+/**
+ * PageShell - layout de pagina con el chrome completo (menu lateral + footer).
+ * Envuelve BaseLayout (cabeza SEO) e inyecta el riel/drawer y el pie. Las
+ * paginas usan este layout; solo pasan SEO + activeId de navegacion.
+ */
+interface Props {
+  title: string;
+  description: string;
+  logicalPath?: string;
+  ogImage?: string;
+  noindex?: boolean;
+  /** id de nav activo (ver src/config/navigation.ts). */
+  activeId?: string;
+}
+
+const { title, description, logicalPath = "/", ogImage, noindex, activeId } =
+  Astro.props;
+const locale = getLocaleFromUrl(Astro.url);
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  logicalPath={logicalPath}
+  ogImage={ogImage}
+  noindex={noindex}
+  chrome
+>
+  <SideNav slot="chrome-start" locale={locale} activeId={activeId} logicalPath={logicalPath} />
+  <slot />
+  <Footer slot="chrome-end" locale={locale} />
+</BaseLayout>

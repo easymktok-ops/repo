@@ -1,0 +1,344 @@
+---
+import Icon from "@components/ui/Icon.astro";
+import Button from "@components/ui/Button.astro";
+import { primaryNav } from "@config/navigation";
+import { site, localizedPath, type Locale } from "@config/site";
+import { alternateLocale } from "@i18n/utils";
+import { useTranslations } from "@i18n/ui";
+
+/**
+ * Menu lateral persistente (patron theenglishbus, elevado).
+ * Desktop (lg+): riel fijo a la izquierda, siempre visible.
+ * Movil (<lg): barra superior sticky + drawer accesible (script vanilla, sin
+ * framework -> las paginas de contenido siguen sin React).
+ */
+interface Props {
+  locale: Locale;
+  activeId?: string;
+  /** Ruta logica sin prefijo, para el conmutador de idioma. */
+  logicalPath?: string;
+}
+
+const { locale, activeId, logicalPath = "/" } = Astro.props;
+const t = useTranslations(locale);
+const other = alternateLocale(locale);
+
+const items = primaryNav.map((it) => ({
+  ...it,
+  href: localizedPath(it.path, locale),
+  text: it.label[locale],
+  active: it.id === activeId,
+}));
+
+const bookHref = localizedPath("/reservar", locale);
+const langHref = localizedPath(logicalPath, other);
+const waDigits = (site.brand.whatsappDisplay || "").replace(/[^\d]/g, "");
+const waHref = waDigits ? `https://wa.me/${waDigits}` : localizedPath("/contacto", locale);
+const homeHref = localizedPath("/", locale);
+---
+
+<!-- Barra superior (solo movil/tablet) -->
+<header class="topbar">
+  <a class="brand" href={homeHref} aria-label={site.name}>
+    <Icon name="path" class="brand-mark" />
+    <span class="brand-word">{site.name}</span>
+  </a>
+  <div class="topbar-actions">
+    <Button href={bookHref} size="md" class="topbar-cta">{t("cta.book")}</Button>
+    <button
+      id="navToggle"
+      class="icon-btn"
+      type="button"
+      aria-expanded="false"
+      aria-controls="navDrawer"
+      aria-label={t("nav.menu")}
+    >
+      <Icon name="list" />
+    </button>
+  </div>
+</header>
+
+<!-- Overlay + Drawer (movil) y Riel (desktop) comparten la lista de nav -->
+<div id="navOverlay" class="nav-overlay" hidden></div>
+
+<aside id="navDrawer" class="rail" aria-label="Navegacion principal">
+  <div class="rail-head">
+    <a class="brand" href={homeHref} aria-label={site.name}>
+      <Icon name="path" class="brand-mark" />
+      <span class="brand-word">{site.name}</span>
+    </a>
+    <button
+      id="navClose"
+      class="icon-btn drawer-only"
+      type="button"
+      aria-label={t("nav.close")}
+    >
+      <Icon name="x" />
+    </button>
+  </div>
+
+  <nav class="rail-nav" aria-label="Secciones">
+    <ul>
+      {
+        items.map((it) => (
+          <li>
+            <a
+              class:list={["rail-link", { "is-active": it.active }]}
+              href={it.href}
+              aria-current={it.active ? "page" : undefined}
+            >
+              <Icon name={it.icon} class="rail-ico" />
+              <span>{it.text}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+
+  <div class="rail-foot">
+    <Button href={bookHref} size="md" icon="arrow-up-right" class="rail-cta"
+      >{t("cta.book")}</Button
+    >
+    <a class="foot-link" href={waHref} rel="noopener">
+      <Icon name="chat-circle" class="rail-ico" />
+      <span>{t("cta.whatsapp")}</span>
+    </a>
+    <a class="foot-link foot-lang" href={langHref} hreflang={other}>
+      <Icon name="globe-hemisphere-west" class="rail-ico" />
+      <span>{t("nav.language")}</span>
+    </a>
+  </div>
+</aside>
+
+<script>
+  // Drawer movil accesible: toggle, escape, overlay, bloqueo de scroll, foco.
+  const toggle = document.getElementById("navToggle");
+  const closeBtn = document.getElementById("navClose");
+  const drawer = document.getElementById("navDrawer");
+  const overlay = document.getElementById("navOverlay");
+  let lastFocused: HTMLElement | null = null;
+
+  function openNav() {
+    lastFocused = document.activeElement as HTMLElement;
+    document.body.classList.add("nav-open");
+    overlay?.removeAttribute("hidden");
+    toggle?.setAttribute("aria-expanded", "true");
+    const first = drawer?.querySelector<HTMLElement>("a, button");
+    first?.focus();
+    document.addEventListener("keydown", onKey);
+  }
+  function closeNav() {
+    document.body.classList.remove("nav-open");
+    overlay?.setAttribute("hidden", "");
+    toggle?.setAttribute("aria-expanded", "false");
+    document.removeEventListener("keydown", onKey);
+    lastFocused?.focus();
+  }
+  function onKey(e: KeyboardEvent) {
+    if (e.key === "Escape") closeNav();
+  }
+
+  toggle?.addEventListener("click", openNav);
+  closeBtn?.addEventListener("click", closeNav);
+  overlay?.addEventListener("click", closeNav);
+  // Cerrar al navegar dentro del drawer
+  drawer?.querySelectorAll("a").forEach((a) => a.addEventListener("click", closeNav));
+</script>
+
+<style>
+  /* ---------- Barra superior (movil/tablet) ---------- */
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    height: var(--topbar-h);
+    padding-inline: var(--gutter);
+    background: color-mix(in oklch, var(--bg-deep) 82%, transparent);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line-faint);
+  }
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+  .topbar-cta {
+    padding-block: 0.55rem;
+    padding-inline: 1rem;
+    font-size: var(--step--1);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    color: var(--ink);
+  }
+  .brand-mark {
+    font-size: 1.4rem;
+    color: var(--accent);
+  }
+  .brand-word {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-1);
+    letter-spacing: -0.02em;
+  }
+
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-input);
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    font-size: 1.35rem;
+    cursor: pointer;
+    transition:
+      border-color var(--dur-pop) var(--ease-out),
+      transform var(--dur-press) var(--ease-out);
+  }
+  .icon-btn:hover {
+    border-color: var(--line-strong);
+  }
+  .icon-btn:active {
+    transform: scale(0.95);
+  }
+
+  /* ---------- Overlay (movil) ---------- */
+  .nav-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-backdrop);
+    background: oklch(0.1 0.02 260 / 0.55);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity var(--dur-panel) var(--ease-out);
+  }
+  :global(body.nav-open) .nav-overlay {
+    opacity: 1;
+  }
+
+  /* ---------- Riel / Drawer ---------- */
+  .rail {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    background: var(--bg-deep);
+    border-right: 1px solid var(--line-faint);
+    padding: var(--space-lg) var(--space-md);
+  }
+  .rail-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .rail-nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 2px;
+  }
+  .rail-link {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.7rem 0.85rem;
+    border-radius: var(--radius-input);
+    color: var(--muted);
+    font-weight: 500;
+    transition:
+      background-color var(--dur-pop) var(--ease-out),
+      color var(--dur-pop) var(--ease-out);
+  }
+  .rail-ico {
+    font-size: 1.3rem;
+    color: inherit;
+  }
+  .rail-link:hover {
+    background: var(--surface);
+    color: var(--ink);
+  }
+  .rail-link.is-active {
+    background: var(--surface);
+    color: var(--accent);
+  }
+
+  .rail-foot {
+    margin-top: auto;
+    display: grid;
+    gap: var(--space-2xs);
+  }
+  .rail-cta {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .foot-link {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.6rem 0.85rem;
+    border-radius: var(--radius-input);
+    color: var(--muted);
+    font-size: var(--step--1);
+    transition: color var(--dur-pop) var(--ease-out);
+  }
+  .foot-link:hover {
+    color: var(--ink);
+  }
+
+  /* ---------- Responsivo ---------- */
+  /* Movil/tablet: el riel es un drawer deslizante. */
+  @media (max-width: 1023px) {
+    .rail {
+      position: fixed;
+      inset-block: 0;
+      left: 0;
+      z-index: var(--z-modal);
+      width: min(84vw, 320px);
+      transform: translateX(-100%);
+      transition: transform var(--dur-panel) var(--ease-drawer);
+      overflow-y: auto;
+    }
+    :global(body.nav-open) .rail {
+      transform: translateX(0);
+    }
+  }
+
+  /* Desktop: riel fijo, sin barra superior ni drawer. */
+  @media (min-width: 1024px) {
+    .topbar {
+      display: none;
+    }
+    .drawer-only {
+      display: none;
+    }
+    .nav-overlay {
+      display: none;
+    }
+    .rail {
+      position: fixed;
+      inset-block: 0;
+      left: 0;
+      width: var(--rail-w);
+      overflow-y: auto;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rail,
+    .nav-overlay {
+      transition: none;
+    }
+  }
+</style>

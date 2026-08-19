@@ -1,0 +1,57 @@
+---
+/**
+ * Icon.astro - iconografia Phosphor inline, cero JS.
+ * Los SVG (fill="currentColor", viewBox 0 0 256 256) se cargan crudos en build.
+ * Tamano por `font-size` (svg = 1em); color por `color` (currentColor).
+ * `label` -> icono semantico con aria-label; sin label -> decorativo (oculto a SR).
+ */
+interface Props {
+  name: string;
+  weight?: "regular" | "fill";
+  label?: string;
+  class?: string;
+}
+
+const { name, weight = "regular", label, class: className } = Astro.props;
+
+const regular = import.meta.glob("/src/assets/icons/phosphor/regular/*.svg", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
+const fill = import.meta.glob("/src/assets/icons/phosphor/fill/*.svg", {
+  query: "?raw",
+  import: "default",
+  eager: true,
+}) as Record<string, string>;
+
+const set = weight === "fill" ? fill : regular;
+const key = `/src/assets/icons/phosphor/${weight}/${name}.svg`;
+const svg = set[key];
+
+if (!svg && import.meta.env.DEV) {
+  // Falla ruidosa en dev para no shippear un icono roto.
+  throw new Error(`[Icon] glifo Phosphor no encontrado: ${weight}/${name}`);
+}
+---
+
+<span
+  class:list={["icon", className]}
+  role={label ? "img" : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : "true"}
+  set:html={svg ?? ""}
+></span>
+
+<style>
+  .icon {
+    display: inline-flex;
+    line-height: 0;
+    flex-shrink: 0;
+  }
+  .icon :global(svg) {
+    width: 1em;
+    height: 1em;
+    display: block;
+  }
+</style>

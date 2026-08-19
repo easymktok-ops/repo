@@ -1,0 +1,122 @@
+---
+import Icon from "@components/ui/Icon.astro";
+import { primaryNav } from "@config/navigation";
+import { site, localizedPath, type Locale } from "@config/site";
+import { useTranslations } from "@i18n/ui";
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const year = new Date().getFullYear();
+const links = primaryNav
+  .filter((it) => it.id !== "home")
+  .map((it) => ({ href: localizedPath(it.path, locale), text: it.label[locale] }));
+
+const trust = [
+  { icon: "seal-check", text: t("trust.afac") },
+  { icon: "arrow-clockwise", text: t("trust.reschedule") },
+  { icon: "shield-check", text: t("trust.securePay") },
+];
+---
+
+<footer class="site-footer">
+  <div class="footer-inner container">
+    <div class="footer-brand">
+      <span class="brand-word">{site.name}</span>
+      <p class="footer-tag measure">{site.brand.tagline[locale]}</p>
+      <ul class="trust-line">
+        {
+          trust.map((it) => (
+            <li>
+              <Icon name={it.icon} class="trust-ico" />
+              <span>{it.text}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <nav class="footer-nav" aria-label="Pie de pagina">
+      {links.map((l) => <a href={l.href}>{l.text}</a>)}
+    </nav>
+  </div>
+
+  <div class="footer-legal container">
+    <span>© {year} {site.name}. {t("footer.rights")}</span>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line-faint);
+    background: var(--bg-deep);
+    margin-top: var(--space-3xl);
+  }
+  .footer-inner {
+    display: grid;
+    gap: var(--space-xl);
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+  @media (min-width: 768px) {
+    .footer-inner {
+      grid-template-columns: 1.4fr 1fr;
+      align-items: start;
+    }
+  }
+  .brand-word {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-2);
+    letter-spacing: -0.02em;
+  }
+  .footer-tag {
+    color: var(--muted);
+    margin-top: var(--space-xs);
+  }
+  .trust-line {
+    list-style: none;
+    padding: 0;
+    margin-top: var(--space-md);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+  }
+  .trust-line li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  .trust-ico {
+    font-size: 1.2rem;
+    color: var(--accent);
+  }
+  .footer-nav {
+    display: grid;
+    gap: 0.65rem;
+    align-content: start;
+  }
+  @media (min-width: 480px) {
+    .footer-nav {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .footer-nav a {
+    color: var(--muted);
+    font-size: var(--step-0);
+    transition: color var(--dur-pop) var(--ease-out);
+    width: fit-content;
+  }
+  .footer-nav a:hover {
+    color: var(--accent);
+  }
+  .footer-legal {
+    padding-block: var(--space-md);
+    border-top: 1px solid var(--line-faint);
+    color: var(--faint);
+    font-size: var(--step--1);
+  }
+</style>

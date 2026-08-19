@@ -113,6 +113,10 @@
   --container-narrow: 1080px;
   --gutter: clamp(1.25rem, 0.9rem + 1.75vw, 2.5rem);
 
+  /* Menu lateral persistente (desktop) / barra movil */
+  --rail-w: 264px;
+  --topbar-h: 64px;
+
   /* =========================================================================
      RADIOS (Shape Consistency Lock, motivo "boleto/boarding pass")
      Regla documentada: cards 14px, inputs 10px, botones pill, sellos 999px.

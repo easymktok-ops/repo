@@ -1,0 +1,169 @@
+---
+import Icon from "@components/ui/Icon.astro";
+import { type Locale } from "@config/site";
+
+/**
+ * Barra de confianza con motivo "boarding pass" (conserva lo que funciona del
+ * sitio de referencia: AFAC, reprogramacion, pago seguro, badge 4.9; pero con
+ * tratamiento de boleto, no una fila generica de 4 iconos).
+ *
+ * El conteo de reseñas se deja como slot (dato real por confirmar); solo se
+ * muestra la calificacion 4.9 dada en el brief. Nada inventado.
+ */
+interface Props {
+  locale: Locale;
+  reviewCount?: number | null;
+}
+const { locale, reviewCount = null } = Astro.props;
+
+const t = {
+  es: {
+    reviews: "Reseñas Google",
+    afac: "Pilotos certificados AFAC",
+    reschedule: "Reprogramación sin costo",
+    secure: "Pago seguro",
+    count: reviewCount ? `${reviewCount} reseñas` : "Calificación verificada",
+  },
+  en: {
+    reviews: "Google reviews",
+    afac: "AFAC-certified pilots",
+    reschedule: "Free rescheduling",
+    secure: "Secure payment",
+    count: reviewCount ? `${reviewCount} reviews` : "Verified rating",
+  },
+}[locale];
+---
+
+<section class="bp-wrap container" aria-label={locale === "es" ? "Confianza" : "Trust"}>
+  <div class="bp">
+    <div class="bp-stub">
+      <span class="bp-score">4.9</span>
+      <span class="bp-stars" aria-hidden="true">
+        <Icon name="star" weight="fill" /><Icon name="star" weight="fill" /><Icon
+          name="star"
+          weight="fill"
+        /><Icon name="star" weight="fill" /><Icon name="star" weight="fill" />
+      </span>
+      <span class="bp-stub-meta">{t.reviews}</span>
+      <span class="bp-stub-meta bp-mono">{t.count}</span>
+    </div>
+
+    <div class="bp-perf" aria-hidden="true"></div>
+
+    <ul class="bp-specs">
+      <li>
+        <Icon name="seal-check" class="bp-ico" />
+        <span>{t.afac}</span>
+      </li>
+      <li>
+        <Icon name="arrow-clockwise" class="bp-ico" />
+        <span>{t.reschedule}</span>
+      </li>
+      <li>
+        <Icon name="shield-check" class="bp-ico" />
+        <span>{t.secure}</span>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .bp-wrap {
+    margin-top: calc(-1 * var(--space-lg));
+    position: relative;
+    z-index: var(--z-raised);
+  }
+  .bp {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-lg) var(--space-md);
+  }
+  @media (min-width: 820px) {
+    .bp {
+      grid-template-columns: auto 1px 1fr;
+      align-items: center;
+      gap: var(--space-lg);
+      padding: var(--space-md) var(--space-lg);
+    }
+  }
+
+  .bp-stub {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    gap: 0.35rem 0.7rem;
+    padding-right: var(--space-md);
+  }
+  .bp-score {
+    grid-row: span 2;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-4);
+    line-height: 1;
+    color: var(--ink);
+  }
+  .bp-stars {
+    display: inline-flex;
+    gap: 2px;
+    color: var(--accent);
+    font-size: 0.95rem;
+  }
+  .bp-stub-meta {
+    grid-column: 2;
+    font-size: var(--step--1);
+    color: var(--muted);
+    line-height: 1.2;
+  }
+  .bp-mono {
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+    color: var(--faint);
+  }
+
+  /* Perforacion del boleto */
+  .bp-perf {
+    display: none;
+  }
+  @media (min-width: 820px) {
+    .bp-perf {
+      display: block;
+      align-self: stretch;
+      width: 1px;
+      background-image: linear-gradient(
+        var(--line-strong) 55%,
+        transparent 55%
+      );
+      background-size: 1px 12px;
+    }
+  }
+
+  .bp-specs {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-sm);
+  }
+  @media (min-width: 560px) {
+    .bp-specs {
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: var(--space-md);
+    }
+  }
+  .bp-specs li {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--ink-soft);
+    font-size: var(--step-0);
+  }
+  .bp-ico {
+    font-size: 1.4rem;
+    color: var(--accent);
+  }
+</style>

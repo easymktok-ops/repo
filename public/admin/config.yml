@@ -197,6 +197,68 @@ collections:
       - { label: "Termina", name: "endsAt", widget: "datetime", required: false }
       - { label: "Activa", name: "active", widget: "boolean", default: false }
 
+  # --- OCASIONES -----------------------------------------------------------
+  - name: "occasions"
+    label: "Ocasiones"
+    label_singular: "Ocasión"
+    folder: "src/content/occasions"
+    create: true
+    slug: "{{fields.slug}}"
+    summary: "{{title.es}}"
+    fields:
+      - {
+          label: "Título",
+          name: "title",
+          widget: "object",
+          fields:
+            [
+              { label: "Español", name: "es", widget: "string" },
+              { label: "English", name: "en", widget: "string", required: false },
+            ],
+        }
+      - { label: "Slug (URL, estable)", name: "slug", widget: "string", pattern: ["^[a-z0-9-]+$", "solo minúsculas, números y guiones"] }
+      - {
+          label: "Titular emocional",
+          name: "tagline",
+          widget: "object",
+          fields:
+            [
+              { label: "Español", name: "es", widget: "string" },
+              { label: "English", name: "en", widget: "string", required: false },
+            ],
+        }
+      - {
+          label: "Resumen",
+          name: "summary",
+          widget: "object",
+          fields:
+            [
+              { label: "Español", name: "es", widget: "text" },
+              { label: "English", name: "en", widget: "text", required: false },
+            ],
+        }
+      - { label: "Imagen principal", name: "heroImage", widget: "image" }
+      - {
+          label: "Texto alterno de la imagen (alt)",
+          name: "heroImageAlt",
+          widget: "object",
+          fields:
+            [
+              { label: "Español", name: "es", widget: "string" },
+              { label: "English", name: "en", widget: "string", required: false },
+            ],
+        }
+      - {
+          label: "Paquetes sugeridos",
+          name: "suggestedPackages",
+          widget: "list",
+          required: false,
+          field: { label: "Paquete", name: "package", widget: "relation", collection: "packages", search_fields: ["title.es"], value_field: "{{slug}}", display_fields: ["title.es"] },
+        }
+      - { label: "Orden", name: "order", widget: "number", default: 0, value_type: "int" }
+      - { label: "Destacada", name: "featured", widget: "boolean", default: true }
+      - { label: "Borrador (no publicar)", name: "draft", widget: "boolean", default: false }
+
   # --- GALERIA -------------------------------------------------------------
   - name: "gallery"
     label: "Galería"
