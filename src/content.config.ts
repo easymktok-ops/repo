@@ -28,11 +28,18 @@ const packages = defineCollection({
       // Precio EDITABLE por el negocio. Moneda MXN por defecto. price=null
       // significa "consultar" (no inventamos cifras no confirmadas).
       priceFrom: z.number().nonnegative().nullable().default(null),
+      // Precio anterior tachado (cuando hay oferta). null = sin descuento.
+      priceWas: z.number().nonnegative().nullable().default(null),
       currency: z.string().default("MXN"),
       priceNote: localized.optional(), // ej. "vuelo compartido, 2 personas"
+      // Etiqueta de la tarjeta (Mas popular, Oferta, Premium...).
+      badge: localized.optional(),
       durationMinutes: z.number().int().positive().optional(),
       capacity: z
-        .object({ min: z.number().int().positive(), max: z.number().int().positive() })
+        .object({
+          min: z.number().int().positive().optional(),
+          max: z.number().int().positive(),
+        })
         .optional(),
       // Disponibilidad editable: el negocio activa/desactiva sin tocar codigo.
       available: z.boolean().default(true),

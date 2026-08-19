@@ -1,7 +1,7 @@
 ---
 import { getImage } from "astro:assets";
 import Button from "@components/ui/Button.astro";
-import { localizedPath, type Locale } from "@config/site";
+import { whatsappUrl, type Locale } from "@config/site";
 import { img } from "@lib/media";
 
 /**
@@ -34,7 +34,11 @@ const inside = await getImage({
   width: 1100,
   format: "webp",
 });
-const bookHref = localizedPath("/reservar", locale);
+const bookHref = whatsappUrl(
+  locale === "es"
+    ? "Hola, quiero reservar un vuelo en globo en Teotihuacán. ¿Me ayudan?"
+    : "Hi, I'd like to book a balloon flight in Teotihuacán. Can you help?",
+);
 ---
 
 <section class="de">
@@ -44,7 +48,9 @@ const bookHref = localizedPath("/reservar", locale);
     <div class="de-copy">
       <h2 class="de-h">{t.heading}</h2>
       <p class="de-sub measure">{t.sub}</p>
-      <Button href={bookHref} size="lg" icon="arrow-up-right">{t.cta}</Button>
+      <Button href={bookHref} size="lg" icon="arrow-up-right" target="_blank" rel="noopener">
+        {t.cta}
+      </Button>
     </div>
 
     <div class="de-stage">

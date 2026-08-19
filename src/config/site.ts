@@ -15,15 +15,23 @@ export const site = {
   defaultLocale: (import.meta.env.PUBLIC_DEFAULT_LOCALE ?? "es") as Locale,
   locales: ["es", "en"] as const,
 
-  /** Datos de negocio CONFIRMADOS por el brief. Nada inventado. */
+  /** Datos de negocio CONFIRMADOS (sitio actual del negocio). Nada inventado. */
   brand: {
-    // Descripcion factual y citable por LLMs (LLMO). Sin cifras no confirmadas.
+    // Descripcion factual y citable por LLMs (LLMO).
     tagline: {
       es: "Vuelos en globo aerostático al amanecer sobre el valle de Teotihuacán.",
       en: "Sunrise hot-air balloon flights over the Teotihuacán valley.",
     },
-    // Placeholders explicitos: el negocio los edita en el CMS / .env.
-    whatsappDisplay: import.meta.env.PUBLIC_WHATSAPP_DISPLAY_NUMBER ?? "",
+    // WhatsApp real del negocio (digitos para wa.me). El display es editable por env.
+    whatsapp: "5215535780223",
+    whatsappDisplay: import.meta.env.PUBLIC_WHATSAPP_DISPLAY_NUMBER ?? "+52 55 3578 0223",
+    // Reseñas verificadas (Google). Cifra real del negocio.
+    reviews: { rating: 4.9, count: 2040, source: "Google" as const },
+    // Ubicacion / globopuerto propio.
+    location: {
+      es: "San Martín de las Pirámides, a 2 km de las pirámides",
+      en: "San Martín de las Pirámides, 2 km from the pyramids",
+    },
   },
 
   analytics: {
@@ -36,6 +44,12 @@ export const site = {
 export function absoluteUrl(path = "/"): string {
   const clean = path.startsWith("/") ? path : `/${path}`;
   return `${site.url}${clean}`;
+}
+
+/** URL de WhatsApp del negocio, con mensaje opcional prellenado. */
+export function whatsappUrl(text?: string): string {
+  const base = `https://wa.me/${site.brand.whatsapp}`;
+  return text ? `${base}?text=${encodeURIComponent(text)}` : base;
 }
 
 /** Prefijo de ruta por locale. es vive en la raiz; en bajo /en. */

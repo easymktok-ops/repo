@@ -1,0 +1,333 @@
+---
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import Icon from "@components/ui/Icon.astro";
+import { site, localizedPath, whatsappUrl, type Locale } from "@config/site";
+
+/**
+ * Catalogo de vuelos (patron 5.2, densidad ~5). Lee los paquetes del CMS
+ * (Content Collections) y los muestra en cards editoriales con hairline, precio
+ * "Desde $X" siempre visible, precio tachado en ofertas, badge y rating real.
+ * CTA "Elegir fecha" -> WhatsApp con el paquete prellenado (canal de reserva
+ * actual; en Fase 3 apunta al checkout de 3 pasos).
+ */
+interface Props {
+  locale: Locale;
+  /** true en la pagina dedicada /vuelos (oculta el header de seccion). */
+  page?: boolean;
+  /** limita cuantas tarjetas mostrar (para teaser en el home). */
+  limit?: number;
+}
+const { locale, page = false, limit } = Astro.props;
+
+const all = (await getCollection("packages", ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const packages = limit ? all.slice(0, limit) : all;
+
+const reviews = site.brand.reviews;
+const nf = new Intl.NumberFormat(locale === "es" ? "es-MX" : "en-US");
+const money = (n: number) => `$${nf.format(n)}`;
+
+function durationLabel(min?: number) {
+  if (!min) return null;
+  const h = Math.round(min / 60);
+  return locale === "es" ? `${h} h` : `${h} h`;
+}
+function capacityLabel(cap?: { min?: number; max: number }) {
+  if (!cap) return null;
+  const people = locale === "es" ? "personas" : "people";
+  if (cap.min) return `${cap.min} a ${cap.max} ${people}`;
+  return locale === "es" ? `hasta ${cap.max} ${people}` : `up to ${cap.max} ${people}`;
+}
+
+const t = {
+  es: {
+    heading: "Elige tu vuelo",
+    sub: "Siete formas de ver el amanecer sobre Teotihuacán. Precios en pesos mexicanos.",
+    all: "Ver los 7 vuelos",
+    from: "Desde",
+    pick: "Elegir fecha",
+    reviews: `${reviews.rating} · ${nf.format(reviews.count)} reseñas`,
+    waPrefix: (name: string, price: string) =>
+      `Hola, me interesa el ${name} (desde ${price} MXN). ¿Me ayudan a reservar?`,
+  },
+  en: {
+    heading: "Choose your flight",
+    sub: "Seven ways to watch the sunrise over Teotihuacán. Prices in Mexican pesos.",
+    all: "See all 7 flights",
+    from: "From",
+    pick: "Pick a date",
+    reviews: `${reviews.rating} · ${nf.format(reviews.count)} reviews`,
+    waPrefix: (name: string, price: string) =>
+      `Hi, I'm interested in the ${name} (from ${price} MXN). Can you help me book?`,
+  },
+}[locale];
+
+const flightsHref = localizedPath("/vuelos", locale);
+---
+
+<section class="cat container" aria-label={t.heading}>
+  {
+    !page && (
+      <header class="cat-head">
+        <div>
+          <h2>{t.heading}</h2>
+          <p class="cat-sub measure">{t.sub}</p>
+        </div>
+        <a class="cat-all" href={flightsHref}>
+          <span>{t.all}</span>
+          <Icon name="arrow-up-right" />
+        </a>
+      </header>
+    )
+  }
+
+  <ul class="cat-grid">
+    {
+      packages.map((pkg) => {
+        const d = pkg.data;
+        const price = d.priceFrom != null ? money(d.priceFrom) : locale === "es" ? "Consultar" : "Ask";
+        const meta = [durationLabel(d.durationMinutes), capacityLabel(d.capacity)]
+          .filter(Boolean)
+          .join(" · ");
+        const wa = whatsappUrl(t.waPrefix(d.title[locale] ?? d.title.es, price));
+        return (
+          <li class="card">
+            <a class="card-media" href={wa} rel="noopener" aria-label={t.pick}>
+              <Image
+                src={d.heroImage}
+                alt={d.heroImageAlt[locale] ?? d.heroImageAlt.es}
+                widths={[360, 520, 720]}
+                sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
+                format="avif"
+              />
+              {d.badge && <span class="card-badge">{d.badge[locale] ?? d.badge.es}</span>}
+            </a>
+            <div class="card-body">
+              <h3 class="card-name">{d.title[locale] ?? d.title.es}</h3>
+              {meta && <p class="card-meta">{meta}</p>}
+              <p class="card-rating">
+                <Icon name="star" weight="fill" class="card-star" />
+                <span>{t.reviews}</span>
+              </p>
+              <p class="card-sum">{d.summary[locale] ?? d.summary.es}</p>
+            </div>
+            <div class="card-foot">
+              <span class="card-price">
+                <span class="card-from">{t.from}</span>
+                <span class="card-amount">{price}</span>
+                {d.priceWas != null && <span class="card-was">{money(d.priceWas)}</span>}
+              </span>
+              <a class="card-cta" href={wa} rel="noopener">
+                <span>{t.pick}</span>
+                <Icon name="arrow-up-right" />
+              </a>
+            </div>
+          </li>
+        );
+      })
+    }
+  </ul>
+</section>
+
+<style>
+  .cat {
+    padding-block: var(--space-3xl);
+  }
+  .cat-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    justify-content: space-between;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+  h2 {
+    font-size: var(--step-3);
+  }
+  .cat-sub {
+    margin-top: var(--space-xs);
+    color: var(--muted);
+    font-size: var(--step-1);
+  }
+  .cat-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--accent);
+    font-weight: 600;
+    white-space: nowrap;
+    transition: gap var(--dur-pop) var(--ease-out);
+  }
+  .cat-all:hover {
+    gap: 0.85rem;
+  }
+
+  /* Densidad ~5: cuadricula compacta pero no apretada. */
+  .cat-grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-md);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 620px) {
+    .cat-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (min-width: 1040px) {
+    .cat-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    transition:
+      border-color var(--dur-menu) var(--ease-out),
+      transform var(--dur-menu) var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .card:hover {
+      border-color: var(--line-strong);
+      transform: translateY(-3px);
+    }
+  }
+
+  .card-media {
+    position: relative;
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+  .card-media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 600ms var(--ease-out);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .card:hover .card-media :global(img) {
+      transform: scale(1.05);
+    }
+  }
+  .card-badge {
+    position: absolute;
+    top: var(--space-2xs);
+    left: var(--space-2xs);
+    background: color-mix(in oklch, var(--bg-deep) 78%, transparent);
+    backdrop-filter: blur(6px);
+    color: var(--ink);
+    font-size: var(--step--1);
+    font-weight: 600;
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--line-strong);
+  }
+
+  .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: var(--space-md) var(--space-md) var(--space-sm);
+  }
+  .card-name {
+    font-size: var(--step-1);
+    color: var(--ink);
+  }
+  .card-meta {
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    color: var(--muted);
+    letter-spacing: 0.01em;
+  }
+  .card-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  .card-star {
+    color: var(--accent);
+    font-size: 1rem;
+  }
+  .card-sum {
+    margin-top: 0.15rem;
+    color: var(--muted);
+    font-size: var(--step-0);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-foot {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md) var(--space-md);
+    border-top: 1px solid var(--line-faint);
+  }
+  .card-price {
+    display: grid;
+    line-height: 1.1;
+  }
+  .card-from {
+    font-size: var(--step--1);
+    color: var(--faint);
+  }
+  .card-amount {
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    font-size: var(--step-2);
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+  .card-was {
+    font-family: var(--font-body);
+    font-variant-numeric: tabular-nums;
+    font-size: var(--step--1);
+    color: var(--faint);
+    text-decoration: line-through;
+  }
+  .card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--accent);
+    color: var(--accent-ink);
+    font-weight: 600;
+    font-size: var(--step-0);
+    padding: 0.6rem 1rem;
+    border-radius: var(--radius-pill);
+    white-space: nowrap;
+    transition:
+      background-color var(--dur-pop) var(--ease-out),
+      transform var(--dur-press) var(--ease-out);
+  }
+  .card-cta:hover {
+    background: var(--accent-strong);
+  }
+  .card-cta:active {
+    transform: scale(0.97);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card,
+    .card-media :global(img) {
+      transition: none;
+    }
+  }
+</style>

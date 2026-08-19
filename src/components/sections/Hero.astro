@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import Button from "@components/ui/Button.astro";
-import { localizedPath, type Locale } from "@config/site";
+import { localizedPath, whatsappUrl, type Locale } from "@config/site";
 import { img } from "@lib/media";
 
 /**
@@ -35,7 +35,11 @@ const copy = {
   },
 }[locale];
 
-const bookHref = localizedPath("/reservar", locale);
+const bookHref = whatsappUrl(
+  locale === "es"
+    ? "Hola, quiero reservar un vuelo en globo en Teotihuacán. ¿Me ayudan?"
+    : "Hi, I'd like to book a balloon flight in Teotihuacán. Can you help?",
+);
 const flightsHref = localizedPath("/vuelos", locale);
 const poster = img("galeria-03.jpg");
 const posterAlt =
@@ -66,7 +70,9 @@ const posterAlt =
     <h1 class="hero-title">{copy.title}</h1>
     <p class="hero-sub">{copy.subtitle}</p>
     <div class="hero-cta">
-      <Button href={bookHref} size="lg" icon="arrow-up-right">{copy.primary}</Button>
+      <Button href={bookHref} size="lg" icon="arrow-up-right" target="_blank" rel="noopener">
+        {copy.primary}
+      </Button>
       <Button href={flightsHref} size="lg" variant="ghost">{copy.secondary}</Button>
     </div>
   </div>

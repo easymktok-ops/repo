@@ -2,7 +2,7 @@
 import Icon from "@components/ui/Icon.astro";
 import Button from "@components/ui/Button.astro";
 import { primaryNav } from "@config/navigation";
-import { site, localizedPath, type Locale } from "@config/site";
+import { site, localizedPath, whatsappUrl, type Locale } from "@config/site";
 import { alternateLocale } from "@i18n/utils";
 import { useTranslations } from "@i18n/ui";
 
@@ -30,10 +30,13 @@ const items = primaryNav.map((it) => ({
   active: it.id === activeId,
 }));
 
-const bookHref = localizedPath("/reservar", locale);
+const bookHref = localizedPath("/vuelos", locale);
 const langHref = localizedPath(logicalPath, other);
-const waDigits = (site.brand.whatsappDisplay || "").replace(/[^\d]/g, "");
-const waHref = waDigits ? `https://wa.me/${waDigits}` : localizedPath("/contacto", locale);
+const waHref = whatsappUrl(
+  locale === "es"
+    ? "Hola, me interesa información sobre los vuelos en globo en Teotihuacán."
+    : "Hi, I'd like information about the balloon flights in Teotihuacán.",
+);
 const homeHref = localizedPath("/", locale);
 ---
 

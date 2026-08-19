@@ -1,0 +1,20 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import PageHeader from "@components/ui/PageHeader.astro";
+import FlightCatalog from "@components/sections/FlightCatalog.astro";
+
+const locale = "es" as const;
+---
+
+<PageShell
+  title="Explorar vuelos"
+  description="Siete paquetes de vuelo en globo sobre Teotihuacán, desde $2,000 MXN. Pilotos AFAC y globopuerto propio."
+  logicalPath="/vuelos"
+  activeId="flights"
+>
+  <PageHeader
+    title="Elige tu vuelo"
+    lead="Siete formas de ver el amanecer sobre Teotihuacán. Todos con pilotos certificados AFAC y reprogramación gratis por clima. Precios en pesos mexicanos."
+  />
+  <FlightCatalog locale={locale} page />
+</PageShell>

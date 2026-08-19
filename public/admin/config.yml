@@ -58,6 +58,19 @@ collections:
             ],
         }
       - { label: "Precio desde (MXN)", name: "priceFrom", widget: "number", required: false, value_type: "int", min: 0, hint: "Déjalo vacío para mostrar 'Consultar'." }
+      - { label: "Precio anterior (tachado)", name: "priceWas", widget: "number", required: false, value_type: "int", min: 0, hint: "Solo si hay oferta. Se muestra tachado." }
+      - {
+          label: "Etiqueta / badge",
+          name: "badge",
+          widget: "object",
+          required: false,
+          hint: "Ej. Más popular, Oferta, Premium.",
+          fields:
+            [
+              { label: "Español", name: "es", widget: "string" },
+              { label: "English", name: "en", widget: "string", required: false },
+            ],
+        }
       - { label: "Moneda", name: "currency", widget: "hidden", default: "MXN" }
       - { label: "Duración (minutos)", name: "durationMinutes", widget: "number", required: false, value_type: "int", min: 1 }
       - {

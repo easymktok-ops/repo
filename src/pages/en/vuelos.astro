@@ -1,0 +1,20 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import PageHeader from "@components/ui/PageHeader.astro";
+import FlightCatalog from "@components/sections/FlightCatalog.astro";
+
+const locale = "en" as const;
+---
+
+<PageShell
+  title="Explore flights"
+  description="Seven hot-air balloon packages over Teotihuacán, from $2,000 MXN. AFAC pilots and our own launch site."
+  logicalPath="/vuelos"
+  activeId="flights"
+>
+  <PageHeader
+    title="Choose your flight"
+    lead="Seven ways to watch the sunrise over Teotihuacán. All with AFAC-certified pilots and free weather rescheduling. Prices in Mexican pesos."
+  />
+  <FlightCatalog locale={locale} page />
+</PageShell>

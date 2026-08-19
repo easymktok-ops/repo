@@ -2,15 +2,15 @@
 import PageShell from "@layouts/PageShell.astro";
 import Hero from "@components/sections/Hero.astro";
 import BoardingPassBar from "@components/sections/BoardingPassBar.astro";
+import FlightCatalog from "@components/sections/FlightCatalog.astro";
 import Ocasiones from "@components/sections/Ocasiones.astro";
 import DoubleExposure from "@components/sections/DoubleExposure.astro";
 import Gallery from "@components/sections/Gallery.astro";
 import { site } from "@config/site";
 
 /**
- * Home (es). Ritmo de secciones: video a sangre completa -> barra de confianza
- * -> ocasiones -> doble exposicion -> galeria. Faltan catalogo, testimonios y
- * FAQ (siguiente pasada).
+ * Home (es). Ritmo: video hero -> confianza -> catalogo (producto arriba) ->
+ * ocasiones -> doble exposicion -> galeria. Faltan testimonios y FAQ.
  */
 const locale = "es" as const;
 ---
@@ -22,7 +22,8 @@ const locale = "es" as const;
   activeId="home"
 >
   <Hero locale={locale} />
-  <BoardingPassBar locale={locale} />
+  <BoardingPassBar locale={locale} reviewCount={site.brand.reviews.count} />
+  <FlightCatalog locale={locale} />
   <Ocasiones locale={locale} />
   <DoubleExposure locale={locale} />
   <Gallery locale={locale} />
