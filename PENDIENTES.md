@@ -9,7 +9,17 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
 
 ## 🔴 Pendientes (por implementar)
 
-_(vacío — agrega detalles y aparecerán aquí)_
+- [ ] **Más servicios — precio a $160.** En la lista de precios, los ítems
+      **subrayados** en la foto del cliente pasan de $140 → **$160**:
+      - `Regular nail polish` $140 → **$160** (20 min)
+      - `Nail polish hardener` $140 → **$160** (10 min)
+      ⚠️ Confirmar: `Nail polish remover` también está a $140 pero **no** parecía
+      subrayado — se queda en $140 salvo que el cliente diga lo contrario.
+
+### ✔ Validado (sin acción)
+- Frase "Si logra relajar la mente también lo hace." → NO se pasó a la nueva
+  web; el párrafo de Nosotras ya está redactado limpio. Nada que borrar.
+- Shiatsu → ya muestra 90 min en la nueva.
 
 ---
 
