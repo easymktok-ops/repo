@@ -1,44 +1,89 @@
 ---
-// Toggle de idioma ES/EN con banderas e indicador visual del idioma activo.
-// Cambia de ruta (/es <-> /en) conservando la sub-ruta y guarda la preferencia.
+// Selector de idioma compacto: muestra el idioma actual con un globo y
+// despliega los demás al hacer clic. Escala a 3+ idiomas sin ocupar ancho.
 import type { Lang } from '../i18n/ui';
 import { wb } from '../lib/paths';
 const { lang, path } = Astro.props as { lang: Lang; path: string };
-const esHref = (wb(`/es/${path}`).replace(/\/+$/, '') || '/') + '/';
-const enHref = (wb(`/en/${path}`).replace(/\/+$/, '') || '/') + '/';
+
+const href = (l: string) => (wb(`/${l}/${path}`).replace(/\/+$/, '') || '/') + '/';
+const langs = [
+  { code: 'es', flag: '🇲🇽', label: 'Español', short: 'ES' },
+  { code: 'en', flag: '🇺🇸', label: 'English', short: 'EN' },
+];
+const current = langs.find((l) => l.code === lang) ?? langs[0];
 ---
-<div class="lang-toggle" role="group" aria-label="Idioma / Language">
-  <a href={esHref} class:list={['lang-toggle__opt', { 'is-active': lang === 'es' }]}
-     data-set-lang="es" hreflang="es" aria-current={lang === 'es' ? 'true' : undefined}>
-    <span class="lang-toggle__flag" aria-hidden="true">🇲🇽</span><span>ES</span>
-  </a>
-  <a href={enHref} class:list={['lang-toggle__opt', { 'is-active': lang === 'en' }]}
-     data-set-lang="en" hreflang="en" aria-current={lang === 'en' ? 'true' : undefined}>
-    <span class="lang-toggle__flag" aria-hidden="true">🇺🇸</span><span>EN</span>
-  </a>
+<div class="lang" data-lang-menu>
+  <button type="button" class="lang__btn" data-lang-btn aria-haspopup="true" aria-expanded="false" aria-label="Idioma / Language">
+    <svg class="lang__globe" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm0 0c2.5 2.3 3.8 5.6 3.8 9s-1.3 6.7-3.8 9c-2.5-2.3-3.8-5.6-3.8-9S9.5 5.3 12 3zM3.2 9h17.6M3.2 15h17.6"/></svg>
+    <span class="lang__flag">{current.flag}</span>
+    <span class="lang__code">{current.short}</span>
+    <svg class="lang__caret" viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path fill="currentColor" d="M7 10l5 5 5-5z"/></svg>
+  </button>
+  <ul class="lang__list" role="menu">
+    {langs.map((l) => (
+      <li role="none">
+        <a role="menuitem" href={href(l.code)} hreflang={l.code} data-set-lang={l.code}
+           class:list={['lang__opt', { 'is-active': l.code === lang }]}
+           aria-current={l.code === lang ? 'true' : undefined}>
+          <span class="lang__flag">{l.flag}</span>
+          <span class="lang__label">{l.label}</span>
+          {l.code === lang && <span class="lang__check" aria-hidden="true">✓</span>}
+        </a>
+      </li>
+    ))}
+  </ul>
 </div>
 
 <script>
-  document.querySelectorAll('[data-set-lang]').forEach((el) => {
-    el.addEventListener('click', () => {
-      try { localStorage.setItem('spamita_lang', el.getAttribute('data-set-lang') || 'es'); } catch (e) {}
+  document.querySelectorAll('[data-lang-menu]').forEach((menu) => {
+    const btn = menu.querySelector('[data-lang-btn]');
+    const open = (v) => { menu.classList.toggle('is-open', v); btn?.setAttribute('aria-expanded', String(v)); };
+    btn?.addEventListener('click', (e) => { e.stopPropagation(); open(!menu.classList.contains('is-open')); });
+    menu.querySelectorAll('[data-set-lang]').forEach((a) => {
+      a.addEventListener('click', () => {
+        try { localStorage.setItem('spamita_lang', a.getAttribute('data-set-lang') || 'es'); } catch (e) {}
+      });
     });
   });
+  document.addEventListener('click', () => document.querySelectorAll('[data-lang-menu].is-open').forEach((m) => { m.classList.remove('is-open'); m.querySelector('[data-lang-btn]')?.setAttribute('aria-expanded', 'false'); }));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') document.querySelectorAll('[data-lang-menu].is-open').forEach((m) => m.classList.remove('is-open')); });
 </script>
 
 <style>
-  .lang-toggle {
-    display: inline-flex; align-items: center; gap: 0.3rem;
-    padding: 0.2rem; border: 1px solid var(--color-line); border-radius: 999px;
-    background: var(--color-bg);
-  }
-  .lang-toggle__opt {
-    display: inline-flex; align-items: center; gap: 0.35rem;
+  .lang { position: relative; display: inline-block; }
+  .lang__btn {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.35rem 0.7rem; cursor: pointer;
+    background: var(--color-bg); color: var(--color-text);
+    border: 1px solid var(--color-line); border-radius: 999px;
     font-size: var(--fs-xs); font-weight: var(--fw-medium); letter-spacing: 0.06em;
-    color: var(--color-text-muted); padding: 0.35rem 0.7rem; border-radius: 999px;
-    transition: color 0.3s var(--ease-soft), background 0.3s var(--ease-soft);
+    transition: border-color 0.3s var(--ease-soft), color 0.3s var(--ease-soft);
   }
-  .lang-toggle__opt:hover { color: var(--clay-700); }
-  .lang-toggle__opt.is-active { background: var(--clay-900); color: #fff; }
-  .lang-toggle__flag { font-size: 0.95rem; line-height: 1; }
+  .lang__btn:hover { border-color: var(--clay-500); color: var(--clay-700); }
+  .lang__globe { color: var(--clay-700); }
+  .lang__flag { font-size: 0.95rem; line-height: 1; }
+  .lang__caret { transition: transform 0.25s var(--ease-soft); opacity: 0.7; }
+  .lang.is-open .lang__caret { transform: rotate(180deg); }
+
+  .lang__list {
+    position: absolute; top: calc(100% + 6px); left: 0; z-index: 60;
+    min-width: 160px; margin: 0; padding: 0.3rem; list-style: none;
+    background: var(--color-bg); border: 1px solid var(--color-line);
+    border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.12);
+    opacity: 0; visibility: hidden; transform: translateY(-4px);
+    transition: opacity 0.2s var(--ease-soft), transform 0.2s var(--ease-soft), visibility 0.2s;
+  }
+  .lang.is-open .lang__list { opacity: 1; visibility: visible; transform: none; }
+  .lang__opt {
+    display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.6rem;
+    border-radius: 8px; color: var(--color-text); font-size: var(--fs-sm);
+    transition: background 0.2s var(--ease-soft);
+  }
+  .lang__opt:hover { background: var(--clay-050); }
+  .lang__opt.is-active { color: var(--clay-900); font-weight: var(--fw-medium); }
+  .lang__label { flex: 1; }
+  .lang__check { color: var(--clay-700); }
+
+  /* En la barra superior de mobile, el menú se alinea a la derecha */
+  .lang-topbar .lang__list { left: auto; right: 0; }
 </style>

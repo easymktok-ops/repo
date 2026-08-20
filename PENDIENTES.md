@@ -37,7 +37,18 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
 
 ---
 
+## 🔵 Fase 2 (futuro, requiere decisión/inversión)
+
+- [ ] **Tercer idioma: Francés** (mercado quebequense de Puerto Vallarta).
+      El selector ya es un desplegable que escala a 3+ idiomas. Falta traducir
+      y mantener TODO el contenido (copy, servicios, FAQ, SEO, hreflang, /fr).
+      Decidir si se justifica según el segmento a atacar.
+
+---
+
 ## ✅ Hecho (histórico)
+
+- [x] Selector de idioma compacto (globo desplegable, escala a 3+ idiomas)
 
 - [x] Sitio Astro bilingüe (ES/EN), rutas separadas + hreflang, base-aware (/demo)
 - [x] Sistema de diseño, menú lateral, toggle idioma con banderas
