@@ -9,9 +9,15 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
 
 ## 🔴 Pendientes (por implementar)
 
-- [x] **Más servicios — precio a $160** (subrayados): `Regular nail polish` y
-      `Nail polish hardener` pasaron de $140 → $160. `Nail polish remover`
-      se queda en $140 (confirmado por el cliente).
+- [ ] **Horarios por temporada.** Reemplazar el horario único ("Lun–Dom
+      9:00–20:00") por dos horarios estacionales:
+      - **Temporada alta (noviembre–marzo):** Lun–Dom **9:00–20:00**
+      - **Temporada baja (abril–octubre):** Lun–Sáb **9:30–18:30**;
+        Dom **9:30–18:00**
+      Lugares a actualizar: menú lateral (`side.horario.valor`), footer,
+      página de Contacto y `openingHours` del schema.org (rangos por día).
+      Presentación sugerida: dos líneas "Temporada alta / Temporada baja"
+      con los meses entre paréntesis.
 
 ### ✔ Validado (sin acción)
 - Frase "Si logra relajar la mente también lo hace." → NO se pasó a la nueva
