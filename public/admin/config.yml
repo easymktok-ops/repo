@@ -163,6 +163,7 @@ collections:
     create: true
     fields:
       - { label: "Autor", name: "author", widget: "string" }
+      - { label: "Ubicación / etiqueta", name: "location", widget: "string", required: false, hint: "Ej. Costa Rica, Cliente verificado." }
       - {
           label: "Reseña (corta)",
           name: "quote",

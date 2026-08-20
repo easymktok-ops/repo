@@ -1,0 +1,246 @@
+---
+import { getCollection } from "astro:content";
+import Icon from "@components/ui/Icon.astro";
+import { site, type Locale } from "@config/site";
+
+/**
+ * Testimonios reales (Google / TripAdvisor). Masonry para respetar longitudes
+ * distintas (no cards identicas). Resumen de calificacion + JSON-LD con
+ * AggregateRating para citabilidad. Contenido editable desde el CMS.
+ */
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const reviews = (await getCollection("testimonials", ({ data }) => !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const r = site.brand.reviews;
+const nf = new Intl.NumberFormat(locale === "es" ? "es-MX" : "en-US");
+
+const t = {
+  es: {
+    excellent: "Excelente",
+    summary: `${nf.format(r.count)} reseñas verificadas en Google · también en TripAdvisor`,
+    verified: "vuelo verificado",
+  },
+  en: {
+    excellent: "Excellent",
+    summary: `${nf.format(r.count)} verified Google reviews · also on TripAdvisor`,
+    verified: "verified flight",
+  },
+}[locale];
+
+const sourceLabel: Record<string, string> = {
+  google: "Google",
+  tripadvisor: "TripAdvisor",
+  directo: locale === "es" ? "Cliente directo" : "Direct client",
+};
+
+function initials(name: string) {
+  return name
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((w) => w[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
+const schema = {
+  "@context": "https://schema.org",
+  "@type": "TravelAgency",
+  name: site.name,
+  url: site.url,
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: String(r.rating),
+    reviewCount: String(r.count),
+    bestRating: "5",
+  },
+};
+---
+
+<section class="tm container" aria-label={locale === "es" ? "Reseñas" : "Reviews"}>
+  <header class="tm-head">
+    <div class="tm-score">{r.rating}</div>
+    <div class="tm-score-meta">
+      <span class="tm-stars" aria-hidden="true">
+        {Array.from({ length: 5 }).map(() => <Icon name="star" weight="fill" />)}
+      </span>
+      <span class="tm-excellent">{t.excellent}</span>
+      <span class="tm-summary">{t.summary}</span>
+    </div>
+  </header>
+
+  <div class="tm-masonry">
+    {
+      reviews.map((rev) => {
+        const d = rev.data;
+        return (
+          <figure class="tm-card">
+            <figcaption class="tm-src">
+              <span class:list={["tm-src-mark", d.source]}>{sourceLabel[d.source]?.[0]}</span>
+              <span class="tm-src-name">{sourceLabel[d.source]}</span>
+              <span class="tm-src-dot" aria-hidden="true">·</span>
+              <span class="tm-src-verified">{t.verified}</span>
+            </figcaption>
+            <blockquote class="tm-quote">{d.quote[locale] ?? d.quote.es}</blockquote>
+            <div class="tm-author">
+              <span class="tm-avatar" aria-hidden="true">{initials(d.author)}</span>
+              <span class="tm-who">
+                <b>{d.author}</b>
+                {d.location && <small>{d.location}</small>}
+              </span>
+            </div>
+          </figure>
+        );
+      })
+    }
+  </div>
+
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+</section>
+
+<style>
+  .tm {
+    padding-block: var(--space-3xl);
+  }
+  .tm-head {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+    text-align: left;
+  }
+  .tm-score {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-5);
+    line-height: 1;
+    color: var(--ink);
+  }
+  .tm-score-meta {
+    display: grid;
+    gap: 2px;
+  }
+  .tm-stars {
+    display: inline-flex;
+    gap: 2px;
+    color: var(--accent);
+    font-size: 1.05rem;
+  }
+  .tm-excellent {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--step-1);
+    color: var(--ink);
+  }
+  .tm-summary {
+    font-size: var(--step--1);
+    color: var(--muted);
+    max-width: 40ch;
+  }
+
+  .tm-masonry {
+    columns: 1;
+    column-gap: var(--space-md);
+  }
+  @media (min-width: 640px) {
+    .tm-masonry {
+      columns: 2;
+    }
+  }
+  @media (min-width: 1040px) {
+    .tm-masonry {
+      columns: 3;
+    }
+  }
+  .tm-card {
+    break-inside: avoid;
+    margin: 0 0 var(--space-md);
+    padding: var(--space-md);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+  }
+
+  .tm-src {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--step--1);
+    color: var(--faint);
+    margin-bottom: var(--space-sm);
+  }
+  .tm-src-mark {
+    display: inline-grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: var(--radius-pill);
+    font-weight: 700;
+    font-size: 0.72rem;
+    color: var(--bg-deep);
+    background: var(--ink-soft);
+  }
+  .tm-src-mark.google {
+    background: oklch(0.72 0.15 250);
+    color: #fff;
+  }
+  .tm-src-mark.tripadvisor {
+    background: oklch(0.78 0.16 165);
+    color: var(--bg-deep);
+  }
+  .tm-src-name {
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .tm-src-dot {
+    color: var(--line-strong);
+  }
+
+  .tm-quote {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: var(--step-0);
+    line-height: 1.55;
+  }
+  .tm-author {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-top: var(--space-md);
+  }
+  .tm-avatar {
+    display: inline-grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-pill);
+    background: var(--accent-wash);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: var(--step--1);
+    flex-shrink: 0;
+  }
+  .tm-who {
+    display: grid;
+    line-height: 1.25;
+  }
+  .tm-who b {
+    color: var(--ink);
+    font-size: var(--step-0);
+  }
+  .tm-who small {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+
+  @media (max-width: 480px) {
+    .tm-head {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+  }
+</style>

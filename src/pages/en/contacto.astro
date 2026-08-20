@@ -1,0 +1,21 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import PageHeader from "@components/ui/PageHeader.astro";
+import Contact from "@components/sections/Contact.astro";
+
+const locale = "en" as const;
+---
+
+<PageShell
+  title="Contact"
+  description="Contact Aerodiverti for your balloon flight over Teotihuacán. WhatsApp, phone, email and launch site in San Martín de las Pirámides."
+  logicalPath="/contacto"
+  activeId="contact"
+>
+  <PageHeader
+    eyebrow="Contact"
+    title="Let's talk about your flight"
+    lead="We're here to help you choose the flight and the date. Instant reply on WhatsApp."
+  />
+  <Contact locale={locale} />
+</PageShell>

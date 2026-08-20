@@ -73,6 +73,7 @@ const testimonials = defineCollection({
   loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/testimonials" }),
   schema: z.object({
     author: z.string(),
+    location: z.string().optional(), // ej. "Costa Rica", "Cliente verificado"
     // Cuerpo corto (<= 3 lineas al renderizar). Snippet, no resena completa.
     quote: localized,
     rating: z.number().min(1).max(5).default(5),

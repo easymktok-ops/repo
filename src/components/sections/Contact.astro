@@ -1,0 +1,481 @@
+---
+import Icon from "@components/ui/Icon.astro";
+import { site, whatsappUrl, type Locale } from "@config/site";
+
+/**
+ * Contacto: formulario que COMPONE un mensaje de WhatsApp con todos los datos
+ * (funciona ya, sin backend; en Fase 3 se conecta al outbox/checkout). Panel de
+ * contacto real (WhatsApp, oficina, correo, globopuerto + cómo llegar).
+ * El envio real por WhatsApp/correo lo maneja un script vanilla (cero framework).
+ */
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const c = site.brand;
+const waDigits = c.whatsapp;
+const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  `Aerodiverti ${c.address.line1} ${c.address.area}`,
+)}`;
+const mailto = `mailto:${c.email}`;
+
+const t = {
+  es: {
+    formTitle: "Cuéntanos de tu vuelo",
+    formLead: "Déjanos tus datos y te ayudamos a armar la experiencia. ¿Quieres respuesta al instante? Escríbenos por WhatsApp.",
+    name: "Nombre completo",
+    email: "Correo",
+    phone: "WhatsApp o teléfono",
+    date: "Fecha tentativa",
+    people: "¿Cuántas personas?",
+    peoplePick: "Selecciona",
+    message: "Mensaje",
+    optional: "opcional",
+    privacy: "Acepto que me contacten sobre mi solicitud.",
+    submit: "Enviar por WhatsApp",
+    orEmail: "o escríbenos a",
+    sent: "Abrimos WhatsApp con tus datos. Si no se abrió, escríbenos directo.",
+    infoTitle: "Contáctanos directo",
+    wa: "WhatsApp",
+    office: "Oficina",
+    mail: "Correo",
+    port: "Globopuerto",
+    directions: "Cómo llegar",
+    reassure: "Despegamos al amanecer. Reprogramación gratis por clima.",
+  },
+  en: {
+    formTitle: "Tell us about your flight",
+    formLead: "Leave your details and we'll help you plan the experience. Want an instant reply? Message us on WhatsApp.",
+    name: "Full name",
+    email: "Email",
+    phone: "WhatsApp or phone",
+    date: "Preferred date",
+    people: "How many people?",
+    peoplePick: "Select",
+    message: "Message",
+    optional: "optional",
+    privacy: "I agree to be contacted about my request.",
+    submit: "Send via WhatsApp",
+    orEmail: "or email us at",
+    sent: "We opened WhatsApp with your details. If it did not open, message us directly.",
+    infoTitle: "Reach us directly",
+    wa: "WhatsApp",
+    office: "Office",
+    mail: "Email",
+    port: "Launch site",
+    directions: "Get directions",
+    reassure: "We lift off at sunrise. Free rescheduling for weather.",
+  },
+}[locale];
+
+const peopleOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11 - 16", "16+"];
+---
+
+<section class="ct container">
+  <div class="ct-grid">
+    <!-- Formulario -->
+    <div class="ct-form-wrap">
+      <h2 class="ct-h">{t.formTitle}</h2>
+      <p class="ct-lead measure">{t.formLead}</p>
+
+      <form id="contactForm" class="ct-form" data-wa={waDigits} novalidate>
+        <div class="field">
+          <label for="cf-name">{t.name} <span class="req">*</span></label>
+          <input id="cf-name" name="name" type="text" required autocomplete="name" />
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="cf-email">{t.email} <span class="req">*</span></label>
+            <input id="cf-email" name="email" type="email" required autocomplete="email" />
+          </div>
+          <div class="field">
+            <label for="cf-phone">{t.phone} <span class="req">*</span></label>
+            <input id="cf-phone" name="phone" type="tel" required inputmode="tel" autocomplete="tel" placeholder="+52 55 1234 5678" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="cf-date">{t.date} <span class="opt">({t.optional})</span></label>
+            <input id="cf-date" name="date" type="date" />
+          </div>
+          <div class="field">
+            <label for="cf-people">{t.people} <span class="opt">({t.optional})</span></label>
+            <div class="select-wrap">
+              <select id="cf-people" name="people">
+                <option value="">{t.peoplePick}</option>
+                {peopleOptions.map((o) => <option value={o}>{o}</option>)}
+              </select>
+              <Icon name="caret-down" class="select-caret" />
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="cf-message">{t.message} <span class="opt">({t.optional})</span></label>
+          <textarea id="cf-message" name="message" rows="3"></textarea>
+        </div>
+
+        <label class="check">
+          <input type="checkbox" name="privacy" required />
+          <span>{t.privacy}</span>
+        </label>
+
+        <div class="ct-actions">
+          <button type="submit" class="ct-submit">
+            <Icon name="paper-plane-tilt" />
+            <span>{t.submit}</span>
+          </button>
+          <span class="ct-or">
+            {t.orEmail} <a href={mailto}>{c.email}</a>
+          </span>
+        </div>
+        <p id="cf-sent" class="ct-sent" hidden>{t.sent}</p>
+      </form>
+    </div>
+
+    <!-- Panel de contacto directo -->
+    <aside class="ct-info">
+      <h2 class="ct-info-h">{t.infoTitle}</h2>
+      <ul class="ct-channels">
+        <li>
+          <a href={whatsappUrl()} rel="noopener" target="_blank">
+            <span class="ci-ico ci-wa"><Icon name="chat-circle" /></span>
+            <span class="ci-body">
+              <span class="ci-k">{t.wa}</span>
+              <span class="ci-v">{c.whatsappDisplay}</span>
+            </span>
+            <Icon name="arrow-up-right" class="ci-go" />
+          </a>
+        </li>
+        <li>
+          <a href={`tel:+${c.phone}`}>
+            <span class="ci-ico"><Icon name="phone" /></span>
+            <span class="ci-body">
+              <span class="ci-k">{t.office}</span>
+              <span class="ci-v">{c.phoneDisplay}</span>
+            </span>
+            <Icon name="arrow-up-right" class="ci-go" />
+          </a>
+        </li>
+        <li>
+          <a href={mailto}>
+            <span class="ci-ico"><Icon name="envelope-simple" /></span>
+            <span class="ci-body">
+              <span class="ci-k">{t.mail}</span>
+              <span class="ci-v">{c.email}</span>
+            </span>
+            <Icon name="arrow-up-right" class="ci-go" />
+          </a>
+        </li>
+        <li>
+          <a href={mapsUrl} rel="noopener" target="_blank">
+            <span class="ci-ico"><Icon name="map-pin" /></span>
+            <span class="ci-body">
+              <span class="ci-k">{t.port}</span>
+              <span class="ci-v">{c.address.line1}, {c.address.area}, {c.address.zip}</span>
+              <span class="ci-dir">{t.directions} <Icon name="arrow-square-out" /></span>
+            </span>
+          </a>
+        </li>
+      </ul>
+      <p class="ct-reassure">
+        <Icon name="sun-horizon" class="ci-sun" />
+        <span>{t.reassure}</span>
+      </p>
+    </aside>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById("contactForm") as HTMLFormElement | null;
+  const sent = document.getElementById("cf-sent");
+  if (form) {
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      if (!form.reportValidity()) return;
+      const f = new FormData(form);
+      const g = (k: string) => (f.get(k)?.toString() || "").trim();
+      const isEs = document.documentElement.lang.startsWith("es");
+      const parts = isEs
+        ? [
+            `Hola, soy ${g("name")}. Me interesa un vuelo en globo en Teotihuacán.`,
+            g("people") && `Seríamos ${g("people")} personas.`,
+            g("date") && `Fecha tentativa: ${g("date")}.`,
+            g("message") && `${g("message")}`,
+            `Mi correo es ${g("email")} y mi teléfono ${g("phone")}.`,
+          ]
+        : [
+            `Hi, I'm ${g("name")}. I'm interested in a balloon flight in Teotihuacán.`,
+            g("people") && `We'd be ${g("people")} people.`,
+            g("date") && `Preferred date: ${g("date")}.`,
+            g("message") && `${g("message")}`,
+            `My email is ${g("email")} and my phone is ${g("phone")}.`,
+          ];
+      const text = parts.filter(Boolean).join(" ");
+      const wa = `https://wa.me/${form.dataset.wa}?text=${encodeURIComponent(text)}`;
+      window.open(wa, "_blank", "noopener");
+      sent?.removeAttribute("hidden");
+    });
+  }
+</script>
+
+<style>
+  .ct {
+    padding-block: var(--space-lg) var(--space-3xl);
+  }
+  .ct-grid {
+    display: grid;
+    gap: var(--space-xl);
+  }
+  @media (min-width: 940px) {
+    .ct-grid {
+      grid-template-columns: 1.35fr 0.9fr;
+      align-items: start;
+    }
+  }
+
+  .ct-h {
+    font-size: var(--step-2);
+  }
+  .ct-lead {
+    margin-top: var(--space-xs);
+    margin-bottom: var(--space-lg);
+    color: var(--muted);
+    font-size: var(--step-0);
+  }
+
+  /* ---------- Formulario ---------- */
+  .ct-form {
+    display: grid;
+    gap: var(--space-md);
+  }
+  .row {
+    display: grid;
+    gap: var(--space-md);
+  }
+  @media (min-width: 560px) {
+    .row {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .field {
+    display: grid;
+    gap: 0.4rem;
+  }
+  .field label {
+    font-size: var(--step--1);
+    font-weight: 600;
+    color: var(--ink-soft);
+  }
+  .req {
+    color: var(--accent);
+  }
+  .opt {
+    color: var(--faint);
+    font-weight: 400;
+  }
+  input,
+  select,
+  textarea {
+    width: 100%;
+    background: var(--surface-sunken);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-input);
+    color: var(--ink);
+    padding: 0.72rem 0.85rem;
+    font-size: var(--step-0);
+    transition:
+      border-color var(--dur-pop) var(--ease-out),
+      box-shadow var(--dur-pop) var(--ease-out);
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--muted);
+  }
+  input:focus,
+  select:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-wash);
+  }
+  textarea {
+    resize: vertical;
+    min-height: 3.2rem;
+  }
+  /* Fecha oscura legible */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+    cursor: pointer;
+  }
+
+  .select-wrap {
+    position: relative;
+  }
+  select {
+    appearance: none;
+    padding-right: 2.4rem;
+  }
+  .select-caret {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: var(--muted);
+    font-size: 1.2rem;
+  }
+
+  .check {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    font-size: var(--step--1);
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .check input {
+    width: auto;
+    margin-top: 0.15rem;
+    accent-color: var(--accent);
+  }
+
+  .ct-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+    margin-top: var(--space-2xs);
+  }
+  .ct-submit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    background: var(--accent);
+    color: var(--accent-ink);
+    border: none;
+    border-radius: var(--radius-pill);
+    font-weight: 600;
+    font-size: var(--step-0);
+    padding: 0.85rem 1.5rem;
+    cursor: pointer;
+    transition:
+      background-color var(--dur-pop) var(--ease-out),
+      transform var(--dur-press) var(--ease-out);
+  }
+  .ct-submit:hover {
+    background: var(--accent-strong);
+  }
+  .ct-submit:active {
+    transform: scale(0.97);
+  }
+  .ct-or {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+  .ct-or a {
+    color: var(--accent);
+  }
+  .ct-sent {
+    margin: 0;
+    color: var(--ok);
+    font-size: var(--step--1);
+  }
+
+  /* ---------- Panel de contacto ---------- */
+  .ct-info {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+  }
+  @media (min-width: 940px) {
+    .ct-info {
+      position: sticky;
+      top: var(--space-lg);
+    }
+  }
+  .ct-info-h {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-md);
+  }
+  .ct-channels {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-2xs);
+  }
+  .ct-channels a {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.75rem;
+    border-radius: var(--radius-input);
+    border: 1px solid transparent;
+    transition:
+      background-color var(--dur-pop) var(--ease-out),
+      border-color var(--dur-pop) var(--ease-out);
+  }
+  .ct-channels a:hover {
+    background: var(--surface-raised);
+    border-color: var(--line);
+  }
+  .ci-ico {
+    display: inline-grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+    border-radius: var(--radius-input);
+    background: var(--surface-sunken);
+    color: var(--accent);
+    font-size: 1.3rem;
+  }
+  .ci-wa {
+    background: var(--accent-wash);
+  }
+  .ci-body {
+    display: grid;
+    gap: 1px;
+    min-width: 0;
+  }
+  .ci-k {
+    font-size: var(--step--1);
+    color: var(--faint);
+  }
+  .ci-v {
+    color: var(--ink);
+    font-size: var(--step-0);
+  }
+  .ci-dir {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.2rem;
+    color: var(--accent);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+  .ci-go {
+    margin-left: auto;
+    color: var(--faint);
+    flex-shrink: 0;
+  }
+
+  .ct-reassure {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: var(--space-md);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--line-faint);
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+  .ci-sun {
+    color: var(--accent);
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+</style>

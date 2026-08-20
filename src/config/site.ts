@@ -32,6 +32,15 @@ export const site = {
       es: "San Martín de las Pirámides, a 2 km de las pirámides",
       en: "San Martín de las Pirámides, 2 km from the pyramids",
     },
+    // Contacto real del negocio.
+    phoneDisplay: "(55) 53 41 98 34",
+    phone: "525553419834",
+    email: "ventas@aerodiverti.com",
+    address: {
+      line1: "Álvaro Obregón 22",
+      area: "San Martín de las Pirámides, Estado de México",
+      zip: "C.P. 55850",
+    },
   },
 
   analytics: {

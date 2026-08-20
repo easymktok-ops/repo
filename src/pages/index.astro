@@ -6,6 +6,7 @@ import FlightCatalog from "@components/sections/FlightCatalog.astro";
 import Ocasiones from "@components/sections/Ocasiones.astro";
 import DoubleExposure from "@components/sections/DoubleExposure.astro";
 import Gallery from "@components/sections/Gallery.astro";
+import Testimonials from "@components/sections/Testimonials.astro";
 import Faq from "@components/sections/Faq.astro";
 import { site } from "@config/site";
 
@@ -28,5 +29,6 @@ const locale = "es" as const;
   <Ocasiones locale={locale} />
   <DoubleExposure locale={locale} />
   <Gallery locale={locale} />
+  <Testimonials locale={locale} />
   <Faq locale={locale} />
 </PageShell>
