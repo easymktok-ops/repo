@@ -32,8 +32,8 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
       Reproductor 🎵 activo y verificado.
 - [ ] **Probar formulario en el hosting** — enviar por correo y por WhatsApp y
       confirmar que llegan.
-- [ ] **Pasar a producción en la raíz** — cambiar `base` de `/demo` a `/`,
-      recompilar y entregar ZIP final.
+- [x] **Producción en la raíz** — build con base `/` + `.htaccess` (404,
+      compresión, caché). ZIP final entregado. Falta que el cliente lo suba.
 
 ---
 

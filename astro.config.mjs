@@ -4,9 +4,9 @@ import { defineConfig } from 'astro/config';
 // El español es el idioma por defecto; la raíz redirige a /es.
 export default defineConfig({
   site: 'https://thespamita.com',
-  // Subcarpeta de despliegue. Para la demo: '/demo'. Para producción en la
-  // raíz del dominio, cambiar a '/' (o eliminar esta línea).
-  base: '/demo',
+  // Despliegue en la raíz del dominio (producción).
+  // Para volver a una subcarpeta de prueba, usar base: '/demo'.
+  base: '/',
   i18n: {
     defaultLocale: 'es',
     locales: ['es', 'en'],

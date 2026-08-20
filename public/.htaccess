@@ -1,0 +1,26 @@
+# The Spa Mita — configuración para hosting Apache (raíz del dominio)
+
+# Página 404 personalizada
+ErrorDocument 404 /404.html
+
+# Compresión (si el módulo está disponible)
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml application/javascript application/json image/svg+xml
+</IfModule>
+
+# Caché de estáticos
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType audio/mpeg "access plus 1 year"
+</IfModule>
+
+# Tipos MIME por si el servidor no los define
+<IfModule mod_mime.c>
+  AddType image/webp .webp
+  AddType audio/mpeg .mp3
+</IfModule>

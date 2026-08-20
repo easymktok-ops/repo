@@ -12,7 +12,7 @@
     <link rel="canonical" href="https://thespamita.com/es/" />
     <title>The Spa Mita</title>
     <script is:inline>
-      // Asegura slash final y agrega es/ (maneja /demo y /demo/).
+      // Redirige al idioma por defecto respetando la ruta actual (raíz o subcarpeta).
       location.replace(location.pathname.replace(/\/?$/, '/') + 'es/' + location.search + location.hash);
     </script>
   </head>
