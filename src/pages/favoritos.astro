@@ -1,0 +1,100 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import PageHeader from "@components/ui/PageHeader.astro";
+import FlightCatalog from "@components/sections/FlightCatalog.astro";
+import Button from "@components/ui/Button.astro";
+import Icon from "@components/ui/Icon.astro";
+import { localizedPath } from "@config/site";
+
+const locale = "es" as const;
+---
+
+<PageShell
+  title="Favoritos"
+  description="Los vuelos en globo que marcaste como favoritos, guardados en este dispositivo."
+  logicalPath="/favoritos"
+  activeId="favorites"
+  noindex
+>
+  <PageHeader
+    title="Tus favoritos"
+    lead="Los vuelos que marcaste con el corazón aparecen aquí. Se guardan en este dispositivo, sin cuenta ni registro."
+  />
+
+  <div id="favCatalog">
+    <FlightCatalog locale={locale} page />
+  </div>
+
+  <section id="favEmpty" class="fav-empty container" hidden>
+    <div class="fav-empty-card">
+      <span class="fav-empty-ico"><Icon name="heart" /></span>
+      <h2>Aún no tienes favoritos</h2>
+      <p class="measure">
+        Explora los vuelos y toca el corazón en los que más te gusten. Se guardan en
+        este dispositivo para que los retomes cuando quieras.
+      </p>
+      <Button href={localizedPath("/vuelos", locale)} icon="arrow-up-right">Explorar vuelos</Button>
+    </div>
+  </section>
+</PageShell>
+
+<script>
+  const KEY = "aero:favs";
+  const read = (): string[] => {
+    try {
+      return JSON.parse(localStorage.getItem(KEY) || "[]");
+    } catch {
+      return [];
+    }
+  };
+  function refresh() {
+    const favs = read();
+    let shown = 0;
+    document.querySelectorAll<HTMLElement>("#favCatalog .card").forEach((c) => {
+      const on = favs.includes(c.dataset.slug || "");
+      c.style.display = on ? "" : "none";
+      if (on) shown++;
+    });
+    const empty = document.getElementById("favEmpty");
+    const cat = document.getElementById("favCatalog");
+    if (empty) empty.hidden = shown > 0;
+    if (cat) cat.hidden = shown === 0;
+  }
+  document.addEventListener("favs:changed", refresh);
+  refresh();
+</script>
+
+<style>
+  .fav-empty {
+    padding-block: var(--space-xl) var(--space-3xl);
+  }
+  .fav-empty-card {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: var(--space-sm);
+    max-width: 560px;
+    margin-inline: auto;
+    padding: var(--space-2xl) var(--space-lg);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+  }
+  .fav-empty-ico {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-pill);
+    background: var(--accent-wash);
+    color: var(--accent);
+    font-size: 1.8rem;
+    margin-bottom: var(--space-2xs);
+  }
+  .fav-empty-card h2 {
+    font-size: var(--step-2);
+  }
+  .fav-empty-card p {
+    color: var(--muted);
+  }
+</style>

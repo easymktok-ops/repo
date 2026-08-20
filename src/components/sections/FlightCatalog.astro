@@ -93,7 +93,17 @@ const flightsHref = localizedPath("/vuelos", locale);
           .join(" · ");
         const wa = whatsappUrl(t.waPrefix(d.title[locale] ?? d.title.es, price));
         return (
-          <li class="card">
+          <li class="card" data-slug={d.slug}>
+            <button
+              class="fav-btn"
+              type="button"
+              data-slug={d.slug}
+              aria-pressed="false"
+              aria-label={locale === "es" ? "Guardar en favoritos" : "Save to favorites"}
+            >
+              <span class="heart-o"><Icon name="heart" /></span>
+              <span class="heart-f"><Icon name="heart" weight="fill" /></span>
+            </button>
             <a class="card-media" href={wa} rel="noopener" aria-label={t.pick}>
               <Image
                 src={d.heroImage}
@@ -130,6 +140,40 @@ const flightsHref = localizedPath("/vuelos", locale);
     }
   </ul>
 </section>
+
+<script>
+  // Favoritos: guarda slugs en localStorage (por dispositivo, sin cuenta).
+  const KEY = "aero:favs";
+  const read = (): string[] => {
+    try {
+      return JSON.parse(localStorage.getItem(KEY) || "[]");
+    } catch {
+      return [];
+    }
+  };
+  const write = (a: string[]) => localStorage.setItem(KEY, JSON.stringify(a));
+  const sync = () => {
+    const favs = read();
+    document.querySelectorAll<HTMLButtonElement>(".fav-btn").forEach((b) => {
+      b.setAttribute("aria-pressed", favs.includes(b.dataset.slug || "") ? "true" : "false");
+    });
+  };
+  document.querySelectorAll<HTMLButtonElement>(".fav-btn").forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const slug = btn.dataset.slug || "";
+      const a = read();
+      const i = a.indexOf(slug);
+      if (i >= 0) a.splice(i, 1);
+      else a.push(slug);
+      write(a);
+      sync();
+      document.dispatchEvent(new CustomEvent("favs:changed"));
+    });
+  });
+  sync();
+</script>
 
 <style>
   .cat {
@@ -185,6 +229,7 @@ const flightsHref = localizedPath("/vuelos", locale);
   }
 
   .card {
+    position: relative;
     display: flex;
     flex-direction: column;
     background: var(--surface);
@@ -194,6 +239,44 @@ const flightsHref = localizedPath("/vuelos", locale);
     transition:
       border-color var(--dur-menu) var(--ease-out),
       transform var(--dur-menu) var(--ease-out);
+  }
+
+  /* Botón favorito (corazón) sobre la imagen */
+  .fav-btn {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    z-index: var(--z-raised);
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--line-strong);
+    background: color-mix(in oklch, var(--bg-deep) 62%, transparent);
+    backdrop-filter: blur(6px);
+    color: var(--ink);
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition:
+      background-color var(--dur-pop) var(--ease-out),
+      transform var(--dur-press) var(--ease-out);
+  }
+  .fav-btn:hover {
+    background: var(--bg-deep);
+  }
+  .fav-btn:active {
+    transform: scale(0.9);
+  }
+  .fav-btn .heart-f {
+    display: none;
+    color: var(--accent);
+  }
+  .fav-btn[aria-pressed="true"] .heart-o {
+    display: none;
+  }
+  .fav-btn[aria-pressed="true"] .heart-f {
+    display: inline-flex;
   }
   @media (hover: hover) and (pointer: fine) {
     .card:hover {

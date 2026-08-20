@@ -1,0 +1,392 @@
+---
+import { Image } from "astro:assets";
+import Icon from "@components/ui/Icon.astro";
+import Button from "@components/ui/Button.astro";
+import { site, whatsappUrl, localizedPath, type Locale } from "@config/site";
+import { img } from "@lib/media";
+
+/**
+ * Globopuerto: pagina de la pista propia (patron del sitio de referencia,
+ * reescrito para no duplicar contenido y rehecho en Obsidiana). Datos reales.
+ */
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const c = site.brand;
+const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+  "Aerodiverti Teotihuacán, San Martín de las Pirámides",
+)}`;
+const bookWa = whatsappUrl(
+  locale === "es"
+    ? "Hola, quiero reservar un vuelo en globo en Teotihuacán. ¿Me ayudan?"
+    : "Hi, I'd like to book a balloon flight in Teotihuacán. Can you help?",
+);
+const flightsHref = localizedPath("/vuelos", locale);
+
+const t = {
+  es: {
+    facilities: "Las instalaciones",
+    facilitiesSub: "Lo que vives desde que llegas hasta que aterrizas.",
+    location: "Ubicación exacta",
+    locationLead:
+      "Búscanos en Google Maps como Aerodiverti Teotihuacán. Estamos a unos 30 minutos de la Ciudad de México por la autopista México-Tulancingo.",
+    openMaps: "Abrir en Google Maps",
+    diff: "Qué hace diferente a nuestro globopuerto",
+    diffSub: "La mayoría de los operadores despega desde campos rentados. Nosotros volamos desde pista propia.",
+    howto: "Cómo llegar",
+    ready: "¿Listo para volar?",
+    readySub:
+      "Reserva en línea en menos de 90 segundos o pregúntanos lo que sea por WhatsApp. Reprogramación sin costo si el clima impide volar, con cambios hasta 48 h antes.",
+    seeFlights: "Ver vuelos",
+    chat: "Escríbenos por WhatsApp",
+    book: "Reservar vuelo",
+    stat1: "de las pirámides",
+    stat2: "reseñas en Google",
+  },
+  en: {
+    facilities: "The launch site",
+    facilitiesSub: "What you live from the moment you arrive until you land.",
+    location: "Exact location",
+    locationLead:
+      "Find us on Google Maps as Aerodiverti Teotihuacán. We're about 30 minutes from Mexico City on the México-Tulancingo highway.",
+    openMaps: "Open in Google Maps",
+    diff: "What sets our launch site apart",
+    diffSub: "Most operators take off from rented fields. We fly from our own site.",
+    howto: "How to get here",
+    ready: "Ready to fly?",
+    readySub:
+      "Book online in under 90 seconds, or ask us anything on WhatsApp. Free rescheduling if weather grounds the flight, with changes up to 48 h before.",
+    seeFlights: "See flights",
+    chat: "Message us on WhatsApp",
+    book: "Book a flight",
+    stat1: "from the pyramids",
+    stat2: "Google reviews",
+  },
+}[locale];
+
+const facilities = [
+  { file: "galeria-05.jpg", alt: { es: "Pasajeras en la canastilla con la pirámide al fondo", en: "Passengers in the basket with the pyramid behind" } },
+  { file: "galeria-06.jpg", alt: { es: "Pasajera mirando el amanecer desde el globo", en: "Passenger watching the sunrise from the balloon" } },
+  { file: "galeria-02.jpg", alt: { es: "Quemador encendido dentro del globo", en: "Burner firing inside the balloon" } },
+  { file: "ocasion-aniversario.jpg", alt: { es: "Pareja en la canastilla celebrando", en: "Couple celebrating in the basket" } },
+  { file: "galeria-07.jpg", alt: { es: "Silueta al contraluz frente a un globo", en: "Silhouette against a balloon at sunrise" } },
+  { file: "ocasion-cumpleanos.jpg", alt: { es: "Festejo con globos al amanecer", en: "Celebration with balloons at sunrise" } },
+];
+
+const features = [
+  { icon: "map-pin", title: { es: "A 2 km de las pirámides", en: "2 km from the pyramids" }, body: { es: "Nuestra pista está en San Martín de las Pirámides. Despegas desde terreno propio de Aerodiverti, no desde la zona arqueológica.", en: "Our site is in San Martín de las Pirámides. You take off from Aerodiverti's own ground, not from the archaeological zone." } },
+  { icon: "airplane-takeoff", title: { es: "Pista exclusiva", en: "Exclusive site" }, body: { es: "No la compartimos con otros operadores: nada de filas, aglomeraciones ni esperas antes de volar.", en: "We don't share it with other operators: no lines, no crowds, no waiting before you fly." } },
+  { icon: "car-simple", title: { es: "Estacionamiento privado", en: "Private parking" }, body: { es: "Gratuito y vigilado mientras estás en el aire. Llegas, dejas el coche y subes al globo.", en: "Free and guarded while you're in the air. Arrive, park, and step into the balloon." } },
+  { icon: "coffee", title: { es: "Cafetería de bienvenida", en: "Welcome café" }, body: { es: "Café recién hecho y un desayuno ligero antes del briefing de seguridad.", en: "Fresh coffee and a light breakfast before the safety briefing." } },
+  { icon: "seal-check", title: { es: "Globos Pasha y Kubíček", en: "Pasha and Kubíček balloons" }, body: { es: "Equipos certificados de dos de los fabricantes europeos de referencia en el mundo del globo.", en: "Certified equipment from two of the leading European balloon manufacturers." } },
+  { icon: "users", title: { es: "Equipo de tierra AFAC", en: "AFAC ground crew" }, body: { es: "Personal capacitado y pilotos con licencia comercial emitida por la autoridad aeronáutica.", en: "Trained crew and pilots with a commercial license issued by the aviation authority." } },
+  { icon: "sun-horizon", title: { es: "Al primer sol", en: "At first light" }, body: { es: "Despegamos apenas el cielo empieza a iluminarse, entre 06:00 y 07:30 aprox.; la hora exacta la define el clima y el piloto.", en: "We lift off as the sky starts to glow, roughly 06:00–07:30; the exact time depends on weather and pilot." } },
+  { icon: "shield-check", title: { es: "Seguro de viajero", en: "Traveler insurance" }, body: { es: "Cobertura por incidente activa desde que entras al globopuerto hasta que sales.", en: "Incident coverage, active from the moment you enter the site until you leave." } },
+];
+
+const howto = [
+  { icon: "van", tag: { es: "Con transporte Aerodiverti", en: "With Aerodiverti transport" }, title: { es: "Desde CDMX, sin manejar", en: "From Mexico City, no driving" }, body: { es: "Te recogemos desde las 04:00 h en un punto acordado, dentro de un radio de 4 km del Ángel de la Independencia. Al terminar el vuelo, el regreso es al Ángel (punto alterno: Monumento a la Revolución).", en: "We pick you up from 04:00 at an agreed point within 4 km of the Ángel de la Independencia. After the flight, we return you to the Ángel (alternate point: Monumento a la Revolución)." } },
+  { icon: "car-simple", tag: { es: "En tu auto", en: "In your own car" }, title: { es: "~45 min desde CDMX", en: "~45 min from Mexico City" }, body: { es: "Toma la México-Tulancingo (132D) hasta la caseta de Teotihuacán y sigue las señales a San Martín de las Pirámides. Incluye estacionamiento privado y gratuito.", en: "Take the México-Tulancingo (132D) to the Teotihuacán toll, then follow signs to San Martín de las Pirámides. Free private parking included." } },
+];
+---
+
+<!-- Encabezado -->
+<section class="gp-hero container">
+  <p class="gp-eyebrow">
+    <Icon name="map-pin" /> San Martín de las Pirámides · Estado de México
+  </p>
+  <h1 class="gp-title">Globopuerto <span class="gp-title-brand">{site.name}</span></h1>
+  <p class="gp-lead measure">
+    {locale === "es"
+      ? "Nuestra pista privada está en San Martín de las Pirámides, a 2 km de la Zona Arqueológica de Teotihuacán. El despegue es aquí, no sobre las pirámides, y el vuelo cruza el Valle con los primeros rayos del sol. Contamos con estacionamiento privado, cafetería de bienvenida, equipo en tierra AFAC y globos Pasha y Kubíček certificados."
+      : "Our private site is in San Martín de las Pirámides, 2 km from the Teotihuacán archaeological zone. Takeoff happens here, not over the pyramids, and the flight crosses the valley at first light. We have private parking, a welcome café, AFAC ground crew and certified Pasha and Kubíček balloons."}
+  </p>
+  <div class="gp-cta">
+    <Button href={bookWa} size="lg" icon="arrow-up-right" target="_blank" rel="noopener">{t.book}</Button>
+    <Button href={flightsHref} size="lg" variant="ghost">{t.seeFlights}</Button>
+  </div>
+
+  <div class="gp-stats">
+    <div class="gp-stat">
+      <span class="gp-stat-num">2 km</span>
+      <span class="gp-stat-k">{t.stat1}</span>
+    </div>
+    <div class="gp-stat">
+      <span class="gp-stat-num">
+        {c.reviews.rating}
+        <Icon name="star" weight="fill" class="gp-star" />
+      </span>
+      <span class="gp-stat-k">{new Intl.NumberFormat(locale === "es" ? "es-MX" : "en-US").format(c.reviews.count)} {t.stat2}</span>
+    </div>
+  </div>
+</section>
+
+<!-- Instalaciones -->
+<section class="gp-block container">
+  <h2>{t.facilities}</h2>
+  <p class="gp-sub">{t.facilitiesSub}</p>
+  <div class="gp-masonry">
+    {facilities.map((s) => (
+      <figure>
+        <Image src={img(s.file)} alt={s.alt[locale]} widths={[360, 640, 900]} sizes="(min-width:1024px) 30vw, (min-width:640px) 45vw, 90vw" format="avif" />
+      </figure>
+    ))}
+  </div>
+</section>
+
+<!-- Ubicación -->
+<section class="gp-block container">
+  <h2>{t.location}</h2>
+  <p class="gp-sub measure">{t.locationLead}</p>
+  <a class="gp-location" href={mapsUrl} rel="noopener" target="_blank">
+    <span class="gp-loc-pin"><Icon name="map-pin" /></span>
+    <span class="gp-loc-body">
+      <span class="gp-loc-addr">{c.address.line1}, {c.address.area}, {c.address.zip}</span>
+      <span class="gp-loc-open">{t.openMaps} <Icon name="arrow-square-out" /></span>
+    </span>
+  </a>
+</section>
+
+<!-- Diferenciadores -->
+<section class="gp-block container">
+  <h2>{t.diff}</h2>
+  <p class="gp-sub measure">{t.diffSub}</p>
+  <ul class="gp-features">
+    {features.map((f) => (
+      <li class="gp-feature">
+        <span class="gp-feat-ico"><Icon name={f.icon} /></span>
+        <h3>{f.title[locale]}</h3>
+        <p>{f.body[locale]}</p>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<!-- Cómo llegar -->
+<section class="gp-block container">
+  <h2>{t.howto}</h2>
+  <div class="gp-howto">
+    {howto.map((h) => (
+      <article class="gp-way">
+        <span class="gp-way-tag"><Icon name={h.icon} /> {h.tag[locale]}</span>
+        <h3>{h.title[locale]}</h3>
+        <p>{h.body[locale]}</p>
+      </article>
+    ))}
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="container">
+  <div class="gp-ready">
+    <div>
+      <h2>{t.ready}</h2>
+      <p class="measure">{t.readySub}</p>
+    </div>
+    <div class="gp-ready-cta">
+      <Button href={flightsHref} size="lg" icon="arrow-up-right">{t.seeFlights}</Button>
+      <Button href={bookWa} size="lg" variant="ghost" iconLeading="chat-circle" target="_blank" rel="noopener">{t.chat}</Button>
+    </div>
+  </div>
+</section>
+
+<style>
+  .gp-hero {
+    padding-block: var(--space-xl) var(--space-2xl);
+  }
+  .gp-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin-bottom: var(--space-sm);
+  }
+  .gp-title {
+    font-size: var(--step-5);
+    font-weight: 700;
+    line-height: 1;
+  }
+  .gp-title-brand {
+    display: block;
+    color: var(--accent);
+  }
+  .gp-lead {
+    margin-top: var(--space-md);
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+  }
+  .gp-cta {
+    margin-top: var(--space-lg);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+  .gp-stats {
+    margin-top: var(--space-xl);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 520px;
+    gap: var(--space-md);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    padding: var(--space-md) var(--space-lg);
+  }
+  .gp-stat {
+    display: grid;
+    gap: 2px;
+  }
+  .gp-stat + .gp-stat {
+    border-left: 1px solid var(--line-faint);
+    padding-left: var(--space-lg);
+  }
+  .gp-stat-num {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-3);
+    color: var(--ink);
+  }
+  .gp-star {
+    color: var(--accent);
+    font-size: 1.1rem;
+  }
+  .gp-stat-k {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+
+  .gp-block {
+    padding-block: var(--space-2xl);
+    border-top: 1px solid var(--line-faint);
+  }
+  h2 {
+    font-size: var(--step-3);
+  }
+  .gp-sub {
+    margin-top: var(--space-xs);
+    margin-bottom: var(--space-lg);
+    color: var(--muted);
+    font-size: var(--step-1);
+  }
+
+  .gp-masonry {
+    columns: 1;
+    column-gap: var(--space-md);
+  }
+  @media (min-width: 640px) {
+    .gp-masonry { columns: 2; }
+  }
+  @media (min-width: 1024px) {
+    .gp-masonry { columns: 3; }
+  }
+  .gp-masonry figure {
+    break-inside: avoid;
+    margin: 0 0 var(--space-md);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+  .gp-masonry :global(img) { width: 100%; height: auto; display: block; }
+
+  .gp-location {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    transition: border-color var(--dur-pop) var(--ease-out);
+  }
+  .gp-location:hover { border-color: var(--accent); }
+  .gp-loc-pin {
+    display: inline-grid;
+    place-items: center;
+    width: 48px; height: 48px;
+    flex-shrink: 0;
+    border-radius: var(--radius-input);
+    background: var(--accent-wash);
+    color: var(--accent);
+    font-size: 1.5rem;
+  }
+  .gp-loc-body { display: grid; gap: 3px; }
+  .gp-loc-addr { color: var(--ink); font-size: var(--step-0); }
+  .gp-loc-open {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    color: var(--accent); font-weight: 600; font-size: var(--step--1);
+  }
+
+  .gp-features {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: var(--space-md);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 620px) { .gp-features { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1024px) { .gp-features { grid-template-columns: 1fr 1fr 1fr; } }
+  .gp-feature {
+    padding: var(--space-md);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: var(--surface);
+  }
+  .gp-feat-ico {
+    display: inline-grid; place-items: center;
+    width: 42px; height: 42px;
+    border-radius: var(--radius-input);
+    background: var(--surface-sunken);
+    color: var(--accent);
+    font-size: 1.4rem;
+    margin-bottom: var(--space-sm);
+  }
+  .gp-feature h3 { font-size: var(--step-1); margin-bottom: 0.25rem; }
+  .gp-feature p { color: var(--muted); font-size: var(--step-0); }
+
+  .gp-howto {
+    display: grid; gap: var(--space-md);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 760px) { .gp-howto { grid-template-columns: 1fr 1fr; } }
+  .gp-way {
+    padding: var(--space-lg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-card);
+    background: var(--surface);
+  }
+  .gp-way-tag {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    margin-bottom: var(--space-sm);
+  }
+  .gp-way h3 { font-size: var(--step-2); margin-bottom: 0.35rem; }
+  .gp-way p { color: var(--muted); font-size: var(--step-0); }
+
+  .gp-ready {
+    margin-block: var(--space-2xl);
+    display: grid; gap: var(--space-lg);
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(120% 140% at 100% 0%, var(--accent-wash), transparent 60%),
+      var(--surface);
+    border: 1px solid var(--line);
+  }
+  @media (min-width: 860px) {
+    .gp-ready { grid-template-columns: 1.4fr auto; align-items: center; }
+  }
+  .gp-ready h2 { font-size: var(--step-3); }
+  .gp-ready p { margin-top: var(--space-xs); color: var(--muted); }
+  .gp-ready-cta { display: flex; flex-wrap: wrap; gap: var(--space-sm); }
+</style>

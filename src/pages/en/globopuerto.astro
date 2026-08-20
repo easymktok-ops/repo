@@ -1,0 +1,15 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import Globopuerto from "@components/sections/Globopuerto.astro";
+
+const locale = "en" as const;
+---
+
+<PageShell
+  title="Launch site"
+  description="Aerodiverti's own launch site in San Martín de las Pirámides, 2 km from Teotihuacán. Exclusive site, private parking, welcome café and AFAC crew."
+  logicalPath="/globopuerto"
+  activeId="globopuerto"
+>
+  <Globopuerto locale={locale} />
+</PageShell>
