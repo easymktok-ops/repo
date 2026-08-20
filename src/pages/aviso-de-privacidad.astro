@@ -1,0 +1,112 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import PageHeader from "@components/ui/PageHeader.astro";
+import { site } from "@config/site";
+
+const locale = "es" as const;
+const c = site.brand;
+---
+
+<PageShell
+  title="Aviso de privacidad"
+  description="Cómo Aerodiverti recaba y usa tus datos, y qué cookies utiliza el sitio."
+  logicalPath="/aviso-de-privacidad"
+  activeId=""
+>
+  <PageHeader title="Aviso de privacidad" lead="Cómo tratamos tus datos y qué cookies usa este sitio." />
+
+  <article class="legal container-narrow">
+    <p class="legal-draft">
+      Borrador base. Revísalo con tu asesor legal antes de publicarlo; describe lo
+      que el sitio realmente recaba y las herramientas que utiliza.
+    </p>
+
+    <h2>Responsable</h2>
+    <p>
+      {site.name}, con globopuerto en {c.address.line1}, {c.address.area}, {c.address.zip}.
+      Para cualquier tema de privacidad puedes escribir a <a href={`mailto:${c.email}`}>{c.email}</a>.
+    </p>
+
+    <h2>Qué datos recabamos</h2>
+    <ul>
+      <li>
+        <strong>Formulario de contacto:</strong> nombre, correo, teléfono o WhatsApp,
+        fecha tentativa, número de personas y el mensaje que nos escribas.
+      </li>
+      <li>
+        <strong>Cookies de medición</strong> (solo si las aceptas en el banner): Google
+        Analytics 4, Google Ads y Meta Pixel.
+      </li>
+    </ul>
+
+    <h2>Para qué los usamos</h2>
+    <ul>
+      <li>Atender tu solicitud, contactarte y ayudarte a reservar tu vuelo.</li>
+      <li>Medir el uso del sitio y mejorar la experiencia y nuestra publicidad.</li>
+    </ul>
+
+    <h2>Cookies y medición</h2>
+    <p>
+      Al abrir el sitio, ninguna herramienta de medición se activa hasta que lo
+      autorizas. Si aceptas, cargamos Google Analytics 4, Google Ads y Meta Pixel
+      para entender el tráfico y la efectividad de la publicidad. Puedes elegir
+      "Solo lo necesario" en el banner, o borrar las cookies desde tu navegador en
+      cualquier momento.
+    </p>
+
+    <h2>Con quién se comparten</h2>
+    <p>
+      Con los proveedores que hacen funcionar el sitio: Google (Analytics y Ads) y
+      Meta (Pixel y WhatsApp, cuando nos escribes por ahí). Cuando se habilite el
+      pago en línea, también con la pasarela de pago para procesar tu reserva.
+    </p>
+
+    <h2>Tus derechos</h2>
+    <p>
+      Puedes acceder, rectificar, cancelar u oponerte al uso de tus datos (derechos
+      ARCO) escribiendo a <a href={`mailto:${c.email}`}>{c.email}</a>.
+    </p>
+
+    <h2>Cambios</h2>
+    <p>Podemos actualizar este aviso; publicaremos aquí la versión vigente.</p>
+  </article>
+</PageShell>
+
+<style>
+  .legal {
+    padding-block: var(--space-md) var(--space-3xl);
+  }
+  .legal-draft {
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--warn);
+    border-radius: var(--radius-input);
+    background: color-mix(in oklch, var(--warn) 12%, transparent);
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    margin-bottom: var(--space-xl);
+  }
+  .legal h2 {
+    font-size: var(--step-2);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-2xs);
+  }
+  .legal p,
+  .legal li {
+    color: var(--muted);
+    font-size: var(--step-0);
+    line-height: 1.6;
+  }
+  .legal ul {
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .legal a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .legal strong {
+    color: var(--ink-soft);
+  }
+</style>

@@ -45,6 +45,9 @@ const trust = [
 
   <div class="footer-legal container">
     <span>© {year} {site.name}. {t("footer.rights")}</span>
+    <a href={localizedPath("/aviso-de-privacidad", locale)}>
+      {locale === "es" ? "Aviso de privacidad" : "Privacy notice"}
+    </a>
   </div>
 </footer>
 
@@ -114,9 +117,20 @@ const trust = [
     color: var(--accent);
   }
   .footer-legal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-md);
+    justify-content: space-between;
     padding-block: var(--space-md);
     border-top: 1px solid var(--line-faint);
     color: var(--faint);
     font-size: var(--step--1);
+  }
+  .footer-legal a {
+    color: var(--muted);
+    transition: color var(--dur-pop) var(--ease-out);
+  }
+  .footer-legal a:hover {
+    color: var(--accent);
   }
 </style>

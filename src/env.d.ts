@@ -14,8 +14,10 @@ interface ImportMetaEnv {
   readonly PUBLIC_DEFAULT_LOCALE: "es" | "en";
   readonly PUBLIC_WHATSAPP_DISPLAY_NUMBER?: string; // numero visible para el boton flotante
 
-  // --- Analitica (publicas, opcionales) ---
-  readonly PUBLIC_GA_ID?: string;
+  // --- Analitica (publicas; los IDs se exponen en el cliente por diseño) ---
+  readonly PUBLIC_GA_ID?: string; // GA4  (G-XXXX)
+  readonly PUBLIC_GOOGLE_ADS_ID?: string; // Google Ads (AW-XXXX)
+  readonly PUBLIC_META_PIXEL_ID?: string; // Meta Pixel (numerico)
   readonly PUBLIC_PLAUSIBLE_DOMAIN?: string;
 
   // --- Pagos: Stripe (secreto en servidor, publishable en cliente) ---

@@ -4,6 +4,7 @@ import { site, absoluteUrl } from "@config/site";
 import { getLocaleFromUrl, hreflangAlternates } from "@i18n/utils";
 import { useTranslations } from "@i18n/ui";
 import { siteGraph } from "@lib/seo/schema";
+import Analytics from "@components/analytics/Analytics.astro";
 
 /**
  * Layout base: cabeza SEO/OG/hreflang dominio-agnostica. Todo lo absoluto se
@@ -90,5 +91,6 @@ const fullTitle = title === site.name ? title : `${title} · ${site.name}`;
       <slot />
     </main>
     <slot name="chrome-end" />
+    <Analytics locale={locale} />
   </body>
 </html>

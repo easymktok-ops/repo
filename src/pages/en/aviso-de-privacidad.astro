@@ -1,0 +1,111 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import PageHeader from "@components/ui/PageHeader.astro";
+import { site } from "@config/site";
+
+const locale = "en" as const;
+const c = site.brand;
+---
+
+<PageShell
+  title="Privacy notice"
+  description="How Aerodiverti collects and uses your data, and which cookies the site uses."
+  logicalPath="/aviso-de-privacidad"
+  activeId=""
+>
+  <PageHeader title="Privacy notice" lead="How we handle your data and which cookies this site uses." />
+
+  <article class="legal container-narrow">
+    <p class="legal-draft">
+      Base draft. Have it reviewed by your legal advisor before publishing; it
+      describes what the site actually collects and the tools it uses.
+    </p>
+
+    <h2>Data controller</h2>
+    <p>
+      {site.name}, launch site at {c.address.line1}, {c.address.area}, {c.address.zip}.
+      For any privacy matter, write to <a href={`mailto:${c.email}`}>{c.email}</a>.
+    </p>
+
+    <h2>What we collect</h2>
+    <ul>
+      <li>
+        <strong>Contact form:</strong> name, email, phone or WhatsApp, preferred date,
+        number of people and the message you send us.
+      </li>
+      <li>
+        <strong>Measurement cookies</strong> (only if you accept them in the banner):
+        Google Analytics 4, Google Ads and Meta Pixel.
+      </li>
+    </ul>
+
+    <h2>How we use it</h2>
+    <ul>
+      <li>To handle your request, contact you and help you book your flight.</li>
+      <li>To measure site usage and improve the experience and our advertising.</li>
+    </ul>
+
+    <h2>Cookies and measurement</h2>
+    <p>
+      When you open the site, no measurement tool runs until you allow it. If you
+      accept, we load Google Analytics 4, Google Ads and Meta Pixel to understand
+      traffic and advertising performance. You can choose "Only essential" in the
+      banner, or clear cookies from your browser at any time.
+    </p>
+
+    <h2>Who we share it with</h2>
+    <p>
+      With the providers that run the site: Google (Analytics and Ads) and Meta
+      (Pixel and WhatsApp, when you message us there). Once online payment is
+      enabled, also with the payment gateway to process your booking.
+    </p>
+
+    <h2>Your rights</h2>
+    <p>
+      You can access, correct, cancel or object to the use of your data by writing
+      to <a href={`mailto:${c.email}`}>{c.email}</a>.
+    </p>
+
+    <h2>Changes</h2>
+    <p>We may update this notice; the current version will be posted here.</p>
+  </article>
+</PageShell>
+
+<style>
+  .legal {
+    padding-block: var(--space-md) var(--space-3xl);
+  }
+  .legal-draft {
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--warn);
+    border-radius: var(--radius-input);
+    background: color-mix(in oklch, var(--warn) 12%, transparent);
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    margin-bottom: var(--space-xl);
+  }
+  .legal h2 {
+    font-size: var(--step-2);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-2xs);
+  }
+  .legal p,
+  .legal li {
+    color: var(--muted);
+    font-size: var(--step-0);
+    line-height: 1.6;
+  }
+  .legal ul {
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .legal a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .legal strong {
+    color: var(--ink-soft);
+  }
+</style>

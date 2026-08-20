@@ -1,0 +1,223 @@
+---
+import { site, localizedPath, type Locale } from "@config/site";
+
+/**
+ * Analitica con Google Consent Mode v2 + banner de cookies.
+ * - Por defecto todo el consentimiento va DENEGADO (no se carga nada de tracking).
+ * - GA4, Google Ads y Meta Pixel se cargan SOLO cuando el usuario acepta.
+ * - La elección se guarda en localStorage; si ya decidió, no se vuelve a mostrar.
+ * - No afecta Core Web Vitals: nada de terceros hasta el consentimiento.
+ * IDs desde config/env (públicos por diseño).
+ */
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const a = site.analytics;
+const hasAny = Boolean(a.gaId || a.googleAdsId || a.metaPixelId);
+const privacyHref = localizedPath("/aviso-de-privacidad", locale);
+
+const t = {
+  es: {
+    text: "Usamos cookies para medir el tráfico y mejorar tu experiencia. Puedes aceptarlas o seguir sin ellas.",
+    more: "Aviso de privacidad",
+    accept: "Aceptar",
+    reject: "Solo lo necesario",
+    aria: "Aviso de cookies",
+  },
+  en: {
+    text: "We use cookies to measure traffic and improve your experience. You can accept them or continue without.",
+    more: "Privacy notice",
+    accept: "Accept",
+    reject: "Only essential",
+    aria: "Cookie notice",
+  },
+}[locale];
+---
+
+{
+  hasAny && (
+    <>
+      <div id="cookie-banner" class="ck" role="dialog" aria-label={t.aria} aria-live="polite" hidden>
+        <p class="ck-text">
+          {t.text}{" "}
+          <a href={privacyHref}>{t.more}</a>
+        </p>
+        <div class="ck-actions">
+          <button id="ck-reject" type="button" class="ck-btn ck-ghost">
+            {t.reject}
+          </button>
+          <button id="ck-accept" type="button" class="ck-btn ck-accept">
+            {t.accept}
+          </button>
+        </div>
+      </div>
+
+      <script
+        is:inline
+        define:vars={{ gaId: a.gaId, adsId: a.googleAdsId, pixelId: a.metaPixelId }}
+      >
+        (function () {
+          window.dataLayer = window.dataLayer || [];
+          function gtag() {
+            dataLayer.push(arguments);
+          }
+          window.gtag = gtag;
+          // Consent Mode v2: todo denegado por defecto.
+          gtag("consent", "default", {
+            ad_storage: "denied",
+            analytics_storage: "denied",
+            ad_user_data: "denied",
+            ad_personalization: "denied",
+            wait_for_update: 500,
+          });
+
+          var KEY = "aero:consent";
+          var loaded = false;
+          function getConsent() {
+            try {
+              return localStorage.getItem(KEY);
+            } catch (e) {
+              return null;
+            }
+          }
+          function setConsent(v) {
+            try {
+              localStorage.setItem(KEY, v);
+            } catch (e) {}
+          }
+          function inject(src) {
+            var s = document.createElement("script");
+            s.async = true;
+            s.src = src;
+            document.head.appendChild(s);
+          }
+          function loadAll() {
+            if (loaded) return;
+            loaded = true;
+            gtag("consent", "update", {
+              ad_storage: "granted",
+              analytics_storage: "granted",
+              ad_user_data: "granted",
+              ad_personalization: "granted",
+            });
+            if (gaId || adsId) {
+              inject("https://www.googletagmanager.com/gtag/js?id=" + (gaId || adsId));
+              gtag("js", new Date());
+              if (gaId) gtag("config", gaId);
+              if (adsId) gtag("config", adsId, { allow_enhanced_conversions: true });
+            }
+            if (pixelId) {
+              !(function (f, b, e, v, n, t, s) {
+                if (f.fbq) return;
+                n = f.fbq = function () {
+                  n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+                };
+                if (!f._fbq) f._fbq = n;
+                n.push = n;
+                n.loaded = !0;
+                n.version = "2.0";
+                n.queue = [];
+                t = b.createElement(e);
+                t.async = !0;
+                t.src = v;
+                s = b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t, s);
+              })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+              fbq("init", pixelId);
+              fbq("track", "PageView");
+            }
+          }
+
+          var banner = document.getElementById("cookie-banner");
+          var stored = getConsent();
+          if (stored === "granted") loadAll();
+          else if (stored !== "denied" && banner) banner.hidden = false;
+
+          var acc = document.getElementById("ck-accept");
+          var rej = document.getElementById("ck-reject");
+          if (acc)
+            acc.addEventListener("click", function () {
+              setConsent("granted");
+              if (banner) banner.hidden = true;
+              loadAll();
+            });
+          if (rej)
+            rej.addEventListener("click", function () {
+              setConsent("denied");
+              if (banner) banner.hidden = true;
+            });
+        })();
+      </script>
+    </>
+  )
+}
+
+<style>
+  .ck {
+    position: fixed;
+    left: 50%;
+    bottom: var(--space-sm);
+    transform: translateX(-50%);
+    z-index: var(--z-toast);
+    width: min(720px, calc(100% - 2 * var(--space-sm)));
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-md) var(--space-lg);
+    background: var(--surface-raised);
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-lg);
+  }
+  .ck-text {
+    margin: 0;
+    flex: 1 1 320px;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    line-height: 1.5;
+  }
+  .ck-text a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .ck-actions {
+    display: flex;
+    gap: var(--space-2xs);
+    flex-shrink: 0;
+  }
+  .ck-btn {
+    border-radius: var(--radius-pill);
+    padding: 0.6rem 1.1rem;
+    font-weight: 600;
+    font-size: var(--step--1);
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition:
+      background-color var(--dur-pop) var(--ease-out),
+      border-color var(--dur-pop) var(--ease-out),
+      transform var(--dur-press) var(--ease-out);
+  }
+  .ck-btn:active {
+    transform: scale(0.97);
+  }
+  .ck-accept {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  .ck-accept:hover {
+    background: var(--accent-strong);
+  }
+  .ck-ghost {
+    background: transparent;
+    color: var(--muted);
+    border-color: var(--line-strong);
+  }
+  .ck-ghost:hover {
+    color: var(--ink);
+    border-color: var(--accent);
+  }
+</style>
