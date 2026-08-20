@@ -9,7 +9,7 @@ Leyenda: `[ ]` pendiente · `[~]` en progreso · `[x]` hecho
 
 ## 🔴 Pendientes (por implementar)
 
-- [ ] **Horarios por temporada.** Reemplazar el horario único ("Lun–Dom
+- [x] **Horarios por temporada.** Reemplazar el horario único ("Lun–Dom
       9:00–20:00") por dos horarios estacionales:
       - **Temporada alta (noviembre–marzo):** Lun–Dom **9:00–20:00**
       - **Temporada baja (abril–octubre):** Lun–Sáb **9:30–18:30**;

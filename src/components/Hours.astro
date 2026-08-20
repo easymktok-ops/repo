@@ -1,0 +1,23 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+const { lang } = Astro.props as { lang: Lang };
+const t = useTranslations(lang);
+---
+<div class="hours">
+  <p class="hours__row">
+    <span class="hours__season">{t('horario.alta.label')} <em>{t('horario.alta.months')}</em></span>
+    <span class="hours__val">{t('horario.alta.valor')}</span>
+  </p>
+  <p class="hours__row">
+    <span class="hours__season">{t('horario.baja.label')} <em>{t('horario.baja.months')}</em></span>
+    <span class="hours__val">{t('horario.baja.valor')}</span>
+  </p>
+</div>
+
+<style>
+  .hours { display: flex; flex-direction: column; gap: 0.5rem; }
+  .hours__row { margin: 0; line-height: 1.4; }
+  .hours__season { display: block; font-weight: var(--fw-medium); color: var(--color-text); font-size: var(--fs-sm); }
+  .hours__season em { font-style: normal; color: var(--clay-700); font-weight: var(--fw-light); }
+  .hours__val { font-size: var(--fs-sm); color: var(--color-text-muted); }
+</style>

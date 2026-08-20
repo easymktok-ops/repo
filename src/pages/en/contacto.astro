@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PageHero from '../../components/PageHero.astro';
 import ContactForm from '../../components/ContactForm.astro';
+import Hours from '../../components/Hours.astro';
 import { site } from '../../i18n/site';
 import { useTranslations } from '../../i18n/ui';
 const t = useTranslations('en');
@@ -15,7 +16,8 @@ const t = useTranslations('en');
       <p>{site.address.locality}, {site.address.region}, Mexico</p>
       <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
       <p><a href={site.whatsapp} target="_blank" rel="noopener noreferrer">{t('hero.cta2')} · {site.phoneDisplay}</a></p>
-      <p>{t('side.horario.label')}: {t('side.horario.valor')}</p>
+      <p class="contact-aside__hlabel">{t('side.horario.label')}</p>
+      <Hours lang="en" />
     </aside>
   </section>
 </BaseLayout>

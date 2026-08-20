@@ -6,6 +6,7 @@ import { useTranslations, type Lang } from '../i18n/ui';
 import { site } from '../i18n/site';
 import { wb } from '../lib/paths';
 import LangToggle from './LangToggle.astro';
+import Hours from './Hours.astro';
 
 const { lang, path = '' } = Astro.props as { lang: Lang; path?: string };
 const t = useTranslations(lang);
@@ -43,10 +44,10 @@ const nav = [
 
     <div class="sidebar__foot">
       <LangToggle lang={lang} path={path} />
-      <p class="sidebar__meta">
+      <div class="sidebar__meta">
         <span class="sidebar__meta-label">{t('side.horario.label')}</span>
-        {t('side.horario.valor')}
-      </p>
+        <Hours lang={lang} />
+      </div>
       <p class="sidebar__meta">
         <span class="sidebar__meta-label">{t('side.tel.label')}</span>
         <a href={`mailto:${site.email}`}>{site.email}</a><br />

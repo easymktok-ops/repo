@@ -46,7 +46,14 @@ const schema = {
     'Punta de Mita', 'Bahía de Banderas', 'Sayulita', 'Nuevo Vallarta',
     'Nayarit', 'Puerto Vallarta',
   ],
-  openingHours: 'Mo-Su 09:00-20:00',
+  openingHoursSpecification: [
+    // Temporada alta (nov–mar): Lun–Dom 9:00–20:00
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'], opens: '09:00', closes: '20:00', validFrom: `${new Date().getFullYear()}-11-01`, validThrough: `${new Date().getFullYear() + 1}-03-31` },
+    // Temporada baja (abr–oct): Lun–Sáb 9:30–18:30
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'], opens: '09:30', closes: '18:30', validFrom: `${new Date().getFullYear()}-04-01`, validThrough: `${new Date().getFullYear()}-10-31` },
+    // Temporada baja domingo: 9:30–18:00
+    { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Sunday', opens: '09:30', closes: '18:00', validFrom: `${new Date().getFullYear()}-04-01`, validThrough: `${new Date().getFullYear()}-10-31` },
+  ],
   makesOffer: [
     'Masajes', 'Faciales', 'Exfoliación corporal', 'Tratamientos corporales',
     'Depilación', 'Manicure y pedicure',

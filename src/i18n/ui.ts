@@ -20,6 +20,12 @@ export const ui = {
     'side.horario.label': 'Horario',
     'side.horario.valor': 'Lun–Dom · 9:00–20:00',
     'side.tel.label': 'Contacto',
+    'horario.alta.label': 'Temporada alta',
+    'horario.alta.months': '(nov–mar)',
+    'horario.alta.valor': 'Lun–Dom · 9:00–20:00',
+    'horario.baja.label': 'Temporada baja',
+    'horario.baja.months': '(abr–oct)',
+    'horario.baja.valor': 'Lun–Sáb · 9:30–18:30 · Dom 9:30–18:00',
 
     // --- Hero ---
     'hero.eyebrow': 'Punta de Mita · Nayarit',
@@ -136,6 +142,12 @@ export const ui = {
     'side.horario.label': 'Hours',
     'side.horario.valor': 'Mon–Sun · 9:00–20:00',
     'side.tel.label': 'Contact',
+    'horario.alta.label': 'High season',
+    'horario.alta.months': '(Nov–Mar)',
+    'horario.alta.valor': 'Mon–Sun · 9:00–20:00',
+    'horario.baja.label': 'Low season',
+    'horario.baja.months': '(Apr–Oct)',
+    'horario.baja.valor': 'Mon–Sat · 9:30–18:30 · Sun 9:30–18:00',
 
     'hero.eyebrow': 'Punta de Mita · Nayarit',
     'hero.title': 'A day to enhance your beauty and release stress',

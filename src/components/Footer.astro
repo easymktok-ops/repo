@@ -2,6 +2,7 @@
 import { useTranslations, type Lang } from '../i18n/ui';
 import { site } from '../i18n/site';
 import { wb } from '../lib/paths';
+import Hours from './Hours.astro';
 const { lang } = Astro.props as { lang: Lang };
 const t = useTranslations(lang);
 const year = new Date().getFullYear();
@@ -15,7 +16,7 @@ const year = new Date().getFullYear();
         {site.address.street}<br />
         {site.address.postalCode} {site.address.locality}, {site.address.region}, México
       </p>
-      <p class="footer__meta"><span>{t('footer.hours')}</span> {t('side.horario.valor')}</p>
+      <div class="footer__meta"><span>{t('footer.hours')}</span><Hours lang={lang} /></div>
       <p class="footer__meta">
         <a href={`mailto:${site.email}`}>{site.email}</a><br />
         <a href={site.whatsapp} target="_blank" rel="noopener noreferrer">{site.phoneDisplay}</a>
