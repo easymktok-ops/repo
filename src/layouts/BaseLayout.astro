@@ -3,6 +3,7 @@ import "@styles/global.css";
 import { site, absoluteUrl } from "@config/site";
 import { getLocaleFromUrl, hreflangAlternates } from "@i18n/utils";
 import { useTranslations } from "@i18n/ui";
+import { siteGraph } from "@lib/seo/schema";
 
 /**
  * Layout base: cabeza SEO/OG/hreflang dominio-agnostica. Todo lo absoluto se
@@ -38,7 +39,7 @@ const ogImageUrl = ogImage
   ? ogImage.startsWith("http")
     ? ogImage
     : absoluteUrl(ogImage)
-  : absoluteUrl("/images/og-default.jpg");
+  : absoluteUrl("/og/og-default.jpg");
 const fullTitle = title === site.name ? title : `${title} · ${site.name}`;
 ---
 
@@ -65,12 +66,18 @@ const fullTitle = title === site.name ? title : `${title} · ${site.name}`;
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${site.name} — ${description}`} />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={fullTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+
+    <!-- Datos estructurados: negocio + sitio -->
+    <script type="application/ld+json" set:html={JSON.stringify(siteGraph())} />
 
     <meta name="theme-color" content="#1a1c24" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

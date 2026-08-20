@@ -31,7 +31,7 @@
   --ink: oklch(0.94 0.006 240); /* texto principal, casi bone frio */
   --ink-soft: oklch(0.86 0.008 240); /* subtitulos */
   --muted: oklch(0.72 0.012 245); /* texto secundario (pasa AA sobre bg) */
-  --faint: oklch(0.58 0.012 250); /* metadatos, captions (uso grande) */
+  --faint: oklch(0.68 0.014 250); /* metadatos, captions (AA sobre surfaces) */
 
   /* --- LINEAS (hairlines de 1px, patron theenglishbus) ------------------- */
   --line: oklch(0.32 0.014 255); /* borde estandar hairline */

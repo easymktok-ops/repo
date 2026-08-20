@@ -1,8 +1,9 @@
 ---
 import { getCollection } from "astro:content";
-import { Image } from "astro:assets";
+import { Image, getImage } from "astro:assets";
 import Icon from "@components/ui/Icon.astro";
-import { site, localizedPath, whatsappUrl, type Locale } from "@config/site";
+import { site, localizedPath, whatsappUrl, absoluteUrl, type Locale } from "@config/site";
+import { catalogSchema } from "@lib/seo/schema";
 
 /**
  * Catalogo de vuelos (patron 5.2, densidad ~5). Lee los paquetes del CMS
@@ -17,13 +18,34 @@ interface Props {
   page?: boolean;
   /** limita cuantas tarjetas mostrar (para teaser en el home). */
   limit?: number;
+  /** emite JSON-LD ItemList/Product (solo en la pagina canonica /vuelos). */
+  emitSchema?: boolean;
 }
-const { locale, page = false, limit } = Astro.props;
+const { locale, page = false, limit, emitSchema = false } = Astro.props;
 
 const all = (await getCollection("packages", ({ data }) => !data.draft)).sort(
   (a, b) => a.data.order - b.data.order,
 );
 const packages = limit ? all.slice(0, limit) : all;
+
+let catalogLd: object | null = null;
+if (emitSchema) {
+  const items = await Promise.all(
+    all.map(async (pkg) => {
+      const d = pkg.data;
+      const optimized = await getImage({ src: d.heroImage, width: 800, format: "webp" });
+      return {
+        name: d.title[locale] ?? d.title.es,
+        description: d.summary[locale] ?? d.summary.es,
+        price: d.priceFrom,
+        currency: d.currency,
+        imageUrl: absoluteUrl(optimized.src),
+        url: absoluteUrl(localizedPath("/vuelos", locale)),
+      };
+    }),
+  );
+  catalogLd = catalogSchema(items);
+}
 
 const reviews = site.brand.reviews;
 const nf = new Intl.NumberFormat(locale === "es" ? "es-MX" : "en-US");
@@ -104,7 +126,8 @@ const flightsHref = localizedPath("/vuelos", locale);
               <span class="heart-o"><Icon name="heart" /></span>
               <span class="heart-f"><Icon name="heart" weight="fill" /></span>
             </button>
-            <a class="card-media" href={wa} rel="noopener" aria-label={t.pick}>
+            {d.badge && <span class="card-badge">{d.badge[locale] ?? d.badge.es}</span>}
+            <a class="card-media" href={wa} rel="noopener">
               <Image
                 src={d.heroImage}
                 alt={d.heroImageAlt[locale] ?? d.heroImageAlt.es}
@@ -112,7 +135,6 @@ const flightsHref = localizedPath("/vuelos", locale);
                 sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 90vw"
                 format="avif"
               />
-              {d.badge && <span class="card-badge">{d.badge[locale] ?? d.badge.es}</span>}
             </a>
             <div class="card-body">
               <h3 class="card-name">{d.title[locale] ?? d.title.es}</h3>
@@ -140,6 +162,8 @@ const flightsHref = localizedPath("/vuelos", locale);
     }
   </ul>
 </section>
+
+{catalogLd && <script type="application/ld+json" set:html={JSON.stringify(catalogLd)} />}
 
 <script>
   // Favoritos: guarda slugs en localStorage (por dispositivo, sin cuenta).
@@ -304,6 +328,7 @@ const flightsHref = localizedPath("/vuelos", locale);
   }
   .card-badge {
     position: absolute;
+    z-index: var(--z-raised);
     top: var(--space-2xs);
     left: var(--space-2xs);
     background: color-mix(in oklch, var(--bg-deep) 78%, transparent);

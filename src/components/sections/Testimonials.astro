@@ -46,18 +46,6 @@ function initials(name: string) {
     .join("");
 }
 
-const schema = {
-  "@context": "https://schema.org",
-  "@type": "TravelAgency",
-  name: site.name,
-  url: site.url,
-  aggregateRating: {
-    "@type": "AggregateRating",
-    ratingValue: String(r.rating),
-    reviewCount: String(r.count),
-    bestRating: "5",
-  },
-};
 ---
 
 <section class="tm container" aria-label={locale === "es" ? "Reseñas" : "Reviews"}>
@@ -97,8 +85,6 @@ const schema = {
       })
     }
   </div>
-
-  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 </section>
 
 <style>
