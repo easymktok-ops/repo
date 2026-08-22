@@ -24,6 +24,9 @@ interface ImportMetaEnv {
   readonly PUBLIC_STRIPE_PUBLISHABLE_KEY?: string;
   readonly STRIPE_SECRET_KEY?: string;
   readonly STRIPE_WEBHOOK_SECRET?: string;
+  // Endpoint del backend PHP que crea la sesion de Stripe. Relativo por defecto
+  // (mismo origen). Solo se cambia si el backend vive en otro host/subdominio.
+  readonly PUBLIC_CHECKOUT_ENDPOINT?: string;
 
   // --- Notificaciones (proveedor por definir en Fase 3; interfaz ya existe) ---
   readonly NOTIFICATIONS_EMAIL_PROVIDER?: "resend" | "sendgrid" | "log";

@@ -22,3 +22,7 @@ npm-debug.log*
 
 # decap local backend
 .decap-cache/
+
+# backend PHP: secretos y catalogo generado (no versionar)
+server/config.php
+server/data/catalog.json

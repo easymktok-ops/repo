@@ -1,0 +1,49 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import PageHeader from "@components/ui/PageHeader.astro";
+import BookingWidget from "@components/islands/BookingWidget";
+import { getCollection } from "astro:content";
+import { whatsappUrl } from "@config/site";
+
+const locale = "en" as const;
+
+const pkgs = await getCollection(
+  "packages",
+  (p) => !p.data.draft && p.data.available && p.data.priceFrom != null,
+);
+const packages = pkgs
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((p) => ({
+    slug: p.data.slug,
+    title: p.data.title[locale] ?? p.data.title.es,
+    pricePerPerson: p.data.priceFrom as number,
+    priceWas: p.data.priceWas,
+    currency: p.data.currency,
+    capacity: p.data.capacity ?? { max: 16 },
+    durationMinutes: p.data.durationMinutes ?? null,
+  }));
+
+const wa = whatsappUrl("Hi, I'd like to book a hot-air balloon flight. Can you help?");
+---
+
+<PageShell
+  title="Book a flight"
+  description="Book your hot-air balloon flight over Teotihuacán. Choose your experience and passengers and pay online securely, or reserve your spots with a deposit."
+  logicalPath="/reservar"
+  activeId=""
+>
+  <PageHeader
+    eyebrow="Book"
+    title="Book your sunrise in a balloon"
+    lead="Choose your experience and passengers. Pay in full online or reserve your spots with a deposit; the balance is settled on site the day of the flight."
+  />
+  <section class="container-narrow booking-wrap">
+    <BookingWidget client:load locale={locale} packages={packages} whatsappUrl={wa} />
+  </section>
+</PageShell>
+
+<style>
+  .booking-wrap {
+    padding-block: var(--space-md) var(--space-3xl);
+  }
+</style>

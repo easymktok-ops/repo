@@ -1,0 +1,49 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import PageHeader from "@components/ui/PageHeader.astro";
+import BookingWidget from "@components/islands/BookingWidget";
+import { getCollection } from "astro:content";
+import { whatsappUrl } from "@config/site";
+
+const locale = "es" as const;
+
+const pkgs = await getCollection(
+  "packages",
+  (p) => !p.data.draft && p.data.available && p.data.priceFrom != null,
+);
+const packages = pkgs
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((p) => ({
+    slug: p.data.slug,
+    title: p.data.title[locale] ?? p.data.title.es,
+    pricePerPerson: p.data.priceFrom as number,
+    priceWas: p.data.priceWas,
+    currency: p.data.currency,
+    capacity: p.data.capacity ?? { max: 16 },
+    durationMinutes: p.data.durationMinutes ?? null,
+  }));
+
+const wa = whatsappUrl("Hola, quiero reservar un vuelo en globo. ¿Me ayudan?");
+---
+
+<PageShell
+  title="Reservar vuelo"
+  description="Reserva tu vuelo en globo sobre Teotihuacán. Elige tu experiencia, tus pasajeros y paga en línea de forma segura, o aparta tus lugares con un anticipo."
+  logicalPath="/reservar"
+  activeId=""
+>
+  <PageHeader
+    eyebrow="Reservar"
+    title="Reserva tu amanecer en globo"
+    lead="Elige tu experiencia y pasajeros. Paga todo en línea o aparta tus lugares con un anticipo; el saldo se liquida en sitio el día del vuelo."
+  />
+  <section class="container-narrow booking-wrap">
+    <BookingWidget client:load locale={locale} packages={packages} whatsappUrl={wa} />
+  </section>
+</PageShell>
+
+<style>
+  .booking-wrap {
+    padding-block: var(--space-md) var(--space-3xl);
+  }
+</style>

@@ -1,0 +1,136 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import Icon from "@components/ui/Icon.astro";
+import { whatsappUrl } from "@config/site";
+
+const locale = "en" as const;
+const wa = whatsappUrl("Hi, I just booked my flight. I'd like to confirm the details.");
+---
+
+<PageShell
+  title="Booking confirmed"
+  description="Thank you for booking your hot-air balloon flight with Aerodiverti."
+  logicalPath="/reserva-confirmada"
+  activeId=""
+  noindex
+>
+  <section class="confirm container-narrow">
+    <span class="confirm-badge"><Icon name="check-circle" /></span>
+    <h1 class="confirm-title">Your booking is confirmed</h1>
+    <p class="confirm-ref" data-ref>
+      We received your payment. Your confirmation email is on its way.
+    </p>
+    <p class="confirm-lead">
+      We'll contact you to set the exact date and the meeting point at the launch
+      site. If you paid a deposit, the balance is settled on site the day of the
+      flight. Check your inbox (and the spam folder, just in case).
+    </p>
+    <div class="confirm-actions">
+      <a class="confirm-btn confirm-primary" href={wa}>
+        <Icon name="whatsapp-logo" /> Message on WhatsApp
+      </a>
+      <a class="confirm-btn confirm-ghost" href="/en/">Back to home</a>
+    </div>
+  </section>
+</PageShell>
+
+<script is:inline>
+  (function () {
+    var p = new URLSearchParams(location.search);
+    var ref = p.get("ref");
+    var amt = parseFloat(p.get("amt") || "0");
+    var cur = (p.get("cur") || "MXN").toUpperCase();
+    if (ref) {
+      var el = document.querySelector("[data-ref]");
+      if (el) {
+        el.textContent = "Your booking number is " + ref + ". Your confirmation email is on its way.";
+      }
+    }
+    try {
+      if (ref && window.dataLayer) {
+        window.dataLayer.push({
+          event: "purchase",
+          ecommerce: {
+            transaction_id: ref,
+            currency: cur,
+            value: isNaN(amt) ? undefined : amt,
+          },
+        });
+      }
+      if (ref && typeof window.fbq === "function") {
+        window.fbq("track", "Purchase", { value: isNaN(amt) ? undefined : amt, currency: cur });
+      }
+    } catch (e) {}
+  })();
+</script>
+
+<style>
+  .confirm {
+    padding-block: var(--space-2xl) var(--space-3xl);
+    text-align: center;
+    max-width: 640px;
+  }
+  .confirm-badge {
+    display: inline-grid;
+    place-items: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: var(--radius-pill);
+    background: var(--accent-wash);
+    color: var(--accent);
+    font-size: 2.4rem;
+    margin-bottom: var(--space-md);
+  }
+  .confirm-title {
+    font-family: var(--font-display);
+    font-size: var(--step-3);
+    letter-spacing: var(--tracking-display);
+    line-height: var(--leading-tight);
+    margin: 0 0 var(--space-sm);
+  }
+  .confirm-ref {
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+    margin: 0 0 var(--space-sm);
+  }
+  .confirm-lead {
+    color: var(--muted);
+    line-height: var(--leading-body);
+    margin: 0 auto var(--space-lg);
+    max-width: 52ch;
+  }
+  .confirm-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    justify-content: center;
+  }
+  .confirm-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-pill);
+    padding: 0.8rem 1.5rem;
+    font-weight: 600;
+    border: 1px solid transparent;
+    transition:
+      background-color var(--dur-pop) var(--ease-out),
+      border-color var(--dur-pop) var(--ease-out),
+      color var(--dur-pop) var(--ease-out);
+  }
+  .confirm-primary {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+  .confirm-primary:hover {
+    background: var(--accent-strong);
+  }
+  .confirm-ghost {
+    color: var(--muted);
+    border-color: var(--line-strong);
+  }
+  .confirm-ghost:hover {
+    color: var(--ink);
+    border-color: var(--accent);
+  }
+</style>

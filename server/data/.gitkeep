@@ -1,0 +1,3 @@
+# Los .php de este directorio se sirven bajo la web root.
+# El catalog.json real lo genera el build de Astro y se copia aqui en el deploy.
+# (ver server/README.md). Este archivo mantiene el directorio en git.

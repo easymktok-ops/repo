@@ -114,6 +114,11 @@ const flightsHref = localizedPath("/vuelos", locale);
           .filter(Boolean)
           .join(" · ");
         const wa = whatsappUrl(t.waPrefix(d.title[locale] ?? d.title.es, price));
+        // Reservables van al motor de reservas; los "Consultar" a WhatsApp.
+        const bookable = d.priceFrom != null;
+        const bookHref = bookable
+          ? `${localizedPath("/reservar", locale)}?pkg=${d.slug}`
+          : wa;
         return (
           <li class="card" data-slug={d.slug}>
             <button
@@ -127,7 +132,7 @@ const flightsHref = localizedPath("/vuelos", locale);
               <span class="heart-f"><Icon name="heart" weight="fill" /></span>
             </button>
             {d.badge && <span class="card-badge">{d.badge[locale] ?? d.badge.es}</span>}
-            <a class="card-media" href={wa} rel="noopener">
+            <a class="card-media" href={bookHref} rel="noopener">
               <Image
                 src={d.heroImage}
                 alt={d.heroImageAlt[locale] ?? d.heroImageAlt.es}
@@ -151,7 +156,7 @@ const flightsHref = localizedPath("/vuelos", locale);
                 <span class="card-amount">{price}</span>
                 {d.priceWas != null && <span class="card-was">{money(d.priceWas)}</span>}
               </span>
-              <a class="card-cta" href={wa} rel="noopener">
+              <a class="card-cta" href={bookHref} rel="noopener">
                 <span>{t.pick}</span>
                 <Icon name="arrow-up-right" />
               </a>
