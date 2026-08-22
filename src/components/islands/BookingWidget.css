@@ -296,7 +296,8 @@
   font-weight: 600;
 }
 .bk-mode-amt {
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
   color: var(--accent);
 }
@@ -465,7 +466,8 @@
 .bk-line dd {
   margin: 0;
   font-variant-numeric: tabular-nums;
-  font-family: var(--font-mono);
+  font-family: var(--font-body);
+  font-weight: 550;
   color: var(--ink-soft);
 }
 .bk-line-muted dd {
