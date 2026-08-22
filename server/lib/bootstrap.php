@@ -7,6 +7,8 @@
 declare(strict_types=1);
 
 mb_internal_encoding('UTF-8');
+// Zona horaria del negocio (timestamps consistentes en toda la app).
+date_default_timezone_set('America/Mexico_City');
 
 /** Carga config.php (secretos) o cae a config.example.php en su defecto. */
 function load_config(): array

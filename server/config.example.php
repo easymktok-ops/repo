@@ -36,15 +36,23 @@ return [
     // src/config/booking.ts. Fuente de verdad de negocio.
     'deposit_per_passenger' => 1000,
 
-    // --- Base de datos (MySQL de Webempresa) ------------------------------
-    // Crea la BD en el panel (libera una de las 2 borrando el WP temporal) y
-    // corre server/sql/schema.sql. Aqui van esas credenciales.
+    // --- Base de datos -----------------------------------------------------
+    // Por defecto SQLite: un archivo, sin servidor MySQL ni credenciales. El
+    // esquema se crea SOLO en el primer arranque. Ideal cuando el plan tiene
+    // limite de bases MySQL. El archivo vive fuera de la web (carpeta data,
+    // protegida por .htaccess).
     'db' => [
-        'host'    => getenv('DB_HOST') ?: 'localhost',
-        'name'    => getenv('DB_NAME') ?: 'aerodive_reservas',
-        'user'    => getenv('DB_USER') ?: 'aerodive_user',
-        'pass'    => getenv('DB_PASS') ?: '',
-        'charset' => 'utf8mb4',
+        'driver' => 'sqlite',
+        'path'   => __DIR__ . '/data/aerodiverti.sqlite',
+
+        // Alternativa MySQL (solo si el hosting NO trae SQLite). Cambia
+        // 'driver' a 'mysql' y rellena estos campos; luego corre
+        // server/sql/schema.sql en esa base.
+        // 'host'    => 'localhost',
+        // 'name'    => '',
+        // 'user'    => '',
+        // 'pass'    => '',
+        // 'charset' => 'utf8mb4',
     ],
 
     // --- Notificaciones ----------------------------------------------------

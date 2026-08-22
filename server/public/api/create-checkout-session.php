@@ -102,8 +102,8 @@ try {
              total_full_cents, balance_cents, customer_name, customer_email,
              customer_phone, notes, created_at)
          VALUES
-            (:ref, "pending", :locale, :slug, :title, :pax, :fdate, :mode, :cur,
-             :ppp, :now, :full, :bal, :name, :email, :phone, :notes, NOW())'
+            (:ref, \'pending\', :locale, :slug, :title, :pax, :fdate, :mode, :cur,
+             :ppp, :now, :full, :bal, :name, :email, :phone, :notes, :created_at)'
     );
     $stmt->execute([
         ':ref' => $reference,
@@ -122,6 +122,7 @@ try {
         ':email' => $email,
         ':phone' => $phone,
         ':notes' => $notes !== '' ? $notes : null,
+        ':created_at' => date('Y-m-d H:i:s'),
     ]);
     $bookingId = (int) $pdo->lastInsertId();
 } catch (Throwable $e) {

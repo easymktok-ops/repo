@@ -19,13 +19,16 @@ function enqueue_notification(PDO $pdo, int $bookingId, string $channel, string 
     $stmt = $pdo->prepare(
         'INSERT INTO notifications_outbox
             (booking_id, channel, kind, recipient, status, attempts, next_attempt_at, created_at)
-         VALUES (:bid, :ch, :kind, :to, "pending", 0, NOW(), NOW())'
+         VALUES (:bid, :ch, :kind, :to, \'pending\', 0, :na, :ca)'
     );
+    $now = date('Y-m-d H:i:s');
     $stmt->execute([
         ':bid' => $bookingId,
         ':ch' => $channel,
         ':kind' => $kind,
         ':to' => $to,
+        ':na' => $now,
+        ':ca' => $now,
     ]);
 }
 
@@ -43,16 +46,18 @@ function process_outbox(PDO $pdo, array $config): array
     $maxDelay = (int) ($config['outbox']['max_delay_sec'] ?? 3600);
 
     // Toma un lote de pendientes listas para intentar (join con la reserva).
-    $rows = $pdo->query(
+    $sel = $pdo->prepare(
         'SELECT o.*, b.reference, b.locale, b.customer_name, b.customer_email,
                 b.customer_phone, b.package_title, b.passengers, b.flight_date,
                 b.mode, b.amount_now_cents, b.balance_cents, b.notes
            FROM notifications_outbox o
            JOIN bookings b ON b.id = o.booking_id
-          WHERE o.status = "pending" AND o.next_attempt_at <= NOW()
+          WHERE o.status = \'pending\' AND o.next_attempt_at <= :now
           ORDER BY o.id ASC
           LIMIT 25'
-    )->fetchAll();
+    );
+    $sel->execute([':now' => date('Y-m-d H:i:s')]);
+    $rows = $sel->fetchAll();
 
     $summary = ['processed' => 0, 'sent' => 0, 'failed' => 0, 'retry' => 0];
 
@@ -60,7 +65,7 @@ function process_outbox(PDO $pdo, array $config): array
         'UPDATE notifications_outbox
             SET status = :status, attempts = :attempts, last_error = :err,
                 provider = :provider, next_attempt_at = :next, sent_at = :sent_at,
-                updated_at = NOW()
+                updated_at = :updated_at
           WHERE id = :id'
     );
 
@@ -74,6 +79,7 @@ function process_outbox(PDO $pdo, array $config): array
         if ($result['ok']) {
             $upd->execute([
                 ':status' => 'sent',
+                ':updated_at' => date('Y-m-d H:i:s'),
                 ':attempts' => $attempts,
                 ':err' => null,
                 ':provider' => $result['provider'],
@@ -90,6 +96,7 @@ function process_outbox(PDO $pdo, array $config): array
         if ($attempts >= $maxAttempts) {
             $upd->execute([
                 ':status' => 'failed',
+                ':updated_at' => date('Y-m-d H:i:s'),
                 ':attempts' => $attempts,
                 ':err' => $result['error'],
                 ':provider' => $result['provider'],
@@ -104,6 +111,7 @@ function process_outbox(PDO $pdo, array $config): array
             $next = date('Y-m-d H:i:s', time() + $delay);
             $upd->execute([
                 ':status' => 'pending',
+                ':updated_at' => date('Y-m-d H:i:s'),
                 ':attempts' => $attempts,
                 ':err' => $result['error'],
                 ':provider' => $result['provider'],

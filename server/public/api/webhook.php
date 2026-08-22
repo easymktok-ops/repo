@@ -70,11 +70,12 @@ try {
     // Marca pagada.
     $pdo->prepare(
         'UPDATE bookings
-            SET status = "paid", paid_at = NOW(),
+            SET status = \'paid\', paid_at = :paid_at,
                 stripe_session_id = COALESCE(stripe_session_id, :sid),
                 stripe_payment_intent = :pi
           WHERE id = :id'
     )->execute([
+        ':paid_at' => date('Y-m-d H:i:s'),
         ':sid' => $sessionId,
         ':pi' => $paymentIntent !== '' ? $paymentIntent : null,
         ':id' => $booking['id'],
