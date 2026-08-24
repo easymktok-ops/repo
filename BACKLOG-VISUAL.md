@@ -20,6 +20,25 @@ acento de acción hacia el **fucsia de marca**.
 
 ---
 
+## Colores de marca (extraídos del logo)
+
+Logo guardado en `src/assets/brand/aerodiverti-logo.pdf` (+ `.png`).
+
+- **Fucsia de marca** (wordmark): `#B4438C` aprox (magenta ~321°). Es el acento
+  principal para CTAs/outlines. Al implementar afino el OKLCH exacto (probable
+  ligero ajuste a algo un poco más saturado para que "pegue" como acento).
+- **Paleta de pinceladas del globo** (acuarela) — para **bullets y detalles
+  pequeños**, nunca como color de UI grande:
+  - lima `#ADE35D` · verde `#A8E598` · amarillo `#D4DD5C` · naranja `#E9A761`
+  - coral `#F0A59F` · rosa `#EFA1CF` · cian `#9CEFEC`
+
+> **Ojo (dato clave del logo):** el globo es **line-art negro** sobre **fondo
+> blanco**. Está pensado para **fondo claro**. Sobre el rail oscuro actual no
+> funciona tal cual (caja blanca o trazos negros invisibles). Esto conecta con
+> VIS-09: si vamos a un tema más claro, el logo entra perfecto.
+
+---
+
 ## 1. Color y marca
 
 - **VIS-01 · CTAs en fucsia** `PEND`
@@ -27,14 +46,19 @@ acento de acción hacia el **fucsia de marca**.
   "Ir a pagar", etc.) deben ir en el **fucsia de marca**, no en el aqua actual.
   Ref: captura del home (recuadros rosas sobre los dos "Reservar vuelo").
 
-- **VIS-02 · Favicon** `DUDA(asset)`
-  Reemplazar el favicon actual por el **fucsia** que pasó el cliente (replicarlo).
-  _Necesito el archivo_ (SVG o PNG a buena resolución) o lo tomo del Drive.
+- **VIS-02 · Favicon** `DUDA(pendiente decidir)`
+  El logo **no sirve** de favicon (outlines muy finos, se pierden a 16px). No se
+  pudo traer el favicon del sitio original (el proxy bloquea aerodiverti.mx).
+  **Propuesta:** diseño un favicon **bold** de marca (silueta de globo o
+  monograma "A" en fucsia) que lea nítido a 16px. Alternativa: el cliente me
+  pasa el favicon actual como archivo.
 
-- **VIS-03 · Logo en el menú** `DUDA(asset)`
-  Reemplazar el texto "Aerodiverti" del rail lateral por el **logotipo** (script
-  "Aerodiverti / vuela y descubre"). _Necesito el archivo_ (SVG preferido).
-  Contemplar variante legible sobre fondo oscuro.
+- **VIS-03 · Logo en el menú** `LISTO(asset) / PEND(tratamiento)`
+  Logo recibido y guardado (`src/assets/brand/`). Reemplazar el texto
+  "Aerodiverti" del rail por el logotipo. **Pendiente el tratamiento para fondo
+  oscuro** (el logo es line-art negro + fondo blanco): opciones = recolorear
+  trazos y "vuela y descubre" a claro, usar solo el wordmark fucsia, o ponerlo
+  en un chip claro. Convertir a **SVG** para web (hoy es PDF/PNG).
 
 - **VIS-04 · Favoritos en fucsia** `PEND`
   El corazón de favoritos (hoy aqua) al **fucsia de marca**. Aplica en: tarjetas
