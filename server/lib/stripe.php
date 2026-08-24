@@ -94,8 +94,13 @@ function stripe_request(string $secretKey, string $method, string $path, ?array 
  * @param int $tolerance segundos de tolerancia (default 300, como el SDK).
  * @return bool true si la firma es valida y esta dentro de la tolerancia.
  */
-function stripe_verify_webhook(string $payload, string $sigHeader, string $secret, int $tolerance = 300): bool
+function stripe_verify_webhook(string $payload, string $sigHeader, string $secret, int $tolerance = 300, ?string &$reason = null): bool
 {
+    $reason = 'ok';
+    if ($secret === '' || strpos($secret, '<<') !== false || strpos($secret, 'whsec_') !== 0) {
+        $reason = 'secret_vacio_o_placeholder';
+        return false;
+    }
     $timestamp = null;
     $signatures = [];
     foreach (explode(',', $sigHeader) as $part) {
@@ -110,11 +115,17 @@ function stripe_verify_webhook(string $payload, string $sigHeader, string $secre
             $signatures[] = $v;
         }
     }
-    if ($timestamp === null || !$signatures) {
+    if ($timestamp === null) {
+        $reason = 'sin_timestamp';
+        return false;
+    }
+    if (!$signatures) {
+        $reason = 'sin_firma_v1';
         return false;
     }
     // Rechaza timestamps fuera de tolerancia (anti-replay).
     if (abs(time() - $timestamp) > $tolerance) {
+        $reason = 'timestamp_fuera_de_tolerancia';
         return false;
     }
     $expected = hash_hmac('sha256', $timestamp . '.' . $payload, $secret);
@@ -123,5 +134,6 @@ function stripe_verify_webhook(string $payload, string $sigHeader, string $secre
             return true;
         }
     }
+    $reason = 'firma_no_coincide';
     return false;
 }

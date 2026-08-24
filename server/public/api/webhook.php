@@ -22,9 +22,12 @@ $config = load_config();
 
 $payload = file_get_contents('php://input') ?: '';
 $sig = $_SERVER['HTTP_STRIPE_SIGNATURE'] ?? '';
+// trim solo del secreto (nunca del payload: la firma es sobre el cuerpo exacto).
+$secret = trim((string) $config['stripe_webhook_secret']);
 
-if (!stripe_verify_webhook($payload, $sig, (string) $config['stripe_webhook_secret'])) {
-    log_line('webhook', 'firma invalida');
+$reason = null;
+if (!stripe_verify_webhook($payload, $sig, $secret, 300, $reason)) {
+    log_line('webhook', 'firma invalida', ['motivo' => $reason]);
     json_response(400, ['error' => 'firma invalida']);
 }
 
