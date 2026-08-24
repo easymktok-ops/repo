@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-K5P832HB');</script>
+  <!-- End Google Tag Manager -->
+
+  <meta name="description" content="Casa Cacau Guest House en Manguinhos, Búzios. Casa completa para grupos y familias. Reserva directa — precio directo, sin costos ocultos.">
+  <title>Casa Cacau Guest House – Búzios | Grupo Caminuê</title>
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Casa Cacau Guest House – Búzios | Grupo Caminuê">
+  <meta property="og:description" content="Casa completa em Manguinhos para grupos e familias. Hasta 14 huéspedes, forno de barro, churrasqueira, WiFi. Reserva direta, preço direto sem custos ocultos.">
+  <meta property="og:image" content="hero-buzios.jpg">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="pt_BR">
+
+  <!-- Meta Pixel -->
+  <script>!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');fbq('init','1928582884542672');fbq('track','PageView');</script>
+  <noscript><img height="1" width="1" style="display:none" alt="" src="https://www.facebook.com/tr?id=1928582884542672&ev=PageView&noscript=1"></noscript>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap"></noscript>
+
+  <style>
+    /* ======================================================
+       DESIGN TOKENS — Casa Cacau Guest House
+    ====================================================== */
+    :root {
+      --green:        #1A362B;
+      --green-dark:   #12241D;
+      --green-mid:    #2E5445;
+      --gold:         #C5A059;
+      --gold-light:   #E8C87A;
+      --terra:        #D96B43;
+      --cream:        #FDFBF7;
+      --cream-2:      #F4EFE6;
+      --cream-3:      #EAE3D6;
+      --text:         #2C3E35;
+      --text-2:       #4A6158;
+      --text-muted:   #6B7C74;
+      --white:        #FFFFFF;
+      --wa-green:     #25D366;
+
+      --font-d: 'Playfair Display', Georgia, serif;
+      --font-b: 'Lato', Arial, sans-serif;
+
+      --shadow-sm: 0 2px 8px rgba(26,54,43,.06);
+      --shadow-md: 0 10px 32px rgba(26,54,43,.10);
+      --shadow-lg: 0 20px 60px rgba(26,54,43,.14);
+
+      --radius-sm:  4px;
+      --radius-md: 10px;
+      --radius-lg: 18px;
+      --radius-xl: 28px;
+
+      --max-w:  1200px;
+      --gutter: clamp(1.25rem, 5vw, 3rem);
+      --ease:   cubic-bezier(.16,1,.3,1);
+
+      --z-header: 100;
+      --z-float:  400;
+    }
+
+    /* ======================================================
+       RESET & BASE
+    ====================================================== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--font-b);
+      background: var(--cream);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    img { max-width: 100%; height: auto; display: block; }
+    a   { color: inherit; text-decoration: none; }
+    ul  { list-style: none; }
+    h1, h2, h3, h4 { font-family: var(--font-d); line-height: 1.15; color: var(--green); text-wrap: balance; }
+
+    .container { width: 100%; max-width: var(--max-w); margin-inline: auto; padding-inline: var(--gutter); }
+
+    /* Reveal */
+    .reveal { opacity:0; transform:translateY(24px); transition:opacity .55s var(--ease), transform .55s var(--ease); }
+    .reveal.on { opacity:1; transform:none; }
+    .d1{transition-delay:.1s} .d2{transition-delay:.2s} .d3{transition-delay:.3s} .d4{transition-delay:.4s}
+    @media(prefers-reduced-motion:reduce){ .reveal{opacity:1;transform:none;transition:none} }
+
+    /* ======================================================
+       TOPBAR
+    ====================================================== */
+    .topbar {
+      position: sticky; top: 0; z-index: var(--z-header);
+      background: #4A3F35;
+      color: var(--white);
+      padding: .55rem var(--gutter);
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      font-size: .8rem; font-weight: 700; letter-spacing: .04em;
+    }
+    .topbar__info { display:flex; align-items:center; gap:.45rem; opacity:.85; }
+    .topbar__btn {
+      display: inline-flex; align-items: center; gap: .4rem;
+      background: #FFFFFF; color: #103050;
+      font-size: .76rem; font-weight: 700; letter-spacing: .04em;
+      padding: .38rem 1.1rem; border-radius: var(--radius-sm);
+      transition: background .2s; white-space: nowrap;
+    }
+    .topbar__btn:hover { background: var(--gold-light); }
+
+    /* ======================================================
+       HERO
+    ====================================================== */
+    .hero {
+      position: relative;
+      min-height: 82svh;
+      display: flex; align-items: flex-end;
+      padding-bottom: clamp(3rem, 8vw, 6rem);
+      overflow: hidden;
+    }
+    .hero__bg {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center 45%;
+      z-index: 0;
+    }
+    .hero__overlay {
+      position: absolute; inset: 0;
+      background-color: rgba(14,22,18,.45);
+      background-image: linear-gradient(
+        to bottom,
+        rgba(14,22,18,.50)  0%,
+        rgba(14,22,18,.30) 55%,
+        rgba(14,22,18,.10) 100%
+      );
+      z-index: 1;
+    }
+    .hero__logo {
+      width: clamp(150px,22vw,220px);
+      margin-bottom: 1.75rem;
+      filter: brightness(0) invert(1);   /* logo 100% blanco */
+      opacity: .95;
+    }
+    .hero__badge {
+      position: absolute; top: 2rem; right: var(--gutter); z-index: 3;
+      background: rgba(197,160,89,.18);
+      backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(197,160,89,.4);
+      border-radius: var(--radius-xl);
+      padding: .9rem 1.25rem;
+      color: var(--white); text-align: center;
+      font-size: .72rem; letter-spacing: .06em;
+    }
+    .hero__badge strong {
+      display: block; font-family: var(--font-d);
+      font-size: 2rem; font-weight: 700; color: var(--gold-light);
+      line-height: 1; margin-bottom: .2rem;
+    }
+    .hero__content { position:relative; z-index:2; color:var(--white); max-width: 680px; }
+    .hero__eyebrow {
+      font-family: var(--font-b); font-size: .72rem; font-weight: 700;
+      letter-spacing: .18em; text-transform: uppercase; color: var(--gold-light);
+      display: flex; align-items: center; gap: .5rem; margin-bottom: .9rem;
+    }
+    .hero__eyebrow::before { content:''; display:block; width:24px; height:1.5px; background:currentColor; }
+    .hero__title {
+      font-size: clamp(2.2rem, 5.8vw, 4rem);
+      font-weight: 700; letter-spacing: -.02em; line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+    .hero__title em { font-style:italic; font-weight:400; color:var(--gold-light); }
+    .hero__sub { font-size: clamp(.92rem,2vw,1.1rem); opacity:.85; max-width:520px; margin-bottom: 2.25rem; line-height:1.7; }
+    .hero__actions { display:flex; flex-wrap:wrap; gap:.75rem; }
+    .hero__slogan { position:absolute; bottom:1.75rem; right:var(--gutter); z-index:3; font-family:var(--font-d); font-style:italic; font-size:.8rem; color:rgba(255,255,255,.4); }
+
+    /* ======================================================
+       BUTTONS
+    ====================================================== */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap:.5rem;
+      font-family: var(--font-b); font-weight: 700; font-size:.88rem;
+      letter-spacing: .06em; text-transform: uppercase;
+      padding: .9rem 2rem; border-radius: var(--radius-sm); border: none; cursor: pointer;
+      transition: background .25s var(--ease), transform .2s, box-shadow .2s;
+      white-space: nowrap; line-height: 1;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn:active { transform: scale(.98); }
+    .btn--primary { background: #103050; color: #FFFFFF; border: none; box-shadow: 0 4px 16px rgba(16,48,80,.22); }
+    .btn--primary:hover { background: #0E2A47; box-shadow: 0 6px 22px rgba(16,48,80,.3); }
+    .btn--gold   { background: #103050; color: #FFFFFF; border: none; box-shadow: 0 4px 16px rgba(16,48,80,.22); }
+    .btn--gold:hover { background: #0E2A47; box-shadow: 0 6px 22px rgba(16,48,80,.3); transform: translateY(-2px); }
+    .btn--ghost { background:rgba(255,255,255,.12); color:var(--white); border:1.5px solid rgba(255,255,255,.42); backdrop-filter:blur(6px); }
+    .btn--ghost:hover { background:rgba(255,255,255,.22); }
+    .btn--wa     { background: #25D366; color: #FFFFFF; border: none; }
+    .btn--wa:hover { background: #1da851; }
+    .btn--outline{ background: transparent; color: #103050; border: 2px solid #103050; }
+    .btn--outline:hover { background: #103050; color: #FFFFFF; }
+    .btn--white { background:var(--white); color:var(--green); }
+    .btn--white:hover { background:var(--cream-2); }
+
+    /* ======================================================
+       TRUST STRIP
+    ====================================================== */
+    .trust { background:var(--green-dark); color:var(--white); padding:1.1rem var(--gutter); }
+    .trust__row { display:flex; flex-wrap:wrap; justify-content:center; gap:1.25rem 3rem; }
+    .trust__item { display:flex; align-items:center; gap:.55rem; font-size:.78rem; font-weight:700; letter-spacing:.04em; opacity:.8; }
+    .trust__item svg { color:var(--gold); }
+
+    /* ======================================================
+       SECTION HEADINGS
+    ====================================================== */
+    .eyebrow {
+      font-family: var(--font-b); font-size:.72rem; font-weight:700;
+      letter-spacing:.18em; text-transform:uppercase; color:var(--gold);
+      display:flex; align-items:center; gap:.5rem; margin-bottom:.65rem;
+    }
+    .eyebrow::after { content:''; display:block; width:32px; height:1.5px; background:currentColor; opacity:.55; }
+    .eyebrow--c { justify-content:center; } .eyebrow--c::after { display:none; }
+
+    .sec-title { color: #2C1810; font-size:clamp(1.7rem,3.8vw,2.75rem); font-weight:700; letter-spacing:-.02em; margin-bottom:.75rem; }
+    .sec-sub { font-size:clamp(.9rem,1.8vw,1.05rem); color:var(--text-2); line-height:1.75; max-width:580px; }
+    .sec-head { margin-bottom:clamp(2rem,5vw,3.5rem); }
+    .sec-head--c { text-align:center; }
+    .sec-head--c .eyebrow { justify-content:center; }
+    .sec-head--c .eyebrow::after { display:none; }
+    .sec-head--c .sec-sub { margin-inline:auto; }
+
+    /* ======================================================
+       BOOKING
+    ====================================================== */
+    .booking {
+      background: var(--white);
+      padding: clamp(3.5rem,8vw,6rem) var(--gutter);
+      border-top: 4px solid var(--green);
+    }
+    .booking__layout {
+      display: grid; grid-template-columns: 1fr; gap: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+    @media(min-width:768px){ .booking__layout{ grid-template-columns:1fr 1fr; align-items:center; } }
+    .booking__pill {
+      display:inline-flex; align-items:center; gap:.45rem;
+      background:rgba(197,160,89,.12); border:1px solid rgba(197,160,89,.4);
+      color:var(--green-mid); font-size:.75rem; font-weight:700; letter-spacing:.04em;
+      padding:.4rem .9rem; border-radius:100px; margin-top:.9rem;
+    }
+    .booking__quote {
+      font-family:var(--font-d); font-style:italic; font-size:1.05rem;
+      color:var(--text-muted); line-height:1.75;
+      border-left:3px solid var(--gold); padding-left:1.25rem;
+    }
+    .hbook-wrap {
+      width:100%; min-height:200px; background:var(--cream); border-radius:var(--radius-lg);
+      border:1px solid var(--cream-3); overflow:visible; box-shadow:var(--shadow-md); padding:1rem;
+    }
+
+    /* ======================================================
+       BENEFITS
+    ====================================================== */
+    .benefits { background: #FFFFFF; padding:clamp(4rem,9vw,7rem) var(--gutter); background:var(--cream); }
+    .benefits__grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:1.5rem; }
+    .benefit-card {
+      background:var(--white); border-radius:var(--radius-lg);
+      padding:2rem 1.75rem 2.25rem;
+      border:1px solid var(--cream-3); box-shadow:var(--shadow-sm);
+      transition:transform .25s var(--ease), box-shadow .25s;
+    }
+    .benefit-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-md); }
+    .benefit-card__icon {
+      width:48px; height:48px; border-radius:var(--radius-md);
+      background:linear-gradient(135deg,var(--cream-2),var(--cream-3));
+      display:flex; align-items:center; justify-content:center;
+      margin-bottom:1.25rem; color:var(--green);
+    }
+    .benefit-card__title { font-family:var(--font-d); font-size:1.1rem; font-weight:700; color: #2C1810; margin-bottom:.5rem; }
+    .benefit-card__text { font-size:.9rem; color:var(--text-2); line-height:1.7; }
+
+    /* ======================================================
+       AMENITIES (dark band)
+    ====================================================== */
+    .amenities { background:#FDFBF7; padding:clamp(3rem,6vw,5rem) var(--gutter); }
+    .amenities__head { font-family:var(--font-d); font-size:clamp(1.1rem,2.5vw,1.35rem); color:#4A3F35; margin-bottom:2rem; font-weight:700; }
+    .amenities__grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(155px,1fr)); gap:.75rem 1rem; }
+    .amenity { display:flex; align-items:center; gap:.5rem; font-family:var(--font-b); font-size:.82rem; color:#103050; }
+    .amenity svg { color:#103050; flex-shrink:0; }
+
+    /* ======================================================
+       ROOMS
+    ====================================================== */
+    .rooms { background: #FFFFFF; padding:clamp(4rem,9vw,7rem) var(--gutter); background:var(--white); }
+    .rooms__grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.5rem; }
+    .room-card {
+      border-radius:var(--radius-xl); overflow:hidden; background:var(--white);
+      border:1px solid var(--cream-3); box-shadow:var(--shadow-sm);
+      display:flex; flex-direction:column;
+      transition:transform .25s var(--ease), box-shadow .25s;
+    }
+    .room-card:hover { transform:translateY(-3px); box-shadow:var(--shadow-md); }
+    .room-card__thumb { position:relative; height:215px; overflow:hidden; background:var(--cream-2); }
+    .room-card__thumb img { width:100%; height:100%; object-fit:cover; transition:transform .5s var(--ease); }
+    .room-card:hover .room-card__thumb img { transform:scale(1.05); }
+    .room-card__tag {
+      position:absolute; top:.75rem; left:.75rem;
+      background:rgba(197,160,89,.2); backdrop-filter:blur(8px);
+      border:1px solid rgba(197,160,89,.5); color:var(--white);
+      font-size:.68rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+      padding:.28rem .75rem; border-radius:100px;
+    }
+    .room-card__body { padding:1.5rem 1.6rem 1.75rem; flex:1; display:flex; flex-direction:column; }
+    .room-card__name { font-family:var(--font-d); font-size:1.1rem; font-weight:700; color: #2C1810; margin-bottom:.4rem; }
+    .room-card__desc { font-size:.88rem; color:var(--text-2); line-height:1.65; flex:1; margin-bottom:1rem; }
+    .room-card__meta { display:flex; gap:1.1rem; font-size:.75rem; color:var(--text-muted); padding-top:.85rem; border-top:1px solid var(--cream-3); margin-bottom:.85rem; }
+    .room-card__meta-item { display:flex; align-items:center; gap:.3rem; }
+    .room-card__cta {
+      display:inline-flex; align-items:center; gap:.4rem;
+      font-size:.76rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+      color: #103050; padding:.5rem 1.1rem; border: 1.5px solid #103050;
+      border-radius:var(--radius-sm); align-self:flex-start;
+      transition:background .2s, color .2s;
+    }
+    .room-card__cta:hover { background: #103050; color: #FFFFFF; }
+
+    /* ======================================================
+       GALLERY
+    ====================================================== */
+    .gallery { padding:clamp(4rem,9vw,7rem) var(--gutter); background:var(--cream); }
+    .gallery__mosaic { display:grid; grid-template-columns:repeat(12,1fr); gap:.75rem; }
+    .gallery__item { overflow:hidden; border-radius:var(--radius-md); background:var(--cream-2); }
+    .gallery__item img { width:100%; height:100%; object-fit:cover; transition:transform .5s var(--ease); }
+    .gallery__item:hover img { transform:scale(1.05); }
+    .gallery__item:nth-child(1) { grid-column:1/8; aspect-ratio:16/10; }
+    .gallery__item:nth-child(2) { grid-column:8/13; aspect-ratio:4/5; }
+    .gallery__item:nth-child(3) { grid-column:1/5;  aspect-ratio:4/5; }
+    .gallery__item:nth-child(4) { grid-column:5/9;  aspect-ratio:4/5; }
+    .gallery__item:nth-child(5) { grid-column:9/13; aspect-ratio:4/5; }
+    @media(max-width:767px){
+      .gallery__mosaic { grid-template-columns:repeat(2,1fr); }
+      .gallery__item:nth-child(1) { grid-column:1/3; aspect-ratio:16/9; }
+      .gallery__item:nth-child(2) { grid-column:auto; aspect-ratio:1; }
+      .gallery__item:nth-child(3) { grid-column:auto; aspect-ratio:1; }
+      .gallery__item:nth-child(4) { grid-column:auto; aspect-ratio:1; }
+      .gallery__item:nth-child(5) { grid-column:1/3; aspect-ratio:16/9; }
+    }
+
+    /* ======================================================
+       NEARBY
+    ====================================================== */
+    .nearby { padding:clamp(4rem,9vw,7rem) var(--gutter); background:var(--white); }
+    .nearby__layout { display:grid; grid-template-columns:1fr; gap:3.5rem; align-items:start; }
+    @media(min-width:768px){ .nearby__layout{ grid-template-columns:1fr 1fr; align-items:center; gap:4.5rem; } }
+    .nearby__address { display:flex; align-items:flex-start; gap:.5rem; font-size:.85rem; color:var(--text-muted); margin-bottom:1.5rem; }
+    .nearby__address svg { flex-shrink:0; margin-top:2px; color:var(--gold); }
+    .nearby__list { display:flex; flex-direction:column; gap:.75rem; }
+    .nearby__item {
+      display:flex; align-items:center; justify-content:space-between; gap:1rem;
+      padding:.9rem 1rem; background:var(--cream); border-radius:var(--radius-md);
+      border-left: 3px solid #103050;
+    }
+    .nearby__name { font-size:.9rem; font-weight:700; color: #103050; }
+    .nearby__time { font-size:.78rem; color:var(--text-muted); margin-top:.1rem; }
+    .nearby__dist { font-size:.76rem; font-weight:700; color:var(--gold); white-space:nowrap; }
+    .nearby__map { border-radius:var(--radius-xl); overflow:hidden; box-shadow:var(--shadow-lg); aspect-ratio:4/3; }
+    .nearby__map iframe { width:100%; height:100%; border:0; display:block; }
+
+    /* ======================================================
+       FAQ
+    ====================================================== */
+    .faq { padding:clamp(4rem,9vw,7rem) var(--gutter); background:var(--cream); }
+    .faq__list { max-width:720px; margin-inline:auto; display:flex; flex-direction:column; gap:.6rem; }
+    .faq__item { background:var(--white); border-radius:var(--radius-md); border:1px solid var(--cream-3); overflow:hidden; box-shadow:0 1px 2px rgba(26,54,43,.04); }
+    .faq__check { display:none; }
+    .faq__label {
+      display:flex; align-items:center; justify-content:space-between; gap:1rem;
+      padding:1.15rem 1.5rem; cursor:pointer; font-weight:700; font-size:.92rem;
+      color:var(--green); user-select:none; transition:background .2s;
+    }
+    .faq__label:hover { background:var(--cream); }
+    .faq__icon {
+      flex-shrink:0; width:22px; height:22px; border-radius:50%;
+      background:var(--cream-2); display:flex; align-items:center; justify-content:center;
+      color:var(--green); transition:transform .25s var(--ease), background .2s;
+    }
+    .faq__check:checked ~ .faq__label .faq__icon { transform:rotate(45deg); background:var(--green); color:var(--white); }
+    .faq__body { max-height:0; overflow:hidden; transition:max-height .35s ease; }
+    .faq__check:checked ~ .faq__body { max-height:400px; }
+    .faq__answer { padding:0 1.5rem 1.35rem; font-size:.9rem; color:var(--text-2); line-height:1.75; }
+
+    /* ======================================================
+       CTA BAND
+    ====================================================== */
+    .cta-band {
+      background:#FDFBF7; padding:clamp(3.5rem,8vw,6rem) var(--gutter);
+      color:var(--neutral-700); text-align:center; position:relative; overflow:hidden;
+    }
+    .cta-band::before {
+      content:''; position:absolute; inset:0;
+      background-image:radial-gradient(ellipse at 20% 80%, rgba(197,160,89,.08) 0%, transparent 55%),
+                       radial-gradient(ellipse at 80% 20%, rgba(197,160,89,.06) 0%, transparent 50%);
+    }
+    .cta-band__inner { position:relative; z-index:1; }
+    .cta-band__eyebrow { font-size:.72rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase; color:var(--madeira-600); margin-bottom:1rem; }
+    .cta-band__title { font-family:var(--font-d); font-size:clamp(1.6rem,3.8vw,2.5rem); font-weight:700; color:var(--azul-700); margin-bottom:.75rem; }
+    .cta-band__sub { color:var(--neutral-600); font-size:1rem; max-width:540px; margin:0 auto 2.25rem; }
+    .cta-band__actions { display:flex; flex-wrap:wrap; gap:.85rem; justify-content:center; }
+
+    /* ======================================================
+       FOOTER
+    ====================================================== */
+    footer { background:#4A3F35; color:rgba(255,255,255,.72); padding:clamp(3rem,6vw,5rem) var(--gutter) 2rem; }
+    .footer__grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:2.5rem; margin-bottom:2.5rem; }
+    .footer__logo { width:clamp(140px,20vw,190px); margin-bottom:1rem; filter: brightness(0) invert(1); opacity: .88;; }
+    .footer__brand p { font-size:.84rem; line-height:1.75; }
+    .footer__col-title { font-family:var(--font-d); font-size:.95rem; font-weight:700; color: #FFFFFF; margin-bottom:.9rem; }
+    .footer__links { display:flex; flex-direction:column; gap:.6rem; }
+    .footer__links a { font-size:.83rem; display:flex; align-items:center; gap:.45rem; transition:color .2s; }
+    .footer__links a:hover { color:var(--gold-light); }
+    .footer__hr { border:none; border-top:1px solid rgba(255,255,255,.07); margin-bottom:1.5rem; }
+    .footer__bottom { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:.75rem; font-size:.78rem; opacity:.45; }
+    .footer__socials { display:flex; gap:.65rem; }
+    .footer__socials a {
+      width:30px; height:30px; border-radius:50%; background:rgba(255,255,255,.07);
+      display:flex; align-items:center; justify-content:center;
+      color:rgba(255,255,255,.65); transition:background .2s, color .2s;
+    }
+    .footer__socials a:hover { background: #C5A059; color: #2C1810; }
+
+    /* ======================================================
+       FLOAT WA
+    ====================================================== */
+    .float-wa {
+      position:fixed; bottom:1.75rem; right:1.75rem; z-index:var(--z-float);
+      width:56px; height:56px; border-radius:50%; background: #25D366; color:var(--white);
+      display:flex; align-items:center; justify-content:center;
+      box-shadow:0 4px 18px rgba(37,211,102,.38);
+      animation:wa-pulse 3s ease-in-out infinite;
+    }
+    .float-wa:hover { transform:scale(1.1); animation:none; box-shadow:0 6px 28px rgba(37,211,102,.5); }
+    @keyframes wa-pulse {
+      0%,100%{ box-shadow:0 4px 18px rgba(37,211,102,.38); }
+      50%{ box-shadow:0 4px 28px rgba(37,211,102,.5), 0 0 0 10px rgba(37,211,102,.08); }
+    }
+    @media(prefers-reduced-motion:reduce){ .float-wa{ animation:none; } }
+
+    /* ======================================================
+       RESPONSIVE MOBILE
+    ====================================================== */
+    @media(max-width:767px){
+      .hero__badge { display:none; }
+      .topbar__info { display:none; }
+      .topbar__btn { margin-inline:auto; }
+      .topbar { justify-content:center; }
+    }
+
+
+    /* Título hero em branco */
+    .hero__title { color: var(--white) !important; }
+    .hero__title em { color: var(--gold-light) !important; }
+
+    /* ============================================================
+       FIX BUSCADOR HBOOK — Diagnóstico 23-06-2026
+       ID duplicado a propósito para ganar a reglas !important
+       de la plataforma HBook/HSystem
+    ============================================================ */
+
+    /* Panel: fondo verde de marca + franja dorada */
+    #HSystemSearchBoxInline#HSystemSearchBoxInline.bottom {
+      background: #1A362B !important;
+      padding: 26px 0 30px !important;
+      border-top: 3px solid #C5A059 !important;
+    }
+
+    /* Labels (ya son blancos — aseguramos contraste y peso) */
+    #HSystemSearchBoxInline#HSystemSearchBoxInline.bottom .label {
+      color: #ffffff !important;
+      font-weight: 600 !important;
+      letter-spacing: .3px;
+      margin-bottom: 6px !important;
+      display: block;
+    }
+
+    /* Inputs y selects */
+    #HSystemSearchBoxInline#HSystemSearchBoxInline.bottom .HSystemForm-Control {
+      height: 44px !important;
+      border: 1px solid #d9d2c4 !important;
+      border-radius: 8px !important;
+      background: #fff !important;
+      color: #2C3E35 !important;
+      box-shadow: none !important;
+      padding: 8px 38px 8px 12px !important;
+    }
+    #HSystemSearchBoxInline#HSystemSearchBoxInline.bottom .HSystemForm-Control:focus {
+      border-color: #C5A059 !important;
+      box-shadow: 0 0 0 3px rgba(197,160,89,.25) !important;
+      outline: none;
+    }
+
+    /* Iconos de calendario: SVG blancos → dorados */
+    #HSystemSearchBoxInline#HSystemSearchBoxInline.bottom #checkinLabel,
+    #HSystemSearchBoxInline#HSystemSearchBoxInline.bottom #checkoutLabel {
+      position: relative;
+      display: block;
+    }
+    #HSystemSearchBoxInline#HSystemSearchBoxInline.bottom #checkinLabel svg,
+    #HSystemSearchBoxInline#HSystemSearchBoxInline.bottom #checkoutLabel svg {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 18px;
+      height: 18px;
+      pointer-events: none;
+    }
+    #HSystemSearchBoxInline#HSystemSearchBoxInline.bottom #checkinLabel svg,
+    #HSystemSearchBoxInline#HSystemSearchBoxInline.bottom #checkoutLabel svg,
+    #HSystemSearchBoxInline#HSystemSearchBoxInline.bottom #checkinLabel svg *,
+    #HSystemSearchBoxInline#HSystemSearchBoxInline.bottom #checkoutLabel svg * {
+      fill: #C5A059 !important;
+    }
+
+    /* Alinear columnas al fondo (col del botón no tiene label) */
+    #HSystemSearchBoxInline#HSystemSearchBoxInline.bottom .col {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    /* Botón: dorado com texto verde — sempre visível */
+    #HSystemSearchBoxInline#HSystemSearchBoxInline.bottom a.btn {
+      background: #C5A059 !important;
+      color: #1A362B !important;
+      font-weight: 700 !important;
+      border: none !important;
+      border-radius: 8px !important;
+      height: 44px !important;
+      display: flex !important;
+      align-items: center;
+      justify-content: center;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+      text-decoration: none !important;
+      cursor: pointer;
+      width: 100%;
+      transition: background .2s ease, transform .1s ease;
+    }
+    #HSystemSearchBoxInline#HSystemSearchBoxInline.bottom a.btn:hover {
+      background: #b08e44 !important;
+      transform: translateY(-1px);
+    }
+
+  
+    /* ==========================================================
+       REESTRUTURA DO FUNIL — quartos logo abaixo do hero
+       (reordenação visual por flexbox, sem mexer no DOM)
+    ========================================================== */
+    body { display: flex; flex-direction: column; }
+    .topbar       { order: 0; }
+    .hero         { order: 1; }
+    .trust        { order: 2; }
+    .social-proof { order: 3; }
+    .rooms        { order: 4; }
+    .benefits     { order: 5; }
+    .amenities    { order: 6; }
+    .gallery      { order: 7; }
+    .nearby, .location { order: 8; }
+    .faq          { order: 9; }
+    .cta-band     { order: 10; }
+    footer        { order: 11; }
+
+    /* Barra de prova social / avaliação agregada */
+    .social-proof { background:#FFFFFF; padding:clamp(1.5rem,4vw,2.25rem) clamp(1.25rem,5vw,3rem); border-bottom:1px solid #EAE3D6; }
+    .social-proof__inner { max-width:1200px; margin-inline:auto; display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:1rem 2.5rem; }
+    .social-proof__score { display:flex; align-items:center; gap:.75rem; }
+    .social-proof__num { font-family:'Playfair Display',Georgia,serif; font-size:2.4rem; font-weight:700; color:#C5A059; line-height:1; }
+    .social-proof__stars { color:#C5A059; font-size:1.05rem; letter-spacing:2px; }
+    .social-proof__meta { font-size:.82rem; color:#6B7C74; line-height:1.4; }
+    .social-proof__meta strong { display:block; color:#2C1810; font-size:.95rem; font-weight:700; }
+    .social-proof__meta span { font-weight:700; color:#2C3E35; }
+    .social-proof__link { display:inline-flex; align-items:center; gap:.45rem; font-size:.78rem; font-weight:700; letter-spacing:.03em; color:#103050; border:1.5px solid #103050; border-radius:6px; padding:.55rem 1.1rem; transition:background .2s,color .2s; }
+    .social-proof__link:hover { background:#103050; color:#FFFFFF; }
+
+    /* CTA de WhatsApp em cada cartão de quarto */
+    .room-card__cta, .rc__cta { background:#25D366 !important; color:#FFFFFF !important; border:1.5px solid #25D366 !important; }
+    .room-card__cta:hover, .rc__cta:hover { background:#1da851 !important; color:#FFFFFF !important; border-color:#1da851 !important; }
+    .room-card__cta svg, .rc__cta svg { flex-shrink:0; }
+
+  </style>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17815241132"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'AW-17815241132');
+</script>
+  <!-- Dados estruturados schema.org -->
+  <!-- NOTA: aggregateRating usa valores PLACEHOLDER (4.9 / 40). Reemplazar por los reales de Google. -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LodgingBusiness",
+  "name": "Casa Cacau Guest House",
+  "url": "https://grupocaminue.com.br/hotels/casa-cacau-guest-house/",
+  "image": "Casa-Completa-9.webp",
+  "telephone": "+55 22 99878-2768",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "R. Alto Manguinhos, 9",
+    "addressLocality": "Armação dos Búzios",
+    "addressRegion": "RJ",
+    "postalCode": "28950-000",
+    "addressCountry": "BR"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -22.767674,
+    "longitude": -41.904711
+  },
+  "amenityFeature": [
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Forno de barro",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Churrasqueira",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Cozinha equipada",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Ar-condicionado",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Wi-Fi",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Smart TV",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Máquina de lavar",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Frigobar",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Estacionamento",
+      "value": true
+    },
+    {
+      "@type": "LocationFeatureSpecification",
+      "name": "Check-in flexível",
+      "value": true
+    }
+  ],
+  "makesOffer": [
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "HotelRoom",
+        "name": "Casa Completa",
+        "occupancy": {
+          "@type": "QuantitativeValue",
+          "maxValue": 14,
+          "unitText": "hóspedes"
+        }
+      },
+      "availability": "https://schema.org/InStock"
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "HotelRoom",
+        "name": "Suíte com Varanda",
+        "occupancy": {
+          "@type": "QuantitativeValue",
+          "maxValue": 4,
+          "unitText": "hóspedes"
+        }
+      },
+      "availability": "https://schema.org/InStock"
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "HotelRoom",
+        "name": "Duplo com Varanda",
+        "occupancy": {
+          "@type": "QuantitativeValue",
+          "maxValue": 2,
+          "unitText": "hóspedes"
+        }
+      },
+      "availability": "https://schema.org/InStock"
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "HotelRoom",
+        "name": "Quarto Quádruplo",
+        "occupancy": {
+          "@type": "QuantitativeValue",
+          "maxValue": 4,
+          "unitText": "hóspedes"
+        }
+      },
+      "availability": "https://schema.org/InStock"
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "HotelRoom",
+        "name": "Apartamento Térreo",
+        "occupancy": {
+          "@type": "QuantitativeValue",
+          "maxValue": 4,
+          "unitText": "hóspedes"
+        }
+      },
+      "availability": "https://schema.org/InStock"
+    }
+  ],
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "4.9",
+    "reviewCount": "40",
+    "bestRating": "5"
+  }
+}
+  </script>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "¿La casa tiene cocina disponible para los huéspedes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "¡Sí! Casa Cacau cuenta con cocina completamente equipada, horno de barro y parrilla para uso de los huéspedes. El desayuno no está incluido — tenés total autonomía para preparar tus comidas."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cómo reservo?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Por WhatsApp +55 22 99878-2768 o por el sitio web. Indicá fechas, número de huéspedes y la habitación deseada. Nuestro equipo confirma rápidamente."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Cuál es el horario de check-in y check-out?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Check-in a partir de las 14h. Check-out hasta las 10h. Los horarios especiales pueden solicitarse con anticipación, según disponibilidad."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Los precios varían según la fecha?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí. Las tarifas varían según temporada, feriados y disponibilidad. Usá el motor de reservas o enviá tus fechas por WhatsApp para recibir el valor exacto."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿Qué formas de pago se aceptan?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Aceptamos PIX, transferencia bancaria y tarjeta de crédito. Las opciones se confirman antes de finalizar la reserva. PIX garantiza confirmación inmediata."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "¿El Guest House tiene estacionamiento?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Sí, Casa Cacau cuenta con estacionamiento para huéspedes. Consultá la disponibilidad al momento de reservar."
+      }
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K5P832HB"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<!-- ======================================================
+     TOPBAR
+====================================================== -->
+<div class="topbar" role="banner">
+  <span class="topbar__info">
+    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 5.18 2 2 0 015.09 3h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L9.09 11a16 16 0 006.86 6.86l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 18.92z"/></svg>
+    +55 22 99878-2768
+  </span>
+  <a href="https://api.whatsapp.com/send?phone=5522998782768&text=Hola%2C%20encontr%C3%A9%20el%20sitio%20web%20del%20Grupo%20Caminu%C3%A9%20y%20me%20gustar%C3%ADa%20hablar%20con%20el%20equipo%20para%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20disponibilidad%20en%20Casa%20Cacau." class="topbar__btn" target="_blank" rel="noopener noreferrer">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a9.616 9.616 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Reservar por WhatsApp
+  </a>
+</div>
+
+<!-- ======================================================
+     HERO
+====================================================== -->
+<header class="hero">
+  <img class="hero__bg" src="Casa-Completa-4.webp" alt="Casa Cacau Guest House — Manguinhos, Búzios" fetchpriority="high" decoding="async" width="1920" height="1080">
+  <div class="hero__overlay" aria-hidden="true"></div>
+  <div class="hero__badge" aria-label="Capacidade hasta 14 huéspedes">
+    <strong>14</strong>huéspedes<br>máximo
+  </div>
+  <div class="container">
+    <div class="hero__content">
+      <img class="hero__logo" src="logo-caminue.png" alt="Grupo Caminuê" width="220" height="83">
+      <p class="hero__eyebrow">Búzios, RJ · Brasil</p>
+      <h1 class="hero__title">Casa Cacau</h1>
+      <p class="hero__sub">Guest House con suites privadas para 1 a 4 huéspedes, ideal para quienes buscan comodidad, privacidad y una experiencia acogedora en Búzios. Para grupos y familias, Casa Cacau también está disponible en modalidad Casa Completa, alojando hasta 14 personas con toda la estructura necesaria para una estadía confortable.</p>
+      <div class="hero__actions">
+        <a href="#rooms" class="btn btn--gold">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Reservar Ahora
+        </a>
+        <a href="https://api.whatsapp.com/send?phone=5522998782768&text=Hola%2C%20encontr%C3%A9%20el%20sitio%20web%20del%20Grupo%20Caminu%C3%A9%20y%20me%20gustar%C3%ADa%20hablar%20con%20el%20equipo%20para%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20disponibilidad%20en%20Casa%20Cacau." class="btn btn--ghost" target="_blank" rel="noopener noreferrer">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a9.616 9.616 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Hablar por WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+  <p class="hero__slogan">Cada paso guarda una historia.</p>
+</header>
+
+<!-- ======================================================
+     TRUST STRIP
+====================================================== -->
+<div class="trust" role="complementary" aria-label="Diferenciais">
+  <div class="trust__row">
+    <div class="trust__item"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Precio directo, sin costos ocultos</div>
+    <div class="trust__item"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>Respuesta en minutos</div>
+    <div class="trust__item"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>En Manguinhos, Búzios</div>
+    <div class="trust__item"><svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><polyline points="20,6 9,17 4,12"/></svg>Reprogramación en casos especiales</div>
+  </div>
+</div>
+
+<!-- ======================================================
+     BENEFÍCIOS
+====================================================== -->
+<!-- ======================================================
+     PROVA SOCIAL / AVALIAÇÕES
+     >>> REEMPLAZAR: usá la nota media (4,9) y el total (+40) reales de Google
+         antes de publicar — también en el JSON-LD aggregateRating del <head>.
+====================================================== -->
+<section class="social-proof" aria-label="Reseñas de huéspedes">
+  <div class="social-proof__inner">
+    <div class="social-proof__score">
+      <span class="social-proof__num">4,9</span>
+      <div>
+        <div class="social-proof__stars" aria-hidden="true">★★★★★</div>
+        <div class="social-proof__meta"><strong>Calificación excelente</strong>según <span>+40</span> reseñas reales en Google</div>
+      </div>
+    </div>
+    <a class="social-proof__link" href="https://maps.app.goo.gl/229PJyEwBbfvwQm98" target="_blank" rel="noopener noreferrer">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C7.6 2 4 5.6 4 10c0 5.4 7 11.5 7.3 11.8.4.3.9.3 1.3 0C13 21.5 20 15.4 20 10c0-4.4-3.6-8-8-8zm0 11a3 3 0 110-6 3 3 0 010 6z"/></svg> Ver reseñas en Google
+    </a>
+  </div>
+</section>
+
+<section class="benefits" aria-labelledby="benefits-h2">
+  <div class="container">
+    <div class="sec-head sec-head--c">
+      <p class="eyebrow eyebrow--c">Por qué elegir</p>
+      <h2 class="sec-title" id="benefits-h2">Casa Cacau — Opciones</h2>
+      <p class="sec-sub">Elegí la modalidad ideal: casa entera para hasta 14 personas, o habitaciones individuales para estadías más flexibles — siempre con estructura completa y precio directo.</p>
+    </div>
+    <div class="benefits__grid">
+      <div class="benefit-card reveal">
+        <div class="benefit-card__icon" aria-hidden="true"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <h3 class="benefit-card__title">Ubicación privilegiada</h3>
+        <p class="benefit-card__text">A 600m de Praia de Manguinhos y 700m de Geribá. Barrio tranquilo, residencial y bien conectado con las mejores playas de Búzios.</p>
+      </div>
+      <div class="benefit-card reveal d1">
+        <div class="benefit-card__icon" aria-hidden="true"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg></div>
+        <h3 class="benefit-card__title">Casa Completa o Guest House</h3>
+        <p class="benefit-card__text"><strong>Casa Completa:</strong> toda la casa para hasta 14 huéspedes con horno de barro y parrilla. <strong>Guest House:</strong> habitaciones individuales desde 1 cama — ideal para parejas, amigos o viajes en solitario.</p>
+      </div>
+      <div class="benefit-card reveal d2">
+        <div class="benefit-card__icon" aria-hidden="true"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg></div>
+        <h3 class="benefit-card__title">Mejor precio directo</h3>
+        <p class="benefit-card__text">Reservá directamente con nosotros y asegurate el mejor precio. Sin tarifas extra, sin sorpresas. En casos especiales, ofrecemos reprogramación de estadía.</p>
+      </div>
+      <div class="benefit-card reveal d3">
+        <div class="benefit-card__icon" aria-hidden="true"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg></div>
+        <h3 class="benefit-card__title">Atención rápida</h3>
+        <p class="benefit-card__text">Nuestro equipo responde en minutos por WhatsApp. Dudas, pedidos especiales o ajustes en la reserva — siempre disponibles para vos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     COMODIDADES
+====================================================== -->
+<div class="amenities" role="complementary" aria-label="Comodidades da Casa Cacau Guest House">
+  <div class="container">
+    <p class="amenities__head">Todo para una estadía perfecta.</p>
+    <div class="amenities__grid">
+      <div class="amenity"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M8 12c0-1.38.3-2.65.83-3.76M15.17 8.24A8 8 0 0120 12a8 8 0 01-8 8A8 8 0 014 12c0-2.2.89-4.2 2.34-5.66"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>Horno de Barro</div>
+      <div class="amenity"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/><line x1="8" y1="22" x2="8" y2="18"/><line x1="12" y1="22" x2="12" y2="22"/></svg>Parrilla/Asador</div>
+      <div class="amenity"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2"/><line x1="7" y1="2" x2="7" y2="11"/><path d="M21 15a2 2 0 01-2 2H7l-4 4V9a2 2 0 012-2h14a2 2 0 012 2z"/></svg>Cocina Equipada</div>
+      <div class="amenity"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="8" rx="2"/><line x1="12" y1="14" x2="12" y2="19"/><polyline points="9,19 12,22 15,19"/><circle cx="7" cy="10" r="1" fill="currentColor"/><circle cx="12" cy="10" r="1" fill="currentColor"/><circle cx="17" cy="10" r="1" fill="currentColor"/></svg>Aire Acondicionado</div>
+      <div class="amenity"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.55a11 11 0 0114.08 0"/><path d="M1.42 9a16 16 0 0121.16 0"/><path d="M8.53 16.11a6 6 0 016.95 0"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>WiFi</div>
+      <div class="amenity"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="13" rx="2"/><polyline points="17,2 12,7 7,2"/></svg>Smart TV 50"</div>
+      <div class="amenity"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2"/><circle cx="12" cy="13" r="4"/><circle cx="8" cy="6" r="1" fill="currentColor"/><circle cx="12" cy="6" r="1" fill="currentColor"/></svg>Lavarropas</div>
+      <div class="amenity"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>Comedor</div>
+      <div class="amenity"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="5" y1="10" x2="19" y2="10"/><line x1="10" y1="6" x2="10" y2="8"/><line x1="10" y1="14" x2="10" y2="17"/></svg>Frigobar</div>
+      <div class="amenity"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>600m Praia de Manguinhos</div>
+      <div class="amenity"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12,6 12,12 16,14"/></svg>Check-in flexible</div>
+      <div class="amenity"><svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 010 6H9"/></svg>Estacionamiento</div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================================================
+     QUARTOS
+====================================================== -->
+<section class="rooms" id="rooms" aria-labelledby="rooms-h2">
+  <div class="container">
+    <div class="sec-head">
+      <p class="eyebrow">Acomodaciones</p>
+      <h2 class="sec-title" id="rooms-h2">Elegí tu habitación</h2>
+      <p class="sec-sub">Todas las habitaciones tienen aire acondicionado, baño privado y desayuno incluido. Algunas con balcón y vista privilegiada.</p>
+    </div>
+    <div class="rooms__grid">
+
+      <!-- Casa Completa — produto principal -->
+      <article class="room-card reveal">
+        <div class="room-card__thumb">
+          <img src="Casa-Completa-15.webp" alt="Casa Completa — forno de barro, área gourmet" loading="lazy" width="600" height="400">
+          <span class="room-card__tag">Casa entera</span>
+        </div>
+        <div class="room-card__body">
+          <h3 class="room-card__name">Casa Completa</h3>
+          <p class="room-card__desc">La casa entera exclusivamente para tu grupo. 10 camas, horno de barro, parrilla, cocina equipada y todos los espacios comunes. Total privacidad.</p>
+          <div class="room-card__meta">
+            <span class="room-card__meta-item"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>Hasta 14 huéspedes</span>
+            <span class="room-card__meta-item"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>10 camas</span>
+          </div>
+          <a href="https://api.whatsapp.com/send?phone=5522998782768&text=%C2%A1Hola%21%20Me%20interesa%20Casa%20Completa%20en%20Casa%20Cacau%20%28B%C3%BAzios%29.%20%C2%BFMe%20pasan%20disponibilidad%20y%20precios%3F" class="room-card__cta" target="_blank" rel="noopener noreferrer"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a9.616 9.616 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Reservar por WhatsApp</a>
+        </div>
+      </article>
+
+      <article class="room-card reveal">
+        <div class="room-card__thumb">
+          <img src="Suite-com-Varanda-5.webp" alt="Suite con Balcón — Casa Cacau Guest House" loading="lazy" width="600" height="400">
+          <span class="room-card__tag">Más popular</span>
+        </div>
+        <div class="room-card__body">
+          <h3 class="room-card__name">Suite con Balcón</h3>
+          <p class="room-card__desc">Ambiente amplio y ventilado con balcón privado. Techo de madera, paredes en azul encantador, 3 camas y toda la estructura para hasta 4 huéspedes.</p>
+          <div class="room-card__meta">
+            <span class="room-card__meta-item"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Hasta 4 huéspedes</span>
+            <span class="room-card__meta-item"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>3 camas</span>
+          </div>
+          <a href="https://api.whatsapp.com/send?phone=5522998782768&text=%C2%A1Hola%21%20Me%20interesa%20Suite%20con%20Balc%C3%B3n%20en%20Casa%20Cacau%20%28B%C3%BAzios%29.%20%C2%BFMe%20pasan%20disponibilidad%20y%20precios%3F" class="room-card__cta" target="_blank" rel="noopener noreferrer"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a9.616 9.616 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Reservar por WhatsApp</a>
+        </div>
+      </article>
+
+      <article class="room-card reveal d1">
+        <div class="room-card__thumb">
+          <img src="Duplo-com-Varanda.webp" alt="Doble con Balcón — Casa Cacau Guest House" loading="lazy" width="600" height="400">
+        </div>
+        <div class="room-card__body">
+          <h3 class="room-card__name">Doble con Balcón</h3>
+          <p class="room-card__desc">Para parejas en busca de tranquilidad. Cama doble, balcón privado, aire acondicionado y baño privado. Ambiente íntimo y acogedor.</p>
+          <div class="room-card__meta">
+            <span class="room-card__meta-item"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Hasta 2 huéspedes</span>
+            <span class="room-card__meta-item"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>1 cama</span>
+          </div>
+          <a href="https://api.whatsapp.com/send?phone=5522998782768&text=%C2%A1Hola%21%20Me%20interesa%20Doble%20con%20Balc%C3%B3n%20en%20Casa%20Cacau%20%28B%C3%BAzios%29.%20%C2%BFMe%20pasan%20disponibilidad%20y%20precios%3F" class="room-card__cta" target="_blank" rel="noopener noreferrer"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a9.616 9.616 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Reservar por WhatsApp</a>
+        </div>
+      </article>
+
+      <article class="room-card reveal d2">
+        <div class="room-card__thumb">
+          <img src="Quarto-Quadruplo.webp" alt="Espaço comum — Casa Cacau Guest House" loading="lazy" width="600" height="400">
+          <span class="room-card__tag">Novedad</span>
+        </div>
+        <div class="room-card__body">
+          <h3 class="room-card__name">Habitación Cuádruple</h3>
+          <p class="room-card__desc">Perfecto para familias o grupos de amigos. 3 camas, baño privado, Smart TV y aire acondicionado. Amplio y bien iluminado.</p>
+          <div class="room-card__meta">
+            <span class="room-card__meta-item"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg>Hasta 4 huéspedes</span>
+            <span class="room-card__meta-item"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>3 camas</span>
+          </div>
+          <a href="https://api.whatsapp.com/send?phone=5522998782768&text=%C2%A1Hola%21%20Me%20interesa%20Habitaci%C3%B3n%20Cu%C3%A1druple%20en%20Casa%20Cacau%20%28B%C3%BAzios%29.%20%C2%BFMe%20pasan%20disponibilidad%20y%20precios%3F" class="room-card__cta" target="_blank" rel="noopener noreferrer"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a9.616 9.616 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Reservar por WhatsApp</a>
+        </div>
+      </article>
+
+      <article class="room-card reveal d1">
+        <div class="room-card__thumb">
+          <img src="Suite-com-Varanda-4.webp" alt="Apartamento Térreo — 3 camas, banheiro privativo" loading="lazy" width="600" height="400">
+        </div>
+        <div class="room-card__body">
+          <h3 class="room-card__name">Apartamento – Planta Baja</h3>
+          <p class="room-card__desc">Acomodación completa en planta baja, ideal para hasta 4 huéspedes. 3 camas, aire acondicionado, baño privado y Smart TV. Una solución independiente y confortable.</p>
+          <div class="room-card__meta">
+            <span class="room-card__meta-item"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/></svg>Hasta 4 huéspedes</span>
+            <span class="room-card__meta-item"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/></svg>3 camas</span>
+          </div>
+          <a href="https://api.whatsapp.com/send?phone=5522998782768&text=%C2%A1Hola%21%20Me%20interesa%20Apartamento%20Planta%20Baja%20en%20Casa%20Cacau%20%28B%C3%BAzios%29.%20%C2%BFMe%20pasan%20disponibilidad%20y%20precios%3F" class="room-card__cta" target="_blank" rel="noopener noreferrer"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a9.616 9.616 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>Reservar por WhatsApp</a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     GALERIA
+====================================================== -->
+<section class="gallery" aria-labelledby="gallery-h2">
+  <div class="container">
+    <div class="sec-head">
+      <p class="eyebrow">Galería</p>
+      <h2 class="sec-title" id="gallery-h2">Conocé el Guest House</h2>
+    </div>
+    <div class="gallery__mosaic">
+      <div class="gallery__item reveal"><img src="Casa-Completa-4.webp" alt="Vista de Búzios — Casa Cacau Guest House" loading="lazy" width="800" height="500"></div>
+      <div class="gallery__item reveal d1"><img src="Casa-Completa-9.webp" alt="Espaço de relaxamento" loading="lazy" width="500" height="625"></div>
+      <div class="gallery__item reveal d1"><img src="Casa-Completa-15.webp" alt="Sala de estar aconchegante" loading="lazy" width="500" height="625"></div>
+      <div class="gallery__item reveal d2"><img src="Casa-Completa-8.webp" alt="Área com jardim tropical" loading="lazy" width="500" height="625"></div>
+      <div class="gallery__item reveal d3"><img src="Casa-Completa-19.webp" alt="Entrada da posada" loading="lazy" width="500" height="625"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     LOCALIZAÇÃO
+====================================================== -->
+<section class="nearby" aria-labelledby="nearby-h2">
+  <div class="container">
+    <div class="nearby__layout">
+      <div class="reveal">
+        <p class="eyebrow">Ubicación</p>
+        <h2 class="sec-title" id="nearby-h2">Barrio tranquilo, todo cerca</h2>
+        <p class="sec-sub" style="margin-bottom:1.75rem">Manguinhos es una de las zonas mejor ubicadas de Búzios — tranquila, residencial y con fácil acceso a playas, restaurantes y al centro histórico.</p>
+        <address class="nearby__address">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          R. Alto Manguinhos, 9 — Manguinhos, Armação dos Búzios, RJ, 28950-000, Brasil
+        </address>
+        <nav class="nearby__list" aria-label="Atrações próximas">
+          <div class="nearby__item"><div><div class="nearby__name">🏖 Praia de Manguinhos</div><div class="nearby__time">6–8 min caminando · 2 min en auto</div></div><span class="nearby__dist">600m</span></div>
+          <div class="nearby__item"><div><div class="nearby__name">🏖 Praia de Geribá</div><div class="nearby__time">10–12 min caminando · 3 min en auto</div></div><span class="nearby__dist">700m</span></div>
+          <div class="nearby__item"><div><div class="nearby__name">⚓ Porto da Barra</div><div class="nearby__time">10 min caminando · 3 min en auto</div></div><span class="nearby__dist">900m</span></div>
+          <div class="nearby__item"><div><div class="nearby__name">🐢 Praia da Tartaruga</div><div class="nearby__time">20 min caminando · 5 min en auto</div></div><span class="nearby__dist">2 km</span></div>
+          <div class="nearby__item"><div><div class="nearby__name">🎉 Rua das Pedras</div><div class="nearby__time">25 min caminando · 8 min en auto</div></div><span class="nearby__dist">3,7 km</span></div>
+        </nav>
+      </div>
+      <div class="nearby__map reveal d2">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d997.702315467331!2d-41.904711039829884!3d-22.767674463024804!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x97016ac9ff9397%3A0xc80a6b26be4eca2f!2sCasa%20Cacau!5e0!3m2!1ses!2smx!4v1782252976652!5m2!1ses!2smx" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" title="Ubicación Casa Cacau — Manguinhos, Búzios" aria-label="Mapa de localização"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     FAQ
+====================================================== -->
+<section class="faq" aria-labelledby="faq-h2">
+  <div class="container">
+    <div class="sec-head sec-head--c">
+      <p class="eyebrow eyebrow--c">Preguntas frecuentes</p>
+      <h2 class="sec-title" id="faq-h2">Preguntas frecuentes</h2>
+    </div>
+    <div class="faq__list reveal">
+      <div class="faq__item"><input class="faq__check" type="checkbox" id="q1"><label class="faq__label" for="q1">¿La casa tiene cocina disponible para los huéspedes?<span class="faq__icon" aria-hidden="true"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></label><div class="faq__body"><p class="faq__answer">¡Sí! Casa Cacau cuenta con cocina completamente equipada, horno de barro y parrilla para uso de los huéspedes. El desayuno no está incluido — tenés total autonomía para preparar tus comidas.</p></div></div>
+      <div class="faq__item"><input class="faq__check" type="checkbox" id="q2"><label class="faq__label" for="q2">¿Cómo reservo?<span class="faq__icon" aria-hidden="true"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></label><div class="faq__body"><p class="faq__answer">Por WhatsApp <strong>+55 22 99878-2768</strong> o por el sitio web. Indicá fechas, número de huéspedes y la habitación deseada. Nuestro equipo confirma rápidamente.</p></div></div>
+      <div class="faq__item"><input class="faq__check" type="checkbox" id="q3"><label class="faq__label" for="q3">¿Cuál es el horario de check-in y check-out?<span class="faq__icon" aria-hidden="true"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></label><div class="faq__body"><p class="faq__answer">Check-in a partir de las 14h. Check-out hasta las 10h. Los horarios especiales pueden solicitarse con anticipación, según disponibilidad.</p></div></div>
+      <div class="faq__item"><input class="faq__check" type="checkbox" id="q4"><label class="faq__label" for="q4">¿Los precios varían según la fecha?<span class="faq__icon" aria-hidden="true"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></label><div class="faq__body"><p class="faq__answer">Sí. Las tarifas varían según temporada, feriados y disponibilidad. Usá el motor de reservas o enviá tus fechas por WhatsApp para recibir el valor exacto.</p></div></div>
+      <div class="faq__item"><input class="faq__check" type="checkbox" id="q5"><label class="faq__label" for="q5">¿Qué formas de pago se aceptan?<span class="faq__icon" aria-hidden="true"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></label><div class="faq__body"><p class="faq__answer">Aceptamos PIX, transferencia bancaria y tarjeta de crédito. Las opciones se confirman antes de finalizar la reserva. PIX garantiza confirmación inmediata.</p></div></div>
+      <div class="faq__item"><input class="faq__check" type="checkbox" id="q6"><label class="faq__label" for="q6">¿El Guest House tiene estacionamiento?<span class="faq__icon" aria-hidden="true"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span></label><div class="faq__body"><p class="faq__answer">Sí, Casa Cacau cuenta con estacionamiento para huéspedes. Consultá la disponibilidad al momento de reservar.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     CTA BAND
+====================================================== -->
+<section class="cta-band" aria-labelledby="cta-h2">
+  <div class="container cta-band__inner">
+    <p class="cta-band__eyebrow">Cada paso guarda una historia</p>
+    <h2 class="cta-band__title" id="cta-h2">¿Listo para tu estadía en Búzios?</h2>
+    <p class="cta-band__sub">Hablá con nuestro equipo ahora. Respondemos en minutos y garantizamos el mejor precio directo.</p>
+    <div class="cta-band__actions">
+      <a href="#rooms" class="btn btn--gold">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        Reservar Ahora
+      </a>
+      <a href="https://api.whatsapp.com/send?phone=5522998782768&text=Hola%2C%20encontr%C3%A9%20el%20sitio%20web%20del%20Grupo%20Caminu%C3%A9%20y%20me%20gustar%C3%ADa%20hablar%20con%20el%20equipo%20para%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20disponibilidad%20en%20Casa%20Cacau." class="btn btn--wa" target="_blank" rel="noopener noreferrer">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a9.616 9.616 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Hablar por WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================================================
+     FOOTER
+====================================================== -->
+<footer role="contentinfo">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__brand">
+        <img src="logo-caminue.png" alt="Grupo Caminuê" class="footer__logo" loading="lazy" width="190" height="72">
+        <p>Grupo Caminuê — hospitalidad con alma. Dos posadas con ubicación privilegiada y atención personalizada en Búzios, RJ.</p>
+      </div>
+      <div>
+        <h3 class="footer__col-title">Casa Cacau</h3>
+        <nav class="footer__links" aria-label="Navegação">
+          <a href="https://grupocaminue.com.br/hotels/casa-cacau-guest-house/">Verificar disponibilidad</a>
+          <a href="#rooms-h2">Acomodaciones</a>
+          <a href="#gallery-h2">Galería</a>
+          <a href="#nearby-h2">Ubicación</a>
+          <a href="#faq-h2">Preguntas frecuentes</a>
+          <a href="https://grupocaminue.com.br/hotels/casa-cacau-guest-house/" target="_blank" rel="noopener noreferrer">↗ Casa Cacau Guest House</a>
+        </nav>
+      </div>
+      <div>
+        <h3 class="footer__col-title">Contacto</h3>
+        <nav class="footer__links" aria-label="Contacto">
+          <a href="tel:+5522998782768"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 5.18 2 2 0 015.09 3h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L9.09 11a16 16 0 006.86 6.86l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 18.92z"/></svg>+55 22 99878-2768</a>
+          <a href="https://api.whatsapp.com/send?phone=5522998782768&text=Hola%2C%20encontr%C3%A9%20el%20sitio%20web%20del%20Grupo%20Caminu%C3%A9%20y%20me%20gustar%C3%ADa%20hablar%20con%20el%20equipo%20para%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20disponibilidad%20en%20Casa%20Cacau." target="_blank" rel="noopener noreferrer"><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.031.02C5.467.02.099 5.388.099 11.952c0 2.107.549 4.163 1.591 5.967L.049 24l6.266-1.639a11.93 11.93 0 005.706 1.447h.005c6.554 0 11.923-5.368 11.927-11.932.002-3.185-1.24-6.181-3.495-8.434A11.856 11.856 0 0012.031.02z"/></svg>WhatsApp — respuesta rápida</a>
+          <a href="mailto:comercial@grupocaminue.com.br"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>comercial@grupocaminue.com.br</a>
+          <a href="https://maps.app.goo.gl/229PJyEwBbfvwQm98" target="_blank" rel="noopener noreferrer"><svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>R. Alto Manguinhos, 9 — Manguinhos, Búzios, RJ</a>
+        </nav>
+      </div>
+    </div>
+    <hr class="footer__hr">
+    <div class="footer__bottom">
+      <p>© <span id="yr"></span> Grupo Caminuê. Todos los derechos reservados.</p>
+      <div class="footer__socials">
+        <a href="https://www.instagram.com/grupocaminuebz/" target="_blank" rel="noopener noreferrer" aria-label="Instagram Grupo Caminuê">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="https://www.facebook.com/grupocaminue" target="_blank" rel="noopener noreferrer" aria-label="Facebook Grupo Caminuê">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- FLOATING WHATSAPP -->
+<a class="float-wa" href="https://api.whatsapp.com/send?phone=5522998782768&text=Hola%2C%20encontr%C3%A9%20el%20sitio%20web%20del%20Grupo%20Caminu%C3%A9%20y%20me%20gustar%C3%ADa%20hablar%20con%20el%20equipo%20para%20obtener%20m%C3%A1s%20informaci%C3%B3n%20sobre%20la%20disponibilidad%20en%20Casa%20Cacau." target="_blank" rel="noopener noreferrer" aria-label="Fale conosco pelo WhatsApp">
+  <svg width="26" height="26" viewBox="0 0 24 24" fill="#fff" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a9.616 9.616 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<script>
+  // Ano dinâmico
+  document.getElementById('yr').textContent = new Date().getFullYear();
+
+  // Scroll reveal
+  (function(){
+    if(!('IntersectionObserver' in window)){
+      document.querySelectorAll('.reveal').forEach(function(e){ e.classList.add('on'); });
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){ e.target.classList.add('on'); io.unobserve(e.target); }
+      });
+    },{threshold:.1, rootMargin:'0px 0px -40px 0px'});
+    document.querySelectorAll('.reveal').forEach(function(e){ io.observe(e); });
+  })();
+
+  /* ============================================================
+     CAMADA DE MEDIÇÃO (dataLayer) — pronta para o GTM escutar.
+     No GTM crie os gatilhos/tags a partir destes eventos:
+       - 'wa_click'       -> conversão principal (Meta Lead/Contact + Google Ads)
+       - 'select_rooms'   -> clique em "Reservar" do hero/banda (micro)
+       - 'view_item_list' -> listado de quartos visível
+     Parâmetros disponíveis: wa_placement, room_name, property, language
+  ============================================================ */
+  (function(){
+    window.dataLayer = window.dataLayer || [];
+    var PROPERTY = 'casa-cacau';
+    var LANG = document.documentElement.lang || '';
+
+    function placementOf(a){
+      if(a.closest('.room-card, .rc'))   return 'room_card';
+      if(a.closest('.topbar'))           return 'topbar';
+      if(a.closest('.hero'))             return 'hero';
+      if(a.closest('.cta-band'))         return 'cta_band';
+      if(a.closest('.float-wa, .fl-wa')) return 'floating';
+      if(a.closest('footer'))            return 'footer';
+      return 'other';
+    }
+    function roomOf(a){
+      var c = a.closest('.room-card, .rc'); if(!c) return null;
+      var n = c.querySelector('.room-card__name, .rc__name');
+      return n ? n.textContent.trim() : null;
+    }
+
+    // Clique em qualquer CTA de WhatsApp -> conversão
+    document.querySelectorAll('a[href*="api.whatsapp.com"], a[href*="wa.me"]').forEach(function(a){
+      a.addEventListener('click', function(){
+        window.dataLayer.push({
+          event: 'wa_click',
+          wa_placement: placementOf(a),
+          room_name: roomOf(a),
+          property: PROPERTY,
+          language: LANG
+        });
+      });
+    });
+
+    // Clique em "Reservar" (rola para os quartos) -> micro-conversão
+    document.querySelectorAll('a.btn[href="#rooms"]').forEach(function(a){
+      a.addEventListener('click', function(){
+        window.dataLayer.push({ event:'select_rooms', wa_placement: placementOf(a), property: PROPERTY, language: LANG });
+      });
+    });
+
+    // Listado de quartos visível -> view_item_list (uma única vez)
+    (function(){
+      var el = document.getElementById('rooms'); if(!el) return;
+      function push(){ window.dataLayer.push({ event:'view_item_list', item_list_name:'rooms', property:PROPERTY, language:LANG }); }
+      if(!('IntersectionObserver' in window)){ push(); return; }
+      var sent=false;
+      var io=new IntersectionObserver(function(e){
+        if(!sent && e[0].isIntersecting){ sent=true; push(); io.disconnect(); }
+      },{threshold:0, rootMargin:'0px 0px -15% 0px'});
+      io.observe(el);
+    })();
+  })();
+</script>
+</body>
+</html>
