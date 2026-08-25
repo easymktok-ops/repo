@@ -20,8 +20,8 @@ Estado: `PEND` = pendiente · `LISTO` = aplicado · `DUDA` = requiere decisión/
 | VIS-06 | Padding de "Elegir fecha" | **LISTO** |
 | VIS-07 | Parallax del hero | **LISTO** (se implementó de cero) |
 | VIS-08 | Quitar marca de agua "Teotihuacán" | **LISTO** |
-| VIS-09 | Probar fondo claro | `DUDA` -> recomendación: **mantener oscuro** (ver nota) |
-| VIS-10 | Globopuerto: globos en tierra | `DUDA` (bloqueado: fotos del Drive) |
+| VIS-09 | Probar fondo claro | **RESUELTO**: se mantiene oscuro (decisión del cliente) |
+| VIS-10 | Globopuerto: globos en tierra | **LISTO** (fotos en tierra del Drive) |
 | VIS-11 | Feedback al elegir vuelo (auto-scroll) | **LISTO** |
 
 Todo el cambio de color es sistémico: sale de un solo token `--accent` en
@@ -107,22 +107,22 @@ disciplina de un solo acento. Si quieres, dime en qué lista/bloque la aplico.
   único elemento tipo watermark del sitio. Si te referías a otra cosa concreta,
   dime y la ajusto.
 
-- **VIS-09 · Probar fondo claro (blanco)** `DUDA (UX) -> recomendación`
-  **Recomendación: mantener el tema oscuro (Obsidiana).** Razones: (1) es una
-  **regla dura** en CLAUDE.md ("tema único, no hay light mode"); (2) la foto del
-  amanecer y el video del hero ganan aire cinematográfico sobre negro y pierden
-  fuerza sobre blanco; (3) el fucsia como acento rinde mejor sobre oscuro. Lo
-  que sí resuelve un fondo claro (el logo) se puede atender con un tratamiento de
-  logo sobre oscuro (VIS-03) sin volcar todo el sitio. Si aún quieres verlo, hago
-  un prototipo A/B solo del hero para comparar con evidencia, sin tocar el resto.
+- **VIS-09 · Probar fondo claro (blanco)** `RESUELTO: se mantiene oscuro`
+  Decisión del cliente: **el sitio se queda en oscuro (Obsidiana)**. Coincide con
+  la regla dura de CLAUDE.md y con que la foto/video del amanecer y el fucsia de
+  marca rinden mejor sobre negro. El logo se resolvió con tratamiento sobre
+  oscuro (VIS-03), sin necesidad de volcar el tema.
 
 ## 4. Fotos / contenido
 
-- **VIS-10 · Globopuerto: globos en tierra** `DUDA (asset)`
-  Sigue **bloqueado por assets**. Necesito las fotos de globo en tierra del
-  Drive. Puedo intentar leerlas vía el conector de Google Drive si me confirmas;
-  o súbelas al repo (`src/assets/…`) y las selecciono/optimizo.
-  Drive: https://drive.google.com/drive/folders/1jJKAUhgot46Uu0gC7oIrjn-v0kapxeKV
+- **VIS-10 · Globopuerto: globos en tierra** `LISTO`
+  Vía el conector de Google Drive tomé fotos de la subcarpeta **"FOTOS EN
+  TIERRA"**, seleccioné 6 (inflado con el globo de marca + equipo, grupos junto a
+  la envolvente, campo al amanecer), las optimicé (orientación, 1600–1800 px,
+  sin EXIF) y reemplacé la galería de "Las instalaciones" (antes eran tomas en
+  vuelo). Assets: `src/assets/uploads/globopuerto-tierra-01..06.jpg`.
+  Hay muchas más fotos buenas en el Drive (incluye alta resolución en las DSC);
+  si quieres, amplío la selección o las llevo también a la Galería.
 
 ## 5. UX / interacción
 
@@ -134,7 +134,8 @@ disciplina de un solo acento. Si quieres, dime en qué lista/bloque la aplico.
 
 ---
 
-## Assets que sigo necesitando
+## Estado final
 
-- [ ] **Logo** tratado para fondo oscuro, en **SVG** (desbloquea VIS-03).
-- [ ] **Fotos de globo en tierra** del Drive (desbloquea VIS-10).
+Backlog visual **completo**. Los 12 items están LISTO o RESUELTO. Si el
+diseñador comparte el **archivo vectorial** del logo (.ai/.eps/PDF vectorial),
+puedo reemplazar el wordmark tratado por un SVG vectorial puro.
