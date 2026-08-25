@@ -23,6 +23,8 @@ Estado: `PEND` = pendiente · `LISTO` = aplicado · `DUDA` = requiere decisión/
 | VIS-09 | Probar fondo claro | **RESUELTO**: se mantiene oscuro (decisión del cliente) |
 | VIS-10 | Globopuerto: globos en tierra | **LISTO** (fotos en tierra del Drive) |
 | VIS-11 | Feedback al elegir vuelo (auto-scroll) | **LISTO** |
+| VIS-12 | Parallax doble exposición (foto fija) | **LISTO** |
+| VIS-13 | Homologar el nuevo logo en el flujo de reservas | `PEND` |
 
 Todo el cambio de color es sistémico: sale de un solo token `--accent` en
 `src/styles/tokens.css`. No hay fucsia hardcodeado en componentes.
@@ -134,10 +136,37 @@ disciplina de un solo acento. Si quieres, dime en qué lista/bloque la aplico.
   un **halo fucsia breve** como confirmación. Respeta `prefers-reduced-motion`
   (scroll instantáneo, sin halo).
 
+- **VIS-12 · Parallax de la doble exposición (foto fija)** `LISTO`
+  En "Lo que se ve allá arriba", la foto del cielo ahora va **fija de fondo**
+  (`background-attachment: fixed`) recortada con máscara en forma del globo: al
+  hacer scroll, la ventana-globo revela distinto el cielo (parallax real). iOS
+  degrada a normal (sin parallax, no roto); `prefers-reduced-motion` la deja
+  contenida sin movimiento.
+
+## 6. Marca / consistencia
+
+- **VIS-13 · Homologar el nuevo logo en el flujo de reservas** `PEND`
+  El nuevo **wordmark fucsia** (`aerodiverti-wordmark-dark.png`) ya está en el
+  menú (rail + barra móvil) en todo el sitio, incluida la página `/reservar`.
+  Falta homologarlo en el **resto del flujo de reserva**, donde hoy la marca
+  aparece como texto o no aparece:
+  - **Página de confirmación** `/reserva-confirmada` (y `en/`): poner el
+    wordmark en el encabezado del "boleto"/mensaje de éxito.
+  - **Correos de notificación** (`server/lib/templates.php`): encabezado con el
+    logo (imagen alojada por URL absoluta, no adjunta) en la confirmación al
+    cliente y en la alerta al admin.
+  - **Stripe Checkout**: subir el logo/branding en el panel de Stripe
+    (Configuración → Marca) para que la página de pago lo muestre.
+  - (Opcional) Reforzar el motivo "boarding pass" del `BookingWidget` con el
+    wordmark en el resumen del boleto.
+  Requiere una variante del logo con buen contraste según el fondo (para correos
+  con fondo claro puede convenir el wordmark original fucsia sobre blanco).
+
 ---
 
-## Estado final
+## Estado
 
-Backlog visual **completo**. Los 12 items están LISTO o RESUELTO. Si el
-diseñador comparte el **archivo vectorial** del logo (.ai/.eps/PDF vectorial),
-puedo reemplazar el wordmark tratado por un SVG vectorial puro.
+Fase de backlog visual cerrada (VIS-00..VIS-12 LISTO/RESUELTO). Pendiente
+**VIS-13** (homologar logo en el flujo de reservas). Si el diseñador comparte el
+**archivo vectorial** del logo (.ai/.eps/PDF vectorial), se puede reemplazar el
+wordmark tratado por un SVG vectorial puro.
