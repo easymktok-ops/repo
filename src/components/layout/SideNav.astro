@@ -1,6 +1,8 @@
 ---
+import { Image } from "astro:assets";
 import Icon from "@components/ui/Icon.astro";
 import Button from "@components/ui/Button.astro";
+import wordmark from "@/assets/brand/aerodiverti-wordmark-dark.png";
 import { primaryNav } from "@config/navigation";
 import { site, localizedPath, whatsappUrl, type Locale } from "@config/site";
 import { alternateLocale } from "@i18n/utils";
@@ -43,8 +45,7 @@ const homeHref = localizedPath("/", locale);
 <!-- Barra superior (solo movil/tablet) -->
 <header class="topbar">
   <a class="brand" href={homeHref} aria-label={site.name}>
-    <Icon name="path" class="brand-mark" />
-    <span class="brand-word">{site.name}</span>
+    <Image src={wordmark} alt="" class="brand-logo" loading="eager" />
   </a>
   <div class="topbar-actions">
     <Button href={bookHref} size="md" class="topbar-cta">{t("cta.book")}</Button>
@@ -67,8 +68,7 @@ const homeHref = localizedPath("/", locale);
 <aside id="navDrawer" class="rail" aria-label="Navegacion principal">
   <div class="rail-head">
     <a class="brand" href={homeHref} aria-label={site.name}>
-      <Icon name="path" class="brand-mark" />
-      <span class="brand-word">{site.name}</span>
+      <Image src={wordmark} alt="" class="brand-logo" loading="eager" />
     </a>
     <button
       id="navClose"
@@ -179,18 +179,17 @@ const homeHref = localizedPath("/", locale);
   .brand {
     display: inline-flex;
     align-items: center;
-    gap: 0.55rem;
     color: var(--ink);
   }
-  .brand-mark {
-    font-size: 1.4rem;
-    color: var(--accent);
+  .brand-logo {
+    display: block;
+    height: 1.75rem;
+    width: auto;
   }
-  .brand-word {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: var(--step-1);
-    letter-spacing: -0.02em;
+  @media (min-width: 1024px) {
+    .brand-logo {
+      height: 2rem;
+    }
   }
 
   .icon-btn {

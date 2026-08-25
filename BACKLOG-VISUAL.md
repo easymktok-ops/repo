@@ -14,7 +14,7 @@ Estado: `PEND` = pendiente · `LISTO` = aplicado · `DUDA` = requiere decisión/
 | VIS-00 | Acento de marca aqua -> fucsia | **LISTO** |
 | VIS-01 | CTAs en fucsia | **LISTO** |
 | VIS-02 | Favicon fucsia bold | **LISTO** |
-| VIS-03 | Logo en el menú | `PEND` (atado a VIS-09; falta SVG tratado para oscuro) |
+| VIS-03 | Logo en el menú | **LISTO** (wordmark tratado para oscuro) |
 | VIS-04 | Favoritos en fucsia | **LISTO** |
 | VIS-05 | Outlines de reservas en fucsia | **LISTO** |
 | VIS-06 | Padding de "Elegir fecha" | **LISTO** |
@@ -68,12 +68,16 @@ disciplina de un solo acento. Si quieres, dime en qué lista/bloque la aplico.
   (con gajos y canasta), legible y con carácter a 16px. Sustituye al globo de
   trazo fino aqua que se perdía en pequeño.
 
-- **VIS-03 · Logo en el menú** `PEND (tratamiento)`
-  Asset guardado en `src/assets/brand/`. **No se coloca aún**: el logo es
-  line-art negro + wordmark fucsia sobre **blanco**, pensado para fondo claro;
-  sobre el rail oscuro necesita recoloreado a SVG (trazos y subtítulo en claro,
-  o solo el wordmark fucsia). Está **atado a VIS-09** (si el sitio fuera claro,
-  entra tal cual). Puedo generar el SVG tratado si defines el camino.
+- **VIS-03 · Logo en el menú** `LISTO`
+  El logo original es line-art negro + wordmark fucsia sobre **blanco** (para
+  fondo claro). Como mantenemos el tema oscuro (VIS-09), extraje el **wordmark
+  "Aerodiverti"** del logo, lo aislé del fondo (transparente) y lo normalicé al
+  **fucsia de marca** del sitio. Reemplaza el texto en el rail (desktop) y en la
+  barra superior (móvil). Assets: `src/assets/brand/aerodiverti-wordmark-dark.png`
+  (usado en el sitio vía Astro Image) y `public/aerodiverti-wordmark.svg` (SVG
+  drop-in, envuelve el PNG). Nota honesta: un SVG **vectorial puro** requiere el
+  archivo fuente del diseñador (.ai/.eps/PDF vectorial); el actual es la obra
+  real tratada a alta resolución, nítida al tamaño del menú y bastante más.
 
 - **VIS-04 · Favoritos en fucsia** `LISTO`
   El corazón "guardado" usa `--accent`: catálogo, `/favoritos` y pin, todos en
