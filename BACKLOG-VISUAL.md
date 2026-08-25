@@ -99,6 +99,16 @@ Logo guardado en `src/assets/brand/aerodiverti-logo.pdf` (+ `.png`).
   seleccionar_ las de globo en tierra.
   Drive: https://drive.google.com/drive/folders/1jJKAUhgot46Uu0gC7oIrjn-v0kapxeKV
 
+## 5. UX / interacción
+
+- **VIS-11 · Feedback al elegir vuelo (auto-scroll)** `PEND` · alta prioridad
+  En el paso 1 de reservas, al seleccionar un vuelo **no hay cambio visible**: el
+  selector de Pasajeros/Fecha queda abajo, fuera de vista, y se siente que el
+  sitio "no hace nada / se trabó". Al elegir un paquete, hacer **scroll suave**
+  hacia la zona de Pasajeros/Fecha, y/o feedback claro (resaltar el bloque, mover
+  el foco). Respetar `prefers-reduced-motion`. Es chico y de alto impacto en la
+  percepción de que el sitio responde.
+
 ---
 
 ## Assets que necesito para implementar
