@@ -5,10 +5,14 @@ import { whatsappUrl, type Locale } from "@config/site";
 import { img } from "@lib/media";
 
 /**
- * Doble exposicion (patron 5.4): la silueta del globo es la mascara (clipPath)
- * de una foto real del cielo que ve el pasajero. Momento de marca, no adorno.
- * Palabra de lugar atravesando la composicion, solida (sin gradiente en texto).
- * Reveal por scroll con animation-timeline: view() (cero JS; degrada a visible).
+ * Doble exposicion (patron 5.4): la silueta del globo es una MASCARA sobre una
+ * foto real del cielo. La foto va con `background-attachment: fixed`, asi que
+ * queda "fija" al viewport y la ventana-globo la revela distinta al hacer scroll
+ * (parallax real). Momento de marca, no adorno.
+ *
+ * OJO tecnico: `background-attachment: fixed` se rompe si un ancestro tiene
+ * `transform`/`filter`. Por eso la sombra va en un hermano (.de-shadow) y el
+ * reveal del stage es solo opacidad (nunca transform sobre .de-stage).
  */
 interface Props {
   locale: Locale;
@@ -28,10 +32,11 @@ const t = {
   },
 }[locale];
 
-// Imagen dentro de la silueta (cielo/nubes reales), optimizada a webp.
+// Imagen dentro de la silueta (cielo/nubes reales). Va como fondo fijo cubriendo
+// el viewport, asi que pedimos algo mas grande para que "cover" no se pixele.
 const inside = await getImage({
   src: img("galeria-04.jpg"),
-  width: 1100,
+  width: 1600,
   format: "webp",
 });
 const bookHref = whatsappUrl(
@@ -52,36 +57,31 @@ const bookHref = whatsappUrl(
     </div>
 
     <div class="de-stage">
-      <svg
-        class="de-balloon"
-        viewBox="0 0 420 620"
+      {/* Sombra en forma de globo (hermano: no rompe el fondo fijo). */}
+      <div class="de-shadow" aria-hidden="true"></div>
+
+      {
+        /* La foto del cielo, FIJA al viewport (parallax). La mascara la recorta
+          a la forma de la envolvente del globo. */
+      }
+      <div
+        class="de-fill"
+        style={`background-image:url(${inside.src})`}
         role="img"
         aria-label={locale === "es"
           ? "El cielo del amanecer visto a traves de la silueta de un globo"
           : "The dawn sky seen through a balloon silhouette"}
+      >
+      </div>
+
+      {/* Trazos del globo (gajos, borde, canasta) por encima de la foto. */}
+      <svg
+        class="de-balloon"
+        viewBox="0 0 420 620"
+        aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
       >
-        <defs>
-          <clipPath id="deEnv">
-            <path
-              d="M210,18 C332,18 402,120 402,252 C402,352 332,416 272,436 L252,454 L168,454 L148,436 C88,416 18,352 18,252 C18,120 88,18 210,18 Z"
-            ></path>
-          </clipPath>
-        </defs>
-
-        <g clip-path="url(#deEnv)">
-          <image
-            href={inside.src}
-            x="-40"
-            y="-30"
-            width="500"
-            height="520"
-            preserveAspectRatio="xMidYMid slice"
-          />
-          <rect x="0" y="0" width="420" height="470" fill="rgba(18,22,40,0.14)"></rect>
-        </g>
-
-        <g class="de-gores" clip-path="url(#deEnv)">
+        <g class="de-gores">
           <path d="M210,18 C150,150 120,300 158,452" fill="none"></path>
           <path d="M210,18 L210,454" fill="none"></path>
           <path d="M210,18 C270,150 300,300 262,452" fill="none"></path>
@@ -135,14 +135,57 @@ const bookHref = whatsappUrl(
   }
 
   .de-stage {
+    position: relative;
     justify-self: center;
     width: min(100%, 420px);
+    aspect-ratio: 420 / 620;
+    /* Sin transform ni filter aqui: romperia el background-attachment: fixed. */
+  }
+  .de-shadow,
+  .de-fill,
+  .de-balloon {
+    position: absolute;
+    inset: 0;
   }
   .de-balloon {
     width: 100%;
-    height: auto;
-    filter: drop-shadow(0 30px 60px oklch(0.05 0.02 260 / 0.65));
+    height: 100%;
+    z-index: 2;
   }
+
+  /* Mascara con la forma exacta de la envolvente (mismo path que .de-rim). */
+  .de-shadow,
+  .de-fill {
+    --de-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 420 620'%3E%3Cpath d='M210,18 C332,18 402,120 402,252 C402,352 332,416 272,436 L252,454 L168,454 L148,436 C88,416 18,352 18,252 C18,120 88,18 210,18 Z' fill='%23fff'/%3E%3C/svg%3E")
+      center / 100% 100% no-repeat;
+    -webkit-mask: var(--de-mask);
+    mask: var(--de-mask);
+  }
+
+  /* Sombra suave en forma de globo. Es hermano de .de-fill (no ancestro), asi
+     que su filter/transform no afecta al fondo fijo. */
+  .de-shadow {
+    z-index: 0;
+    background: oklch(0.05 0.02 260 / 0.72);
+    filter: blur(26px);
+    transform: translateY(22px) scale(0.98);
+  }
+
+  /* LA FOTO: fija al viewport -> al hacer scroll, la ventana-globo la revela
+     distinta (parallax). En iOS "fixed" degrada a normal (sin parallax, no roto). */
+  .de-fill {
+    z-index: 1;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+  }
+  .de-fill::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: oklch(0.13 0.014 260 / 0.18);
+  }
+
   .de-gores path {
     stroke: oklch(0.9 0.02 344 / 0.26);
     stroke-width: 1.1;
@@ -163,14 +206,17 @@ const bookHref = whatsappUrl(
      soporte, se anima al entrar. Sin soporte, se ve normal. */
   @media (prefers-reduced-motion: no-preference) {
     @supports (animation-timeline: view()) {
-      .de-copy,
-      .de-stage {
+      .de-copy {
         animation: deRise linear both;
         animation-timeline: view();
         animation-range: entry 5% cover 32%;
       }
+      /* El stage entra solo con opacidad: nada de transform sobre un ancestro
+         de .de-fill (rompe el fondo fijo). */
       .de-stage {
-        animation-name: deRiseStage;
+        animation: deFade linear both;
+        animation-timeline: view();
+        animation-range: entry 5% cover 32%;
       }
     }
   }
@@ -184,14 +230,19 @@ const bookHref = whatsappUrl(
       transform: translateY(0);
     }
   }
-  @keyframes deRiseStage {
+  @keyframes deFade {
     from {
       opacity: 0;
-      transform: translateY(30px) scale(0.97);
     }
     to {
       opacity: 1;
-      transform: translateY(0) scale(1);
+    }
+  }
+
+  /* Sin movimiento: la foto deja de ir fija (queda contenida en el globo). */
+  @media (prefers-reduced-motion: reduce) {
+    .de-fill {
+      background-attachment: scroll;
     }
   }
 </style>
