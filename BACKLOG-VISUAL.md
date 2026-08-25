@@ -1,121 +1,136 @@
 # Backlog visual — Aerodiverti
 
-Cambios de diseño/UI acumulados por el cliente. **No se implementan hasta
-autorización explícita** ("dale a los cambios"). Se aplican todos juntos.
+Cambios de diseño/UI acumulados por el cliente. Se implementaron en bloque el
+**2026-08-25** ("dale, ataquemos el backlog visual").
 
 Estado: `PEND` = pendiente · `LISTO` = aplicado · `DUDA` = requiere decisión/asset.
 
 ---
 
-## Dirección de marca (transversal)
+## Resumen de implementación (2026-08-25)
 
-La marca de Aerodiverti es **fucsia/magenta** (del logo y el favicon). Hoy el
-sitio usa un solo acento **aqua** ("cielo alto"). El cliente quiere mover el
-acento de acción hacia el **fucsia de marca**.
+| Item | Qué | Estado |
+| --- | --- | --- |
+| VIS-00 | Acento de marca aqua -> fucsia | **LISTO** |
+| VIS-01 | CTAs en fucsia | **LISTO** |
+| VIS-02 | Favicon fucsia bold | **LISTO** |
+| VIS-03 | Logo en el menú | `PEND` (atado a VIS-09; falta SVG tratado para oscuro) |
+| VIS-04 | Favoritos en fucsia | **LISTO** |
+| VIS-05 | Outlines de reservas en fucsia | **LISTO** |
+| VIS-06 | Padding de "Elegir fecha" | **LISTO** |
+| VIS-07 | Parallax del hero | **LISTO** (se implementó de cero) |
+| VIS-08 | Quitar marca de agua "Teotihuacán" | **LISTO** |
+| VIS-09 | Probar fondo claro | `DUDA` -> recomendación: **mantener oscuro** (ver nota) |
+| VIS-10 | Globopuerto: globos en tierra | `DUDA` (bloqueado: fotos del Drive) |
+| VIS-11 | Feedback al elegir vuelo (auto-scroll) | **LISTO** |
 
-> **DECISIÓN A CONFIRMAR (VIS-00):** ¿el acento cambia **por completo** a fucsia,
-> o el fucsia es para **acciones/CTAs/outlines** y el aqua se conserva en algún
-> rol secundario? Afecta a `tokens.css` y a la regla "un solo acento" de
-> DESIGN.md/CLAUDE.md. Definir al implementar (yo propongo opciones con muestras).
+Todo el cambio de color es sistémico: sale de un solo token `--accent` en
+`src/styles/tokens.css`. No hay fucsia hardcodeado en componentes.
 
 ---
 
-## Colores de marca (extraídos del logo)
+## Dirección de marca (transversal) — RESUELTO (VIS-00)
 
-Logo guardado en `src/assets/brand/aerodiverti-logo.pdf` (+ `.png`).
+**Decisión aplicada:** el acento único pasa **por completo** de aqua a **fucsia
+de marca**. Se conserva la regla "un solo acento" de DESIGN.md/CLAUDE.md; solo
+cambia el matiz. El aqua "cielo alto" queda retirado.
 
-- **Fucsia de marca** (wordmark): `#B4438C` aprox (magenta ~321°). Es el acento
-  principal para CTAs/outlines. Al implementar afino el OKLCH exacto (probable
-  ligero ajuste a algo un poco más saturado para que "pegue" como acento).
-- **Paleta de pinceladas del globo** (acuarela) — para **bullets y detalles
-  pequeños**, nunca como color de UI grande:
-  - lima `#ADE35D` · verde `#A8E598` · amarillo `#D4DD5C` · naranja `#E9A761`
-  - coral `#F0A59F` · rosa `#EFA1CF` · cian `#9CEFEC`
+El fucsia de marca puro del logo es `#B4438C` = `oklch(0.56 0.167 344)`. Ese tono
+es demasiado oscuro para leer como **texto** sobre el fondo Obsidiana (L 0.17).
+El token quedó afinado a `oklch(0.74 0.145 344)` (mismo matiz, más claro) para
+pasar AA en sus dos papeles:
 
-> **Ojo (dato clave del logo):** el globo es **line-art negro** sobre **fondo
-> blanco**. Está pensado para **fondo claro**. Sobre el rail oscuro actual no
-> funciona tal cual (caja blanca o trazos negros invisibles). Esto conecta con
-> VIS-09: si vamos a un tema más claro, el logo entra perfecto.
+- como texto/icono/borde sobre `--bg`: **~7.7:1** (AA cuerpo, AAA large)
+- como fondo de botón con `--accent-ink` (tinta oscura) encima: **~7.7:1**
+
+## Paleta de pinceladas (acuarela del globo)
+
+Añadida a `tokens.css` como `--brush-*` (OKLCH), documentada **solo para
+micro-detalle** (bullets/puntos), nunca como color de UI. Aún **no** se cablea a
+ningún componente: se hará en un punto concreto y con criterio para no romper la
+disciplina de un solo acento. Si quieres, dime en qué lista/bloque la aplico.
+
+- lima `oklch(0.852 0.173 128)` · verde `oklch(0.862 0.121 139)` ·
+  amarillo `oklch(0.866 0.152 113)` · naranja `oklch(0.777 0.117 66)` ·
+  coral `oklch(0.793 0.09 24)` · rosa `oklch(0.799 0.109 344)` ·
+  cian `oklch(0.898 0.081 193)`
 
 ---
 
 ## 1. Color y marca
 
-- **VIS-01 · CTAs en fucsia** `PEND`
-  Los botones de acción ("Reservar vuelo" del hero y del rail, "Elegir fecha",
-  "Ir a pagar", etc.) deben ir en el **fucsia de marca**, no en el aqua actual.
-  Ref: captura del home (recuadros rosas sobre los dos "Reservar vuelo").
+- **VIS-01 · CTAs en fucsia** `LISTO`
+  Todos los botones de acción (hero, rail, "Elegir fecha", "Ir a pagar",
+  "Continuar", etc.) usan `--accent`, ahora fucsia. Cambio de un solo token.
 
-- **VIS-02 · Favicon** `DUDA(pendiente decidir)`
-  El logo **no sirve** de favicon (outlines muy finos, se pierden a 16px). No se
-  pudo traer el favicon del sitio original (el proxy bloquea aerodiverti.mx).
-  **Propuesta:** diseño un favicon **bold** de marca (silueta de globo o
-  monograma "A" en fucsia) que lea nítido a 16px. Alternativa: el cliente me
-  pasa el favicon actual como archivo.
+- **VIS-02 · Favicon** `LISTO`
+  Rediseñado en `public/favicon.svg`: silueta de globo **rellena en fucsia**
+  (con gajos y canasta), legible y con carácter a 16px. Sustituye al globo de
+  trazo fino aqua que se perdía en pequeño.
 
-- **VIS-03 · Logo en el menú** `LISTO(asset) / PEND(tratamiento)`
-  Logo recibido y guardado (`src/assets/brand/`). Reemplazar el texto
-  "Aerodiverti" del rail por el logotipo. **Pendiente el tratamiento para fondo
-  oscuro** (el logo es line-art negro + fondo blanco): opciones = recolorear
-  trazos y "vuela y descubre" a claro, usar solo el wordmark fucsia, o ponerlo
-  en un chip claro. Convertir a **SVG** para web (hoy es PDF/PNG).
+- **VIS-03 · Logo en el menú** `PEND (tratamiento)`
+  Asset guardado en `src/assets/brand/`. **No se coloca aún**: el logo es
+  line-art negro + wordmark fucsia sobre **blanco**, pensado para fondo claro;
+  sobre el rail oscuro necesita recoloreado a SVG (trazos y subtítulo en claro,
+  o solo el wordmark fucsia). Está **atado a VIS-09** (si el sitio fuera claro,
+  entra tal cual). Puedo generar el SVG tratado si defines el camino.
 
-- **VIS-04 · Favoritos en fucsia** `PEND`
-  El corazón de favoritos (hoy aqua) al **fucsia de marca**. Aplica en: tarjetas
-  del catálogo, botón guardar, página `/favoritos` y el icono del pin.
+- **VIS-04 · Favoritos en fucsia** `LISTO`
+  El corazón "guardado" usa `--accent`: catálogo, `/favoritos` y pin, todos en
+  fucsia automáticamente.
 
-- **VIS-05 · Outlines de Reservas en fucsia** `PEND`
-  En el flujo `/reservar`, **todos los outlines/bordes** en fucsia (bordes de
-  inputs, tarjetas de paquete y de modo de pago, anillos de foco, etc.).
+- **VIS-05 · Outlines de Reservas en fucsia** `LISTO`
+  Bordes de inputs, tarjetas de paquete/modo de pago, anillos de foco y el
+  stepper: todo deriva de `--accent`. Ya en fucsia.
 
 ## 2. Botones / espaciado
 
-- **VIS-06 · Padding de "Elegir fecha"** `PEND`
-  El botón "Elegir fecha" (catálogo) está muy pegado al borde; ampliar el
-  padding interno para que respire. Revisar también consistencia con los demás
-  botones. Ref: captura del botón.
+- **VIS-06 · Padding de "Elegir fecha"** `LISTO`
+  `.card-cta` pasa de `0.6rem 1rem` a `0.72rem 1.25rem` (+ gap). Respira y queda
+  consistente con los demás botones pill.
 
-## 3. Hero (home) — "la idea está bien, la ejecución falló"
+## 3. Hero (home)
 
-- **VIS-07 · Parallax roto** `PEND`
-  El parallax del hero no funciona. Arreglarlo (o sustituir por un efecto que sí
-  se sienta bien y respete `prefers-reduced-motion`).
+- **VIS-07 · Parallax** `LISTO`
+  No había parallax real. Se añadió uno sutil: la imagen deriva más lento que el
+  scroll (rAF + IntersectionObserver, solo mientras el hero se ve). Escala base
+  1.12 para que el desplazamiento no muestre bordes. Respeta
+  `prefers-reduced-motion` (sin movimiento, queda estático).
 
-- **VIS-08 · Quitar marca de agua** `PEND`
-  Eliminar la marca de agua de "Teotihuacán" que se ve sobre el hero.
+- **VIS-08 · Quitar marca de agua** `LISTO`
+  Eliminada la palabra gigante y tenue **"TEOTIHUACÁN"** (`.de-word`,
+  opacity 0.05) de la sección de doble exposición, justo bajo el hero. Era el
+  único elemento tipo watermark del sitio. Si te referías a otra cosa concreta,
+  dime y la ajusto.
 
-- **VIS-09 · Probar fondo claro (blanco)** `DUDA(UX)`
-  Explorar un hero con **fondo blanco** en vez de negro. **Nota del cliente:**
-  "si ves que rompe y va en contra de las reglas de UX, no lo hagas, cuestiona".
-  → Al implementar: prototipar ambas y evaluar críticamente contraste/jerarquía y
-  el impacto en la identidad (el oscuro da el aire cinematográfico y hace resaltar
-  la foto del amanecer). Recomendar con evidencia, no aplicar a ciegas.
+- **VIS-09 · Probar fondo claro (blanco)** `DUDA (UX) -> recomendación`
+  **Recomendación: mantener el tema oscuro (Obsidiana).** Razones: (1) es una
+  **regla dura** en CLAUDE.md ("tema único, no hay light mode"); (2) la foto del
+  amanecer y el video del hero ganan aire cinematográfico sobre negro y pierden
+  fuerza sobre blanco; (3) el fucsia como acento rinde mejor sobre oscuro. Lo
+  que sí resuelve un fondo claro (el logo) se puede atender con un tratamiento de
+  logo sobre oscuro (VIS-03) sin volcar todo el sitio. Si aún quieres verlo, hago
+  un prototipo A/B solo del hero para comparar con evidencia, sin tocar el resto.
 
 ## 4. Fotos / contenido
 
-- **VIS-10 · Globopuerto: globos en tierra** `DUDA(asset)`
-  Hoy Globopuerto usa fotos del globo **en vuelo**; el cliente prefiere fotos del
-  globo **en tierra** (mayormente). Hay más fotos en el **Drive**. _Buscar y
-  seleccionar_ las de globo en tierra.
+- **VIS-10 · Globopuerto: globos en tierra** `DUDA (asset)`
+  Sigue **bloqueado por assets**. Necesito las fotos de globo en tierra del
+  Drive. Puedo intentar leerlas vía el conector de Google Drive si me confirmas;
+  o súbelas al repo (`src/assets/…`) y las selecciono/optimizo.
   Drive: https://drive.google.com/drive/folders/1jJKAUhgot46Uu0gC7oIrjn-v0kapxeKV
 
 ## 5. UX / interacción
 
-- **VIS-11 · Feedback al elegir vuelo (auto-scroll)** `PEND` · alta prioridad
-  En el paso 1 de reservas, al seleccionar un vuelo **no hay cambio visible**: el
-  selector de Pasajeros/Fecha queda abajo, fuera de vista, y se siente que el
-  sitio "no hace nada / se trabó". Al elegir un paquete, hacer **scroll suave**
-  hacia la zona de Pasajeros/Fecha, y/o feedback claro (resaltar el bloque, mover
-  el foco). Respetar `prefers-reduced-motion`. Es chico y de alto impacto en la
-  percepción de que el sitio responde.
+- **VIS-11 · Feedback al elegir vuelo (auto-scroll)** `LISTO`
+  En el paso 1 de reservas, al elegir un vuelo ahora: (1) se hace **scroll suave**
+  hacia el bloque Pasajeros/Fecha si está fuera de vista, y (2) ese bloque recibe
+  un **halo fucsia breve** como confirmación. Respeta `prefers-reduced-motion`
+  (scroll instantáneo, sin halo).
 
 ---
 
-## Assets que necesito para implementar
+## Assets que sigo necesitando
 
-- [ ] **Logo** (script "Aerodiverti / vuela y descubre") en **SVG** (o PNG grande).
-- [ ] **Favicon** fucsia en **SVG/PNG**.
-- [ ] **Fotos de globo en tierra** para Globopuerto (del Drive).
-- [ ] **Hex/OKLCH exacto del fucsia** de marca (lo extraigo del logo/favicon).
-
-_Con estos assets, VIS-02/03/10 quedan desbloqueados._
+- [ ] **Logo** tratado para fondo oscuro, en **SVG** (desbloquea VIS-03).
+- [ ] **Fotos de globo en tierra** del Drive (desbloquea VIS-10).

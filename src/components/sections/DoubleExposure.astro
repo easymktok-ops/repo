@@ -42,8 +42,6 @@ const bookHref = whatsappUrl(
 ---
 
 <section class="de">
-  <span class="de-word" aria-hidden="true">TEOTIHUACÁN</span>
-
   <div class="de-inner container">
     <div class="de-copy">
       <h2 class="de-h">{t.heading}</h2>
@@ -79,7 +77,7 @@ const bookHref = whatsappUrl(
             width="500"
             height="520"
             preserveAspectRatio="xMidYMid slice"
-          ></image>
+          />
           <rect x="0" y="0" width="420" height="470" fill="rgba(18,22,40,0.14)"></rect>
         </g>
 
@@ -92,8 +90,7 @@ const bookHref = whatsappUrl(
         <path
           class="de-rim"
           d="M210,18 C332,18 402,120 402,252 C402,352 332,416 272,436 L252,454 L168,454 L148,436 C88,416 18,352 18,252 C18,120 88,18 210,18 Z"
-          fill="none"
-        ></path>
+          fill="none"></path>
 
         <g class="de-rigging">
           <line x1="168" y1="454" x2="182" y2="516"></line>
@@ -113,23 +110,6 @@ const bookHref = whatsappUrl(
     padding-block: var(--space-3xl);
     border-block: 1px solid var(--line-faint);
   }
-  /* Palabra de lugar atravesando, solida y tenue (sin gradiente en texto). */
-  .de-word {
-    position: absolute;
-    left: 50%;
-    top: 46%;
-    translate: -50% -50%;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(3.5rem, 13vw, 12rem);
-    letter-spacing: -0.04em;
-    color: var(--ink);
-    opacity: 0.05;
-    white-space: nowrap;
-    pointer-events: none;
-    z-index: 0;
-  }
-
   .de-inner {
     position: relative;
     z-index: var(--z-raised);
@@ -164,7 +144,7 @@ const bookHref = whatsappUrl(
     filter: drop-shadow(0 30px 60px oklch(0.05 0.02 260 / 0.65));
   }
   .de-gores path {
-    stroke: oklch(0.9 0.03 220 / 0.28);
+    stroke: oklch(0.9 0.02 344 / 0.26);
     stroke-width: 1.1;
   }
   .de-rim {

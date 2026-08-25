@@ -157,6 +157,22 @@
 .bk-row {
   display: grid;
   gap: var(--space-md);
+  border-radius: var(--radius-card);
+}
+/* Feedback al elegir vuelo (VIS-11): halo fucsia breve sobre Pasajeros/Fecha. */
+.bk-row.bk-cue {
+  animation: bk-cue 900ms var(--ease-out);
+}
+@keyframes bk-cue {
+  0% {
+    box-shadow: 0 0 0 0 var(--accent-wash);
+  }
+  35% {
+    box-shadow: 0 0 0 6px var(--accent-wash);
+  }
+  100% {
+    box-shadow: 0 0 0 0 oklch(0.74 0.145 344 / 0);
+  }
 }
 @media (min-width: 560px) {
   .bk-row {

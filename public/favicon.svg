@@ -1,12 +1,23 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Aerodiverti">
-  <rect width="32" height="32" rx="7" fill="#1a1c24" />
-  <!-- Silueta minima de globo: envolvente + canasta. Marca geometrica simple. -->
+  <defs>
+    <linearGradient id="env" x1="16" y1="3" x2="16" y2="24" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f4a6d2" />
+      <stop offset="1" stop-color="#d15fa4" />
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="7" fill="#15171e" />
+  <!-- Globo de marca: envolvente fucsia solida (bold, legible a 16px). -->
   <path
-    d="M16 5c-4.4 0-7.5 3.3-7.5 7.7 0 3.1 2 6 4.6 7.9h5.8c2.6-1.9 4.6-4.8 4.6-7.9C23.5 8.3 20.4 5 16 5Z"
-    fill="none"
-    stroke="#8fe3e6"
-    stroke-width="1.8"
+    d="M16 3.4C10 3.4 5.8 7.9 5.8 13.1c0 4.6 3.3 7.8 7.3 9.3l1.1 1.8h3.6l1.1-1.8c4-1.5 7.3-4.7 7.3-9.3C26.2 7.9 22 3.4 16 3.4Z"
+    fill="url(#env)"
   />
-  <path d="M13.1 20.6h5.8M14 20.6l1 3.2h2l1-3.2" fill="none" stroke="#8fe3e6" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
-  <rect x="14.3" y="24" width="3.4" height="3" rx="0.8" fill="none" stroke="#8fe3e6" stroke-width="1.6" />
+  <!-- Costuras (gajos): mismo tono del chip, insinuan el globo sin ruido. -->
+  <g stroke="#15171e" stroke-width="0.9" fill="none" opacity="0.55" stroke-linecap="round">
+    <path d="M16 3.6 16 23" />
+    <path d="M16 3.6C12.3 8 11 15 12.8 22.1" />
+    <path d="M16 3.6C19.7 8 21 15 19.2 22.1" />
+  </g>
+  <!-- Canasta + tirantes -->
+  <path d="M13.4 22.6 14.4 24.4M18.6 22.6 17.6 24.4" stroke="#f4a6d2" stroke-width="1.3" stroke-linecap="round" />
+  <rect x="13.5" y="24.4" width="5" height="3.4" rx="1" fill="#f4a6d2" />
 </svg>

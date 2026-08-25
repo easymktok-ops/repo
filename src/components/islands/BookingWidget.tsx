@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Locale } from "@config/site";
 import { booking, type BookingMode, amountDueNow } from "@config/booking";
 import "./BookingWidget.css";
@@ -129,6 +129,29 @@ export default function BookingWidget({ locale, packages, whatsappUrl }: Props) 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [touched, setTouched] = useState(false);
+  const detailsRef = useRef<HTMLDivElement>(null);
+
+  // Al elegir un vuelo: feedback visible. El resumen y los controles de
+  // Pasajeros/Fecha quedan mas abajo, asi que llevamos la vista hacia ellos
+  // (scroll suave) y resaltamos el bloque un instante. Sin esto, en movil se
+  // siente que el sitio "no responde". Respeta prefers-reduced-motion.
+  function pickFlight(next: string) {
+    setSlug(next);
+    const el = detailsRef.current;
+    if (!el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const rect = el.getBoundingClientRect();
+    const fullyVisible = rect.top >= 0 && rect.bottom <= window.innerHeight;
+    if (!fullyVisible) {
+      el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "center" });
+    }
+    if (!reduce) {
+      // Reinicia la animacion aunque ya estuviera activa (reflow forzado).
+      el.classList.remove("bk-cue");
+      void el.offsetWidth;
+      el.classList.add("bk-cue");
+    }
+  }
 
   // Preselecciona el paquete desde ?pkg= (viene del catalogo).
   useEffect(() => {
@@ -219,7 +242,11 @@ export default function BookingWidget({ locale, packages, whatsappUrl }: Props) 
           const n = i + 1;
           const state = n === step ? "current" : n < step ? "done" : "todo";
           return (
-            <li key={label} className={`bk-step is-${state}`} aria-current={n === step ? "step" : undefined}>
+            <li
+              key={label}
+              className={`bk-step is-${state}`}
+              aria-current={n === step ? "step" : undefined}
+            >
               <span className="bk-step-n">{n < step ? "✓" : n}</span>
               <span className="bk-step-l">{label}</span>
             </li>
@@ -244,11 +271,13 @@ export default function BookingWidget({ locale, packages, whatsappUrl }: Props) 
                         role="radio"
                         aria-checked={active}
                         className={`bk-pkg${active ? " is-active" : ""}`}
-                        onClick={() => setSlug(p.slug)}
+                        onClick={() => pickFlight(p.slug)}
                       >
                         <span className="bk-pkg-title">{p.title}</span>
                         <span className="bk-pkg-price">
-                          {p.priceWas ? <s className="bk-pkg-was">{fmt(p.currency, locale, p.priceWas)}</s> : null}
+                          {p.priceWas ? (
+                            <s className="bk-pkg-was">{fmt(p.currency, locale, p.priceWas)}</s>
+                          ) : null}
                           <strong>{fmt(p.currency, locale, p.pricePerPerson)}</strong>
                           <span className="bk-pkg-unit">{t.perPerson}</span>
                         </span>
@@ -258,9 +287,11 @@ export default function BookingWidget({ locale, packages, whatsappUrl }: Props) 
                 </div>
               </fieldset>
 
-              <div className="bk-row">
+              <div className="bk-row" ref={detailsRef}>
                 <div className="bk-field">
-                  <label className="bk-label" id="lbl-pax">{t.passengers}</label>
+                  <label className="bk-label" id="lbl-pax">
+                    {t.passengers}
+                  </label>
                   <div className="bk-stepper" role="group" aria-labelledby="lbl-pax">
                     <button
                       type="button"
@@ -312,7 +343,9 @@ export default function BookingWidget({ locale, packages, whatsappUrl }: Props) 
           {step === 2 && (
             <div className="bk-fields">
               <div className="bk-field">
-                <label className="bk-label" htmlFor="bk-name">{t.name}</label>
+                <label className="bk-label" htmlFor="bk-name">
+                  {t.name}
+                </label>
                 <input
                   id="bk-name"
                   className={`bk-input${touched && !nameOk ? " is-invalid" : ""}`}
@@ -324,7 +357,9 @@ export default function BookingWidget({ locale, packages, whatsappUrl }: Props) 
               </div>
               <div className="bk-row">
                 <div className="bk-field">
-                  <label className="bk-label" htmlFor="bk-email">{t.email}</label>
+                  <label className="bk-label" htmlFor="bk-email">
+                    {t.email}
+                  </label>
                   <input
                     id="bk-email"
                     className={`bk-input${touched && !emailOk ? " is-invalid" : ""}`}
@@ -335,7 +370,9 @@ export default function BookingWidget({ locale, packages, whatsappUrl }: Props) 
                   />
                 </div>
                 <div className="bk-field">
-                  <label className="bk-label" htmlFor="bk-phone">{t.phone}</label>
+                  <label className="bk-label" htmlFor="bk-phone">
+                    {t.phone}
+                  </label>
                   <input
                     id="bk-phone"
                     className={`bk-input${touched && !phoneOk ? " is-invalid" : ""}`}
@@ -397,31 +434,53 @@ export default function BookingWidget({ locale, packages, whatsappUrl }: Props) 
                   >
                     <span className="bk-mode-head">
                       <span className="bk-mode-title">{t.payDeposit}</span>
-                      <span className="bk-mode-amt">{fmt(currency, locale, booking.depositPerPassenger * passengers)}</span>
+                      <span className="bk-mode-amt">
+                        {fmt(currency, locale, booking.depositPerPassenger * passengers)}
+                      </span>
                     </span>
                     <span className="bk-mode-sub">{t.payDepositSub}</span>
                   </button>
                 </div>
               </fieldset>
 
-              {error && <p className="bk-error" role="alert">{error}</p>}
+              {error && (
+                <p className="bk-error" role="alert">
+                  {error}
+                </p>
+              )}
 
               <div className="bk-actions">
-                <button type="button" className="bk-btn bk-ghost" onClick={() => setStep(2)} disabled={submitting}>
+                <button
+                  type="button"
+                  className="bk-btn bk-ghost"
+                  onClick={() => setStep(2)}
+                  disabled={submitting}
+                >
                   {t.back}
                 </button>
-                <button type="button" className="bk-btn bk-primary bk-pay" onClick={submit} disabled={submitting}>
+                <button
+                  type="button"
+                  className="bk-btn bk-primary bk-pay"
+                  onClick={submit}
+                  disabled={submitting}
+                >
                   {submitting ? t.processing : `${t.goPay} · ${fmt(currency, locale, now)}`}
                 </button>
               </div>
               <p className="bk-secure">{t.securedBy}</p>
               <p className="bk-alt">
-                <a href={whatsappUrl} rel="noopener">{t.quoteWa}</a>
+                <a href={whatsappUrl} rel="noopener">
+                  {t.quoteWa}
+                </a>
               </p>
             </div>
           )}
 
-          {error && step !== 3 && <p className="bk-error" role="alert">{error}</p>}
+          {error && step !== 3 && (
+            <p className="bk-error" role="alert">
+              {error}
+            </p>
+          )}
         </div>
 
         {/* Resumen boarding-pass (sticky) */}

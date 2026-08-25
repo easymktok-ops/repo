@@ -79,9 +79,11 @@ const posterAlt =
 </section>
 
 <script>
+  const wantsMotion = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
+
   // Video diferido: arranca tras la carga y solo si el usuario acepta movimiento.
   const v = document.querySelector<HTMLVideoElement>(".hero-video");
-  if (v && window.matchMedia("(prefers-reduced-motion: no-preference)").matches) {
+  if (v && wantsMotion) {
     const start = () => {
       v.play()
         .then(() => v.classList.add("is-playing"))
@@ -89,6 +91,39 @@ const posterAlt =
     };
     if (document.readyState === "complete") start();
     else window.addEventListener("load", start, { once: true });
+  }
+
+  // Parallax del hero: la imagen deriva mas lento que el scroll (efecto de
+  // profundidad). Solo con movimiento permitido y solo mientras el hero se ve.
+  // Un rAF por frame; escala base en CSS cubre el desplazamiento sin bordes.
+  const hero = document.querySelector<HTMLElement>(".hero");
+  const media = hero?.querySelector<HTMLElement>(".hero-media");
+  if (hero && media && wantsMotion) {
+    let visible = false;
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const rect = hero.getBoundingClientRect();
+      // 0 cuando el hero llena la vista; crece al salir por arriba.
+      const progress = Math.min(1, Math.max(0, -rect.top / (rect.height || 1)));
+      media.style.setProperty("--py", (progress * 9).toFixed(2) + "%");
+    };
+    const onScroll = () => {
+      if (visible && !ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    };
+    const io = new IntersectionObserver(
+      ([e]) => {
+        visible = e.isIntersecting;
+        if (visible) update();
+      },
+      { threshold: 0 },
+    );
+    io.observe(hero);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    update();
   }
 </script>
 
@@ -112,6 +147,11 @@ const posterAlt =
     position: absolute;
     inset: 0;
     z-index: 0;
+    /* Escala base: reserva margen para que el parallax (--py) no muestre bordes.
+       --py lo actualiza el script; en reposo/reduced-motion queda estatico. */
+    --py: 0%;
+    transform: translate3d(0, var(--py), 0) scale(1.12);
+    will-change: transform;
   }
   .hero-poster,
   .hero-video {

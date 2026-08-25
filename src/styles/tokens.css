@@ -12,8 +12,8 @@
    Contraste verificado sobre --bg (L 0.17):
      - ink   (L 0.94) sobre bg  -> ~15:1  (AAA)
      - muted (L 0.72) sobre bg  -> ~6.4:1 (AA cuerpo, objetivo)
-     - accent(L 0.82) sobre bg  -> ~9:1   (AA large + AA cuerpo)
-     - ink   (L 0.17) sobre accent(L 0.82) -> boton solido, ~9:1
+     - accent fucsia (L 0.74) sobre bg -> ~7.7:1 (AA cuerpo + AAA large)
+     - accent-ink (L 0.17) sobre accent(L 0.74) -> boton solido, ~7.7:1
    La verificacion formal por componente es parte de la Fase 4 (audit).
 ============================================================================= */
 
@@ -38,19 +38,36 @@
   --line-strong: oklch(0.42 0.016 253); /* borde en hover/foco */
   --line-faint: oklch(0.26 0.012 258); /* separadores muy sutiles */
 
-  /* --- ACENTO UNICO: "cielo alto" (aqua palido del amanecer en altura) ---- */
-  /* Es EL acento. Color Consistency Lock: se usa igual en toda la pagina. */
-  --accent: oklch(0.82 0.1 205);
-  --accent-strong: oklch(0.86 0.12 200); /* hover del acento */
-  --accent-dim: oklch(0.5 0.06 210); /* acento apagado (bordes/estados) */
-  --accent-ink: oklch(0.17 0.02 240); /* texto SOBRE un fondo de acento */
-  --accent-wash: oklch(0.82 0.1 205 / 0.1); /* velo translucido del acento */
+  /* --- ACENTO UNICO: fucsia de marca (del logo/wordmark de Aerodiverti) ---- */
+  /* Es EL acento. Color Consistency Lock: se usa igual en toda la pagina.
+     La marca es fucsia/magenta (hue 344). El aqua "cielo alto" queda retirado.
+     Afinado en OKLCH para leer AA en sus DOS papeles sobre Obsidiana (L0.17):
+       - como texto/icono/borde  sobre --bg        -> ~7.7:1 (AA cuerpo, AAA large)
+       - como fondo de boton con --accent-ink encima -> ~7.7:1
+     El fucsia de marca puro (oklch 0.56 0.167 344) es demasiado oscuro para
+     texto sobre fondo oscuro; subimos L a 0.74 conservando el matiz. */
+  --accent: oklch(0.74 0.145 344);
+  --accent-strong: oklch(0.8 0.135 344); /* hover del acento (un paso mas claro) */
+  --accent-dim: oklch(0.5 0.09 344); /* acento apagado (bordes/estados) */
+  --accent-ink: oklch(0.17 0.02 344); /* texto oscuro SOBRE un fondo de acento */
+  --accent-wash: oklch(0.74 0.145 344 / 0.1); /* velo translucido del acento */
 
   /* --- EMBER (terracota de las piramides): TERCIARIO RARO ----------------- */
-  /* NO es un segundo acento. Reservado a UN solo momento de marca: la palabra
-     que atraviesa la doble exposicion, o un realce puntual. No aparece como
-     color de UI (nada de CTAs ember, badges ember, etc.). */
+  /* NO es un segundo acento. Reservado a UN solo momento de marca: un realce
+     puntual. No aparece como color de UI (nada de CTAs ember, badges ember). */
   --ember: oklch(0.68 0.15 45);
+
+  /* --- PINCELADAS (acuarela del globo de marca): SOLO micro-detalle -------- */
+  /* Extraidas del logo. Uso permitido: bullets/puntos y adornos diminutos.
+     NUNCA como color de UI (fondos, botones, bordes de foco, texto de cuerpo).
+     No compiten con el acento unico. */
+  --brush-lima: oklch(0.852 0.173 128);
+  --brush-verde: oklch(0.862 0.121 139);
+  --brush-amarillo: oklch(0.866 0.152 113);
+  --brush-naranja: oklch(0.777 0.117 66);
+  --brush-coral: oklch(0.793 0.09 24);
+  --brush-rosa: oklch(0.799 0.109 344);
+  --brush-cian: oklch(0.898 0.081 193);
 
   /* --- ESTADOS SEMANTICOS (derivados, no compiten con el acento) ---------- */
   --ok: oklch(0.78 0.13 155);
@@ -71,12 +88,13 @@
      Mono = Geist Mono, ACOTADO al motivo boarding-pass (cifras tabulares,
      folios de vuelo). Nunca como disfraz "tecnico" en cuerpo.
   ========================================================================= */
-  --font-display: "Bricolage Grotesque Variable", "Bricolage Grotesque",
-    ui-sans-serif, system-ui, sans-serif;
-  --font-body: "Geist Variable", "Geist", ui-sans-serif, system-ui, -apple-system,
-    "Segoe UI", Roboto, sans-serif;
-  --font-mono: "Geist Mono Variable", "Geist Mono", ui-monospace, "SF Mono",
-    "Cascadia Code", monospace;
+  --font-display:
+    "Bricolage Grotesque Variable", "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+  --font-body:
+    "Geist Variable", "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+  --font-mono:
+    "Geist Mono Variable", "Geist Mono", ui-monospace, "SF Mono", "Cascadia Code", monospace;
 
   /* Escala tipografica fluida (clamp, ratio >= 1.25). Tope display <= 6rem. */
   --step--1: clamp(0.83rem, 0.8rem + 0.15vw, 0.9rem);
@@ -85,7 +103,7 @@
   --step-2: clamp(1.56rem, 1.4rem + 0.8vw, 2.15rem);
   --step-3: clamp(1.95rem, 1.66rem + 1.45vw, 3rem);
   --step-4: clamp(2.44rem, 1.94rem + 2.5vw, 4.2rem);
-  --step-5: clamp(3rem, 2.900rem + 4.4vw, 5.75rem); /* tope ~92px < 96px */
+  --step-5: clamp(3rem, 2.9rem + 4.4vw, 5.75rem); /* tope ~92px < 96px */
 
   --leading-tight: 1.05;
   --leading-snug: 1.18;
@@ -133,7 +151,7 @@
   --shadow-sm: 0 1px 2px oklch(0.1 0.02 260 / 0.4);
   --shadow-md: 0 8px 24px -8px oklch(0.08 0.02 260 / 0.55);
   --shadow-lg: 0 24px 60px -18px oklch(0.06 0.02 260 / 0.7);
-  --glow-accent: 0 0 0 1px var(--accent-wash), 0 8px 30px -10px oklch(0.82 0.1 205 / 0.35);
+  --glow-accent: 0 0 0 1px var(--accent-wash), 0 8px 30px -10px oklch(0.74 0.145 344 / 0.35);
 
   /* =========================================================================
      MOTION (emil-design-eng): curvas custom + duraciones por elemento.
