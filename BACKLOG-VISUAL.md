@@ -117,12 +117,14 @@ disciplina de un solo acento. Si quieres, dime en qué lista/bloque la aplico.
 
 - **VIS-10 · Globopuerto: globos en tierra** `LISTO`
   Vía el conector de Google Drive tomé fotos de la subcarpeta **"FOTOS EN
-  TIERRA"**, seleccioné 6 (inflado con el globo de marca + equipo, grupos junto a
-  la envolvente, campo al amanecer), las optimicé (orientación, 1600–1800 px,
-  sin EXIF) y reemplacé la galería de "Las instalaciones" (antes eran tomas en
-  vuelo). Assets: `src/assets/uploads/globopuerto-tierra-01..06.jpg`.
-  Hay muchas más fotos buenas en el Drive (incluye alta resolución en las DSC);
-  si quieres, amplío la selección o las llevo también a la Galería.
+  TIERRA"** y armé la galería de "Las instalaciones" (antes eran tomas en vuelo)
+  con **11 fotos** del globo en tierra, con personas: inflado con el globo de
+  marca + equipo, grupos junto a la envolvente, familias, parejas en la
+  canastilla al amanecer y selfies antes de despegar. Optimizadas (orientación,
+  lado largo ≤1800 px, sin EXIF), alt text es/en.
+  Assets: `src/assets/uploads/globopuerto-tierra-01..11.jpg`.
+  Quedan más fotos buenas en el Drive (incluye alta resolución en las DSC); si
+  quieres, las llevo también a la Galería.
 
 ## 5. UX / interacción
 
