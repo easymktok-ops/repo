@@ -58,4 +58,31 @@ function ensure_schema(PDO $pdo): void
     );
     $pdo->exec("CREATE INDEX IF NOT EXISTS idx_outbox_pending ON notifications_outbox (status, next_attempt_at)");
     $pdo->exec("CREATE INDEX IF NOT EXISTS idx_outbox_booking ON notifications_outbox (booking_id)");
+
+    // --- Columnas administrativas (panel de ventas) -----------------------
+    // SQLite no tiene "ADD COLUMN IF NOT EXISTS": consultamos las columnas
+    // actuales y agregamos solo las que falten. Idempotente y seguro en cada
+    // arranque; no toca reservas existentes.
+    ensure_admin_columns($pdo);
+}
+
+/** Agrega (si faltan) las columnas que usa el panel para gestionar reservas. */
+function ensure_admin_columns(PDO $pdo): void
+{
+    $have = [];
+    foreach ($pdo->query('PRAGMA table_info(bookings)')->fetchAll() as $col) {
+        $have[$col['name']] = true;
+    }
+    $wanted = [
+        'admin_notes'     => 'ALTER TABLE bookings ADD COLUMN admin_notes TEXT',
+        'balance_paid_at' => 'ALTER TABLE bookings ADD COLUMN balance_paid_at TEXT',
+        'completed_at'    => 'ALTER TABLE bookings ADD COLUMN completed_at TEXT',
+        'cancelled_at'    => 'ALTER TABLE bookings ADD COLUMN cancelled_at TEXT',
+        'updated_at'      => 'ALTER TABLE bookings ADD COLUMN updated_at TEXT',
+    ];
+    foreach ($wanted as $name => $sql) {
+        if (!isset($have[$name])) {
+            $pdo->exec($sql);
+        }
+    }
 }

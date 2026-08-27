@@ -80,6 +80,19 @@ return [
         'max_delay_sec'  => 3600,
     ],
 
+    // --- Panel de ventas (server/public/api/panel.php) --------------------
+    // Pantalla protegida para que el negocio vea y gestione las reservas.
+    // La contrasena vive SOLO en el servidor (este archivo, fuera de la web).
+    'panel' => [
+        'enabled' => true,
+        'user'    => getenv('PANEL_USER') ?: 'aerodiverti',
+        // CAMBIA esto por una contrasena tuya (texto). Si prefieres, deja
+        // 'password' vacio y pon un hash bcrypt en 'password_hash'
+        // (generalo con: php -r "echo password_hash('tu-clave', PASSWORD_DEFAULT);").
+        'password'      => getenv('PANEL_PASSWORD') ?: 'cambia-esta-clave',
+        'password_hash' => getenv('PANEL_PASSWORD_HASH') ?: '',
+    ],
+
     // Orden permitido para el redirect de Stripe. Solo se aceptan slugs que
     // existan en catalog.json; esto es una capa extra de allowlist de origenes
     // para CORS si el front vive en otro host (por defecto: mismo origen).

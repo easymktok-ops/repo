@@ -101,6 +101,29 @@ En el dashboard de Stripe → Desarrolladores → Webhooks → “Añadir endpoi
    `bookings`, filas `sent` en `notifications_outbox`
    (con `email_provider = "mail"` llega el correo; con `"log"` solo queda traza).
 
+## Panel de ventas (Fase 4, paso 1)
+
+`server/public/api/panel.php` es una pantalla protegida para que el negocio vea
+y gestione las reservas (parecido a los "Pedidos" de una tienda). Un solo
+archivo, sin dependencias, se sube junto a los demás endpoints.
+
+- **URL:** `https://tu-dominio/api/panel.php`
+- **Login:** usuario y contraseña definidos en `config.php` → bloque `panel`
+  (`user`, `password`). La contraseña vive solo en el servidor. Opción segura:
+  usar `password_hash` (bcrypt) en vez de `password` en texto.
+- **Hace:** KPIs (reservas pagadas, cobrado en línea, saldo por cobrar en sitio,
+  vuelos próximos), lista con filtros/buscador/paginación, detalle de cada
+  reserva con acciones (marcar **saldo pagado en sitio**, **vuelo completado**,
+  **cancelar/reactivar**, notas internas) y **exportar a CSV**.
+- **Base de datos:** lee la misma SQLite de las reservas. Al primer arranque
+  agrega solas las columnas administrativas que necesita (idempotente).
+- **Deploy de una actualización:** basta subir `panel.php` a `public_html/api/`
+  (o donde vivan los endpoints) y, si cambió `lib/schema.php`, subir también ese
+  archivo. Añade el bloque `panel` a tu `config.php`.
+- **Seguridad:** sesión con cookie httponly, token CSRF en cada acción, salida
+  escapada, `noindex`. Aun así, el panel expone datos de clientes: usa una
+  contraseña fuerte y siempre por HTTPS.
+
 ## Producción
 Cambia a llaves `sk_live_` y al `whsec_` del endpoint en vivo, y `site_url` al
 dominio final. Nada de código cambia entre entornos: solo `config.php`.
