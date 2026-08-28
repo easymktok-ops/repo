@@ -15,6 +15,13 @@ badge:
 durationMinutes: 240
 capacity:
   max: 12
+includes:
+  - es: "Despliegue de lona de felicitación"
+    en: "Congratulations banner display"
+  - es: "Las mañanitas al aterrizar"
+    en: "Birthday serenade after landing"
+  - es: "Rebanada de pastel en el restaurante"
+    en: "Slice of cake at the restaurant"
 heroImage: "../../assets/uploads/ocasion-cumpleanos.jpg"
 heroImageAlt:
   es: "Festejo de cumpleaños con globos al amanecer"

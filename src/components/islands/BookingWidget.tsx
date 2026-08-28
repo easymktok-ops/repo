@@ -27,6 +27,8 @@ const T = {
     passengers: "Pasajeros",
     date: "Fecha tentativa",
     dateHint: "Sujeta a confirmacion segun clima y disponibilidad.",
+    weightNote: "El precio aplica para pasajeros de hasta 99 kg por persona.",
+    errDate: "Elige la fecha de tu vuelo.",
     optional: "opcional",
     perPerson: "por persona",
     name: "Nombre completo",
@@ -64,6 +66,8 @@ const T = {
     passengers: "Passengers",
     date: "Preferred date",
     dateHint: "Subject to confirmation based on weather and availability.",
+    weightNote: "Price applies to passengers up to 99 kg each.",
+    errDate: "Choose your flight date.",
     optional: "optional",
     perPerson: "per person",
     name: "Full name",
@@ -188,6 +192,8 @@ export default function BookingWidget({ locale, packages, whatsappUrl }: Props) 
   const nameOk = name.trim().length >= 2;
 
   function goStep2() {
+    setTouched(true);
+    if (!flightDate) return setError(t.errDate);
     setError(null);
     setStep(2);
   }
@@ -318,12 +324,16 @@ export default function BookingWidget({ locale, packages, whatsappUrl }: Props) 
 
                 <div className="bk-field">
                   <label className="bk-label" htmlFor="bk-date">
-                    {t.date} <span className="bk-opt">{t.optional}</span>
+                    {t.date}{" "}
+                    <span className="bk-req" aria-hidden="true">
+                      *
+                    </span>
                   </label>
                   <input
                     id="bk-date"
-                    className="bk-input"
+                    className={`bk-input${touched && !flightDate ? " is-invalid" : ""}`}
                     type="date"
+                    required
                     min={tomorrow}
                     value={flightDate}
                     onChange={(e) => setFlightDate((e.target as HTMLInputElement).value)}
@@ -331,6 +341,8 @@ export default function BookingWidget({ locale, packages, whatsappUrl }: Props) 
                   <p className="bk-hint">{t.dateHint}</p>
                 </div>
               </div>
+
+              <p className="bk-note">{t.weightNote}</p>
 
               <div className="bk-actions">
                 <button type="button" className="bk-btn bk-primary" onClick={goStep2}>

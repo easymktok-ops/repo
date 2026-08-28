@@ -226,6 +226,19 @@
   color: var(--faint);
   font-size: var(--step--1);
 }
+.bk-req {
+  color: var(--accent);
+  font-weight: 700;
+}
+.bk-note {
+  margin: 0;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--line-faint);
+  border-radius: var(--radius-input);
+  background: var(--surface-sunken);
+  color: var(--muted);
+  font-size: var(--step--1);
+}
 
 /* Stepper de pasajeros */
 .bk-stepper {

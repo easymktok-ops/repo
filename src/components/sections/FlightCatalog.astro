@@ -152,6 +152,12 @@ const flightsHref = localizedPath("/vuelos", locale);
                 <span>{t.reviews}</span>
               </p>
               <p class="card-sum">{d.summary[locale] ?? d.summary.es}</p>
+              {d.includes.length > 0 && (
+                <p class="card-incl">
+                  <span class="card-incl-k">{locale === "es" ? "Incluye" : "Includes"}</span>
+                  {d.includes.map((i) => i[locale] ?? i.es).join(" · ")}
+                </p>
+              )}
             </div>
             <div class="card-foot">
               <span class="card-price">
@@ -384,6 +390,25 @@ const flightsHref = localizedPath("/vuelos", locale);
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+  .card-incl {
+    margin-top: 0.6rem;
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+    line-height: 1.4;
+  }
+  .card-incl-k {
+    display: inline-block;
+    margin-right: 0.4rem;
+    padding: 0.05rem 0.45rem;
+    border-radius: var(--radius-pill);
+    background: var(--accent-wash);
+    color: var(--accent);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    vertical-align: 1px;
   }
 
   .card-foot {
