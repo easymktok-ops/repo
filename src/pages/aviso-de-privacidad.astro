@@ -1,74 +1,117 @@
 ---
 import PageShell from "@layouts/PageShell.astro";
 import PageHeader from "@components/ui/PageHeader.astro";
-import { site } from "@config/site";
+import { site, whatsappUrl } from "@config/site";
 
 const locale = "es" as const;
 const c = site.brand;
+const wa = whatsappUrl();
 ---
 
 <PageShell
   title="Aviso de privacidad"
-  description="Cómo Aerodiverti recaba y usa tus datos, y qué cookies utiliza el sitio."
+  description="Qué datos recaba Aerodiverti, para qué los usa, con quién los comparte y cómo ejercer tus derechos."
   logicalPath="/aviso-de-privacidad"
   activeId=""
 >
-  <PageHeader title="Aviso de privacidad" lead="Cómo tratamos tus datos y qué cookies usa este sitio." />
+  <PageHeader
+    title="Aviso de privacidad"
+    lead="Pedimos nombre, teléfono y correo para confirmarte el vuelo y avisarte si el clima obliga a moverlo. No vendemos tus datos."
+  />
 
   <article class="legal container-narrow">
-    <p class="legal-draft">
-      Borrador base. Revísalo con tu asesor legal antes de publicarlo; describe lo
-      que el sitio realmente recaba y las herramientas que utiliza.
+    <p class="legal-updated">Última actualización: 22 de julio de 2026</p>
+
+    <p class="legal-lead">
+      Tu tarjeta la procesan Stripe y PayPal: nosotros nunca la vemos ni la guardamos.
     </p>
 
-    <h2>Responsable</h2>
+    <h2>Quién trata tus datos</h2>
     <p>
-      {site.name}, con globopuerto en {c.address.line1}, {c.address.area}, {c.address.zip}.
-      Para cualquier tema de privacidad puedes escribir a <a href={`mailto:${c.email}`}>{c.email}</a>.
+      {site.name}, operador de vuelos en globo aerostático con salida desde el globopuerto
+      Aerodiverti, en {c.address.area}, es responsable del tratamiento de los datos personales
+      que nos proporcionas en este sitio.
     </p>
 
     <h2>Qué datos recabamos</h2>
     <ul>
+      <li><strong>Para la reserva:</strong> nombre completo, teléfono y correo electrónico.</li>
       <li>
-        <strong>Formulario de contacto:</strong> nombre, correo, teléfono o WhatsApp,
-        fecha tentativa, número de personas y el mensaje que nos escribas.
+        <strong>Del vuelo:</strong> fecha elegida, número de pasajeros, adicionales contratados
+        y, si aplica, la ocasión que celebras.
       </li>
       <li>
-        <strong>Cookies de medición</strong> (solo si las aceptas en el banner): Google
-        Analytics 4, Google Ads y Meta Pixel.
+        <strong>Del pago:</strong> únicamente el identificador de la transacción y el monto. Los
+        datos de tu tarjeta viajan directamente a la pasarela de pago y no pasan por nuestros
+        servidores.
+      </li>
+      <li>
+        <strong>De uso del sitio:</strong> datos de navegación anónimos (páginas vistas, tipo de
+        dispositivo) para entender qué funciona y qué no.
       </li>
     </ul>
 
     <h2>Para qué los usamos</h2>
     <ul>
-      <li>Atender tu solicitud, contactarte y ayudarte a reservar tu vuelo.</li>
-      <li>Medir el uso del sitio y mejorar la experiencia y nuestra publicidad.</li>
+      <li>Confirmarte la reserva y enviarte tu pase de abordar.</li>
+      <li>
+        Contactarte si el clima obliga a reprogramar o cancelar el vuelo: el capitán toma esa
+        decisión la mañana del vuelo, así que necesitamos un teléfono que conteste.
+      </li>
+      <li>Cumplir con los registros de pasajeros que exige la operación aérea.</li>
+      <li>Atender dudas, cambios y facturación.</li>
     </ul>
-
-    <h2>Cookies y medición</h2>
     <p>
-      Al abrir el sitio, ninguna herramienta de medición se activa hasta que lo
-      autorizas. Si aceptas, cargamos Google Analytics 4, Google Ads y Meta Pixel
-      para entender el tráfico y la efectividad de la publicidad. Puedes elegir
-      "Solo lo necesario" en el banner, o borrar las cookies desde tu navegador en
+      Solo te enviaremos promociones si lo aceptas de forma expresa, y podrás darte de baja en
       cualquier momento.
     </p>
 
-    <h2>Con quién se comparten</h2>
+    <h2>Con quién los compartimos</h2>
+    <p>Solo con quien hace falta para que vueles y para que el cobro funcione:</p>
+    <ul>
+      <li>Stripe y PayPal, para procesar el pago.</li>
+      <li>El proveedor de hosting donde vive el sitio y la base de datos de reservas.</li>
+      <li>El servicio de correo con el que te enviamos la confirmación.</li>
+      <li>La autoridad aeronáutica, cuando lo requiera por seguridad de la operación.</li>
+    </ul>
+    <p>No vendemos, rentamos ni cedemos tus datos a terceros con fines comerciales.</p>
+
+    <h2>Cuánto tiempo los guardamos</h2>
     <p>
-      Con los proveedores que hacen funcionar el sitio: Google (Analytics y Ads) y
-      Meta (Pixel y WhatsApp, cuando nos escribes por ahí). Cuando se habilite el
-      pago en línea, también con la pasarela de pago para procesar tu reserva.
+      Conservamos los datos de tu reserva mientras sean necesarios para la operación y para
+      cumplir obligaciones fiscales y de seguridad. Después se eliminan o se anonimizan.
     </p>
 
-    <h2>Tus derechos</h2>
+    <h2>Tus derechos (ARCO)</h2>
     <p>
-      Puedes acceder, rectificar, cancelar u oponerte al uso de tus datos (derechos
-      ARCO) escribiendo a <a href={`mailto:${c.email}`}>{c.email}</a>.
+      Puedes solicitar el Acceso a tus datos, su Rectificación si son incorrectos, su Cancelación
+      cuando ya no sean necesarios, u Oponerte a un uso concreto. También puedes revocar tu
+      consentimiento. Escríbenos a <a href={`mailto:${c.email}`}>{c.email}</a> o por
+      <a href={wa} target="_blank" rel="noopener">WhatsApp</a>, indicando qué quieres hacer y con
+      qué reserva. Te respondemos en un máximo de 20 días hábiles.
+    </p>
+    <p>
+      Si consideras que tu derecho a la protección de datos fue vulnerado, puedes acudir al INAI
+      (<a href="https://home.inai.org.mx/" target="_blank" rel="noopener">inai.org.mx</a>).
     </p>
 
-    <h2>Cambios</h2>
-    <p>Podemos actualizar este aviso; publicaremos aquí la versión vigente.</p>
+    <h2>Cookies</h2>
+    <p>
+      Usamos almacenamiento del navegador para recordar tu reserva a medias (si recargas, no
+      pierdes lo que llevabas) y herramientas de medición para saber en qué parte del proceso
+      abandona la gente. Estas herramientas solo se activan si las aceptas en el banner de
+      cookies. Puedes borrarlas desde la configuración de tu navegador; si lo haces, tendrás que
+      volver a llenar el formulario.
+    </p>
+
+    <h2>Cambios a este aviso</h2>
+    <p>Si cambia algo relevante, se publica aquí con la fecha de actualización al principio.</p>
+
+    <p class="legal-contact">
+      ¿Dudas sobre este documento? Escríbenos por
+      <a href={wa} target="_blank" rel="noopener">WhatsApp</a> o a
+      <a href={`mailto:${c.email}`}>{c.email}</a>.
+    </p>
   </article>
 </PageShell>
 
@@ -76,13 +119,17 @@ const c = site.brand;
   .legal {
     padding-block: var(--space-md) var(--space-3xl);
   }
-  .legal-draft {
-    padding: var(--space-sm) var(--space-md);
-    border: 1px solid var(--warn);
-    border-radius: var(--radius-input);
-    background: color-mix(in oklch, var(--warn) 12%, transparent);
-    color: var(--ink-soft);
+  .legal-updated {
+    color: var(--faint);
     font-size: var(--step--1);
+    font-family: var(--font-mono);
+    letter-spacing: var(--tracking-label);
+    margin-bottom: var(--space-lg);
+  }
+  .legal-lead {
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+    line-height: 1.55;
     margin-bottom: var(--space-xl);
   }
   .legal h2 {
@@ -94,12 +141,16 @@ const c = site.brand;
   .legal li {
     color: var(--muted);
     font-size: var(--step-0);
-    line-height: 1.6;
+    line-height: 1.65;
   }
   .legal ul {
     padding-left: 1.1rem;
     display: grid;
-    gap: 0.4rem;
+    gap: 0.45rem;
+    margin-top: var(--space-2xs);
+  }
+  .legal ul + p {
+    margin-top: var(--space-sm);
   }
   .legal a {
     color: var(--accent);
@@ -107,6 +158,12 @@ const c = site.brand;
     text-underline-offset: 2px;
   }
   .legal strong {
+    color: var(--ink-soft);
+  }
+  .legal-contact {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--line-faint);
     color: var(--ink-soft);
   }
 </style>

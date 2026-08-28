@@ -45,9 +45,14 @@ const trust = [
 
   <div class="footer-legal container">
     <span>© {year} {site.name}. {t("footer.rights")}</span>
-    <a href={localizedPath("/aviso-de-privacidad", locale)}>
-      {locale === "es" ? "Aviso de privacidad" : "Privacy notice"}
-    </a>
+    <nav class="legal-links" aria-label={locale === "es" ? "Enlaces legales" : "Legal links"}>
+      <a href={localizedPath("/terminos-y-condiciones", locale)}>
+        {locale === "es" ? "Términos y condiciones" : "Terms and conditions"}
+      </a>
+      <a href={localizedPath("/aviso-de-privacidad", locale)}>
+        {locale === "es" ? "Aviso de privacidad" : "Privacy notice"}
+      </a>
+    </nav>
   </div>
 </footer>
 
@@ -125,6 +130,11 @@ const trust = [
     border-top: 1px solid var(--line-faint);
     color: var(--faint);
     font-size: var(--step--1);
+  }
+  .legal-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs) var(--space-md);
   }
   .footer-legal a {
     color: var(--muted);

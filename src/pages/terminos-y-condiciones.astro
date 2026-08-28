@@ -1,0 +1,159 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import PageHeader from "@components/ui/PageHeader.astro";
+import { site, whatsappUrl, localizedPath } from "@config/site";
+
+const locale = "es" as const;
+const c = site.brand;
+const wa = whatsappUrl();
+const avisoHref = localizedPath("/aviso-de-privacidad", locale);
+---
+
+<PageShell
+  title="Términos y condiciones"
+  description="Cómo opera Aerodiverti: reservas, pago, el día del vuelo, restricciones de seguridad y adicionales."
+  logicalPath="/terminos-y-condiciones"
+  activeId=""
+>
+  <PageHeader
+    title="Términos y condiciones"
+    lead="El vuelo depende del clima, hay restricciones de seguridad que no son negociables, y el precio que ves es el que se cobra."
+  />
+
+  <article class="legal container-narrow">
+    <p class="legal-updated">Última actualización: 22 de julio de 2026</p>
+
+    <p class="legal-lead">
+      Reservar en este sitio significa que aceptas lo que sigue. Lo importante: el vuelo depende
+      del clima, hay restricciones de seguridad que no son negociables, y el precio que ves es el
+      que se cobra, sin cargos por reservar.
+    </p>
+
+    <h2>El servicio</h2>
+    <p>
+      {site.name} opera vuelos en globo aerostático sobre el valle de Teotihuacán, con despegue
+      desde el globopuerto Aerodiverti en {c.address.area}. Los vuelos los realiza personal con
+      licencia de la autoridad aeronáutica (AFAC) y la actividad incluye seguro de viajero.
+    </p>
+
+    <h2>Reservas y pago</h2>
+    <ul>
+      <li>
+        La reserva se confirma cuando el pago se completa. Hasta entonces el lugar no está
+        apartado.
+      </li>
+      <li>
+        El precio mostrado es el total: no se añaden cargos por reservar ni comisiones al final.
+      </li>
+      <li>Los precios están en pesos mexicanos.</li>
+      <li>El pago lo procesan Stripe y PayPal. No almacenamos datos de tarjetas.</li>
+      <li>
+        Se reserva con al menos un día de anticipación: el vuelo sale al amanecer y el manifiesto
+        se cierra la noche anterior.
+      </li>
+    </ul>
+
+    <h2>El día del vuelo</h2>
+    <ul>
+      <li>
+        Preséntate a la hora que indica tu pase de abordar. Es la hora de cita, anterior al
+        despegue.
+      </li>
+      <li>El horario exacto de despegue depende del clima y lo determina el capitán.</li>
+      <li>La duración del vuelo es de 45 a 60 minutos, sujeta a condiciones de viento.</li>
+      <li>El punto de aterrizaje lo decide el viento: no es un lugar fijo.</li>
+    </ul>
+
+    <h2>Restricciones de seguridad</h2>
+    <p>
+      La edad mínima para volar es de 4 años o 1.10 m de estatura, y todo menor vuela acompañado
+      de un adulto: está prohibido cargarlo durante el vuelo. No pueden volar personas
+      embarazadas. El piloto al mando puede impedir el abordaje de quien no esté en condiciones de
+      volar con seguridad. Estas restricciones no admiten excepción y no generan responsabilidad
+      adicional para Aerodiverti más allá de lo previsto en la política de cancelación.
+    </p>
+
+    <h2>Cancelaciones y cambios</h2>
+    <p>
+      Se rigen por la política de cancelación, que forma parte de estos términos. Si el clima
+      impide volar con seguridad, reprogramamos tu vuelo sin costo.
+    </p>
+
+    <h2>Adicionales</h2>
+    <p>
+      Fotos, video con drone, desayuno y transporte son servicios opcionales que se contratan
+      junto con el vuelo. Si el vuelo se cancela por clima, los adicionales asociados se
+      reembolsan o se reagendan con él.
+    </p>
+
+    <h2>Contenido del sitio</h2>
+    <p>
+      Las fotografías, textos y marcas de este sitio son propiedad de {site.name} y no pueden
+      reproducirse sin autorización.
+    </p>
+
+    <h2>Contacto y aclaraciones</h2>
+    <p>
+      Para cualquier aclaración, escríbenos por
+      <a href={wa} target="_blank" rel="noopener">WhatsApp</a> o a
+      <a href={`mailto:${c.email}`}>{c.email}</a>. Consulta también nuestro
+      <a href={avisoHref}>aviso de privacidad</a>.
+    </p>
+
+    <p class="legal-contact">
+      ¿Dudas sobre este documento? Escríbenos por
+      <a href={wa} target="_blank" rel="noopener">WhatsApp</a> o a
+      <a href={`mailto:${c.email}`}>{c.email}</a>.
+    </p>
+  </article>
+</PageShell>
+
+<style>
+  .legal {
+    padding-block: var(--space-md) var(--space-3xl);
+  }
+  .legal-updated {
+    color: var(--faint);
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    letter-spacing: var(--tracking-label);
+    margin-bottom: var(--space-lg);
+  }
+  .legal-lead {
+    color: var(--ink-soft);
+    font-size: var(--step-1);
+    line-height: 1.55;
+    margin-bottom: var(--space-xl);
+  }
+  .legal h2 {
+    font-size: var(--step-2);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-2xs);
+  }
+  .legal p,
+  .legal li {
+    color: var(--muted);
+    font-size: var(--step-0);
+    line-height: 1.65;
+  }
+  .legal ul {
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.45rem;
+    margin-top: var(--space-2xs);
+  }
+  .legal a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .legal strong {
+    color: var(--ink-soft);
+  }
+  .legal-contact {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--line-faint);
+    color: var(--ink-soft);
+  }
+</style>
