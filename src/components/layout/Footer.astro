@@ -46,11 +46,17 @@ const trust = [
   <div class="footer-legal container">
     <span>© {year} {site.name}. {t("footer.rights")}</span>
     <nav class="legal-links" aria-label={locale === "es" ? "Enlaces legales" : "Legal links"}>
+      <a href={localizedPath("/aviso-de-privacidad", locale)}>
+        {locale === "es" ? "Aviso de privacidad" : "Privacy notice"}
+      </a>
       <a href={localizedPath("/terminos-y-condiciones", locale)}>
         {locale === "es" ? "Términos y condiciones" : "Terms and conditions"}
       </a>
-      <a href={localizedPath("/aviso-de-privacidad", locale)}>
-        {locale === "es" ? "Aviso de privacidad" : "Privacy notice"}
+      <a href={localizedPath("/politica-de-cancelacion", locale)}>
+        {locale === "es" ? "Política de cancelación" : "Cancellation policy"}
+      </a>
+      <a href={localizedPath("/politicas-y-restricciones", locale)}>
+        {locale === "es" ? "Políticas y restricciones" : "Policies and restrictions"}
       </a>
     </nav>
   </div>

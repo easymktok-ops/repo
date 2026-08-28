@@ -1,0 +1,122 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import PageHeader from "@components/ui/PageHeader.astro";
+import { site, whatsappUrl, localizedPath } from "@config/site";
+
+const locale = "en" as const;
+const c = site.brand;
+const wa = whatsappUrl();
+const restriccionesHref = localizedPath("/politicas-y-restricciones", locale);
+---
+
+<PageShell
+  title="Cancellation policy"
+  description="What happens if the weather prevents flying, how to change your date, refunds, and what happens if you arrive late."
+  logicalPath="/politica-de-cancelacion"
+  activeId=""
+>
+  <PageHeader
+    title="Cancellation policy"
+    lead="If the weather prevents flying, your flight is rescheduled to the date you choose and you have 3 months to use it. Changes are made 48 hours in advance."
+  />
+
+  <article class="legal container-narrow">
+    <p class="legal-updated">Last updated: July 22, 2026</p>
+
+    <h2>If the weather prevents flying</h2>
+    <p>
+      The flight depends on wind and visibility. With rain or wind over 20 km/h, for your safety
+      the flight is cancelled. The captain makes the call, always in favor of safety: if in doubt,
+      we do not fly.
+    </p>
+    <p>
+      In that case your flight is rescheduled to the date you choose, and you have 3 months to
+      take it.
+    </p>
+    <p>
+      If you booked ground transport and the flight is cancelled due to bad weather, the transport
+      service is covered 100 %: the van did run.
+    </p>
+
+    <h2>If you want to change your date</h2>
+    <p>
+      You have 48 hours before the flight to make changes. After that window, a 30 % penalty
+      applies. Message us on
+      <a href={wa} target="_blank" rel="noopener">WhatsApp</a> or at
+      <a href={`mailto:${c.email}`}>{c.email}</a> with your booking number.
+    </p>
+
+    <h2>Refunds</h2>
+    <p>
+      Deposits are non-refundable. The only exception is foreign passengers, with a passport or
+      visa and/or a verifiable itinerary.
+    </p>
+
+    <h2>If you do not arrive</h2>
+    <p>
+      The balloon takes off at sunrise and cannot wait. Arrive at the time on your boarding pass:
+      that is the check-in time, before takeoff. Tolerance is 10 minutes, and the absolute maximum
+      is 15. After that the flight is shorter, and on a shared flight the balloon takes off without
+      you, with no right to rescheduling or refund.
+    </p>
+    <p>Not showing up incurs a charge of 100 % of the deposit and/or the flight.</p>
+
+    <h2>Restrictions that prevent flying</h2>
+    <p>
+      The following cannot fly: pregnant women, anyone who has consumed alcohol in the previous 12
+      hours, and people with blood pressure issues, cardio-respiratory conditions, recent
+      surgeries, or spine and/or knee problems. The maximum weight per passenger is 99 kilos.
+    </p>
+    <p>
+      These are not recommendations: the pilot may deny boarding at the field. The full list is in
+      <a href={restriccionesHref}>flight policies and restrictions</a>.
+    </p>
+
+    <p class="legal-contact">
+      Questions about this document? Message us on
+      <a href={wa} target="_blank" rel="noopener">WhatsApp</a> or at
+      <a href={`mailto:${c.email}`}>{c.email}</a>.
+    </p>
+  </article>
+</PageShell>
+
+<style>
+  .legal {
+    padding-block: var(--space-md) var(--space-3xl);
+  }
+  .legal-updated {
+    color: var(--faint);
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    letter-spacing: var(--tracking-label);
+    margin-bottom: var(--space-lg);
+  }
+  .legal h2 {
+    font-size: var(--step-2);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-2xs);
+  }
+  .legal p,
+  .legal li {
+    color: var(--muted);
+    font-size: var(--step-0);
+    line-height: 1.65;
+  }
+  .legal p + p {
+    margin-top: var(--space-sm);
+  }
+  .legal a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .legal strong {
+    color: var(--ink-soft);
+  }
+  .legal-contact {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--line-faint);
+    color: var(--ink-soft);
+  }
+</style>

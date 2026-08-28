@@ -1,0 +1,188 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import PageHeader from "@components/ui/PageHeader.astro";
+import { site, whatsappUrl } from "@config/site";
+
+const locale = "en" as const;
+const c = site.brand;
+const wa = whatsappUrl();
+---
+
+<PageShell
+  title="Flight policies and restrictions"
+  description="Punctuality, the day of the flight, changes, bad weather, minors, weight, safety restrictions and recommendations."
+  logicalPath="/politicas-y-restricciones"
+  activeId=""
+>
+  <PageHeader
+    title="Flight policies and restrictions"
+    lead="The most common questions, in short: arrive on time, on a shared flight the balloon takes off without you. If the weather prevents flying, your flight is rescheduled and you have 3 months to use it. Changes are made 48 hours in advance."
+  />
+
+  <article class="legal container-narrow">
+    <p class="legal-updated">Last updated: July 22, 2026</p>
+
+    <h2>Punctuality</h2>
+    <ul>
+      <li>Being on time is required: 10 minutes of tolerance.</li>
+      <li>
+        Passengers have a maximum tolerance of 15 minutes. After that, the flight will be shorter.
+      </li>
+      <li>
+        On shared flights the balloon will take off without you, with no right to rescheduling or
+        refund.
+      </li>
+    </ul>
+
+    <h2>The day of your flight</h2>
+    <ul>
+      <li>Bring your booking, printed or digital, along with an official ID.</li>
+      <li>
+        If you paid the deposit with a card, you must present that same card physically along with
+        your ID.
+      </li>
+      <li>
+        There you can pay the balance, in cash or by credit or debit card: cards carry a 3 %
+        commission charge.
+      </li>
+    </ul>
+
+    <h2>Changes and cancellations</h2>
+    <ul>
+      <li>You have 48 hours to change your booking. After that, a 30 % penalty applies.</li>
+      <li>Not showing up on your flight day incurs a charge of 100 % of the deposit and/or the flight.</li>
+      <li>
+        Deposits are non-refundable. The only exception is foreign passengers, with a passport or
+        visa and/or a verifiable itinerary.
+      </li>
+    </ul>
+
+    <h2>Bad weather</h2>
+    <ul>
+      <li>
+        With rain or wind over 20 km/h, for your safety the flight is cancelled and rescheduled to
+        the date you choose. You have 3 months to take it.
+      </li>
+      <li>
+        If you booked ground transport and the flight is cancelled due to bad weather, the
+        transport service is covered 100 %.
+      </li>
+    </ul>
+
+    <h2>Minors</h2>
+    <ul>
+      <li>Every minor must fly accompanied by an adult and follow the pilot's instructions.</li>
+      <li>
+        The recommended age to fly is 4 years or 1.10 m tall, since an adult is not allowed to hold
+        them during the flight.
+      </li>
+    </ul>
+
+    <h2>Weight and booking details</h2>
+    <ul>
+      <li>
+        It is very important that booking details are truthful, including weights and health
+        conditions.
+      </li>
+      <li>
+        The maximum weight per passenger is 99 kilos at no charge. Above that, $50 MXN is charged
+        per extra kilo, collected by the crew on the day of the flight.
+      </li>
+    </ul>
+
+    <h2>Restrictions to fly</h2>
+    <p>For safety reasons, the following cannot fly:</p>
+    <ul>
+      <li>Pregnant women.</li>
+      <li>People who have consumed alcohol in the 12 hours before the flight.</li>
+      <li>People with blood pressure issues.</li>
+      <li>People with cardio-respiratory conditions.</li>
+      <li>People with recent surgeries or spine and/or knee problems.</li>
+    </ul>
+
+    <h2>During the flight</h2>
+    <ul>
+      <li>The passenger must heed and obey the pilot's instructions at all times.</li>
+      <li>
+        Touching connections, tanks or ropes, inside or outside the balloon, is strictly
+        prohibited. If instructions are not followed, the flight is cancelled without a refund.
+      </li>
+      <li>
+        The estimated flight time is 45 to 60 minutes. If the pilot decides to make it shorter for
+        safety reasons, it is not grounds for a refund.
+      </li>
+      <li>
+        Bringing backpacks, suitcases or bags aboard is not allowed. You can leave them in the
+        lockers at the launch site.
+      </li>
+      <li>Smoking is strictly prohibited in the takeoff area, during the flight and at landing.</li>
+      <li>
+        Use of camera equipment or phones is at the user's own risk, and selfie sticks are strictly
+        prohibited.
+      </li>
+    </ul>
+
+    <h2>Recommendations</h2>
+    <ul>
+      <li>
+        Wear comfortable, country-outing clothes: jeans, sneakers, a cap. Bring something warm, it
+        gets quite cold. Avoid heels and skirts.
+      </li>
+      <li>Use sunscreen. After the flight, a light layer.</li>
+      <li>Plan the activity without rush: it takes time.</li>
+    </ul>
+
+    <p class="legal-contact">
+      Questions about this document? Message us on
+      <a href={wa} target="_blank" rel="noopener">WhatsApp</a> or at
+      <a href={`mailto:${c.email}`}>{c.email}</a>.
+    </p>
+  </article>
+</PageShell>
+
+<style>
+  .legal {
+    padding-block: var(--space-md) var(--space-3xl);
+  }
+  .legal-updated {
+    color: var(--faint);
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    letter-spacing: var(--tracking-label);
+    margin-bottom: var(--space-lg);
+  }
+  .legal h2 {
+    font-size: var(--step-2);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-2xs);
+  }
+  .legal p,
+  .legal li {
+    color: var(--muted);
+    font-size: var(--step-0);
+    line-height: 1.65;
+  }
+  .legal ul {
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.45rem;
+    margin-top: var(--space-2xs);
+  }
+  .legal p + ul {
+    margin-top: var(--space-2xs);
+  }
+  .legal a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .legal strong {
+    color: var(--ink-soft);
+  }
+  .legal-contact {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--line-faint);
+    color: var(--ink-soft);
+  }
+</style>

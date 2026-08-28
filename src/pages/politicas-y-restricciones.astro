@@ -1,0 +1,192 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import PageHeader from "@components/ui/PageHeader.astro";
+import { site, whatsappUrl } from "@config/site";
+
+const locale = "es" as const;
+const c = site.brand;
+const wa = whatsappUrl();
+---
+
+<PageShell
+  title="Políticas y restricciones de vuelo"
+  description="Puntualidad, el día del vuelo, cambios, mal clima, menores, peso, restricciones de seguridad y recomendaciones."
+  logicalPath="/politicas-y-restricciones"
+  activeId=""
+>
+  <PageHeader
+    title="Políticas y restricciones de vuelo"
+    lead="Lo que más se pregunta, en resumen: llega puntual, en vuelo compartido el globo despega sin ti. Si el clima impide volar, tu vuelo se reprograma y tienes 3 meses para usarlo. Los cambios se hacen con 48 horas de anticipación."
+  />
+
+  <article class="legal container-narrow">
+    <p class="legal-updated">Última actualización: 22 de julio de 2026</p>
+
+    <h2>Puntualidad</h2>
+    <ul>
+      <li>Se requiere ser puntuales: tolerancia de 10 minutos.</li>
+      <li>
+        El pasajero cuenta con 15 minutos de tolerancia máxima. Pasado ese tiempo, la duración del
+        vuelo será menor.
+      </li>
+      <li>
+        En vuelos compartidos el globo despegará sin ti, sin derecho a reprogramación ni
+        devolución.
+      </li>
+    </ul>
+
+    <h2>El día de tu vuelo</h2>
+    <ul>
+      <li>Presenta tu reserva impresa o digital junto con una identificación oficial.</li>
+      <li>
+        Si pagaste el anticipo con tarjeta, debes presentar esa misma tarjeta físicamente junto
+        con tu identificación.
+      </li>
+      <li>
+        Ahí puedes liquidar tu remanente, en efectivo o con tarjeta de crédito o débito: las
+        tarjetas llevan un cargo por comisión del 3 %.
+      </li>
+    </ul>
+
+    <h2>Cambios y cancelaciones</h2>
+    <ul>
+      <li>
+        Tienes 48 horas para hacer cambios a tu reservación. Después, se genera una penalización
+        del 30 %.
+      </li>
+      <li>No presentarte el día de tu vuelo genera un cargo del 100 % del depósito y/o del vuelo.</li>
+      <li>
+        Los depósitos no son reembolsables. La única excepción son los pasajeros extranjeros, con
+        pasaporte o visa y/o itinerario comprobable.
+      </li>
+    </ul>
+
+    <h2>Mal clima</h2>
+    <ul>
+      <li>
+        Con lluvia o viento mayor a 20 km/h, por tu seguridad el vuelo se cancela y se reprograma
+        en la fecha que elijas. Cuentas con 3 meses para realizarlo.
+      </li>
+      <li>
+        Si contrataste transporte terrestre y el vuelo se cancela por mal clima, el servicio de
+        transporte se cubre al 100 %.
+      </li>
+    </ul>
+
+    <h2>Menores</h2>
+    <ul>
+      <li>Todo menor de edad deberá volar en compañía de un adulto y seguir las instrucciones del piloto.</li>
+      <li>
+        La edad recomendable para volar es de 4 años o 1.10 m de estatura, ya que está prohibido
+        que un adulto lo cargue durante el vuelo.
+      </li>
+    </ul>
+
+    <h2>Peso y datos de la reserva</h2>
+    <ul>
+      <li>
+        Es de suma importancia que los datos de la reserva sean verídicos, incluidos pesos y
+        condiciones de salud.
+      </li>
+      <li>
+        El peso máximo por pasajero es de 99 kilos sin cargo. A partir de ahí se cobran $50 MXN por
+        cada kilo extra, y el cobro lo hace el equipo el día del vuelo.
+      </li>
+    </ul>
+
+    <h2>Restricciones para volar</h2>
+    <p>Por seguridad, no pueden volar:</p>
+    <ul>
+      <li>Mujeres embarazadas.</li>
+      <li>Personas que hayan ingerido bebidas alcohólicas en las 12 horas previas al vuelo.</li>
+      <li>Personas con problemas de presión arterial.</li>
+      <li>Personas con problemas cardio-respiratorios.</li>
+      <li>Personas con cirugías recientes o problemas de columna y/o rodillas.</li>
+    </ul>
+
+    <h2>Durante el vuelo</h2>
+    <ul>
+      <li>El pasajero debe atender y obedecer las instrucciones del piloto en todo momento.</li>
+      <li>
+        Queda estrictamente prohibido tocar conexiones, tanques o cuerdas, dentro y fuera del
+        globo. Si no se siguen las instrucciones, el vuelo se cancela sin reembolso.
+      </li>
+      <li>
+        El tiempo estimado de vuelo es de 45 a 60 minutos. Si el piloto decide que sea menor por
+        razones de seguridad, no es motivo de reembolso.
+      </li>
+      <li>
+        Queda prohibido subir mochilas, maletas, bolsas o backpacks. Puedes dejarlos en los lockers
+        del globopuerto.
+      </li>
+      <li>Queda estrictamente prohibido fumar en la zona de despegue, durante el vuelo y en el aterrizaje.</li>
+      <li>
+        El uso de equipo fotográfico o celulares es bajo responsabilidad del usuario, y queda
+        estrictamente prohibido el selfie stick.
+      </li>
+    </ul>
+
+    <h2>Recomendaciones</h2>
+    <ul>
+      <li>
+        Usa ropa cómoda, tipo día de campo: jeans, tenis, gorra. Lleva algo abrigador, hace
+        bastante frío. Evita tacones y faldas.
+      </li>
+      <li>Usa bloqueador solar. Después del vuelo, una prenda ligera.</li>
+      <li>Programa la actividad con calma: lleva tiempo.</li>
+    </ul>
+
+    <p class="legal-contact">
+      ¿Dudas sobre este documento? Escríbenos por
+      <a href={wa} target="_blank" rel="noopener">WhatsApp</a> o a
+      <a href={`mailto:${c.email}`}>{c.email}</a>.
+    </p>
+  </article>
+</PageShell>
+
+<style>
+  .legal {
+    padding-block: var(--space-md) var(--space-3xl);
+  }
+  .legal-updated {
+    color: var(--faint);
+    font-size: var(--step--1);
+    font-family: var(--font-mono);
+    letter-spacing: var(--tracking-label);
+    margin-bottom: var(--space-lg);
+  }
+  .legal h2 {
+    font-size: var(--step-2);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-2xs);
+  }
+  .legal p,
+  .legal li {
+    color: var(--muted);
+    font-size: var(--step-0);
+    line-height: 1.65;
+  }
+  .legal ul {
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.45rem;
+    margin-top: var(--space-2xs);
+  }
+  .legal p + ul {
+    margin-top: var(--space-2xs);
+  }
+  .legal a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .legal strong {
+    color: var(--ink-soft);
+  }
+  .legal-contact {
+    margin-top: var(--space-2xl);
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--line-faint);
+    color: var(--ink-soft);
+  }
+</style>

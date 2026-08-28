@@ -7,6 +7,8 @@ const locale = "es" as const;
 const c = site.brand;
 const wa = whatsappUrl();
 const avisoHref = localizedPath("/aviso-de-privacidad", locale);
+const cancelacionHref = localizedPath("/politica-de-cancelacion", locale);
+const restriccionesHref = localizedPath("/politicas-y-restricciones", locale);
 ---
 
 <PageShell
@@ -70,13 +72,15 @@ const avisoHref = localizedPath("/aviso-de-privacidad", locale);
       de un adulto: está prohibido cargarlo durante el vuelo. No pueden volar personas
       embarazadas. El piloto al mando puede impedir el abordaje de quien no esté en condiciones de
       volar con seguridad. Estas restricciones no admiten excepción y no generan responsabilidad
-      adicional para Aerodiverti más allá de lo previsto en la política de cancelación.
+      adicional para Aerodiverti más allá de lo previsto en la
+      <a href={cancelacionHref}>política de cancelación</a>. La lista completa está en
+      <a href={restriccionesHref}>políticas y restricciones</a>.
     </p>
 
     <h2>Cancelaciones y cambios</h2>
     <p>
-      Se rigen por la política de cancelación, que forma parte de estos términos. Si el clima
-      impide volar con seguridad, reprogramamos tu vuelo sin costo.
+      Se rigen por la <a href={cancelacionHref}>política de cancelación</a>, que forma parte de
+      estos términos. Si el clima impide volar con seguridad, reprogramamos tu vuelo sin costo.
     </p>
 
     <h2>Adicionales</h2>

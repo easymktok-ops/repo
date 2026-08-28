@@ -7,6 +7,8 @@ const locale = "en" as const;
 const c = site.brand;
 const wa = whatsappUrl();
 const avisoHref = localizedPath("/aviso-de-privacidad", locale);
+const cancelacionHref = localizedPath("/politica-de-cancelacion", locale);
+const restriccionesHref = localizedPath("/politicas-y-restricciones", locale);
 ---
 
 <PageShell
@@ -63,14 +65,15 @@ const avisoHref = localizedPath("/aviso-de-privacidad", locale);
       The minimum age to fly is 4 years or 1.10 m tall, and every minor flies accompanied by an
       adult: holding them during the flight is not allowed. Pregnant people cannot fly. The
       pilot in command may deny boarding to anyone not fit to fly safely. These restrictions admit
-      no exception and create no additional liability for Aerodiverti beyond what the cancellation
-      policy provides.
+      no exception and create no additional liability for Aerodiverti beyond what the
+      <a href={cancelacionHref}>cancellation policy</a> provides. The full list is in
+      <a href={restriccionesHref}>flight policies and restrictions</a>.
     </p>
 
     <h2>Cancellations and changes</h2>
     <p>
-      These are governed by the cancellation policy, which is part of these terms. If the weather
-      makes it unsafe to fly, we reschedule your flight at no cost.
+      These are governed by the <a href={cancelacionHref}>cancellation policy</a>, which is part of
+      these terms. If the weather makes it unsafe to fly, we reschedule your flight at no cost.
     </p>
 
     <h2>Add-ons</h2>
