@@ -24,7 +24,7 @@ Estado: `PEND` = pendiente · `LISTO` = aplicado · `DUDA` = requiere decisión/
 | VIS-10 | Globopuerto: globos en tierra | **LISTO** (fotos en tierra del Drive) |
 | VIS-11 | Feedback al elegir vuelo (auto-scroll) | **LISTO** |
 | VIS-12 | Parallax doble exposición (foto fija) | **LISTO** |
-| VIS-13 | Homologar el nuevo logo en el flujo de reservas | `PEND` |
+| VIS-13 | Homologar el nuevo logo en el flujo de reservas | **LISTO** (código; falta subir logo en Stripe) |
 | VIS-14 | Paneles backend responsive (sin scroll horizontal) | **LISTO** |
 | VIS-15 | Favicon administrativo (azul/gris) para paneles backend | **LISTO** |
 
@@ -147,22 +147,20 @@ disciplina de un solo acento. Si quieres, dime en qué lista/bloque la aplico.
 
 ## 6. Marca / consistencia
 
-- **VIS-13 · Homologar el nuevo logo en el flujo de reservas** `PEND`
-  El nuevo **wordmark fucsia** (`aerodiverti-wordmark-dark.png`) ya está en el
-  menú (rail + barra móvil) en todo el sitio, incluida la página `/reservar`.
-  Falta homologarlo en el **resto del flujo de reserva**, donde hoy la marca
-  aparece como texto o no aparece:
-  - **Página de confirmación** `/reserva-confirmada` (y `en/`): poner el
-    wordmark en el encabezado del "boleto"/mensaje de éxito.
-  - **Correos de notificación** (`server/lib/templates.php`): encabezado con el
-    logo (imagen alojada por URL absoluta, no adjunta) en la confirmación al
-    cliente y en la alerta al admin.
-  - **Stripe Checkout**: subir el logo/branding en el panel de Stripe
-    (Configuración → Marca) para que la página de pago lo muestre.
-  - (Opcional) Reforzar el motivo "boarding pass" del `BookingWidget` con el
-    wordmark en el resumen del boleto.
-  Requiere una variante del logo con buen contraste según el fondo (para correos
-  con fondo claro puede convenir el wordmark original fucsia sobre blanco).
+- **VIS-13 · Homologar el nuevo logo en el flujo de reservas** `LISTO` (código)
+  El wordmark ya vivía en el menú (rail + barra móvil) de todo el sitio. Se
+  homologó en el resto del flujo:
+  - **Página de confirmación** `/reserva-confirmada` (es + en): wordmark en el
+    encabezado del "boleto", arriba del check de éxito. `LISTO`
+  - **Correos de notificación** (`server/lib/templates.php`): encabezado de marca
+    con el logo por **URL absoluta** (`{site_url}/aerodiverti-wordmark.png`, no
+    adjunto, dominio-agnóstico) sobre banda oscura para que el wordmark tratado
+    para oscuro se vea nítido; cuerpo claro legible. Aplica a la confirmación al
+    cliente y a la alerta al admin. Se añadió `public/aerodiverti-wordmark.png`
+    (PNG estable para correo; los clientes de correo no renderizan SVG). `LISTO`
+  - **Stripe Checkout**: subir el logo en el panel de Stripe (Configuración →
+    Marca). `PEND` — paso manual del negocio en el dashboard de Stripe.
+  - (Opcional, no hecho) Reforzar el motivo "boarding pass" del `BookingWidget`.
 
 ---
 
@@ -192,8 +190,8 @@ prueba. Son requisitos **antes de salir a producción**.
 
 ## Estado
 
-Fase de backlog visual cerrada (VIS-00..VIS-12 LISTO/RESUELTO). Backend:
-**VIS-14** (responsive) y **VIS-15** (favicon administrativo) **LISTO**.
-Único pendiente: **VIS-13** (homologar logo en el flujo de reservas). Si el
-diseñador comparte el **archivo vectorial** del logo (.ai/.eps/PDF vectorial),
-se puede reemplazar el wordmark tratado por un SVG vectorial puro.
+Backlog visual **cerrado en código**: VIS-00..VIS-15 LISTO/RESUELTO. Único paso
+manual pendiente: subir el **logo en Stripe** (parte de VIS-13, en el dashboard
+de Stripe → Marca). Si el diseñador comparte el **archivo vectorial** del logo
+(.ai/.eps/PDF vectorial), se puede reemplazar el wordmark tratado por un SVG
+vectorial puro.

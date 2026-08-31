@@ -13,6 +13,35 @@ function money_mxn(int $cents): string
 }
 
 /**
+ * Envuelve el texto del correo en un HTML de marca: encabezado con el wordmark
+ * sobre banda oscura (asi el logo tratado para oscuro se ve nitido) y cuerpo
+ * claro legible. El logo va por URL ABSOLUTA (no adjunto) tomada de site_url:
+ * dominio-agnostico. Si no hay site_url, cae al nombre en texto.
+ */
+function email_brand_html(string $bodyText): string
+{
+    $site = '';
+    if (function_exists('load_config')) {
+        $cfg = load_config();
+        $site = rtrim((string) ($cfg['site_url'] ?? ''), '/');
+    }
+    $body = nl2br(htmlspecialchars($bodyText, ENT_QUOTES, 'UTF-8'));
+    $logo = $site !== ''
+        ? '<img src="' . htmlspecialchars($site . '/aerodiverti-wordmark.png', ENT_QUOTES, 'UTF-8')
+            . '" alt="Aerodiverti" width="176" style="height:32px;width:auto;border:0;display:inline-block" />'
+        : '<span style="color:#ea83c1;font-weight:700;font-size:18px">Aerodiverti</span>';
+
+    return '<!doctype html><html><body style="margin:0;background:#f4f4f6">'
+        . '<div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;'
+        . 'font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">'
+        . '<div style="background:#15171e;padding:22px 24px;text-align:center">' . $logo . '</div>'
+        . '<div style="padding:24px;color:#23252b;font-size:15px;line-height:1.6">' . $body . '</div>'
+        . '<div style="padding:14px 24px;color:#9aa0aa;font-size:12px;text-align:center;border-top:1px solid #eee">'
+        . 'Aerodiverti · Vuelos en globo sobre Teotihuacan</div>'
+        . '</div></body></html>';
+}
+
+/**
  * Construye el contenido de una notificacion segun su tipo.
  * $b = fila de la reserva (bookings). Devuelve subject/text/html.
  *
@@ -93,7 +122,7 @@ function render_notification(string $kind, array $b): array
     }
 
     $text = implode("\n", array_filter($lines, static fn($l) => $l !== ""));
-    $html = nl2br(htmlspecialchars($text, ENT_QUOTES, 'UTF-8'));
+    $html = email_brand_html($text);
 
     return ['subject' => $subject, 'text' => $text, 'html' => $html];
 }

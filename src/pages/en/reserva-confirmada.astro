@@ -1,7 +1,9 @@
 ---
 import PageShell from "@layouts/PageShell.astro";
 import Icon from "@components/ui/Icon.astro";
-import { whatsappUrl } from "@config/site";
+import { Image } from "astro:assets";
+import wordmark from "@/assets/brand/aerodiverti-wordmark-dark.png";
+import { whatsappUrl, site } from "@config/site";
 
 const locale = "en" as const;
 const wa = whatsappUrl("Hi, I just booked my flight. I'd like to confirm the details.");
@@ -15,6 +17,7 @@ const wa = whatsappUrl("Hi, I just booked my flight. I'd like to confirm the det
   noindex
 >
   <section class="confirm container-narrow">
+    <Image src={wordmark} alt={site.name} class="confirm-brand" loading="eager" />
     <span class="confirm-badge"><Icon name="check-circle" /></span>
     <h1 class="confirm-title">Your booking is confirmed</h1>
     <p class="confirm-ref" data-ref>
@@ -69,6 +72,13 @@ const wa = whatsappUrl("Hi, I just booked my flight. I'd like to confirm the det
     padding-block: var(--space-2xl) var(--space-3xl);
     text-align: center;
     max-width: 640px;
+  }
+  .confirm-brand {
+    display: block;
+    height: 1.9rem;
+    width: auto;
+    max-width: 70%;
+    margin: 0 auto var(--space-lg);
   }
   .confirm-badge {
     display: inline-grid;
