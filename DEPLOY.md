@@ -39,8 +39,27 @@ workflow a mano (**Actions → Deploy sitio → Run workflow**) y verifica que e
 sitio se actualiza y que **el panel y las reservas siguen intactos**. Recién
 entonces se cambia a las credenciales/URL de producción.
 
-## Pendiente en esta fase (siguiente paso)
+## Panel de contenido `/admin` en vivo (OAuth de GitHub)
 
-Login del panel de contenido en el servidor (proxy OAuth de GitHub), para que el
-negocio pueda editar desde `/admin` en vivo sin depender de dev. Se documenta al
-implementarlo.
+Para que el negocio edite contenido desde `/admin` en el sitio real (no solo en
+dev), el login usa un proxy OAuth propio en PHP (`server/public/api/oauth/`).
+Configuración de una sola vez:
+
+1. **Ruta limpia `/api/`.** Copia el contenido de
+   `server/deploy/public_html.htaccess.example` a un archivo `.htaccess` en la
+   raíz `public_html/`. Deja los endpoints en `/api/...` (panel, checkout,
+   webhook, oauth).
+2. **GitHub OAuth App.** GitHub → Settings → Developer settings → OAuth Apps →
+   New. En *Authorization callback URL* pon
+   `https://TU-DOMINIO/api/oauth/callback.php`. Copia el **Client ID** y genera
+   un **Client Secret**.
+3. **Credenciales en el servidor.** En `server/config.php`, bloque `oauth`, pega
+   `github_client_id` y `github_client_secret`. Viven solo en el servidor.
+4. **Dominio en el CMS.** En `public/admin/config.yml`, cambia
+   `base_url: https://REEMPLAZA-CON-TU-DOMINIO` por el dominio real (staging o
+   producción). Es el único valor dependiente del dominio.
+5. Abre `https://TU-DOMINIO/admin`, entra con GitHub y edita. Al **Publicar**,
+   Decap hace commit a `main` y el pipeline de arriba reconstruye y despliega.
+
+> Para probar en **staging** primero, usa la URL del staging en el paso 2 (callback),
+> en el paso 4 (base_url) y en `PUBLIC_SITE_URL`.
