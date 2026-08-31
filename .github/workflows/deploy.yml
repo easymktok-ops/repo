@@ -1,0 +1,58 @@
+name: Deploy sitio (build + FTP)
+
+# Reconstruye el sitio estatico y lo publica en el hosting cada vez que cambia
+# `main` (incluye los commits que hace el panel de contenido /admin al publicar).
+# Tambien se puede lanzar a mano desde la pestana Actions (workflow_dispatch).
+#
+# SEGURIDAD: el sitio estatico vive en la misma carpeta que el backend PHP y la
+# base de reservas (server/ y su SQLite). El bloque `exclude` PROTEGE esas rutas:
+# nunca se suben ni se borran desde aqui. No quites esas lineas.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-hosting
+  cancel-in-progress: true
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Construir el sitio
+        run: npm run build
+        env:
+          # URL absoluta del entorno destino (sitemap/canonical). Se define como
+          # Variable del repo, no se hardcodea. Staging o produccion segun el caso.
+          PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+
+      - name: Publicar por FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          # Carpeta raiz del sitio en el hosting (p.ej. "public_html/").
+          server-dir: ${{ vars.FTP_SERVER_DIR }}
+          local-dir: ./dist/
+          # --- PROTECCION: nunca subir ni borrar el backend ni los datos ---
+          exclude: |
+            **/server/**
+            **/data/**
+            **/.htaccess
+            **/.htaccess.old
+            **/.well-known/**
+            **/.ftp-deploy-sync-state.json
