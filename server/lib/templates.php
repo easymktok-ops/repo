@@ -31,7 +31,9 @@ function email_brand_html(string $bodyText): string
             . '" alt="Aerodiverti" width="176" style="height:32px;width:auto;border:0;display:inline-block" />'
         : '<span style="color:#ea83c1;font-weight:700;font-size:18px">Aerodiverti</span>';
 
-    return '<!doctype html><html><body style="margin:0;background:#f4f4f6">'
+    return '<!doctype html><html><head><meta charset="utf-8">'
+        . '<meta name="viewport" content="width=device-width,initial-scale=1"></head>'
+        . '<body style="margin:0;background:#f4f4f6">'
         . '<div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:12px;overflow:hidden;'
         . 'font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">'
         . '<div style="background:#15171e;padding:22px 24px;text-align:center">' . $logo . '</div>'
