@@ -1,0 +1,22 @@
+# -----------------------------------------------------------------------------
+# .htaccess de referencia para la RAIZ del sitio (public_html/).
+# Copia su contenido a un archivo llamado exactamente ".htaccess" en public_html.
+#
+# Que hace: expone los endpoints PHP en la ruta limpia /api/... aunque en disco
+# vivan en server/public/api/. Asi el panel, el checkout, el webhook y el OAuth
+# quedan en URLs estables:
+#   /api/panel.php
+#   /api/create-checkout-session.php
+#   /api/webhook.php
+#   /api/oauth/auth.php   /api/oauth/callback.php
+#
+# El pipeline de deploy NO toca este archivo (esta excluido), es infra manual.
+# -----------------------------------------------------------------------------
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # /api/loquesea  ->  server/public/api/loquesea  (rewrite interno, la URL no cambia)
+  RewriteCond %{REQUEST_URI} ^/api/
+  RewriteRule ^api/(.*)$ server/public/api/$1 [L]
+</IfModule>

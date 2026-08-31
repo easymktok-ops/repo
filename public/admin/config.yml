@@ -15,8 +15,15 @@ backend:
   name: github
   repo: easymktok-ops/repo # se confirma en Fase 5 (identidad de repo, no dominio)
   branch: main # rama de publicacion; ajustable en el corte a produccion
+  # Proxy OAuth propio (PHP) en el hosting. `base_url` es el ORIGEN del sitio:
+  # es el unico valor dependiente del dominio, se fija en el corte a produccion
+  # (igual que PUBLIC_SITE_URL). `auth_endpoint` es la ruta del proxy.
+  base_url: https://REEMPLAZA-CON-TU-DOMINIO
+  auth_endpoint: api/oauth/auth.php
 
 # Edicion local inmediata sin OAuth: `npm run cms:proxy` + abrir /admin en dev.
+# local_backend solo se activa en localhost; en el dominio real usa el backend
+# github de arriba, asi que puede quedarse encendido sin afectar produccion.
 local_backend: true
 
 # Medios: los uploads del dueno van aqui. El binding fino con el pipeline de

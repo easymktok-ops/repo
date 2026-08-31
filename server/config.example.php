@@ -93,6 +93,16 @@ return [
         'password_hash' => getenv('PANEL_PASSWORD_HASH') ?: '',
     ],
 
+    // --- OAuth para el panel de contenido (/admin, Decap CMS) --------------
+    // Login del CMS via GitHub, usando el proxy en server/public/api/oauth/.
+    // Crea una GitHub OAuth App (Settings -> Developer settings -> OAuth Apps):
+    //   - Authorization callback URL: https://TU-DOMINIO/api/oauth/callback.php
+    // y pega aqui el Client ID y el Client Secret. Viven SOLO en el servidor.
+    'oauth' => [
+        'github_client_id'     => getenv('OAUTH_GITHUB_CLIENT_ID') ?: '',
+        'github_client_secret' => getenv('OAUTH_GITHUB_CLIENT_SECRET') ?: '',
+    ],
+
     // Orden permitido para el redirect de Stripe. Solo se aceptan slugs que
     // existan en catalog.json; esto es una capa extra de allowlist de origenes
     // para CORS si el front vive en otro host (por defecto: mismo origen).
