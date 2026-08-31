@@ -50,9 +50,14 @@ jobs:
           local-dir: ./dist/
           # --- PROTECCION: nunca subir ni borrar el backend ni los datos ---
           exclude: |
+            server/**
             **/server/**
+            data/**
             **/data/**
+            .htaccess
             **/.htaccess
+            .htaccess.old
             **/.htaccess.old
+            .well-known/**
             **/.well-known/**
             **/.ftp-deploy-sync-state.json
