@@ -25,8 +25,8 @@ Estado: `PEND` = pendiente · `LISTO` = aplicado · `DUDA` = requiere decisión/
 | VIS-11 | Feedback al elegir vuelo (auto-scroll) | **LISTO** |
 | VIS-12 | Parallax doble exposición (foto fija) | **LISTO** |
 | VIS-13 | Homologar el nuevo logo en el flujo de reservas | `PEND` |
-| VIS-14 | Paneles backend responsive (sin scroll horizontal) | `PEND` |
-| VIS-15 | Favicon administrativo (azul/gris) para paneles backend | `PEND` |
+| VIS-14 | Paneles backend responsive (sin scroll horizontal) | **LISTO** |
+| VIS-15 | Favicon administrativo (azul/gris) para paneles backend | **LISTO** |
 
 Todo el cambio de color es sistémico: sale de un solo token `--accent` en
 `src/styles/tokens.css`. No hay fucsia hardcodeado en componentes.
@@ -171,29 +171,29 @@ disciplina de un solo acento. Si quieres, dime en qué lista/bloque la aplico.
 Registrados el **2026-08-31**, tras validar el panel de ventas en el sitio de
 prueba. Son requisitos **antes de salir a producción**.
 
-- **VIS-14 · Paneles backend responsive** `PEND`
-  El panel de ventas (`server/public/api/panel.php`) y el admin de contenido
-  (`/admin`, Decap CMS en `public/admin/`) deben ser **adaptables** a cualquier
-  ancho. Hoy la tabla de reservas **desborda** y aparece una **barra de scroll
-  horizontal** (ver captura del cliente). Objetivo: layout fluido que se ajuste
-  al viewport (en móvil/tablet, columnas menos críticas se apilan u ocultan;
-  el contenedor no genera scroll horizontal). Aplica al panel y, en lo que se
-  pueda tocar, al CMS de contenido.
+- **VIS-14 · Paneles backend responsive** `LISTO`
+  La barra de scroll horizontal salía en el **panel de ventas**: la tabla tenía
+  `min-width:820px` y los correos largos no cortaban, empujando el ancho.
+  Solución en `server/public/api/panel.php`: se quitó el ancho mínimo forzado,
+  los correos ahora cortan (`overflow-wrap`) y las columnas tienen **prioridad**:
+  en tablet (≤960px) se ocultan Vuelo, Fecha de vuelo y Saldo en sitio; en móvil
+  (≤640px) además Creada, Pax y Modo, dejando Folio · Cliente · Pagado · Estado.
+  Así cabe sin scroll horizontal a cualquier ancho. El admin de contenido
+  (`/admin`, Decap) ya es responsive por sí mismo.
 
-- **VIS-15 · Favicon administrativo (diferenciar backend del front)** `PEND`
-  Dar favicon propio al **panel de ventas** y al **admin de contenido**: el mismo
-  globo del favicon principal (`public/favicon.svg`) pero en **otro color**
-  (azul o gris, tono administrativo) para señalar de un vistazo que es **backend**
-  y diferenciarlo del front (que va en fucsia). Hoy los paneles no tienen favicon
-  propio. Nota: el globo es SVG con `--accent`; basta una variante con el relleno
-  en azul/gris y enlazarla desde el `<head>` de `panel.php` y del `/admin`.
+- **VIS-15 · Favicon administrativo (diferenciar backend del front)** `LISTO`
+  Mismo globo del favicon principal pero en **azul** (tono administrativo) para
+  señalar que es backend. `public/favicon-admin.svg` (enlazado en
+  `public/admin/index.html`) para el CMS de contenido, y una variante embebida
+  (data-URI base64, para no romper el "un solo archivo") en el `<head>` del
+  panel de ventas `panel.php`. El front sigue en fucsia.
 
 ---
 
 ## Estado
 
-Fase de backlog visual cerrada (VIS-00..VIS-12 LISTO/RESUELTO). Pendientes:
-**VIS-13** (homologar logo en el flujo de reservas) y, antes de producción,
-**VIS-14** (paneles backend responsive) y **VIS-15** (favicon administrativo).
-Si el diseñador comparte el **archivo vectorial** del logo (.ai/.eps/PDF
-vectorial), se puede reemplazar el wordmark tratado por un SVG vectorial puro.
+Fase de backlog visual cerrada (VIS-00..VIS-12 LISTO/RESUELTO). Backend:
+**VIS-14** (responsive) y **VIS-15** (favicon administrativo) **LISTO**.
+Único pendiente: **VIS-13** (homologar logo en el flujo de reservas). Si el
+diseñador comparte el **archivo vectorial** del logo (.ai/.eps/PDF vectorial),
+se puede reemplazar el wordmark tratado por un SVG vectorial puro.

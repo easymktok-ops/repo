@@ -344,9 +344,9 @@ function render_list(array $rows, int $total, int $page, int $pages, array $f): 
       <table>
         <thead>
           <tr>
-            <th>Folio</th><th>Creada</th><th>Cliente</th><th>Vuelo</th>
-            <th class="num">Pax</th><th>Fecha vuelo</th><th>Modo</th>
-            <th class="num">Pagado</th><th class="num">Saldo en sitio</th><th>Estado</th>
+            <th>Folio</th><th class="hide-sm">Creada</th><th>Cliente</th><th class="hide-md">Vuelo</th>
+            <th class="num hide-sm">Pax</th><th class="hide-md">Fecha vuelo</th><th class="hide-sm">Modo</th>
+            <th class="num">Pagado</th><th class="num hide-md">Saldo en sitio</th><th>Estado</th>
           </tr>
         </thead>
         <tbody>
@@ -356,17 +356,17 @@ function render_list(array $rows, int $total, int $page, int $pages, array $f): 
         <?php foreach ($rows as $r): [$label, $cls] = status_badge($r); ?>
           <tr onclick="location.href='<?= h(self_url(['view' => 'booking', 'id' => $r['id']])) ?>'">
             <td class="mono"><?= h($r['reference']) ?></td>
-            <td class="muted"><?= h(substr((string) $r['created_at'], 0, 16)) ?></td>
-            <td>
+            <td class="muted hide-sm"><?= h(substr((string) $r['created_at'], 0, 16)) ?></td>
+            <td class="cust">
               <div class="strong"><?= h($r['customer_name']) ?></div>
-              <div class="muted sm"><?= h($r['customer_email']) ?></div>
+              <div class="muted sm break"><?= h($r['customer_email']) ?></div>
             </td>
-            <td><?= h($r['package_title']) ?></td>
-            <td class="num"><?= (int) $r['passengers'] ?></td>
-            <td><?= h($r['flight_date'] ?: '—') ?></td>
-            <td><?= $r['mode'] === 'deposit' ? 'Anticipo' : 'Pago total' ?></td>
+            <td class="hide-md"><?= h($r['package_title']) ?></td>
+            <td class="num hide-sm"><?= (int) $r['passengers'] ?></td>
+            <td class="hide-md"><?= h($r['flight_date'] ?: '—') ?></td>
+            <td class="hide-sm"><?= $r['mode'] === 'deposit' ? 'Anticipo' : 'Pago total' ?></td>
             <td class="num"><?= money_cents((int) $r['amount_now_cents'], $r['currency']) ?></td>
-            <td class="num"><?= ($r['mode'] === 'deposit' && empty($r['balance_paid_at']) && empty($r['cancelled_at']) && $r['status'] === 'paid') ? money_cents((int) $r['balance_cents'], $r['currency']) : '—' ?></td>
+            <td class="num hide-md"><?= ($r['mode'] === 'deposit' && empty($r['balance_paid_at']) && empty($r['cancelled_at']) && $r['status'] === 'paid') ? money_cents((int) $r['balance_cents'], $r['currency']) : '—' ?></td>
             <td><span class="badge <?= $cls ?>"><?= h($label) ?></span></td>
           </tr>
         <?php endforeach; ?>
@@ -499,6 +499,21 @@ function action_btn(int $id, string $act, string $csrf, string $label, string $s
         . '</form>';
 }
 
+/** Favicon administrativo (globo AZUL) embebido: distingue backend del front. */
+function panel_favicon(): string
+{
+    $svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">'
+        . '<defs><linearGradient id="e" x1="16" y1="3" x2="16" y2="24" gradientUnits="userSpaceOnUse">'
+        . '<stop offset="0" stop-color="#9cc2f5"/><stop offset="1" stop-color="#3f76c9"/></linearGradient></defs>'
+        . '<rect width="32" height="32" rx="7" fill="#15171e"/>'
+        . '<path d="M16 3.4C10 3.4 5.8 7.9 5.8 13.1c0 4.6 3.3 7.8 7.3 9.3l1.1 1.8h3.6l1.1-1.8c4-1.5 7.3-4.7 7.3-9.3C26.2 7.9 22 3.4 16 3.4Z" fill="url(#e)"/>'
+        . '<g stroke="#15171e" stroke-width="0.9" fill="none" opacity="0.55" stroke-linecap="round">'
+        . '<path d="M16 3.6 16 23"/><path d="M16 3.6C12.3 8 11 15 12.8 22.1"/><path d="M16 3.6C19.7 8 21 15 19.2 22.1"/></g>'
+        . '<path d="M13.4 22.6 14.4 24.4M18.6 22.6 17.6 24.4" stroke="#9cc2f5" stroke-width="1.3" stroke-linecap="round"/>'
+        . '<rect x="13.5" y="24.4" width="5" height="3.4" rx="1" fill="#9cc2f5"/></svg>';
+    return '<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,' . base64_encode($svg) . '">';
+}
+
 function render_login(): void
 {
     $csrf = csrf_token();
@@ -508,6 +523,7 @@ function render_login(): void
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
     <title>Panel · Aerodiverti</title>
+    <?= panel_favicon() ?>
     <?= panel_css() ?>
     </head>
     <body class="loginbg">
@@ -536,6 +552,7 @@ function render_layout(string $title, string $body, array $kpi, bool $showKpi): 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
     <title><?= h($title) ?> · Panel Aerodiverti</title>
+    <?= panel_favicon() ?>
     <?= panel_css() ?>
     </head>
     <body>
@@ -615,7 +632,16 @@ function panel_css(): string
       .filters input:focus,.filters select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
       .count{color:var(--muted);font-size:.85rem;margin-bottom:.6rem}
       .tablewrap{overflow-x:auto;border:1px solid var(--line-soft);border-radius:14px;background:var(--surface)}
-      table{width:100%;border-collapse:collapse;font-size:.9rem;min-width:820px}
+      table{width:100%;border-collapse:collapse;font-size:.9rem}
+      td.cust{min-width:150px} td .break{overflow-wrap:anywhere}
+      /* Columnas por prioridad: se ocultan las secundarias al angostar el ancho,
+         para que la tabla quepa sin barra de scroll horizontal (VIS-14). */
+      @media(max-width:960px){.hide-md{display:none}}
+      @media(max-width:640px){
+        .hide-sm{display:none}
+        thead th,tbody td{padding:.55rem .5rem}
+        .wrap{padding-left:.8rem;padding-right:.8rem}
+      }
       thead th{text-align:left;font-size:.74rem;text-transform:uppercase;letter-spacing:.05em;color:var(--faint);
         padding:.7rem .8rem;border-bottom:1px solid var(--line-soft);white-space:nowrap}
       thead th.num{text-align:right}
