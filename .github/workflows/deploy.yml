@@ -54,6 +54,8 @@ jobs:
             **/server/**
             data/**
             **/data/**
+            aerodiverti.com/**
+            **/aerodiverti.com/**
             .htaccess
             **/.htaccess
             .htaccess.old
