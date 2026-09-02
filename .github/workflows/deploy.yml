@@ -10,7 +10,9 @@ name: Deploy sitio (build + FTP)
 
 on:
   push:
-    branches: [main]
+    # `main` es la rama de produccion. La rama de trabajo se incluye
+    # temporalmente para probar el pipeline en staging antes del corte final.
+    branches: [main, claude/aerodiverti-platform-xajbkz]
   workflow_dispatch:
 
 concurrency:
