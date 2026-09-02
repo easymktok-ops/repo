@@ -10,9 +10,7 @@ name: Deploy sitio (build + FTP)
 
 on:
   push:
-    # `main` es la rama de produccion. La rama de trabajo se incluye
-    # temporalmente para probar el pipeline en staging antes del corte final.
-    branches: [main, claude/aerodiverti-platform-xajbkz]
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
@@ -50,7 +48,6 @@ jobs:
           # Carpeta raiz del sitio en el hosting (p.ej. "public_html/").
           server-dir: ${{ vars.FTP_SERVER_DIR }}
           local-dir: ./dist/
-          log-level: verbose
           # --- PROTECCION: nunca subir ni borrar el backend ni los datos ---
           exclude: |
             server/**
