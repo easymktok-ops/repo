@@ -16,6 +16,20 @@ require __DIR__ . '/../../../lib/bootstrap.php';
 
 $config = load_config();
 $oauth = $config['oauth'] ?? [];
+
+// FASE 2: interruptor. Mientras el panel de contenido no esté liberado
+// (oauth.enabled != true), no se dispara el flujo: se muestra un aviso amable
+// en vez de exponer errores del sistema. TODO: Phase 2 -> poner 'enabled' => true.
+if (empty($oauth['enabled'])) {
+    http_response_code(503);
+    header('Content-Type: text/html; charset=utf-8');
+    header('Retry-After: 3600');
+    exit('<!doctype html><meta charset="utf-8"><title>Fase 2</title>'
+        . '<body style="font-family:system-ui;background:#0f1013;color:#ecedf1;'
+        . 'display:grid;place-items:center;height:100vh;margin:0;text-align:center">'
+        . '<p>Módulo de administración de contenido en preparación (Fase 2).</p></body>');
+}
+
 $clientId = (string) ($oauth['github_client_id'] ?? '');
 
 if ($clientId === '') {

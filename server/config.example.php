@@ -99,6 +99,10 @@ return [
     //   - Authorization callback URL: https://TU-DOMINIO/api/oauth/callback.php
     // y pega aqui el Client ID y el Client Secret. Viven SOLO en el servidor.
     'oauth' => [
+        // FASE 2: pon 'enabled' => true SOLO cuando el panel de contenido este
+        // liberado (y restaura el index.html de Decap). Mientras este en false,
+        // /admin muestra "en preparacion" y los endpoints OAuth quedan inertes.
+        'enabled'              => false,
         'github_client_id'     => getenv('OAUTH_GITHUB_CLIENT_ID') ?: '',
         'github_client_secret' => getenv('OAUTH_GITHUB_CLIENT_SECRET') ?: '',
     ],

@@ -6,17 +6,65 @@
     <meta name="robots" content="noindex" />
     <link rel="icon" type="image/svg+xml" href="/favicon-admin.svg" />
     <title>Aerodiverti · Administración de contenido</title>
+    <!--
+      FASE 1 (Beta operativa): el panel de administración de contenido (Decap CMS
+      + OAuth GitHub) queda EN PAUSA. Su cargador real está preservado en
+      `index.phase2.html`. Para reactivarlo en la Fase 2, restaura ese archivo
+      como `index.html`. Esta pantalla estática no dispara el flujo OAuth (por eso
+      no puede toparse con el 403 del WAF en el callback).
+    -->
+    <style>
+      :root { color-scheme: dark; }
+      * { box-sizing: border-box; margin: 0; }
+      body {
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: 1.5rem;
+        background: radial-gradient(120% 90% at 50% 0%, #1a1c24, #0f1013);
+        color: #ecedf1;
+        font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .card {
+        width: 100%;
+        max-width: 420px;
+        text-align: center;
+        background: #1c1f27;
+        border: 1px solid #262b34;
+        border-radius: 16px;
+        padding: 2.2rem 1.6rem;
+      }
+      .logo { height: 1.9rem; width: auto; margin: 0 auto 1.4rem; display: block; }
+      .badge {
+        display: inline-grid; place-items: center;
+        width: 3rem; height: 3rem; border-radius: 999px;
+        background: color-mix(in srgb, #ea83c1 16%, transparent);
+        color: #ea83c1; font-size: 1.4rem; margin-bottom: 1rem;
+      }
+      h1 { font-size: 1.25rem; letter-spacing: -0.01em; margin-bottom: 0.5rem; }
+      p { color: #a6abb5; line-height: 1.55; font-size: 0.95rem; margin-bottom: 1.5rem; }
+      .btn {
+        display: inline-block; font-weight: 600; font-size: 0.9rem;
+        text-decoration: none; color: #17131a; background: #ea83c1;
+        border-radius: 999px; padding: 0.65rem 1.4rem;
+        transition: background-color 0.15s ease;
+      }
+      .btn:hover { background: #f7a0d4; }
+      .foot { margin-top: 1.4rem; font-size: 0.78rem; color: #6b7280; }
+    </style>
   </head>
   <body>
-    <!--
-      Panel de autoadministración (Decap CMS). Solo para el dueño del negocio:
-      edita precios, disponibilidad, fotos, promos y FAQ SIN tocar código ni
-      maquetado. El schema (config.yml + Content Collections) valida cada campo,
-      así que es imposible romper el sitio al editar contenido.
-
-      Se carga desde CDN porque es una herramienta de back-office privada
-      (noindex), no la web pública. La web de conversión no depende de esto.
-    -->
-    <script src="https://unpkg.com/decap-cms@^3.6.0/dist/decap-cms.js"></script>
+    <main class="card">
+      <img class="logo" src="/aerodiverti-wordmark.svg" alt="Aerodiverti" />
+      <div class="badge">🛠️</div>
+      <h1>Módulo en preparación</h1>
+      <p>
+        El panel de administración de contenido estará disponible muy pronto
+        (Fase 2). Mientras tanto, el sitio y las reservas funcionan con normalidad.
+      </p>
+      <a class="btn" href="/">Ir al inicio</a>
+      <div class="foot">Aerodiverti · Vuelos en globo sobre Teotihuacán</div>
+    </main>
   </body>
 </html>
