@@ -18,8 +18,10 @@ backend:
   # Proxy OAuth propio (PHP) en el hosting. `base_url` es el ORIGEN del sitio:
   # es el unico valor dependiente del dominio, se fija en el corte a produccion
   # (igual que PUBLIC_SITE_URL). `auth_endpoint` es la ruta del proxy.
-  base_url: https://REEMPLAZA-CON-TU-DOMINIO
-  auth_endpoint: api/oauth/auth.php
+  # STAGING (valor de prueba; en el corte a produccion se cambia por el dominio
+  # real y por la ruta corta /api/oauth/auth.php si se activa el rewrite).
+  base_url: https://aerodive-cp5027.wordpresstemporal.com
+  auth_endpoint: server/public/api/oauth/auth.php
 
 # Edicion local inmediata sin OAuth: `npm run cms:proxy` + abrir /admin en dev.
 # local_backend solo se activa en localhost; en el dominio real usa el backend
