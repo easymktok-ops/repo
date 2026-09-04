@@ -10,9 +10,7 @@ name: Deploy sitio (build + FTP)
 
 on:
   push:
-    # `main` = produccion. La rama de trabajo se incluye temporalmente para
-    # desplegar el beta en staging (FTP ya sin geo-bloqueo).
-    branches: [main, claude/aerodiverti-platform-xajbkz]
+    branches: [main]
   workflow_dispatch:
 
 concurrency:
