@@ -28,7 +28,7 @@ Repositorio → **Settings → Secrets and variables → Actions**.
 
 | Variable | Valor | Nota |
 | --- | --- | --- |
-| `PUBLIC_SITE_URL` | URL del entorno destino | Staging: `https://aerodive-cp5027.wordpresstemporal.com` · Producción: la URL real |
+| `PUBLIC_SITE_URL` | URL del entorno destino | Beta operativa: `https://beta.aerodiverti.mx` · Producción final: la URL real (`https://aerodiverti.mx`) |
 | `FTP_SERVER_DIR` | Carpeta raíz del sitio | Normalmente `public_html/` (confírmalo con la ruta que ves en el Administrador de archivos) |
 
 ## Recomendación: probar primero en STAGING
