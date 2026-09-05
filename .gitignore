@@ -11,6 +11,9 @@ dist/
 .env.production
 .env.local
 
+# demo: archivo intermedio para publicar el Artifact (se regenera con build_demo.py)
+demo/_content.html
+
 # logs / os
 npm-debug.log*
 *.log

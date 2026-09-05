@@ -1,0 +1,776 @@
+<title>Happy Puerto · Vuela feliz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+<style>
+  :root {
+    color-scheme: light;
+    --yellow: #f4b400; --yellow-dk: #c49000; --yellow-lt: #ffe066;
+    --cream: #fff9e6; --ink: #1d1d1d; --white: #fff;
+    --sky: #7fc7e8; --coral: #ff8a5b; --mint: #6fd8a4; --grape: #b98bd6; --rose: #ff6fa5;
+    --wa: #25d366;
+    --shadow-pop: 6px 6px 0 0 var(--ink);
+    --shadow-card: 0 10px 30px -12px rgba(29,29,29,.18);
+    --shadow-cardh: 0 18px 40px -12px rgba(244,180,0,.45);
+    --font-display: 'Bangers', 'Impact', cursive;
+    --font-sub: 'Fredoka', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--white); color: var(--ink);
+    font-family: var(--font-body); line-height: 1.6; overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  img { max-width: 100%; display: block; }
+  h1,h2,h3,h4 { margin: 0; line-height: 1.02; }
+  a { color: inherit; }
+  ::selection { background: var(--yellow); color: var(--ink); }
+  .disp { font-family: var(--font-display); letter-spacing: .04em; font-weight: 400; }
+  .sub { font-family: var(--font-sub); }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+  .sticker { display: inline-block; transform: rotate(-3deg); }
+  .eyebrow {
+    display: inline-block; border-radius: 999px; padding: 6px 16px;
+    font-family: var(--font-sub); font-weight: 600; font-size: 14px; margin-bottom: 14px;
+  }
+  section { position: relative; }
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 3px solid var(--ink); outline-offset: 2px; border-radius: 8px;
+  }
+
+  /* ---------- Cursor mascota ---------- */
+  #balloon-cursor {
+    position: fixed; top: 0; left: 0; width: 74px; height: 74px; z-index: 9999;
+    pointer-events: none; transform: translate(-200px,-200px); display: none; will-change: transform;
+  }
+  #balloon-cursor.idle { animation: bob 2s ease-in-out infinite; }
+  @keyframes bob { 0%,100%{ transform: translateY(0) rotate(-3deg);} 50%{ transform: translateY(-4px) rotate(3deg);} }
+
+  /* ---------- Nav ---------- */
+  header#nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; transition: background .3s, box-shadow .3s, backdrop-filter .3s; }
+  header#nav.solid { background: rgba(255,249,230,.85); backdrop-filter: blur(10px); box-shadow: 0 4px 20px -8px rgba(0,0,0,.2); }
+  .nav-in { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 12px 0; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .brand svg, .brand img { width: 46px; height: 46px; animation: bob 3s ease-in-out infinite; }
+  .brand span { font-family: var(--font-display); font-size: 24px; letter-spacing: .04em; }
+  .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; margin: 0; padding: 0; }
+  .nav-links a { font-family: var(--font-sub); font-weight: 500; text-decoration: none; position: relative; padding: 4px 0; }
+  .nav-links a::after { content:''; position:absolute; left:0; right:0; bottom:-2px; height:2px; background:var(--yellow); transform:scaleX(0); transform-origin:left; transition:transform .25s; }
+  .nav-links a:hover::after { transform: scaleX(1); }
+  .btn { font-family: var(--font-sub); font-weight: 600; text-decoration: none; border: none; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+  .btn-dark { background: var(--ink); color: #fff; border-radius: 999px; padding: 11px 22px; box-shadow: var(--shadow-pop); transition: transform .18s; }
+  .btn-dark:hover { transform: translateY(-2px); }
+  .hamb { display: none; width: 44px; height: 44px; border-radius: 999px; background: var(--ink); color: #fff; align-items: center; justify-content: center; border: none; cursor: pointer; }
+  #mobile-menu { display: none; background: rgba(255,249,230,.97); backdrop-filter: blur(10px); border-top: 1px solid rgba(29,29,29,.1); }
+  #mobile-menu.open { display: block; }
+  #mobile-menu ul { list-style: none; margin: 0; padding: 14px 20px; display: flex; flex-direction: column; gap: 4px; }
+  #mobile-menu a { font-family: var(--font-sub); font-weight: 500; font-size: 18px; text-decoration: none; padding: 12px; border-radius: 12px; }
+  #mobile-menu a:hover { background: var(--yellow-lt); }
+
+  /* ---------- Hero ---------- */
+  .hero { min-height: min(760px, 92vh); display: flex; align-items: center; color: #fff; overflow: hidden; background: var(--ink); }
+  .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center; }
+  .hero-veil { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(29,29,29,.55), rgba(29,29,29,.28) 45%, rgba(29,29,29,.72)); }
+  .hero-in { position: relative; z-index: 2; padding: 130px 0 70px; }
+  .hero h1 { font-family: var(--font-display); letter-spacing: .04em; font-size: clamp(2.9rem, 8.5vw, 6.6rem); line-height: .93; text-shadow: 0 3px 0 rgba(29,29,29,.35); }
+  .hero h1 .yl { color: var(--yellow); }
+  .hero p.lede { max-width: 34ch; margin: 22px 0 0; font-size: clamp(1.05rem,2.4vw,1.35rem); color: rgba(255,255,255,.92); }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+  .btn-yellow { background: var(--yellow); color: var(--ink); border-radius: 999px; padding: 15px 28px; font-size: 1.05rem; box-shadow: var(--shadow-pop); transition: transform .18s; }
+  .btn-yellow:hover { transform: translateY(-2px); }
+  .btn-ghost { border: 2px solid rgba(255,255,255,.8); background: rgba(255,255,255,.1); color: #fff; border-radius: 999px; padding: 13px 26px; font-size: 1.05rem; backdrop-filter: blur(3px); transition: background .2s, color .2s; }
+  .btn-ghost:hover { background: #fff; color: var(--ink); }
+  .badge-hero { background: var(--yellow); color: var(--ink); box-shadow: var(--shadow-pop); }
+
+  /* ---------- Trust bar ---------- */
+  .trust { background: var(--ink); color: #fff; }
+  .trust ul { list-style: none; margin: 0; padding: 22px 0; display: flex; gap: 22px; overflow-x: auto; }
+  .trust li { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .trust .ic { width: 38px; height: 38px; border-radius: 999px; background: var(--yellow); color: var(--ink); display: grid; place-items: center; flex-shrink: 0; }
+  .trust span { font-family: var(--font-sub); font-weight: 500; white-space: nowrap; }
+  @media (min-width: 900px){ .trust ul { justify-content: space-between; overflow: visible; } }
+
+  /* ---------- Section heads ---------- */
+  .sec { padding: 84px 0; }
+  .sec-head { max-width: 640px; }
+  .sec-head.center { margin: 0 auto; text-align: center; }
+  .sec-title { font-family: var(--font-display); letter-spacing: .03em; font-size: clamp(2.3rem, 6vw, 4.2rem); line-height: .95; }
+  .sec-sub { margin-top: 14px; font-size: 1.12rem; color: rgba(29,29,29,.7); }
+
+  /* ---------- Packages ---------- */
+  .pk-sec { background: var(--cream); }
+  .blob { position: absolute; border-radius: 999px; filter: blur(60px); pointer-events: none; }
+  .pk-grid { display: grid; grid-template-columns: 1fr; gap: 22px; margin-top: 44px; }
+  @media (min-width: 680px){ .pk-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px){ .pk-grid { grid-template-columns: repeat(12, 1fr); gap: 24px; } .s8{grid-column:span 8;} .s4{grid-column:span 4;} .s12{grid-column:span 12;} }
+  @media (min-width: 680px) and (max-width: 1023px){ .s12{ grid-column: span 2; } }
+  .card { position: relative; background: #fff; border: 2px solid var(--ink); border-radius: 30px; box-shadow: var(--shadow-card); transition: transform .2s, box-shadow .2s; height: 100%; display: flex; flex-direction: column; overflow: hidden; }
+  .card:hover { transform: translateY(-5px) scale(1.01); box-shadow: var(--shadow-cardh); }
+  .card .strip { height: 10px; }
+  .card-body { padding: 26px; display: flex; flex-direction: column; flex: 1; }
+  .card .name { display: flex; align-items: center; gap: 8px; }
+  .card .name h3 { font-family: var(--font-display); letter-spacing: .04em; font-size: 2.1rem; }
+  .card .name .em { font-size: 1.5rem; }
+  .card .tag { margin-top: 4px; font-family: var(--font-sub); font-weight: 500; color: rgba(29,29,29,.68); font-size: 15px; }
+  .price { display: flex; align-items: flex-end; gap: 8px; margin-top: 16px; }
+  .price .big { font-family: var(--font-display); font-size: 3rem; line-height: .9; }
+  .price .u { font-family: var(--font-sub); font-weight: 500; font-size: 13px; color: rgba(29,29,29,.6); margin-bottom: 5px; }
+  ul.incl { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-direction: column; gap: 9px; }
+  ul.incl li { display: flex; align-items: flex-start; gap: 9px; font-size: 15px; color: rgba(29,29,29,.86); }
+  ul.incl .chk { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; }
+  .controls { margin-top: auto; padding-top: 22px; }
+  .ctl-label { font-family: var(--font-sub); font-weight: 500; font-size: 13px; color: rgba(29,29,29,.7); margin: 0 0 6px; display: block; }
+  .stepper { display: inline-flex; align-items: center; gap: 2px; border: 2px solid var(--ink); border-radius: 999px; padding: 4px; background: #fff; }
+  .stepper button { width: 36px; height: 36px; border-radius: 999px; border: none; background: transparent; font-family: var(--font-display); font-size: 1.5rem; cursor: pointer; display: grid; place-items: center; transition: background .15s; }
+  .stepper button:hover:not(:disabled) { background: var(--cream); }
+  .stepper button:disabled { opacity: .3; cursor: not-allowed; }
+  .stepper .val { width: 40px; text-align: center; font-family: var(--font-display); font-size: 1.5rem; }
+  input[type=date] { width: 100%; border: 2px solid var(--ink); border-radius: 14px; padding: 10px 14px; font-family: var(--font-body); font-size: 15px; background: #fff; }
+  input[type=date]:focus { outline: none; border-color: var(--yellow-dk); }
+  .field { margin-top: 16px; }
+  .cta-fly { margin-top: 18px; width: 100%; border: 2px solid var(--ink); border-radius: 999px; padding: 14px; font-family: var(--font-sub); font-weight: 600; font-size: 1.05rem; cursor: pointer; box-shadow: var(--shadow-pop); transition: transform .18s; display: inline-flex; align-items: center; justify-content: center; gap: 8px; color: var(--ink); }
+  .cta-fly:hover { transform: translateY(-2px); }
+  .badge-corner { position: absolute; right: -6px; top: -10px; transform: rotate(3deg); background: var(--yellow); border: 2px solid var(--ink); border-radius: 999px; padding: 5px 12px; font-family: var(--font-sub); font-weight: 700; font-size: 12px; box-shadow: var(--shadow-pop); z-index: 3; }
+  /* LOVE */
+  .love { display: grid; grid-template-columns: 1fr; }
+  @media (min-width: 760px){ .love { grid-template-columns: 1fr 1fr; } }
+  .love .ph { position: relative; min-height: 260px; }
+  .love .ph img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .love .ph .pill { position: absolute; left: 16px; top: 16px; background: var(--ink); color: #fff; border-radius: 999px; padding: 5px 12px; font-family: var(--font-sub); font-weight: 600; font-size: 12px; }
+
+  /* ---------- Steps ---------- */
+  .steps-wrap { position: relative; margin-top: 40px; }
+  .steps-line { position: absolute; left: 0; right: 0; top: 92px; height: 4px; background: linear-gradient(to right, var(--sky), var(--yellow), var(--coral)); display: none; }
+  @media (min-width: 1024px){ .steps-line { display: block; } }
+  .steps { list-style: none; margin: 0; padding: 0 0 6px; display: grid; grid-template-columns: 1fr; gap: 20px; }
+  @media (min-width: 640px){ .steps { grid-template-columns: repeat(2,1fr); } }
+  @media (min-width: 1024px){ .steps { grid-template-columns: repeat(4,1fr); gap: 24px; } }
+  .step { position: relative; background: var(--cream); border: 2px solid var(--ink); border-radius: 26px; overflow: hidden; box-shadow: var(--shadow-card); transition: transform .2s; display: flex; flex-direction: column; }
+  .step:hover { transform: translateY(-5px); }
+  .step .ph { height: 150px; overflow: hidden; position: relative; }
+  .step .ph img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+  .step:hover .ph img { transform: scale(1.06); }
+  .step .n { position: absolute; left: 12px; top: 12px; width: 42px; height: 42px; border-radius: 999px; border: 2px solid var(--ink); background: var(--yellow); display: grid; place-items: center; font-family: var(--font-display); font-size: 1.4rem; box-shadow: var(--shadow-pop); }
+  .step .txt { padding: 18px; }
+  .step h3 { font-family: var(--font-sub); font-weight: 600; font-size: 1.2rem; }
+  .step p { margin: 8px 0 0; font-size: 15px; color: rgba(29,29,29,.7); }
+
+  /* ---------- Gallery ---------- */
+  .gal-sec { background: var(--ink); color: #fff; }
+  .gal-sec .sec-sub { color: rgba(255,255,255,.72); }
+  .masonry { column-count: 2; column-gap: 12px; margin-top: 34px; }
+  @media (min-width: 760px){ .masonry { column-count: 3; } }
+  @media (min-width: 1080px){ .masonry { column-count: 4; } }
+  .masonry button { display: block; width: 100%; margin: 0 0 12px; padding: 0; border: 2px solid rgba(255,255,255,.12); border-radius: 16px; overflow: hidden; background: none; cursor: pointer; break-inside: avoid; transition: transform .2s, border-color .2s; }
+  .masonry button:hover { transform: translateY(-3px); border-color: rgba(244,180,0,.6); }
+
+  /* ---------- About ---------- */
+  .about { background: var(--yellow-lt); overflow: hidden; }
+  .about-grid { display: grid; grid-template-columns: 1fr; gap: 40px; align-items: center; }
+  @media (min-width: 1024px){ .about-grid { grid-template-columns: 1fr 1fr; gap: 64px; } }
+  .about p { font-size: 1.08rem; color: rgba(29,29,29,.86); margin: 0 0 16px; }
+  .about mark { background: var(--yellow); padding: 1px 6px; border-radius: 4px; font-weight: 600; }
+  .about .outline { color: #fff; -webkit-text-stroke: 2px var(--ink); }
+  .stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-top: 28px; }
+  .stat { border: 2px solid var(--ink); background: #fff; border-radius: 18px; padding: 16px; text-align: center; box-shadow: var(--shadow-pop); }
+  .stat dt { font-family: var(--font-display); font-size: 2.2rem; }
+  .stat dd { margin: 0; font-family: var(--font-sub); font-size: 13px; color: rgba(29,29,29,.7); }
+  .about-photo { position: relative; }
+  .about-photo .frame { position: absolute; inset: -12px; transform: rotate(3deg); background: #fff; border-radius: 30px; box-shadow: var(--shadow-card); }
+  .about-photo img { position: relative; border: 2px solid var(--ink); border-radius: 30px; box-shadow: var(--shadow-card); width: 100%; object-fit: cover; }
+
+  /* ---------- Reviews ---------- */
+  .rev-grid { display: grid; grid-template-columns: 1fr; gap: 22px; margin-top: 44px; }
+  @media (min-width: 820px){ .rev-grid { grid-template-columns: repeat(3,1fr); } }
+  .review { background: var(--cream); border: 2px solid var(--ink); border-radius: 28px; padding: 24px; box-shadow: var(--shadow-card); display: flex; flex-direction: column; }
+  .stars { display: flex; gap: 2px; margin-bottom: 12px; }
+  .review blockquote { margin: 0; flex: 1; color: rgba(29,29,29,.86); }
+  .review figcaption { margin-top: 18px; display: flex; align-items: center; gap: 12px; }
+  .avatar { width: 44px; height: 44px; border-radius: 999px; border: 2px solid var(--ink); display: grid; place-items: center; font-family: var(--font-display); font-size: 1.25rem; }
+  .review figcaption b { font-family: var(--font-sub); }
+  .viator { text-align: center; margin-top: 36px; }
+  .viator .disabled { display: inline-flex; align-items: center; gap: 8px; border: 2px solid var(--ink); background: #fff; border-radius: 999px; padding: 12px 24px; font-family: var(--font-sub); font-weight: 600; opacity: .6; cursor: not-allowed; }
+  .viator small { display: block; margin-top: 10px; color: rgba(29,29,29,.5); }
+
+  /* ---------- Policies ---------- */
+  .pol-sec { background: var(--cream); }
+  .acc { max-width: 720px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+  .acc-item { border: 2px solid var(--ink); border-radius: 18px; background: #fff; box-shadow: var(--shadow-pop); overflow: hidden; }
+  .acc-trigger { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 16px 20px; background: none; border: none; cursor: pointer; text-align: left; font-family: var(--font-sub); font-weight: 600; font-size: 1.1rem; color: var(--ink); }
+  .acc-chev { width: 32px; height: 32px; border-radius: 999px; background: var(--yellow); display: grid; place-items: center; flex-shrink: 0; transition: transform .3s; }
+  .acc-item.open .acc-chev { transform: rotate(45deg); }
+  .acc-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s ease; }
+  .acc-item.open .acc-panel { grid-template-rows: 1fr; }
+  .acc-panel > div { overflow: hidden; }
+  .acc-panel ul { margin: 0; padding: 0 20px 18px; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .acc-panel li { display: flex; gap: 9px; color: rgba(29,29,29,.8); }
+  .acc-panel li::before { content:''; width: 6px; height: 6px; border-radius: 999px; background: var(--yellow-dk); margin-top: 9px; flex-shrink: 0; }
+
+  /* ---------- Contact ---------- */
+  .con-grid { display: grid; grid-template-columns: 1fr; gap: 32px; margin-top: 44px; }
+  @media (min-width: 980px){ .con-grid { grid-template-columns: 1fr 1fr; } }
+  .con-cards { display: grid; grid-template-columns: 1fr; gap: 16px; }
+  @media (min-width: 560px){ .con-cards { grid-template-columns: 1fr 1fr; } }
+  .con-card { display: flex; gap: 14px; align-items: flex-start; text-decoration: none; color: inherit; border: 2px solid var(--ink); background: var(--cream); border-radius: 26px; padding: 20px; box-shadow: var(--shadow-pop); transition: transform .18s; }
+  .con-card:hover { transform: translateY(-4px); }
+  .con-card .ic { width: 48px; height: 48px; border-radius: 999px; border: 2px solid var(--ink); display: grid; place-items: center; flex-shrink: 0; }
+  .con-card .lab { font-family: var(--font-sub); font-weight: 600; font-size: 13px; color: rgba(29,29,29,.6); display: block; }
+  .con-card .val { font-family: var(--font-sub); font-weight: 600; font-size: 1.05rem; }
+  .map { border: 2px solid var(--ink); border-radius: 30px; overflow: hidden; box-shadow: var(--shadow-card); min-height: 340px; }
+  .mapcard { position: relative; display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--ink); background: radial-gradient(circle at 28% 26%, rgba(127,199,232,.28), transparent 58%), radial-gradient(circle at 74% 76%, rgba(111,216,164,.24), transparent 58%), var(--cream); }
+  .mapcard-grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(29,29,29,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(29,29,29,.06) 1px, transparent 1px); background-size: 34px 34px; }
+  .mapcard-body { position: relative; text-align: center; padding: 32px; display: flex; flex-direction: column; align-items: center; }
+  .mapcard-pin { width: 56px; height: 56px; border-radius: 999px; background: var(--yellow); border: 2px solid var(--ink); display: grid; place-items: center; box-shadow: var(--shadow-pop); margin-bottom: 14px; }
+  .mapcard-title { font-family: var(--font-sub); font-weight: 600; font-size: 1.15rem; }
+  .mapcard-sub { font-size: 14px; color: rgba(29,29,29,.65); margin-top: 4px; max-width: 30ch; }
+  .mapcard-btn { margin-top: 16px; display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: #fff; font-family: var(--font-sub); font-weight: 600; border-radius: 999px; padding: 10px 20px; transition: transform .18s; }
+  .mapcard:hover .mapcard-btn { transform: translateY(-2px); }
+
+  /* ---------- Footer ---------- */
+  footer { background: var(--ink); color: #fff; }
+  .foot-grid { display: grid; grid-template-columns: 1fr; gap: 36px; padding: 56px 0 0; }
+  @media (min-width: 780px){ .foot-grid { grid-template-columns: 1.5fr 1fr 1fr; } }
+  .foot-brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .foot-brand svg, .foot-brand img { width: 48px; height: 48px; }
+  #balloon-cursor svg, #balloon-cursor img { width: 100%; height: 100%; display: block; }
+  .foot-brand span { font-family: var(--font-display); font-size: 1.5rem; letter-spacing: .04em; }
+  footer h4 { font-family: var(--font-sub); font-size: 13px; text-transform: uppercase; letter-spacing: .06em; color: rgba(255,255,255,.5); margin: 0 0 14px; }
+  footer ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  footer ul a { color: rgba(255,255,255,.8); text-decoration: none; transition: color .2s; display: inline-flex; align-items: center; gap: 12px; }
+  footer ul a:hover { color: var(--yellow); }
+  .soc-ic { width: 36px; height: 36px; border-radius: 999px; border: 1px solid rgba(255,255,255,.22); display: grid; place-items: center; transition: all .2s; }
+  footer ul a:hover .soc-ic { border-color: var(--yellow); background: var(--yellow); color: var(--ink); }
+  .foot-bottom { margin-top: 44px; padding: 20px 0; border-top: 1px solid rgba(255,255,255,.1); display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; font-size: 14px; color: rgba(255,255,255,.62); }
+  .foot-bottom .em { color: var(--yellow); font-weight: 600; font-family: var(--font-sub); }
+
+  /* ---------- WA fab + demo tag ---------- */
+  .wa-fab { position: fixed; right: 20px; bottom: 20px; z-index: 40; width: 60px; height: 60px; border-radius: 999px; background: var(--wa); color: #fff; display: grid; place-items: center; box-shadow: 0 8px 24px -6px rgba(0,0,0,.35); text-decoration: none; transition: transform .2s; }
+  .wa-fab:hover { transform: scale(1.06); }
+  .wa-fab::before { content:''; position: absolute; inset: 0; border-radius: 999px; background: var(--wa); z-index: -1; animation: wapulse 3s ease-out infinite; }
+  @keyframes wapulse { 0%{ transform: scale(1); opacity: .55;} 70%{ transform: scale(1.7); opacity: 0;} 100%{ transform: scale(1.7); opacity: 0;} }
+  .demo-tag { position: fixed; left: 16px; bottom: 18px; z-index: 40; background: var(--ink); color: #fff; font-family: var(--font-sub); font-weight: 600; font-size: 12px; padding: 7px 14px; border-radius: 999px; box-shadow: var(--shadow-card); opacity: .92; }
+  .demo-tag b { color: var(--yellow); }
+
+  #lightbox { position: fixed; inset: 0; z-index: 10000; background: rgba(15,15,15,.93); display: none; align-items: center; justify-content: center; padding: 24px; }
+  #lightbox.open { display: flex; }
+  #lightbox img { max-width: min(1100px,92vw); max-height: 88vh; border-radius: 14px; box-shadow: 0 30px 80px -20px rgba(0,0,0,.7); }
+  #lightbox .x, #lightbox .nav { position: absolute; background: rgba(255,255,255,.1); color: #fff; border: none; border-radius: 999px; display: grid; place-items: center; cursor: pointer; backdrop-filter: blur(4px); }
+  #lightbox .x { top: 18px; right: 18px; width: 46px; height: 46px; }
+  #lightbox .nav { top: 50%; transform: translateY(-50%); width: 50px; height: 50px; }
+  #lightbox .prev { left: 18px; } #lightbox .next { right: 18px; }
+
+  @media (max-width: 860px){ .nav-links, .nav .btn-dark { display: none; } .hamb { display: inline-flex; } }
+  @media (min-width: 1024px){ body.cursor-on, body.cursor-on a, body.cursor-on button, body.cursor-on input { cursor: none; } }
+  @media (prefers-reduced-motion: reduce){ * { animation: none !important; transition: none !important; scroll-behavior: auto !important; } #balloon-cursor { display: none !important; } body.cursor-on { cursor: auto !important; } }
+</style>
+
+<!-- ============ NAV ============ -->
+<header id="nav">
+  <div class="wrap nav-in">
+    <a href="#top" class="brand" aria-label="Happy Puerto inicio">
+      @@LOGO@@
+      <span>Happy Puerto</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#paquetes">Paquetes</a></li>
+      <li><a href="#experiencia">Experiencia</a></li>
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+    <a href="#paquetes" class="btn btn-dark">¡Reserva ahora! 🎈</a>
+    <button class="hamb" id="hamb" aria-label="Abrir menú" aria-expanded="false">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+  <div id="mobile-menu">
+    <ul>
+      <li><a href="#paquetes">Paquetes</a></li>
+      <li><a href="#experiencia">Experiencia</a></li>
+      <li><a href="#nosotros">Nosotros</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+      <li><a href="#paquetes" class="btn btn-dark" style="justify-content:center;margin-top:6px;">¡Reserva ahora! 🎈</a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero-bg" style="background-image:url('@@HERO@@')"></div>
+  <div class="hero-veil"></div>
+  <div class="wrap hero-in">
+    <span class="eyebrow sticker badge-hero">🎈 Teotihuacán · Al amanecer</span>
+    <h1>VUELA SOBRE<br /><span class="yl">LAS PIRÁMIDES</span> 🎈</h1>
+    <p class="lede">La experiencia más feliz del cielo mexicano. Al amanecer, sobre Teotihuacán.</p>
+    <div class="hero-cta">
+      <a href="#paquetes" class="btn btn-yellow">Ver paquetes</a>
+      <a class="btn btn-ghost wa-link" data-msg="Hola 😊 Vi su sitio y me encantaría volar en globo sobre Teotihuacán. ¿Me dan info?">Escríbenos
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.5 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1-1.4-1-2.6s.6-1.8.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.8 1.9.8 2 .1.2.1.3 0 .5s-.2.4-.3.5l-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.5.3.1.3.1.7-.1 1.3Z"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRUST ============ -->
+<section class="trust">
+  <div class="wrap">
+    <ul>
+      <li><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="16" rx="2.5"/><path d="M3 9h18M8 2.5v4M16 2.5v4"/></svg></span><span>7+ años volando</span></li>
+      <li><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3Z"/><path d="M9 12l2 2 4-4"/></svg></span><span>Certificación AFAC</span></li>
+      <li><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v2M3.5 11a8.5 8.5 0 0 1 17 0Z"/><path d="M12 11v7a2.5 2.5 0 0 0 5 0"/></svg></span><span>Seguro incluido</span></li>
+      <li><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3h10l-1.5 8a3.5 3.5 0 0 1-7 0L7 3Z"/><path d="M12 14v5M8.5 21h7"/></svg></span><span>Brindis</span></li>
+      <li><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7v5l3.5 2"/></svg></span><span>Vuelo 35–50 min</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ PAQUETES ============ -->
+<section class="sec pk-sec" id="paquetes">
+  <div class="blob" style="width:180px;height:180px;left:-40px;top:80px;background:rgba(111,216,164,.28)"></div>
+  <div class="blob" style="width:220px;height:220px;right:0;top:50%;background:rgba(127,199,232,.22)"></div>
+  <div class="wrap" style="position:relative">
+    <div class="sec-head center">
+      <span class="eyebrow sticker" style="background:var(--yellow-lt)">Paquetes</span>
+      <h2 class="sec-title">Elige tu vuelo <span style="color:var(--yellow-dk)">feliz</span></h2>
+      <p class="sec-sub">Arma tu experiencia, elige personas y fecha, y cierra por WhatsApp en un mensaje. Sin pagos en línea: te atendemos personalmente. 🎈</p>
+    </div>
+
+    <div class="pk-grid">
+      <!-- SMILE -->
+      <div class="s8">
+        <article class="card pkg" data-name="SMILE" data-price="2199" data-accent="#F4B400">
+          <span class="badge-corner">Más elegido</span>
+          <div class="strip" style="background:#F4B400"></div>
+          <div class="card-body">
+            <div class="name"><span class="em">🎈</span><h3>SMILE</h3></div>
+            <p class="tag">El clásico feliz para estrenarte en el cielo.</p>
+            <div class="price"><span class="big">$2,199</span><span class="u">MXN por persona</span></div>
+            <ul class="incl" data-accent="#F4B400"></ul>
+            <div class="controls"></div>
+          </div>
+        </article>
+      </div>
+      <!-- HAPPY -->
+      <div class="s4">
+        <article class="card pkg" data-name="HAPPY" data-price="2399" data-accent="#6FD8A4">
+          <div class="strip" style="background:#6FD8A4"></div>
+          <div class="card-body">
+            <div class="name"><span class="em">😄</span><h3>HAPPY</h3></div>
+            <p class="tag">Vuelo + experiencias culturales para un día completo.</p>
+            <div class="price"><span class="big">$2,399</span><span class="u">MXN por persona</span></div>
+            <ul class="incl" data-accent="#6FD8A4"></ul>
+            <div class="controls"></div>
+          </div>
+        </article>
+      </div>
+      <!-- COOL -->
+      <div class="s4">
+        <article class="card pkg" data-name="COOL" data-price="2799" data-accent="#7FC7E8">
+          <div class="strip" style="background:#7FC7E8"></div>
+          <div class="card-body">
+            <div class="name"><span class="em">😎</span><h3>COOL</h3></div>
+            <p class="tag">Sin preocuparte por el traslado: nosotros te llevamos.</p>
+            <div class="price"><span class="big">$2,799</span><span class="u">MXN por persona</span></div>
+            <ul class="incl" data-accent="#7FC7E8"></ul>
+            <div class="controls"></div>
+          </div>
+        </article>
+      </div>
+      <!-- STAR -->
+      <div class="s4">
+        <article class="card pkg" data-name="STAR" data-price="2999" data-accent="#FF8A5B">
+          <div class="strip" style="background:#FF8A5B"></div>
+          <div class="card-body">
+            <div class="name"><span class="em">⭐</span><h3>STAR</h3></div>
+            <p class="tag">La experiencia estrella: desayuno en cueva y traslados.</p>
+            <div class="price"><span class="big">$2,999</span><span class="u">MXN por persona</span></div>
+            <ul class="incl" data-accent="#FF8A5B"></ul>
+            <div class="controls"></div>
+          </div>
+        </article>
+      </div>
+      <!-- BIG HAPPY -->
+      <div class="s8">
+        <article class="card pkg" data-name="BIG HAPPY" data-price="3199" data-accent="#B98BD6">
+          <span class="badge-corner">Más completo</span>
+          <div class="strip" style="background:#B98BD6"></div>
+          <div class="card-body">
+            <div class="name"><span class="em">🌟</span><h3>BIG HAPPY</h3></div>
+            <p class="tag">Todo incluido + acceso a la Zona Arqueológica.</p>
+            <div class="price"><span class="big">$3,199</span><span class="u">MXN por persona</span></div>
+            <ul class="incl" data-accent="#B98BD6"></ul>
+            <div class="controls"></div>
+          </div>
+        </article>
+      </div>
+      <!-- LOVE -->
+      <div class="s12">
+        <article class="card pkg love" data-name="LOVE" data-price="12000" data-accent="#FF6FA5" data-persons="2" data-fixed="1">
+          <div class="ph" style="background:#FF6FA5">
+            <img src="@@OCP@@" alt="Pareja celebrando una pedida de mano frente al globo de Happy Puerto" />
+            <span class="pill">Exclusivo · Privado</span>
+          </div>
+          <div class="card-body">
+            <div class="name"><span class="em">💛</span><h3>LOVE</h3></div>
+            <p class="tag" style="color:#d63f7d">Globo PRIVADO para 2. El cielo, solo de ustedes.</p>
+            <div class="price"><span class="big">$12,000</span><span class="u">MXN total</span></div>
+            <ul class="incl" data-accent="#FF6FA5"></ul>
+            <div class="controls"></div>
+          </div>
+        </article>
+      </div>
+    </div>
+    <p style="text-align:center;margin-top:38px;font-family:var(--font-sub);color:rgba(29,29,29,.6)">¿Dudas para elegir? <a href="#contacto" style="font-weight:600;color:var(--ink)">Escríbenos</a> y te ayudamos.</p>
+  </div>
+</section>
+
+<!-- ============ EXPERIENCIA ============ -->
+<section class="sec" id="experiencia">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow sticker" style="background:rgba(127,199,232,.4)">Cómo funciona</span>
+      <h2 class="sec-title">Del <span style="color:var(--sky)">mensaje</span> al <span style="color:var(--coral)">cielo</span></h2>
+      <p class="sec-sub">Cuatro pasos y ya estás flotando sobre Teotihuacán.</p>
+    </div>
+    <div class="steps-wrap">
+      <div class="steps-line"></div>
+      <ol class="steps">
+        <li class="step"><div class="ph"><span class="n">1</span><img src="@@G1@@" alt="Reservas por WhatsApp" /></div><div class="txt"><h3>Reservas por WhatsApp</h3><p>Eliges tu paquete y nos escribes. Te confirmamos disponibilidad y apartas tu fecha.</p></div></li>
+        <li class="step"><div class="ph"><span class="n">2</span><img src="@@G4@@" alt="Punto de reunión 5:30 AM" /></div><div class="txt"><h3>Punto de reunión 5:30 AM</h3><p>Nos vemos antes del amanecer en San Martín de las Pirámides. Café calientito de bienvenida.</p></div></li>
+        <li class="step"><div class="ph"><span class="n">3</span><img src="@@G3@@" alt="Vuela sobre Teotihuacán" /></div><div class="txt"><h3>Vuela sobre Teotihuacán</h3><p>Despegamos con el sol. 35 a 50 minutos flotando sobre las pirámides y el valle.</p></div></li>
+        <li class="step"><div class="ph"><span class="n">4</span><img src="@@G7@@" alt="Brindis y certificado" /></div><div class="txt"><h3>Brindis + certifícate</h3><p>Aterrizamos, brindamos por la aventura y te entregamos tu certificado de vuelo.</p></div></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GALERÍA ============ -->
+<section class="sec gal-sec" id="galeria">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow sticker" style="background:var(--yellow);color:var(--ink)">Galería</span>
+      <h2 class="sec-title" style="color:#fff">Momentos <span style="color:var(--yellow)">felices</span></h2>
+      <p class="sec-sub">Fotos reales de nuestros vuelos al amanecer. Toca cualquiera para verla en grande.</p>
+    </div>
+    <div class="masonry" id="masonry">
+      <button data-full="@@G2@@"><img src="@@G2@@" alt="Globo Happy Puerto elevándose al amanecer" loading="lazy" /></button>
+      <button data-full="@@G1@@"><img src="@@G1@@" alt="Vista del valle de Teotihuacán desde el globo" loading="lazy" /></button>
+      <button data-full="@@G3@@"><img src="@@G3@@" alt="Globos multicolor sobre las pirámides" loading="lazy" /></button>
+      <button data-full="@@G6@@"><img src="@@G6@@" alt="Pasajeros disfrutando el vuelo" loading="lazy" /></button>
+      <button data-full="@@G4@@"><img src="@@G4@@" alt="Inflado del globo antes del despegue" loading="lazy" /></button>
+      <button data-full="@@OCC@@"><img src="@@OCC@@" alt="Celebración de cumpleaños en globo" loading="lazy" /></button>
+      <button data-full="@@G7@@"><img src="@@G7@@" alt="Canasta del globo lista para volar" loading="lazy" /></button>
+      <button data-full="@@OCA@@"><img src="@@OCA@@" alt="Aniversario celebrado sobre Teotihuacán" loading="lazy" /></button>
+      <button data-full="@@G5@@"><img src="@@G5@@" alt="Amanecer con decenas de globos en el cielo" loading="lazy" /></button>
+      <button data-full="@@OCP@@"><img src="@@OCP@@" alt="Pedida de mano frente al globo carita feliz" loading="lazy" /></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ NOSOTROS ============ -->
+<section class="sec about" id="nosotros">
+  <div class="blob" style="width:230px;height:230px;right:-30px;top:-30px;background:rgba(255,255,255,.4)"></div>
+  <div class="wrap" style="position:relative">
+    <div class="about-grid">
+      <div>
+        <span class="eyebrow sticker" style="background:var(--ink);color:#fff">Quiénes somos</span>
+        <h2 class="sec-title">Hacemos que el cielo <span class="outline">sonría</span></h2>
+        <div style="margin-top:20px">
+          <p>En <strong>Happy Puerto</strong> creemos que volar es mucho más que elevarse del suelo: es crear momentos que se quedan para siempre. Somos una empresa con más de <mark>7 años</mark> especializada en experiencias en globo aerostático sobre Teotihuacán.</p>
+          <p>Nos reconocen nuestras <mark>caritas felices</mark> flotando al amanecer sobre las pirámides: son nuestra firma y el reflejo de lo que queremos que sientas allá arriba. Cada vuelo lo cuidamos con equipo certificado, seguro incluido y un trato cercano de principio a fin.</p>
+          <p>Ya sea un cumpleaños, un aniversario, una pedida de mano o simplemente el antojo de una aventura distinta, aquí lo volvemos un recuerdo feliz e inolvidable. 🎈</p>
+        </div>
+        <dl class="stats">
+          <div class="stat"><dt>7+</dt><dd>años volando</dd></div>
+          <div class="stat"><dt>100%</dt><dd>seguro incluido</dd></div>
+          <div class="stat"><dt>AFAC</dt><dd>certificados</dd></div>
+        </dl>
+      </div>
+      <div class="about-photo">
+        <div class="frame"></div>
+        <img src="@@G2@@" alt="Globo carita feliz de Happy Puerto elevándose al amanecer sobre Teotihuacán" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RESEÑAS ============ -->
+<section class="sec" id="resenas">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow sticker" style="background:rgba(111,216,164,.4)">Reseñas</span>
+      <h2 class="sec-title">Nos llenan de <span style="color:var(--yellow-dk)">estrellas</span></h2>
+      <p class="sec-sub">Esto dicen quienes ya volaron con nosotros.</p>
+    </div>
+    <div class="rev-grid" id="rev-grid"></div>
+    <div class="viator">
+      <span class="disabled">Ver todas las reseñas en Viator
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg>
+      </span>
+      <small>Próximamente — enlace disponible en la Fase 2.</small>
+    </div>
+  </div>
+</section>
+
+<!-- ============ POLÍTICAS ============ -->
+<section class="sec pol-sec" id="politicas">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow sticker" style="background:rgba(185,139,214,.4)">Buen viaje</span>
+      <h2 class="sec-title">Políticas y detalles</h2>
+      <p class="sec-sub">Todo claro antes de volar. Si tienes dudas, escríbenos por WhatsApp.</p>
+    </div>
+    <div class="acc" id="acc"></div>
+  </div>
+</section>
+
+<!-- ============ CONTACTO ============ -->
+<section class="sec" id="contacto">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow sticker" style="background:rgba(255,138,91,.4)">Contacto</span>
+      <h2 class="sec-title">¿Listos para <span style="color:var(--coral)">volar</span>?</h2>
+      <p class="sec-sub">Escríbenos por WhatsApp y en minutos armamos tu vuelo feliz.</p>
+    </div>
+    <div class="con-grid">
+      <div class="con-cards">
+        <a class="con-card wa-link" data-msg="Hola 😊 Quiero información y disponibilidad para volar en globo con Happy Puerto.">
+          <span class="ic" style="background:#25D366;color:#fff"><svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.5 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1-1.4-1-2.6s.6-1.8.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.8 1.9.8 2 .1.2.1.3 0 .5s-.2.4-.3.5l-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.5.3.1.3.1.7-.1 1.3Z"/></svg></span>
+          <span><span class="lab">WhatsApp</span><span class="val">+52 56 5653 1771</span></span>
+        </a>
+        <a class="con-card" href="tel:+525656531771">
+          <span class="ic" style="background:#7FC7E8"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h3l1.5 5-2 1.5a11 11 0 0 0 5 5l1.5-2 5 1.5V19a2 2 0 0 1-2 2A16 16 0 0 1 4 6a2 2 0 0 1 1-2Z"/></svg></span>
+          <span><span class="lab">Teléfono</span><span class="val">+52 56 5653 1771</span></span>
+        </a>
+        <a class="con-card" href="mailto:hola@happypuerto.com">
+          <span class="ic" style="background:#FF8A5B"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg></span>
+          <span><span class="lab">Email</span><span class="val" style="word-break:break-word">hola@happypuerto.com</span></span>
+        </a>
+        <div class="con-card">
+          <span class="ic" style="background:#B98BD6"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+          <span><span class="lab">Dónde estamos</span><span class="val">Camino Campestre S/N, San Martín de las Pirámides, Edo. de México</span></span>
+        </div>
+      </div>
+      <a class="map mapcard" href="https://www.google.com/maps/search/?api=1&query=Camino%20Campestre%20San%20Mart%C3%ADn%20de%20las%20Pir%C3%A1mides" target="_blank" rel="noopener" aria-label="Abrir ubicación en Google Maps">
+        <span class="mapcard-grid" aria-hidden="true"></span>
+        <span class="mapcard-body">
+          <span class="mapcard-pin"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1D1D1D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
+          <span class="mapcard-title">Camino Campestre S/N</span>
+          <span class="mapcard-sub">San Martín de las Pirámides · Estado de México</span>
+          <span class="mapcard-btn">Abrir en Google Maps
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8 7h9v9"/></svg>
+          </span>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a href="#top" class="foot-brand">@@LOGO@@<span>Happy Puerto</span></a>
+        <p style="max-width:34ch;margin:16px 0 0;color:rgba(255,255,255,.7)">La experiencia más feliz del cielo mexicano. Vuelos en globo aerostático sobre Teotihuacán, al amanecer.</p>
+        <a class="btn wa-link" data-msg="Hola 😊 Me gustaría más información sobre sus vuelos en globo sobre Teotihuacán." style="margin-top:20px;background:#25D366;color:#fff;border-radius:999px;padding:11px 22px;transition:transform .18s">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.5 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1-1.4-1-2.6s.6-1.8.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.8 1.9.8 2 .1.2.1.3 0 .5s-.2.4-.3.5l-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.5.3.1.3.1.7-.1 1.3Z"/></svg>
+          Escríbenos
+        </a>
+      </div>
+      <nav>
+        <h4>Explora</h4>
+        <ul>
+          <li><a href="#paquetes">Paquetes</a></li>
+          <li><a href="#experiencia">Experiencia</a></li>
+          <li><a href="#galeria">Galería</a></li>
+          <li><a href="#nosotros">Nosotros</a></li>
+          <li><a href="#politicas">Políticas</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </nav>
+      <div>
+        <h4>Síguenos</h4>
+        <ul>
+          <li><a href="https://instagram.com/happypuerto_mexico" target="_blank" rel="noopener"><span class="soc-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg></span>@happypuerto_mexico</a></li>
+          <li><a href="https://instagram.com/happypuerto" target="_blank" rel="noopener"><span class="soc-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></svg></span>@happypuerto</a></li>
+          <li><a href="https://www.facebook.com/share/1GTvPr1acr/" target="_blank" rel="noopener"><span class="soc-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M14 8.5V7c0-1 .5-1.5 1.6-1.5H17V2.5h-2.4C11.9 2.5 11 4 11 6.3v2.2H8.5V12H11v9.5h3V12h2.3l.5-3.5H14Z"/></svg></span>Facebook</a></li>
+          <li><a href="https://www.tiktok.com/@happypuertomx" target="_blank" rel="noopener"><span class="soc-ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M15 3c.3 2.2 1.7 3.8 3.9 4v3c-1.5 0-2.8-.4-3.9-1.1v5.6a5.6 5.6 0 1 1-5.6-5.6c.3 0 .6 0 .9.1v3.1a2.6 2.6 0 1 0 1.8 2.4V3H15Z"/></svg></span>@happypuertomx</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© <span id="year">2026</span> Happy Puerto. Todos los derechos reservados.</span>
+      <span>Sitio por <span class="em">easy mkt</span></span>
+    </div>
+  </div>
+</footer>
+
+<!-- WA fab + demo tag + cursor + lightbox -->
+<a class="wa-fab wa-link" data-msg="Hola 😊 Me gustaría más información sobre sus vuelos en globo sobre Teotihuacán. ¿Me ayudan?" aria-label="Escríbenos por WhatsApp">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.5 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1-1.4-1-2.6s.6-1.8.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.8 1.9.8 2 .1.2.1.3 0 .5s-.2.4-.3.5l-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.5.3.1.3.1.7-.1 1.3Z"/></svg>
+</a>
+<div class="demo-tag">Vista demo · <b>easy mkt</b> × Happy Puerto</div>
+<div id="balloon-cursor" aria-hidden="true">@@CURSOR@@</div>
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Imagen ampliada">
+  <button class="x" id="lb-x" aria-label="Cerrar"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  <button class="nav prev" id="lb-prev" aria-label="Anterior"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+  <button class="nav next" id="lb-next" aria-label="Siguiente"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+  <img id="lb-img" src="" alt="" />
+</div>
+
+<script>
+(function(){
+  var PHONE = '525656531771';
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // ---- WhatsApp generic links ----
+  function waHref(msg){ return 'https://wa.me/'+PHONE+'?text='+encodeURIComponent(msg); }
+  document.querySelectorAll('.wa-link').forEach(function(a){
+    a.setAttribute('href', waHref(a.getAttribute('data-msg')||''));
+    a.setAttribute('target','_blank'); a.setAttribute('rel','noopener');
+  });
+
+  // ---- Nav scroll + mobile ----
+  var nav = document.getElementById('nav');
+  function onScroll(){ nav.classList.toggle('solid', window.scrollY > 24); }
+  onScroll(); window.addEventListener('scroll', onScroll, {passive:true});
+  var hamb = document.getElementById('hamb'), mm = document.getElementById('mobile-menu');
+  hamb.addEventListener('click', function(){
+    var open = mm.classList.toggle('open');
+    hamb.setAttribute('aria-expanded', String(open));
+  });
+  mm.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(){ mm.classList.remove('open'); }); });
+
+  // ---- Package data (includes) ----
+  var INCLUDES = {
+    'SMILE': ['Coffee Break','Vuelo 35–50 min','Certificado de vuelo','Lona especial','Seguro incluido','Brindis'],
+    'HAPPY': ['Todo lo de Smile','Desayuno bufet','Taller de Obsidiana y Maguey','Degustación de pulque','Taller Danzante'],
+    'COOL': ['Todo lo de Happy','Transporte a las Pirámides','Transporte redondo CDMX–Teotihuacán'],
+    'STAR': ['Coffee Break','Vuelo 35–50 min','Certificado · Lona · Seguro · Brindis','Desayuno en cueva','Transporte a las Pirámides','Transporte redondo CDMX'],
+    'BIG HAPPY': ['Todo lo de Star','Entrada a Zona Arqueológica de Teotihuacán'],
+    'LOVE': ['Globo privado para 2 personas','Coffee Break','Vuelo 35–50 min','Certificado · Lona · Seguro · Brindis','Desayuno en cueva']
+  };
+  function checkSVG(color){
+    return '<svg class="chk" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="11" fill="'+color+'"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#1D1D1D" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>';
+  }
+  function fmtDate(iso){ if(!iso) return 'por definir'; var p=iso.split('-'); if(p.length!==3) return iso; return p[2]+'/'+p[1]+'/'+p[0]; }
+  function waPkg(name, price, persons, iso){
+    var per = persons>1?'s':''; var pt = '$'+Number(price).toLocaleString('es-MX');
+    var msg = 'Hola 😊 Me interesa el *Paquete '+name+'* ('+pt+' MXN) para *'+persons+' persona'+per+'* en una fecha aproximada de *'+fmtDate(iso)+'*. ¿Tienen disponibilidad?';
+    return waHref(msg);
+  }
+  var todayISO = (function(){ var t=new Date(); t.setMinutes(t.getMinutes()-t.getTimezoneOffset()); return t.toISOString().slice(0,10); })();
+
+  document.querySelectorAll('.pkg').forEach(function(card){
+    var name = card.getAttribute('data-name');
+    var price = card.getAttribute('data-price');
+    var accent = card.getAttribute('data-accent');
+    var fixed = card.getAttribute('data-fixed')==='1';
+    var persons = parseInt(card.getAttribute('data-persons')||'1', 10);
+
+    // includes
+    var ul = card.querySelector('.incl');
+    (INCLUDES[name]||[]).forEach(function(item){
+      var li = document.createElement('li');
+      li.innerHTML = checkSVG(accent) + '<span>'+item+'</span>';
+      ul.appendChild(li);
+    });
+
+    // controls
+    var ctl = card.querySelector('.controls');
+    var stepperHTML = fixed
+      ? '<p class="ctl-label">Globo privado para 2 · precio total del paquete</p>'
+      : '<span class="ctl-label">¿Cuántas personas?</span>'+
+        '<div class="stepper"><button type="button" class="dec" aria-label="Quitar persona">−</button>'+
+        '<span class="val">'+persons+'</span>'+
+        '<button type="button" class="inc" aria-label="Agregar persona">+</button></div>';
+    ctl.innerHTML =
+      stepperHTML +
+      '<div class="field"><label class="ctl-label">Fecha tentativa</label><input type="date" min="'+todayISO+'" /></div>' +
+      '<a class="cta-fly" style="background:'+accent+'" target="_blank" rel="noopener">¡Quiero este vuelo! '+
+        '<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.5 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1-1.4-1-2.6s.6-1.8.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.8 1.9.8 2 .1.2.1.3 0 .5s-.2.4-.3.5l-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.5.3.1.3.1.7-.1 1.3Z"/></svg></a>';
+
+    var valEl = ctl.querySelector('.val');
+    var dateEl = ctl.querySelector('input[type=date]');
+    var cta = ctl.querySelector('.cta-fly');
+    function refresh(){ cta.setAttribute('href', waPkg(name, price, persons, dateEl.value)); }
+    if(!fixed){
+      var dec = ctl.querySelector('.dec'), inc = ctl.querySelector('.inc');
+      function upd(){ valEl.textContent = persons; dec.disabled = persons<=1; inc.disabled = persons>=8; refresh(); }
+      dec.addEventListener('click', function(){ if(persons>1){persons--; upd();} });
+      inc.addEventListener('click', function(){ if(persons<8){persons++; upd();} });
+      upd();
+    } else { refresh(); }
+    dateEl.addEventListener('change', refresh);
+  });
+
+  // ---- Reviews ----
+  var REVIEWS = [
+    {n:'María F.', i:'M', a:'#7FC7E8', t:'Una experiencia inolvidable. El equipo súper atento y la vista de las pirámides al amanecer no tiene comparación. ¡Volvería mil veces!'},
+    {n:'Carlos R.', i:'C', a:'#FF8A5B', t:'Reservamos por WhatsApp en minutos. Todo puntual, seguro y muy divertido. El brindis al final fue el broche perfecto.'},
+    {n:'Ana & Diego', i:'A', a:'#6FD8A4', t:'Elegimos el globo privado para nuestro aniversario. Mágico de principio a fin. Gracias Happy Puerto por hacerlo especial.'}
+  ];
+  var star = '<svg width="20" height="20" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 19.4 7.4 12.9 2.4 8.6 9 8z"/></svg>';
+  var rg = document.getElementById('rev-grid');
+  REVIEWS.forEach(function(r){
+    var fig = document.createElement('figure'); fig.className='review';
+    fig.innerHTML = '<div class="stars">'+star+star+star+star+star+'</div>'+
+      '<blockquote>“'+r.t+'”</blockquote>'+
+      '<figcaption><span class="avatar" style="background:'+r.a+'">'+r.i+'</span><b>'+r.n+'</b></figcaption>';
+    rg.appendChild(fig);
+  });
+
+  // ---- Policies ----
+  var POLICIES = [
+    {t:'Restricciones de vuelo', b:['No pueden abordar personas con problemas cardíacos, mujeres embarazadas ni personas bajo efectos de alcohol o sustancias.','Menores de edad solo con autorización y acompañados de un adulto responsable.','Es indispensable presentarse puntual al punto de reunión; el vuelo depende de la ventana de amanecer.']},
+    {t:'Restricciones climáticas', b:['El vuelo depende de las condiciones del clima y de la autoridad aeronáutica.','Si por seguridad no es posible volar, se reagenda tu vuelo sin costo adicional en la siguiente fecha disponible.']},
+    {t:'Política de cancelación', b:['Cancelaciones con 48 horas o más de anticipación: sin cargo.','Cancelaciones con menos de 24 horas: cargo del 30% del total.']},
+    {t:'Formas de pago', b:['Efectivo y transferencia bancaria: sin cargo adicional.','Tarjeta de crédito/débito: +5% de comisión.','American Express: +6% de comisión.']},
+    {t:'Cargos extra', b:['Pasajeros con peso mayor a 100 kg: $30 MXN por cada kg adicional.']}
+  ];
+  var acc = document.getElementById('acc');
+  POLICIES.forEach(function(p, idx){
+    var item = document.createElement('div'); item.className = 'acc-item'+(idx===0?' open':'');
+    var lis = p.b.map(function(l){ return '<li>'+l+'</li>'; }).join('');
+    item.innerHTML =
+      '<button class="acc-trigger" aria-expanded="'+(idx===0)+'"><span>'+p.t+'</span>'+
+      '<span class="acc-chev"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span></button>'+
+      '<div class="acc-panel"><div><ul>'+lis+'</ul></div></div>';
+    var trg = item.querySelector('.acc-trigger');
+    trg.addEventListener('click', function(){
+      var open = item.classList.toggle('open');
+      trg.setAttribute('aria-expanded', String(open));
+    });
+    acc.appendChild(item);
+  });
+
+  // ---- Lightbox ----
+  var lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
+  var items = Array.prototype.slice.call(document.querySelectorAll('#masonry button'));
+  var idx = 0;
+  function show(i){ idx=(i+items.length)%items.length; var el=items[idx]; lbImg.src=el.getAttribute('data-full'); lbImg.alt=el.querySelector('img').alt; }
+  function open(i){ show(i); lb.classList.add('open'); document.body.style.overflow='hidden'; }
+  function close(){ lb.classList.remove('open'); document.body.style.overflow=''; }
+  items.forEach(function(el,i){ el.addEventListener('click', function(){ open(i); }); });
+  document.getElementById('lb-x').addEventListener('click', close);
+  document.getElementById('lb-prev').addEventListener('click', function(){ show(idx-1); });
+  document.getElementById('lb-next').addEventListener('click', function(){ show(idx+1); });
+  lb.addEventListener('click', function(e){ if(e.target===lb) close(); });
+  window.addEventListener('keydown', function(e){ if(!lb.classList.contains('open')) return; if(e.key==='Escape') close(); if(e.key==='ArrowLeft') show(idx-1); if(e.key==='ArrowRight') show(idx+1); });
+
+  // ---- Balloon cursor (desktop, lerp) ----
+  var cursor = document.getElementById('balloon-cursor');
+  var mqDesktop = window.matchMedia('(min-width:1024px)');
+  var mqReduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+  var mx=0,my=0,cx=0,cy=0, raf=null, idleT=null, on=false;
+  function loop(){ cx+=(mx-cx)*0.12; cy+=(my-cy)*0.12; cursor.style.transform='translate('+(cx-37)+'px,'+(cy-37)+'px)'; raf=requestAnimationFrame(loop); }
+  function move(e){ mx=e.clientX; my=e.clientY; cursor.classList.remove('idle'); clearTimeout(idleT); idleT=setTimeout(function(){ cursor.classList.add('idle'); },500); }
+  function enable(){ if(on) return; on=true; document.body.classList.add('cursor-on'); cursor.style.display='block'; cx=mx=window.innerWidth/2; cy=my=window.innerHeight/2; window.addEventListener('mousemove', move, {passive:true}); raf=requestAnimationFrame(loop); }
+  function disable(){ if(!on) return; on=false; document.body.classList.remove('cursor-on'); cursor.style.display='none'; window.removeEventListener('mousemove', move); cancelAnimationFrame(raf); clearTimeout(idleT); }
+  function evalCursor(){ if(mqDesktop.matches && !mqReduce.matches) enable(); else disable(); }
+  evalCursor(); mqDesktop.addEventListener('change', evalCursor); mqReduce.addEventListener('change', evalCursor);
+})();
+</script>
