@@ -1,0 +1,68 @@
+---
+const BASE = import.meta.env.BASE_URL;
+const photo = `${BASE}assets/galeria/galeria-02.jpg`.replace(/\/{2,}/g, '/');
+---
+
+<section id="nosotros" class="relative overflow-hidden bg-yellow-lt py-20 sm:py-28">
+  <div class="pointer-events-none absolute -right-10 -top-10 h-56 w-56 rounded-full bg-white/40 blur-2xl" aria-hidden="true"></div>
+
+  <div class="relative mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:gap-16">
+    <!-- Texto -->
+    <div class="reveal order-2 lg:order-1">
+      <span class="sticker mb-3 inline-block rounded-full bg-ink px-4 py-1.5 font-sub text-sm font-semibold text-white">
+        Quiénes somos
+      </span>
+      <h2 class="font-display text-[clamp(2.4rem,6vw,4.5rem)] leading-[0.95] text-ink">
+        Hacemos que el cielo <span class="text-white [-webkit-text-stroke:2px_#1D1D1D]">sonría</span>
+      </h2>
+
+      <div class="mt-5 space-y-4 font-body text-lg text-ink/85">
+        <p>
+          En <strong>Happy Puerto</strong> creemos que volar es mucho más que elevarse del suelo:
+          es crear momentos que se quedan para siempre. Somos una empresa con más de
+          <mark class="rounded bg-yellow px-1.5 font-semibold text-ink">7 años</mark>
+          especializada en experiencias en globo aerostático sobre Teotihuacán.
+        </p>
+        <p>
+          Nos reconocen nuestras
+          <mark class="rounded bg-yellow px-1.5 font-semibold text-ink">caritas felices</mark>
+          flotando al amanecer sobre las pirámides: son nuestra firma y el reflejo de lo que
+          queremos que sientas allá arriba. Cada vuelo lo cuidamos con equipo certificado,
+          seguro incluido y un trato cercano de principio a fin.
+        </p>
+        <p>
+          Ya sea un cumpleaños, un aniversario, una pedida de mano o simplemente el antojo de
+          una aventura distinta, aquí lo volvemos un recuerdo feliz e inolvidable. 🎈
+        </p>
+      </div>
+
+      <dl class="mt-8 grid grid-cols-3 gap-4">
+        <div class="rounded-2xl border-2 border-ink bg-white p-4 text-center shadow-pop">
+          <dt class="font-display text-4xl text-ink">7+</dt>
+          <dd class="font-sub text-sm text-ink/70">años volando</dd>
+        </div>
+        <div class="rounded-2xl border-2 border-ink bg-white p-4 text-center shadow-pop">
+          <dt class="font-display text-4xl text-ink">100%</dt>
+          <dd class="font-sub text-sm text-ink/70">seguro incluido</dd>
+        </div>
+        <div class="rounded-2xl border-2 border-ink bg-white p-4 text-center shadow-pop">
+          <dt class="font-display text-4xl text-ink">AFAC</dt>
+          <dd class="font-sub text-sm text-ink/70">certificados</dd>
+        </div>
+      </dl>
+    </div>
+
+    <!-- Foto -->
+    <div class="reveal order-1 lg:order-2">
+      <div class="relative mx-auto max-w-md lg:max-w-none">
+        <div class="absolute -inset-3 rotate-3 rounded-blob bg-white shadow-card" aria-hidden="true"></div>
+        <img
+          src={photo}
+          alt="Globo carita feliz de Happy Puerto elevándose al amanecer sobre Teotihuacán"
+          loading="lazy"
+          class="relative rounded-blob border-2 border-ink object-cover shadow-card"
+        />
+      </div>
+    </div>
+  </div>
+</section>

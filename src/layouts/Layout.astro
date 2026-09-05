@@ -1,0 +1,47 @@
+---
+import '../styles/global.css';
+import { siteMeta } from '../data/site.js';
+
+const { title = siteMeta.title, description = siteMeta.description } = Astro.props;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).href : undefined;
+const favicon = `${import.meta.env.BASE_URL}favicon.svg`.replace(/\/{2,}/g, '/');
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#F4B400" />
+    {canonical && <link rel="canonical" href={canonical} />}
+    <link rel="icon" type="image/svg+xml" href={favicon} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:locale" content="es_MX" />
+
+    <!-- Fonts: Bangers (display), Fredoka (subheadings ~ "Ahkio"), Inter (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bangers&family=Fredoka:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Sin JS: mostrar todo el contenido revelable de inmediato -->
+    <noscript>
+      <style>
+        .reveal { opacity: 1 !important; transform: none !important; }
+        .hero-line { opacity: 1 !important; clip-path: none !important; transform: none !important; }
+      </style>
+    </noscript>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

@@ -1,0 +1,44 @@
+---
+import { packages } from '../data/site.js';
+import PackageCard from './PackageCard.jsx';
+---
+
+<section id="paquetes" class="relative bg-cream py-20 sm:py-28">
+  <!-- deco blobs -->
+  <div class="pointer-events-none absolute -left-16 top-24 h-40 w-40 rounded-full bg-mint/25 blur-2xl" aria-hidden="true"></div>
+  <div class="pointer-events-none absolute right-0 top-1/2 h-52 w-52 rounded-full bg-sky/20 blur-3xl" aria-hidden="true"></div>
+
+  <div class="relative mx-auto max-w-7xl px-4 sm:px-6">
+    <header class="mx-auto mb-12 max-w-2xl text-center reveal">
+      <span class="sticker mb-3 inline-block rounded-full bg-yellow-lt px-4 py-1.5 font-sub text-sm font-semibold text-ink">
+        Paquetes
+      </span>
+      <h2 class="font-display text-[clamp(2.4rem,6vw,4.5rem)] leading-[0.95] text-ink">
+        Elige tu vuelo <span class="text-yellow-dk">feliz</span>
+      </h2>
+      <p class="mt-4 font-body text-lg text-ink/70">
+        Arma tu experiencia, elige personas y fecha, y cierra por WhatsApp en un mensaje.
+        Sin pagos en línea: te atendemos personalmente. 🎈
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-12 lg:gap-6">
+      {packages.map((pkg, i) => (
+        <div
+          class:list={[
+            'reveal h-full',
+            pkg.span,
+            pkg.variant === 'love' && 'md:col-span-2',
+          ]}
+          style={`transition-delay:${(i % 3) * 80}ms`}
+        >
+          <PackageCard client:visible {...pkg} />
+        </div>
+      ))}
+    </div>
+
+    <p class="mt-10 text-center font-sub text-ink/60">
+      ¿Dudas para elegir? <a href="#contacto" class="font-semibold text-ink underline decoration-yellow decoration-2 underline-offset-4">Escríbenos</a> y te ayudamos.
+    </p>
+  </div>
+</section>

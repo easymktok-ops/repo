@@ -1,0 +1,89 @@
+---
+import { gallery } from '../data/site.js';
+const BASE = import.meta.env.BASE_URL;
+const img = (p) => `${BASE}${p}`.replace(/\/{2,}/g, '/');
+---
+
+<section id="galeria" class="relative bg-ink py-20 text-white sm:py-28">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6">
+    <header class="mb-10 max-w-2xl reveal">
+      <span class="sticker mb-3 inline-block rounded-full bg-yellow px-4 py-1.5 font-sub text-sm font-semibold text-ink">
+        Galería
+      </span>
+      <h2 class="font-display text-[clamp(2.4rem,6vw,4.5rem)] leading-[0.95] text-white">
+        Momentos <span class="text-yellow">felices</span>
+      </h2>
+      <p class="mt-4 font-body text-lg text-white/70">
+        Fotos reales de nuestros vuelos al amanecer. Toca cualquiera para verla en grande.
+      </p>
+    </header>
+
+    <div class="gap-3 [column-fill:_balance] columns-2 md:columns-3 lg:columns-4">
+      {gallery.map((g, i) => (
+        <button
+          type="button"
+          class="gallery-item reveal mb-3 block w-full overflow-hidden rounded-2xl border-2 border-white/10 bg-white/5 break-inside-avoid transition-transform hover:-translate-y-0.5 hover:border-yellow/60"
+          style={`transition-delay:${(i % 5) * 60}ms`}
+          data-full={img(g.src)}
+          data-alt={g.alt}
+          aria-label={`Ampliar: ${g.alt}`}
+        >
+          <img src={img(g.src)} alt={g.alt} loading="lazy" decoding="async" class="w-full object-cover" />
+        </button>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- Lightbox (sin librerías) -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Imagen ampliada">
+  <button id="lb-close" class="absolute right-4 top-4 grid h-11 w-11 place-items-center rounded-full bg-white/10 text-white backdrop-blur transition-colors hover:bg-white/20" aria-label="Cerrar">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+  <button id="lb-prev" class="absolute left-3 top-1/2 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-white backdrop-blur transition-colors hover:bg-white/20 sm:left-6" aria-label="Anterior">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+  </button>
+  <button id="lb-next" class="absolute right-3 top-1/2 grid h-12 w-12 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-white backdrop-blur transition-colors hover:bg-white/20 sm:right-6" aria-label="Siguiente">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+  </button>
+  <img id="lb-img" src="" alt="" />
+</div>
+
+<script>
+  const items = Array.from(document.querySelectorAll('.gallery-item'));
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lb-img');
+  const btnClose = document.getElementById('lb-close');
+  const btnPrev = document.getElementById('lb-prev');
+  const btnNext = document.getElementById('lb-next');
+  let idx = 0;
+
+  const show = (i) => {
+    idx = (i + items.length) % items.length;
+    const el = items[idx];
+    lbImg.src = el.getAttribute('data-full');
+    lbImg.alt = el.getAttribute('data-alt') || '';
+  };
+  const open = (i) => {
+    show(i);
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    btnClose.focus();
+  };
+  const close = () => {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  items.forEach((el, i) => el.addEventListener('click', () => open(i)));
+  btnClose.addEventListener('click', close);
+  btnPrev.addEventListener('click', () => show(idx - 1));
+  btnNext.addEventListener('click', () => show(idx + 1));
+  lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+  window.addEventListener('keydown', (e) => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') show(idx - 1);
+    if (e.key === 'ArrowRight') show(idx + 1);
+  });
+</script>

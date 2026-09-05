@@ -1,0 +1,54 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Hero from '../components/Hero.astro';
+import TrustBar from '../components/TrustBar.astro';
+import PackagesSection from '../components/PackagesSection.astro';
+import HowItWorks from '../components/HowItWorks.astro';
+import Gallery from '../components/Gallery.astro';
+import AboutUs from '../components/AboutUs.astro';
+import Reviews from '../components/Reviews.astro';
+import Policies from '../components/Policies.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+import WAButton from '../components/WAButton.astro';
+import BalloonCursor from '../components/BalloonCursor.astro';
+---
+
+<Layout>
+  <Nav />
+  <main>
+    <Hero />
+    <TrustBar />
+    <PackagesSection />
+    <HowItWorks />
+    <Gallery />
+    <AboutUs />
+    <Reviews />
+    <Policies />
+    <Contact />
+  </main>
+  <Footer />
+
+  <WAButton />
+  <BalloonCursor />
+</Layout>
+
+<script>
+  // Scroll reveals con Motion (import dinámico + fallback robusto).
+  const els = document.querySelectorAll('.reveal');
+  const revealAll = () => els.forEach((e) => e.classList.add('is-visible'));
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (reduce || !('IntersectionObserver' in window)) {
+    revealAll();
+  } else {
+    import('motion')
+      .then(({ inView }) => {
+        els.forEach((el) =>
+          inView(el, () => { el.classList.add('is-visible'); }, { amount: 0.12 })
+        );
+      })
+      .catch(revealAll); // si Motion falla, mostrar todo igual
+  }
+</script>

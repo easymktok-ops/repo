@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80" fill="none" role="img" aria-label="Globo Happy Puerto">
+  <defs>
+    <radialGradient id="bc-g" cx="38%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#FFE066"/>
+      <stop offset="60%" stop-color="#F4B400"/>
+      <stop offset="100%" stop-color="#C49000"/>
+    </radialGradient>
+  </defs>
+  <!-- ropes -->
+  <path d="M30 52 L34 62 M50 52 L46 62" stroke="#1D1D1D" stroke-width="2" stroke-linecap="round"/>
+  <!-- balloon envelope -->
+  <path d="M40 6 C22 6 12 20 12 34 c0 12 9 20 16 24 h24 c7-4 16-12 16-24 C68 20 58 6 40 6 Z" fill="url(#bc-g)" stroke="#1D1D1D" stroke-width="2.5"/>
+  <!-- panel seams -->
+  <path d="M40 6 C33 22 33 44 34 58 M40 6 C47 22 47 44 46 58" stroke="#C49000" stroke-width="1.6" opacity="0.7" fill="none"/>
+  <path d="M13.5 34 h53 M17 46 c9 6 37 6 46 0" stroke="#C49000" stroke-width="1.6" opacity="0.55" fill="none"/>
+  <!-- happy face -->
+  <circle cx="32" cy="33" r="3.1" fill="#1D1D1D"/>
+  <circle cx="48" cy="33" r="3.1" fill="#1D1D1D"/>
+  <path d="M31 42 q9 8 18 0" stroke="#1D1D1D" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+  <!-- basket -->
+  <path d="M34 62 h12 l-1.5 8 h-9 Z" fill="#8a5a2b" stroke="#1D1D1D" stroke-width="2" stroke-linejoin="round"/>
+</svg>

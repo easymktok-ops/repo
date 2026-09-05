@@ -1,0 +1,60 @@
+---
+import { policies } from '../data/site.js';
+---
+
+<section id="politicas" class="bg-cream py-20 sm:py-28">
+  <div class="mx-auto max-w-3xl px-4 sm:px-6">
+    <header class="mb-10 text-center reveal">
+      <span class="sticker mb-3 inline-block rounded-full bg-grape/40 px-4 py-1.5 font-sub text-sm font-semibold text-ink">
+        Buen viaje
+      </span>
+      <h2 class="font-display text-[clamp(2.2rem,6vw,4rem)] leading-[0.95] text-ink">
+        Políticas y detalles
+      </h2>
+      <p class="mt-4 font-body text-lg text-ink/70">
+        Todo claro antes de volar. Si tienes dudas, escríbenos por WhatsApp.
+      </p>
+    </header>
+
+    <div class="space-y-3">
+      {policies.map((p, i) => (
+        <div class="acc-item reveal overflow-hidden rounded-2xl border-2 border-ink bg-white shadow-pop" data-open={i === 0 ? 'true' : 'false'}>
+          <button
+            type="button"
+            class="acc-trigger flex w-full items-center justify-between gap-4 px-5 py-4 text-left"
+            aria-expanded={i === 0 ? 'true' : 'false'}
+            aria-controls={`acc-panel-${p.id}`}
+          >
+            <span class="font-sub text-lg font-semibold text-ink">{p.title}</span>
+            <span class="acc-chevron grid h-8 w-8 shrink-0 place-items-center rounded-full bg-yellow text-ink transition-transform duration-300">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+            </span>
+          </button>
+          <div class="acc-panel" id={`acc-panel-${p.id}`} role="region">
+            <div>
+              <ul class="space-y-2 px-5 pb-5 font-body text-ink/80">
+                {p.body.map((line) => (
+                  <li class="flex items-start gap-2">
+                    <span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-yellow-dk" aria-hidden="true"></span>
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('.acc-item').forEach((item) => {
+    const trigger = item.querySelector('.acc-trigger');
+    trigger.addEventListener('click', () => {
+      const open = item.getAttribute('data-open') === 'true';
+      item.setAttribute('data-open', String(!open));
+      trigger.setAttribute('aria-expanded', String(!open));
+    });
+  });
+</script>

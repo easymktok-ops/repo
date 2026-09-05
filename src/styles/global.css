@@ -1,0 +1,243 @@
+/* ============================================================
+   Happy Puerto — estilos globales
+   Tailwind (base/components/utilities) + CSS custom de animaciones
+   ============================================================ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Variables de marca ─────────────────────────────────────── */
+:root {
+  --yellow: #f4b400;
+  --yellow-dk: #c49000;
+  --yellow-lt: #ffe066;
+  --cream: #fff9e6;
+  --ink: #1d1d1d;
+  --white: #ffffff;
+  /* terciarios */
+  --sky: #7fc7e8;
+  --coral: #ff8a5b;
+  --mint: #6fd8a4;
+  --grape: #b98bd6;
+  --rose: #ff6fa5;
+  --wa: #25d366; /* verde WhatsApp */
+}
+
+/* ── Base ───────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--white);
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--yellow);
+  color: var(--ink);
+}
+
+h1, h2, h3, h4 {
+  line-height: 1.05;
+  margin: 0;
+}
+
+.font-display {
+  font-family: 'Bangers', cursive;
+  letter-spacing: 0.04em;
+  font-weight: 400;
+}
+
+.font-sub {
+  font-family: 'Fredoka', system-ui, sans-serif;
+}
+
+/* Anchors con offset para el nav sticky */
+:target,
+[id] {
+  scroll-margin-top: 90px;
+}
+
+/* Focus visible accesible */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ── Cursor mascota (solo desktop ≥1024px) ──────────────────── */
+@media (min-width: 1024px) {
+  body.cursor-custom {
+    cursor: none;
+  }
+  body.cursor-custom a,
+  body.cursor-custom button,
+  body.cursor-custom input,
+  body.cursor-custom label,
+  body.cursor-custom [role='button'] {
+    cursor: none;
+  }
+}
+
+#balloon-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 80px;
+  height: 80px;
+  pointer-events: none;
+  z-index: 9999;
+  will-change: transform;
+  transform: translate(-100px, -100px);
+  display: none;
+}
+#balloon-cursor img {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+/* oscilación sutil en idle */
+#balloon-cursor.idle img {
+  animation: balloon-bob 2s ease-in-out infinite;
+}
+@keyframes balloon-bob {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-3px) rotate(3deg); }
+}
+
+/* ── Reveal on scroll (fallback inmediato si reduced-motion) ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Hero: revelado línea por línea con clip-path */
+.hero-line {
+  display: block;
+  clip-path: inset(0 0 100% 0);
+  transform: translateY(0.3em);
+  opacity: 0;
+  transition: clip-path 0.7s cubic-bezier(0.2, 0.8, 0.2, 1),
+    transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.7s ease-out;
+}
+.hero-line.in {
+  clip-path: inset(0 0 0 0);
+  transform: none;
+  opacity: 1;
+}
+
+/* ── Botón flotante WhatsApp: pulso verde ───────────────────── */
+.wa-fab {
+  box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.35);
+}
+.wa-fab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: var(--wa);
+  z-index: -1;
+  animation: wa-pulse 3s ease-out infinite;
+}
+@keyframes wa-pulse {
+  0% { transform: scale(1); opacity: 0.55; }
+  70% { transform: scale(1.7); opacity: 0; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
+/* ── Accordion (políticas) ──────────────────────────────────── */
+.acc-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease;
+}
+.acc-panel > div {
+  overflow: hidden;
+}
+.acc-item[data-open='true'] .acc-panel {
+  grid-template-rows: 1fr;
+}
+.acc-item[data-open='true'] .acc-chevron {
+  transform: rotate(45deg);
+}
+
+/* ── Marquee del trust bar (desktop no; mobile scroll manual) ─ */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* ── Lightbox de galería ────────────────────────────────────── */
+#lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: rgba(15, 15, 15, 0.92);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+#lightbox.open {
+  display: flex;
+  opacity: 1;
+}
+#lightbox img {
+  max-width: min(1100px, 92vw);
+  max-height: 88vh;
+  border-radius: 14px;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7);
+}
+
+/* Etiqueta punteada tipo sticker */
+.sticker {
+  transform: rotate(-3deg);
+}
+
+/* ── Reduced motion: todo estático, cursor nativo ───────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hero-line {
+    clip-path: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  body.cursor-custom {
+    cursor: auto !important;
+  }
+  #balloon-cursor {
+    display: none !important;
+  }
+}

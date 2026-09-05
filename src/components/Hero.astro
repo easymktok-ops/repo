@@ -1,0 +1,90 @@
+---
+import { waGeneral } from '../data/site.js';
+const BASE = import.meta.env.BASE_URL;
+const heroVideo = `${BASE}assets/videos/hero-loop.mp4`.replace(/\/{2,}/g, '/');
+const heroPoster = `${BASE}assets/hero-valle.jpg`.replace(/\/{2,}/g, '/');
+const waLink = waGeneral('Hola 😊 Vi su sitio y me encantaría volar en globo sobre Teotihuacán. ¿Me dan info?');
+---
+
+<section id="top" class="relative min-h-[100svh] w-full overflow-hidden bg-ink text-white">
+  <!-- Video de fondo (silencioso, loop, autoplay) -->
+  <video
+    class="absolute inset-0 h-full w-full object-cover"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    poster={heroPoster}
+    aria-hidden="true"
+  >
+    <source src={heroVideo} type="video/mp4" />
+  </video>
+
+  <!-- Overlay para legibilidad -->
+  <div class="absolute inset-0 bg-gradient-to-b from-ink/55 via-ink/30 to-ink/70"></div>
+  <div class="absolute inset-0 bg-ink/20"></div>
+
+  <!-- Contenido -->
+  <div class="relative z-10 mx-auto flex min-h-[100svh] max-w-6xl flex-col items-start justify-center px-5 pt-24 pb-16 sm:px-8">
+    <span
+      id="hero-badge"
+      class="hero-line sticker mb-5 inline-block rounded-full bg-yellow px-4 py-1.5 font-sub text-sm font-semibold text-ink shadow-pop"
+    >
+      🎈 Teotihuacán · Al amanecer
+    </span>
+
+    <h1 class="font-display text-[clamp(2.9rem,9vw,7rem)] leading-[0.92] text-white drop-shadow-[0_3px_0_rgba(29,29,29,0.35)]">
+      <span class="hero-line">VUELA SOBRE</span>
+      <span class="hero-line text-yellow">LAS PIRÁMIDES</span>
+      <span class="hero-line">🎈</span>
+    </h1>
+
+    <p class="hero-line mt-6 max-w-xl font-body text-lg text-white/90 sm:text-xl">
+      La experiencia más feliz del cielo mexicano. Al amanecer, sobre Teotihuacán.
+    </p>
+
+    <div class="hero-line mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <a
+        href="#paquetes"
+        class="inline-flex items-center justify-center gap-2 rounded-full bg-yellow px-7 py-3.5 font-sub text-lg font-semibold text-ink shadow-pop transition-transform hover:-translate-y-0.5 active:translate-y-0"
+      >
+        Ver paquetes
+      </a>
+      <a
+        href={waLink}
+        target="_blank"
+        rel="noopener"
+        class="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/80 bg-white/10 px-7 py-3.5 font-sub text-lg font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white hover:text-ink"
+      >
+        Escríbenos
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.5 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1-1.4-1-2.6s.6-1.8.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.8 1.9.8 2 .1.2.1.3 0 .5s-.2.4-.3.5l-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.5.3.1.3.1.7-.1 1.3Z" />
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- Indicador de scroll -->
+  <a href="#confianza" class="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 text-white/80 animate-bob" aria-label="Desplázate">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M12 5v14M6 13l6 6 6-6" />
+    </svg>
+  </a>
+</section>
+
+<script>
+  // Revelado línea por línea con clip-path (stagger 0.1s).
+  const lines = document.querySelectorAll('#top .hero-line');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) {
+    lines.forEach((l) => l.classList.add('in'));
+  } else {
+    // pequeño delay para asegurar pintado inicial
+    requestAnimationFrame(() => {
+      lines.forEach((l, i) => {
+        setTimeout(() => l.classList.add('in'), 150 + i * 100);
+      });
+    });
+  }
+</script>

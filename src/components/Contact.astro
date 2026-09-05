@@ -1,0 +1,95 @@
+---
+import { contact, waGeneral } from '../data/site.js';
+const waLink = waGeneral('Hola 😊 Quiero información y disponibilidad para volar en globo con Happy Puerto.');
+const mapEmbed = `https://www.google.com/maps?q=${encodeURIComponent(contact.mapsQuery)}&z=14&output=embed`;
+const telHref = `tel:+${contact.whatsappPhone}`;
+
+const cards = [
+  {
+    id: 'whatsapp',
+    label: 'WhatsApp',
+    value: contact.whatsappDisplay,
+    href: waLink,
+    external: true,
+    accent: '#25D366',
+    icon: '<path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Z" fill="none"/><path d="M8.5 7.5c.2-.5.4-.5.7-.5h.5c.2 0 .4 0 .6.5l.8 2c.1.2 0 .4-.1.5l-.5.6c-.1.1-.2.3-.1.5.5 1 1.6 1.9 2.6 2.3.2.1.4 0 .5-.1l.6-.7c.1-.2.3-.2.5-.1l1.9.9c.2.1.3.3.3.5 0 .6-.2 1.2-.7 1.5-.5.3-1 .4-1.6.3-2.4-.5-5.6-3.3-6.3-6-.1-.6 0-1.2.6-2Z"/>',
+  },
+  {
+    id: 'phone',
+    label: 'Teléfono',
+    value: contact.whatsappDisplay,
+    href: telHref,
+    accent: '#7FC7E8',
+    icon: '<path d="M5 4h3l1.5 5-2 1.5a11 11 0 0 0 5 5l1.5-2 5 1.5V19a2 2 0 0 1-2 2A16 16 0 0 1 4 6a2 2 0 0 1 1-2Z"/>',
+  },
+  {
+    id: 'email',
+    label: 'Email',
+    value: contact.email,
+    href: `mailto:${contact.email}`,
+    accent: '#FF8A5B',
+    icon: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/>',
+  },
+  {
+    id: 'address',
+    label: 'Dónde estamos',
+    value: contact.address,
+    accent: '#B98BD6',
+    icon: '<path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/>',
+  },
+];
+---
+
+<section id="contacto" class="bg-white py-20 sm:py-28">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6">
+    <header class="mb-12 max-w-2xl reveal">
+      <span class="sticker mb-3 inline-block rounded-full bg-coral/40 px-4 py-1.5 font-sub text-sm font-semibold text-ink">
+        Contacto
+      </span>
+      <h2 class="font-display text-[clamp(2.4rem,6vw,4.5rem)] leading-[0.95] text-ink">
+        ¿Listos para <span class="text-coral">volar</span>?
+      </h2>
+      <p class="mt-4 font-body text-lg text-ink/70">
+        Escríbenos por WhatsApp y en minutos armamos tu vuelo feliz.
+      </p>
+    </header>
+
+    <div class="grid gap-8 lg:grid-cols-2">
+      <!-- Datos de contacto -->
+      <div class="reveal grid gap-4 sm:grid-cols-2">
+        {cards.map((c) => {
+          const Tag = c.href ? 'a' : 'div';
+          return (
+            <Tag
+              href={c.href}
+              {...(c.external ? { target: '_blank', rel: 'noopener' } : {})}
+              class="group flex items-start gap-4 rounded-blob border-2 border-ink bg-cream p-5 shadow-pop transition-transform hover:-translate-y-1"
+            >
+              <span class="grid h-12 w-12 shrink-0 place-items-center rounded-full border-2 border-ink text-ink" style={`background:${c.accent}`}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={c.icon} />
+              </span>
+              <span class="min-w-0">
+                <span class="block font-sub text-sm font-semibold text-ink/60">{c.label}</span>
+                <span class="block font-sub text-lg font-semibold text-ink break-words">{c.value}</span>
+              </span>
+            </Tag>
+          );
+        })}
+      </div>
+
+      <!-- Mapa -->
+      <div class="reveal overflow-hidden rounded-blob border-2 border-ink shadow-card">
+        <iframe
+          title="Ubicación de Happy Puerto en San Martín de las Pirámides"
+          src={mapEmbed}
+          width="100%"
+          height="100%"
+          style="min-height:340px;border:0;"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+  </div>
+</section>

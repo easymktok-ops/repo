@@ -1,0 +1,83 @@
+---
+import { socials, siteMeta, waGeneral } from '../data/site.js';
+const logo = `${import.meta.env.BASE_URL}assets/logo-happy-puerto.svg`.replace(/\/{2,}/g, '/');
+const year = new Date().getFullYear();
+const waLink = waGeneral();
+
+// Iconos lineales SVG (sin emojis ni imágenes)
+const socialIcons = {
+  instagram:
+    '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/>',
+  facebook:
+    '<path d="M14 8.5V7c0-1 .5-1.5 1.6-1.5H17V2.5h-2.4C11.9 2.5 11 4 11 6.3v2.2H8.5V12H11v9.5h3V12h2.3l.5-3.5H14Z" fill="currentColor" stroke="none"/>',
+  tiktok:
+    '<path d="M15 3c.3 2.2 1.7 3.8 3.9 4v3c-1.5 0-2.8-.4-3.9-1.1v5.6a5.6 5.6 0 1 1-5.6-5.6c.3 0 .6 0 .9.1v3.1a2.6 2.6 0 1 0 1.8 2.4V3H15Z" fill="currentColor" stroke="none"/>',
+};
+
+const links = [
+  { href: '#paquetes', label: 'Paquetes' },
+  { href: '#experiencia', label: 'Experiencia' },
+  { href: '#galeria', label: 'Galería' },
+  { href: '#nosotros', label: 'Nosotros' },
+  { href: '#politicas', label: 'Políticas' },
+  { href: '#contacto', label: 'Contacto' },
+];
+---
+
+<footer class="bg-ink text-white">
+  <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6">
+    <div class="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+      <!-- Marca -->
+      <div>
+        <a href="#top" class="flex items-center gap-3" aria-label={`${siteMeta.name} — inicio`}>
+          <img src={logo} alt={siteMeta.name} width="52" height="52" class="h-[52px] w-[52px]" />
+          <span class="font-display text-2xl">Happy Puerto</span>
+        </a>
+        <p class="mt-4 max-w-xs font-body text-white/70">
+          {siteMeta.tagline} Vuelos en globo aerostático sobre Teotihuacán, al amanecer.
+        </p>
+        <a
+          href={waLink}
+          target="_blank"
+          rel="noopener"
+          class="mt-5 inline-flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-2.5 font-sub font-semibold text-white transition-transform hover:-translate-y-0.5"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.5 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1-1.4-1-2.6s.6-1.8.9-2.1c.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.8 1.9.8 2 .1.2.1.3 0 .5s-.2.4-.3.5l-.4.5c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.2.4-.2.6-.1l1.9.9c.2.1.4.2.5.3.1.3.1.7-.1 1.3Z"/></svg>
+          Escríbenos
+        </a>
+      </div>
+
+      <!-- Navegación -->
+      <nav aria-label="Enlaces del sitio">
+        <h3 class="font-sub text-sm font-semibold uppercase tracking-wide text-white/50">Explora</h3>
+        <ul class="mt-4 space-y-2.5 font-body">
+          {links.map((l) => (
+            <li><a href={l.href} class="text-white/80 transition-colors hover:text-yellow">{l.label}</a></li>
+          ))}
+        </ul>
+      </nav>
+
+      <!-- Redes -->
+      <div>
+        <h3 class="font-sub text-sm font-semibold uppercase tracking-wide text-white/50">Síguenos</h3>
+        <ul class="mt-4 space-y-3 font-body">
+          {socials.map((s) => (
+            <li>
+              <a href={s.url} target="_blank" rel="noopener" class="group inline-flex items-center gap-3 text-white/80 transition-colors hover:text-yellow">
+                <span class="grid h-9 w-9 place-items-center rounded-full border border-white/20 transition-colors group-hover:border-yellow group-hover:bg-yellow group-hover:text-ink">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" set:html={socialIcons[s.id]} />
+                </span>
+                {s.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-center sm:flex-row sm:text-left">
+      <p class="font-body text-sm text-white/60">© {year} Happy Puerto. Todos los derechos reservados.</p>
+      <p class="font-sub text-sm text-white/70">Sitio por <span class="font-semibold text-yellow">easy mkt</span></p>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" fill="none" role="img" aria-label="Happy Puerto">
+  <defs>
+    <path id="hp-top" d="M100 100 m-74,0 a74,74 0 1,1 148,0" />
+    <path id="hp-bot" d="M100 100 m74,0 a74,74 0 1,1 -148,0" />
+    <radialGradient id="hp-g" cx="40%" cy="32%" r="75%">
+      <stop offset="0%" stop-color="#FFE066"/>
+      <stop offset="62%" stop-color="#F4B400"/>
+      <stop offset="100%" stop-color="#C49000"/>
+    </radialGradient>
+  </defs>
+  <!-- seal ring -->
+  <circle cx="100" cy="100" r="96" fill="#1D1D1D"/>
+  <circle cx="100" cy="100" r="90" fill="#FFF9E6"/>
+  <circle cx="100" cy="100" r="72" fill="none" stroke="#1D1D1D" stroke-width="2.5"/>
+  <!-- curved text -->
+  <g fill="#1D1D1D" font-family="'Bangers','Arial Black',sans-serif" letter-spacing="3">
+    <text font-size="20">
+      <textPath href="#hp-top" startOffset="50%" text-anchor="middle">HAPPY PUERTO</textPath>
+    </text>
+    <text font-size="12" letter-spacing="4">
+      <textPath href="#hp-bot" startOffset="50%" text-anchor="middle">• TEOTIHUACÁN • MÉXICO •</textPath>
+    </text>
+  </g>
+  <!-- little stars -->
+  <path d="M40 100 l2 4 4 .5-3 3 .8 4-3.8-2-3.8 2 .8-4-3-3 4-.5z" fill="#F4B400"/>
+  <path d="M154 100 l2 4 4 .5-3 3 .8 4-3.8-2-3.8 2 .8-4-3-3 4-.5z" fill="#F4B400"/>
+  <!-- center balloon -->
+  <g transform="translate(100 96)">
+    <path d="M0 -34 C-16 -34 -25 -22 -25 -10 c0 10 8 17 14 21 h22 c6-4 14-11 14-21 C25 -22 16 -34 0 -34 Z" fill="url(#hp-g)" stroke="#1D1D1D" stroke-width="2.5"/>
+    <path d="M0 -34 C-6 -20 -6 0 -5 11 M0 -34 C6 -20 6 0 5 11" stroke="#C49000" stroke-width="1.4" opacity="0.7" fill="none"/>
+    <circle cx="-8" cy="-8" r="2.6" fill="#1D1D1D"/>
+    <circle cx="8" cy="-8" r="2.6" fill="#1D1D1D"/>
+    <path d="M-9 0 q9 7 18 0" stroke="#1D1D1D" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+    <path d="M-6 14 h12 l-1.4 7 h-9 Z" fill="#8a5a2b" stroke="#1D1D1D" stroke-width="1.8" stroke-linejoin="round"/>
+  </g>
+</svg>

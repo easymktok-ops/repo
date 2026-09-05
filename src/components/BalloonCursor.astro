@@ -1,0 +1,71 @@
+---
+// Cursor mascota (solo desktop ≥1024px, respeta prefers-reduced-motion).
+const cursorImg = `${import.meta.env.BASE_URL}assets/balloon-cursor.svg`.replace(/\/{2,}/g, '/');
+---
+
+<div id="balloon-cursor" aria-hidden="true">
+  <img src={cursorImg} alt="" width="80" height="80" />
+</div>
+
+<script>
+  const cursor = document.getElementById('balloon-cursor');
+  const mq = window.matchMedia('(min-width: 1024px)');
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  let mouseX = 0, mouseY = 0;
+  let cursorX = 0, cursorY = 0;
+  const LERP = 0.12;
+  let rafId = null;
+  let idleTimer = null;
+  let active = false;
+
+  function animateCursor() {
+    cursorX += (mouseX - cursorX) * LERP;
+    cursorY += (mouseY - cursorY) * LERP;
+    // -40 para centrar el globo (80×80) en la punta del cursor
+    cursor.style.transform = `translate(${cursorX - 40}px, ${cursorY - 40}px)`;
+    rafId = requestAnimationFrame(animateCursor);
+  }
+
+  function onMove(e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    cursor.classList.remove('idle');
+    clearTimeout(idleTimer);
+    // tras 500ms sin mover, entra en modo "idle" (oscilación sutil)
+    idleTimer = setTimeout(() => cursor.classList.add('idle'), 500);
+  }
+
+  function enable() {
+    if (active) return;
+    active = true;
+    document.body.classList.add('cursor-custom');
+    cursor.style.display = 'block';
+    // arranca en la posición actual del mouse para evitar salto
+    cursorX = mouseX = window.innerWidth / 2;
+    cursorY = mouseY = window.innerHeight / 2;
+    window.addEventListener('mousemove', onMove, { passive: true });
+    rafId = requestAnimationFrame(animateCursor);
+  }
+
+  function disable() {
+    if (!active) return;
+    active = false;
+    document.body.classList.remove('cursor-custom');
+    cursor.style.display = 'none';
+    cursor.classList.remove('idle');
+    window.removeEventListener('mousemove', onMove);
+    cancelAnimationFrame(rafId);
+    clearTimeout(idleTimer);
+  }
+
+  function evaluate() {
+    if (mq.matches && !reduce.matches) enable();
+    else disable();
+  }
+
+  evaluate();
+  // Reaccionar a cambios de tamaño de ventana o preferencia de movimiento
+  mq.addEventListener('change', evaluate);
+  reduce.addEventListener('change', evaluate);
+</script>
