@@ -66,6 +66,19 @@ return [
         // A donde llega la alerta interna de nueva reserva.
         'admin_email'    => getenv('NOTIF_ADMIN_EMAIL') ?: 'ventas@aerodiverti.com',
 
+        // --- SMTP autenticado (email_provider = 'smtp') ---------------------
+        // Credenciales del buzon que ENVIA. 'secure': 'ssl' (puerto 465) o
+        // 'tls' (STARTTLS, puerto 587). El 'user' suele ser el correo completo.
+        // El 'email_from' de arriba deberia coincidir con este buzon para que
+        // pase SPF/DKIM y no caiga en spam.
+        'smtp' => [
+            'host'   => getenv('SMTP_HOST') ?: 'smtp.tu-proveedor.com',
+            'port'   => (int) (getenv('SMTP_PORT') ?: 587),
+            'user'   => getenv('SMTP_USER') ?: 'ventas@aerodiverti.com',
+            'pass'   => getenv('SMTP_PASS') ?: '',
+            'secure' => getenv('SMTP_SECURE') ?: 'tls', // ssl | tls | none
+        ],
+
         // WhatsApp: "log" hasta cablear Meta Cloud API en Fase 3.1.
         'whatsapp_provider' => getenv('NOTIF_WA_PROVIDER') ?: 'log', // log | meta_cloud
         'whatsapp_token'    => getenv('NOTIF_WA_TOKEN') ?: '',
