@@ -33,6 +33,20 @@ Dials fijados: `DESIGN_VARIANCE 8`, `MOTION_INTENSITY 7`, `VISUAL_DENSITY 4`
   Los carga el negocio vía `/admin`.
 - **Sin em-dash** en texto visible.
 
+## Dominios y DNS (operación, aprendido en campo)
+
+- **SIEMPRE revisar los nameservers ANTES de tocar el DNS de un dominio que
+  recibimos/transferimos.** Riesgo real (pasó con `aerodiverti.mx`): si el
+  dominio estaba en Cloudflare y GoDaddy resetea o reasigna sus propios
+  nameservers (`ns__.domaincontrol.com`), la zona se reinicia a la plantilla
+  por defecto de GoDaddy (`A @ -> Parked`, `CNAME www -> @`) y el sitio
+  productivo desaparece (queda el lander de parking). No lo causa agregar un
+  subdominio; lo causa el cambio de nameservers.
+- Antes de agregar registros en GoDaddy, confirmar que los nameservers son los
+  correctos y rechazar cualquier prompt de GoDaddy tipo "cambiar a los
+  nuestros". Documentar nameservers y registros originales por si hay que
+  revertir.
+
 ## Contenido y CMS
 
 `src/content.config.ts` define el schema; `public/admin/config.yml` es el panel
