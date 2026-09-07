@@ -180,16 +180,16 @@ export const steps = [
 
 // ── Galería (fotos del cliente) ───────────────────────────────────
 export const gallery = [
-  { src: 'assets/galeria/galeria-02.jpg', alt: 'Globo Happy Puerto elevándose al amanecer', tall: true },
-  { src: 'assets/galeria/galeria-01.jpg', alt: 'Vista del valle de Teotihuacán desde el globo' },
-  { src: 'assets/galeria/galeria-03.jpg', alt: 'Globos multicolor sobre las pirámides' },
-  { src: 'assets/galeria/galeria-06.jpg', alt: 'Pasajeros disfrutando el vuelo', tall: true },
-  { src: 'assets/galeria/galeria-04.jpg', alt: 'Inflado del globo antes del despegue' },
-  { src: 'assets/ocasiones/ocasion-cumpleanos.jpg', alt: 'Celebración de cumpleaños en globo' },
-  { src: 'assets/galeria/galeria-07.jpg', alt: 'Canasta del globo lista para volar', tall: true },
-  { src: 'assets/ocasiones/ocasion-aniversario.jpg', alt: 'Aniversario celebrado sobre Teotihuacán' },
-  { src: 'assets/galeria/galeria-05.jpg', alt: 'Amanecer con decenas de globos en el cielo', tall: true },
-  { src: 'assets/ocasiones/ocasion-pedida.jpg', alt: 'Pedida de mano frente al globo carita feliz' },
+  { src: 'assets/galeria/galeria-02.jpg', alt: 'Globo carita feliz con ojos de corazón de Happy Puerto', tall: true },
+  { src: 'assets/galeria/galeria-01.jpg', alt: 'Globo carita feliz de Happy Puerto al amanecer' },
+  { src: 'assets/galeria/galeria-03.jpg', alt: 'Globo carita estrella de Happy Puerto en vuelo' },
+  { src: 'assets/galeria/galeria-06.jpg', alt: 'Pasajera disfrutando el vuelo en globo', tall: true },
+  { src: 'assets/galeria/galeria-04.jpg', alt: 'Preparación e inflado del globo antes del amanecer' },
+  { src: 'assets/ocasiones/ocasion-cumpleanos.jpg', alt: 'Globo carita con lentes de sol de Happy Puerto' },
+  { src: 'assets/galeria/galeria-07.jpg', alt: 'Amigos celebrando en la canasta del globo', tall: true },
+  { src: 'assets/ocasiones/ocasion-aniversario.jpg', alt: 'Globos carita feliz junto a la canasta de Happy Puerto' },
+  { src: 'assets/galeria/galeria-05.jpg', alt: 'Globos carita feliz de Happy Puerto al amanecer', tall: true },
+  { src: 'assets/ocasiones/ocasion-pedida.jpg', alt: 'Pareja celebrando frente al globo de Happy Puerto' },
 ];
 
 // ── Reseñas (PLACEHOLDER Fase 1) ──────────────────────────────────
