@@ -44,7 +44,7 @@ export const packages = [
   {
     id: 'smile',
     name: 'SMILE',
-    emoji: '🎈',
+    emoji: '🙂',
     price: 2199,
     tagline: 'El clásico feliz para estrenarte en el cielo.',
     includes: [

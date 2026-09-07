@@ -97,7 +97,7 @@ export default function PackageCard(pkg) {
 
       <div>
         <label htmlFor={`${id}-date`} className="mb-1.5 block font-sub text-sm font-medium text-ink/70">
-          Fecha tentativa
+          Fecha de tu vuelo
         </label>
         <input
           id={`${id}-date`}
