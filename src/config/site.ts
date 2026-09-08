@@ -28,8 +28,8 @@ export const site = {
     // Asesores de ventas por WhatsApp. El cliente elige a quien escribir en el
     // flujo de reserva. El primero es el numero principal del sitio (arriba).
     advisors: [
-      { name: "Rubi", phone: "5215535780223" },
-      { name: "Brisa", phone: "5215591994645" },
+      { name: "Rubi", phone: "5215535780223", display: "55 3578 0223" },
+      { name: "Brisa", phone: "5215591994645", display: "55 9199 4645" },
     ],
     // Reseñas verificadas (Google). Cifra real del negocio.
     reviews: { rating: 4.9, count: 2040, source: "Google" as const },
@@ -71,9 +71,13 @@ export function whatsappUrl(text?: string, phone: string = site.brand.whatsapp):
   return text ? `${base}?text=${encodeURIComponent(text)}` : base;
 }
 
-/** Lista de asesores con su enlace de WhatsApp listo (para que el cliente elija). */
-export function advisorLinks(text?: string): { name: string; href: string }[] {
-  return site.brand.advisors.map((a) => ({ name: a.name, href: whatsappUrl(text, a.phone) }));
+/** Lista de asesores con su enlace de WhatsApp y numero visible (cliente elige). */
+export function advisorLinks(text?: string): { name: string; href: string; display: string }[] {
+  return site.brand.advisors.map((a) => ({
+    name: a.name,
+    href: whatsappUrl(text, a.phone),
+    display: a.display,
+  }));
 }
 
 /** Prefijo de ruta por locale. es vive en la raiz; en bajo /en. */

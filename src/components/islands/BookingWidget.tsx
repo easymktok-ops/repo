@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { WhatsappLogo } from "@phosphor-icons/react";
 import type { Locale } from "@config/site";
 import { booking, type BookingMode, amountDueNow } from "@config/booking";
 import "./BookingWidget.css";
@@ -19,7 +20,7 @@ interface Props {
   packages: BookingPackage[];
   whatsappUrl: string;
   /** Asesores para que el cliente elija a quien escribir por WhatsApp. */
-  advisors: { name: string; href: string }[];
+  advisors: { name: string; href: string; display: string }[];
 }
 
 const T = {
@@ -27,8 +28,10 @@ const T = {
     steps: ["Elige tu vuelo", "Datos del pasajero", "Pago"],
     pickFlight: "Elige tu vuelo",
     passengers: "Pasajeros",
-    availTitle: "Disponibilidad",
-    availNote: "Antes de reservar, confirma la fecha con un asesor:",
+    dateLabel: "Fecha de tu vuelo",
+    dateHint: "Sujeta a confirmación según clima y disponibilidad.",
+    errDate: "Elige la fecha de tu vuelo.",
+    availNote: "¿Dudas de disponibilidad? Escríbele a un asesor:",
     weightNote: "El precio aplica hasta 99 kg por pasajero. Cada kilo extra cuesta 50 pesos, que cobra el equipo el día del vuelo.",
     optional: "opcional",
     perPerson: "por persona",
@@ -65,8 +68,10 @@ const T = {
     steps: ["Choose your flight", "Passenger details", "Payment"],
     pickFlight: "Choose your flight",
     passengers: "Passengers",
-    availTitle: "Availability",
-    availNote: "Before booking, confirm your date with an advisor:",
+    dateLabel: "Your flight date",
+    dateHint: "Subject to confirmation based on weather and availability.",
+    errDate: "Choose your flight date.",
+    availNote: "Questions about availability? Message an advisor:",
     weightNote: "Price applies up to 99 kg per passenger. Each extra kilo is 50 pesos, collected by the crew on the day of the flight.",
     optional: "optional",
     perPerson: "per person",
@@ -124,6 +129,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
   const [step, setStep] = useState(1);
   const [slug, setSlug] = useState<string>(packages[0]?.slug ?? "");
   const [passengers, setPassengers] = useState(1);
+  const [flightDate, setFlightDate] = useState("");
   const [mode, setMode] = useState<BookingMode>("full");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -184,11 +190,15 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
   const now = amountDueNow(mode, selected.pricePerPerson, passengers);
   const balance = totalFull - now;
 
+  const tomorrow = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   const phoneOk = phone.replace(/\D+/g, "").length >= 8;
   const nameOk = name.trim().length >= 2;
 
   function goStep2() {
+    setTouched(true);
+    if (!flightDate) return setError(t.errDate);
     setError(null);
     setStep(2);
   }
@@ -218,6 +228,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
           packageSlug: selected.slug,
           passengers,
           mode,
+          flightDate,
           name: name.trim(),
           email: email.trim(),
           phone: phone.trim(),
@@ -317,18 +328,43 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
                 </div>
 
                 <div className="bk-field">
-                  <span className="bk-label">{t.availTitle}</span>
-                  <p className="bk-hint">
-                    {t.availNote}{" "}
-                    {advisors.map((a, i) => (
-                      <span key={a.name}>
-                        <a className="bk-advisor-link" href={a.href} target="_blank" rel="noopener">
-                          {a.name}
-                        </a>
-                        {i < advisors.length - 1 ? " · " : ""}
+                  <label className="bk-label" htmlFor="bk-date">
+                    {t.dateLabel}{" "}
+                    <span className="bk-req" aria-hidden="true">
+                      *
+                    </span>
+                  </label>
+                  <input
+                    id="bk-date"
+                    className={`bk-input${touched && !flightDate ? " is-invalid" : ""}`}
+                    type="date"
+                    required
+                    min={tomorrow}
+                    value={flightDate}
+                    onChange={(e) => setFlightDate((e.target as HTMLInputElement).value)}
+                  />
+                  <p className="bk-hint">{t.dateHint}</p>
+                </div>
+              </div>
+
+              <div className="bk-advisors">
+                <span className="bk-advisors-note">{t.availNote}</span>
+                <div className="bk-advisors-row">
+                  {advisors.map((a) => (
+                    <a
+                      key={a.name}
+                      className="bk-wa"
+                      href={a.href}
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      <WhatsappLogo size={22} weight="fill" aria-hidden="true" />
+                      <span className="bk-wa-text">
+                        <span className="bk-wa-name">{a.name}</span>
+                        <span className="bk-wa-num">{a.display}</span>
                       </span>
-                    ))}
-                  </p>
+                    </a>
+                  ))}
                 </div>
               </div>
 
@@ -491,7 +527,10 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
             <div className="bk-ticket-top">
               <span className="bk-ticket-eyebrow">{t.summary}</span>
               <h3 className="bk-ticket-title">{selected.title}</h3>
-              <p className="bk-ticket-meta">{t.people(passengers)}</p>
+              <p className="bk-ticket-meta">
+                {t.people(passengers)}
+                {flightDate ? ` · ${flightDate}` : ""}
+              </p>
             </div>
             <div className="bk-ticket-perf" aria-hidden="true"></div>
             <dl className="bk-ticket-lines">
