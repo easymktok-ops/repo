@@ -18,6 +18,8 @@ interface Props {
   locale: Locale;
   packages: BookingPackage[];
   whatsappUrl: string;
+  /** Asesores para que el cliente elija a quien escribir por WhatsApp. */
+  advisors: { name: string; href: string }[];
 }
 
 const T = {
@@ -25,10 +27,9 @@ const T = {
     steps: ["Elige tu vuelo", "Datos del pasajero", "Pago"],
     pickFlight: "Elige tu vuelo",
     passengers: "Pasajeros",
-    date: "Fecha tentativa",
-    dateHint: "Sujeta a confirmacion segun clima y disponibilidad.",
+    availTitle: "Disponibilidad",
+    availNote: "Antes de reservar, confirma la fecha con un asesor:",
     weightNote: "El precio aplica hasta 99 kg por pasajero. Cada kilo extra cuesta 50 pesos, que cobra el equipo el día del vuelo.",
-    errDate: "Elige la fecha de tu vuelo.",
     optional: "opcional",
     perPerson: "por persona",
     name: "Nombre completo",
@@ -64,10 +65,9 @@ const T = {
     steps: ["Choose your flight", "Passenger details", "Payment"],
     pickFlight: "Choose your flight",
     passengers: "Passengers",
-    date: "Preferred date",
-    dateHint: "Subject to confirmation based on weather and availability.",
+    availTitle: "Availability",
+    availNote: "Before booking, confirm your date with an advisor:",
     weightNote: "Price applies up to 99 kg per passenger. Each extra kilo is 50 pesos, collected by the crew on the day of the flight.",
-    errDate: "Choose your flight date.",
     optional: "optional",
     perPerson: "per person",
     name: "Full name",
@@ -119,12 +119,11 @@ function track(event: string, data: Record<string, unknown>): void {
   if (Array.isArray(w.dataLayer)) w.dataLayer.push({ event, ...data });
 }
 
-export default function BookingWidget({ locale, packages, whatsappUrl }: Props) {
+export default function BookingWidget({ locale, packages, whatsappUrl, advisors }: Props) {
   const t = T[locale] ?? T.es;
   const [step, setStep] = useState(1);
   const [slug, setSlug] = useState<string>(packages[0]?.slug ?? "");
   const [passengers, setPassengers] = useState(1);
-  const [flightDate, setFlightDate] = useState("");
   const [mode, setMode] = useState<BookingMode>("full");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -185,15 +184,11 @@ export default function BookingWidget({ locale, packages, whatsappUrl }: Props) 
   const now = amountDueNow(mode, selected.pricePerPerson, passengers);
   const balance = totalFull - now;
 
-  const tomorrow = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
-
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   const phoneOk = phone.replace(/\D+/g, "").length >= 8;
   const nameOk = name.trim().length >= 2;
 
   function goStep2() {
-    setTouched(true);
-    if (!flightDate) return setError(t.errDate);
     setError(null);
     setStep(2);
   }
@@ -223,7 +218,6 @@ export default function BookingWidget({ locale, packages, whatsappUrl }: Props) 
           packageSlug: selected.slug,
           passengers,
           mode,
-          flightDate,
           name: name.trim(),
           email: email.trim(),
           phone: phone.trim(),
@@ -323,22 +317,18 @@ export default function BookingWidget({ locale, packages, whatsappUrl }: Props) 
                 </div>
 
                 <div className="bk-field">
-                  <label className="bk-label" htmlFor="bk-date">
-                    {t.date}{" "}
-                    <span className="bk-req" aria-hidden="true">
-                      *
-                    </span>
-                  </label>
-                  <input
-                    id="bk-date"
-                    className={`bk-input${touched && !flightDate ? " is-invalid" : ""}`}
-                    type="date"
-                    required
-                    min={tomorrow}
-                    value={flightDate}
-                    onChange={(e) => setFlightDate((e.target as HTMLInputElement).value)}
-                  />
-                  <p className="bk-hint">{t.dateHint}</p>
+                  <span className="bk-label">{t.availTitle}</span>
+                  <p className="bk-hint">
+                    {t.availNote}{" "}
+                    {advisors.map((a, i) => (
+                      <span key={a.name}>
+                        <a className="bk-advisor-link" href={a.href} target="_blank" rel="noopener">
+                          {a.name}
+                        </a>
+                        {i < advisors.length - 1 ? " · " : ""}
+                      </span>
+                    ))}
+                  </p>
                 </div>
               </div>
 
@@ -501,10 +491,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl }: Props) 
             <div className="bk-ticket-top">
               <span className="bk-ticket-eyebrow">{t.summary}</span>
               <h3 className="bk-ticket-title">{selected.title}</h3>
-              <p className="bk-ticket-meta">
-                {t.people(passengers)}
-                {flightDate ? ` · ${flightDate}` : ""}
-              </p>
+              <p className="bk-ticket-meta">{t.people(passengers)}</p>
             </div>
             <div className="bk-ticket-perf" aria-hidden="true"></div>
             <dl className="bk-ticket-lines">

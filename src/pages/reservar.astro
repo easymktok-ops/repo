@@ -3,7 +3,7 @@ import PageShell from "@layouts/PageShell.astro";
 import PageHeader from "@components/ui/PageHeader.astro";
 import BookingWidget from "@components/islands/BookingWidget";
 import { getCollection } from "astro:content";
-import { whatsappUrl } from "@config/site";
+import { whatsappUrl, advisorLinks } from "@config/site";
 
 const locale = "es" as const;
 
@@ -24,6 +24,9 @@ const packages = pkgs
   }));
 
 const wa = whatsappUrl("Hola, quiero reservar un vuelo en globo. ¿Me ayudan?");
+const advisors = advisorLinks(
+  "Hola, quiero confirmar disponibilidad de fecha para reservar un vuelo en globo. ¿Me ayudan?",
+);
 ---
 
 <PageShell
@@ -38,7 +41,7 @@ const wa = whatsappUrl("Hola, quiero reservar un vuelo en globo. ¿Me ayudan?");
     lead="Elige tu experiencia y pasajeros. Paga todo en línea o aparta tus lugares con un anticipo; el saldo se liquida en sitio el día del vuelo."
   />
   <section class="container-narrow booking-wrap">
-    <BookingWidget client:load locale={locale} packages={packages} whatsappUrl={wa} />
+    <BookingWidget client:load locale={locale} packages={packages} whatsappUrl={wa} advisors={advisors} />
   </section>
 </PageShell>
 

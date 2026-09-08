@@ -25,6 +25,12 @@ export const site = {
     // WhatsApp real del negocio (digitos para wa.me). El display es editable por env.
     whatsapp: "5215535780223",
     whatsappDisplay: import.meta.env.PUBLIC_WHATSAPP_DISPLAY_NUMBER ?? "+52 55 3578 0223",
+    // Asesores de ventas por WhatsApp. El cliente elige a quien escribir en el
+    // flujo de reserva. El primero es el numero principal del sitio (arriba).
+    advisors: [
+      { name: "Rubi", phone: "5215535780223" },
+      { name: "Brisa", phone: "5215591994645" },
+    ],
     // Reseñas verificadas (Google). Cifra real del negocio.
     reviews: { rating: 4.9, count: 2040, source: "Google" as const },
     // Ubicacion / globopuerto propio.
@@ -59,10 +65,15 @@ export function absoluteUrl(path = "/"): string {
   return `${site.url}${clean}`;
 }
 
-/** URL de WhatsApp del negocio, con mensaje opcional prellenado. */
-export function whatsappUrl(text?: string): string {
-  const base = `https://wa.me/${site.brand.whatsapp}`;
+/** URL de WhatsApp con mensaje opcional. `phone` por defecto: numero principal. */
+export function whatsappUrl(text?: string, phone: string = site.brand.whatsapp): string {
+  const base = `https://wa.me/${phone}`;
   return text ? `${base}?text=${encodeURIComponent(text)}` : base;
+}
+
+/** Lista de asesores con su enlace de WhatsApp listo (para que el cliente elija). */
+export function advisorLinks(text?: string): { name: string; href: string }[] {
+  return site.brand.advisors.map((a) => ({ name: a.name, href: whatsappUrl(text, a.phone) }));
 }
 
 /** Prefijo de ruta por locale. es vive en la raiz; en bajo /en. */

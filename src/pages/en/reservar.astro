@@ -3,7 +3,7 @@ import PageShell from "@layouts/PageShell.astro";
 import PageHeader from "@components/ui/PageHeader.astro";
 import BookingWidget from "@components/islands/BookingWidget";
 import { getCollection } from "astro:content";
-import { whatsappUrl } from "@config/site";
+import { whatsappUrl, advisorLinks } from "@config/site";
 
 const locale = "en" as const;
 
@@ -24,6 +24,9 @@ const packages = pkgs
   }));
 
 const wa = whatsappUrl("Hi, I'd like to book a hot-air balloon flight. Can you help?");
+const advisors = advisorLinks(
+  "Hi, I'd like to confirm date availability to book a hot-air balloon flight. Can you help?",
+);
 ---
 
 <PageShell
@@ -38,7 +41,7 @@ const wa = whatsappUrl("Hi, I'd like to book a hot-air balloon flight. Can you h
     lead="Choose your experience and passengers. Pay in full online or reserve your spots with a deposit; the balance is settled on site the day of the flight."
   />
   <section class="container-narrow booking-wrap">
-    <BookingWidget client:load locale={locale} packages={packages} whatsappUrl={wa} />
+    <BookingWidget client:load locale={locale} packages={packages} whatsappUrl={wa} advisors={advisors} />
   </section>
 </PageShell>
 
