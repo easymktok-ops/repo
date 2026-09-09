@@ -18,9 +18,8 @@ backend:
   # Proxy OAuth propio (PHP) en el hosting. `base_url` es el ORIGEN del sitio:
   # es el unico valor dependiente del dominio, se fija en el corte a produccion
   # (igual que PUBLIC_SITE_URL). `auth_endpoint` es la ruta del proxy.
-  # BETA DE PRODUCCION: origen del subdominio de pruebas sobre el dominio bueno.
-  # Al corte a produccion final (aerodiverti.com.mx sin beta) se cambia aqui.
-  base_url: https://beta.aerodiverti.com.mx
+  # PRODUCCION: dominio oficial del sitio.
+  base_url: https://aerodiverti.com.mx
   auth_endpoint: server/public/api/oauth/auth.php
 
 # Edicion local inmediata sin OAuth: `npm run cms:proxy` + abrir /admin en dev.
