@@ -220,8 +220,9 @@ export const reviews = [
     text: 'Elegimos el globo privado para nuestro aniversario. Mágico de principio a fin. Gracias Happy Puerto por hacerlo especial.',
   },
 ];
-// Placeholder — link real de Viator pendiente para Fase 2.
-export const viatorUrl = null; // TODO Fase 2: URL real de reseñas Viator.
+// Enlace a reseñas reales en TripAdvisor (no están en Viator).
+export const reviewsUrl =
+  'https://www.tripadvisor.com.mx/Attraction_Review-g3172174-d21060015-Reviews-Happy_Puerto-San_Martin_de_las_Piramides_Central_Mexico_and_Gulf_Coast.html';
 
 // ── Políticas (accordion) ─────────────────────────────────────────
 export const policies = [
