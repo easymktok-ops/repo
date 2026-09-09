@@ -205,9 +205,30 @@ export const gallery = [
 // Calificación real verificada en TripAdvisor (5.0 ★).
 export const rating = { score: '5.0', label: 'Excelente', source: 'TripAdvisor' };
 
-// Testimonios: vacío hasta pegar textos reales del cliente (NO inventar).
-// Cuando el cliente comparta reseñas, agregar objetos { name, initial, stars, text }.
-export const reviews = [];
+// Testimonios reales de TripAdvisor (compartidos por el cliente).
+export const reviews = [
+  {
+    name: 'Karina Isabel S.',
+    initial: 'K',
+    stars: 5,
+    meta: 'Abril 2026 · En familia',
+    text: 'Una experiencia muy recomendable. Todo el personal fue muy amable y tuvieron muchas atenciones con nosotros desde que nos recogieron. El vuelo estuvo espectacular. Contratamos el servicio de fotografía y video con dron y definitivamente valió la pena: la vista desde arriba es asombrosa. ¡Definitivamente lo repetiríamos! La empresa Happy, ¡la mejor!',
+  },
+  {
+    name: 'Oksana I.',
+    initial: 'O',
+    stars: 5,
+    meta: 'Julio 2026 · En pareja',
+    text: 'Fue una experiencia increíble. El capitán fue muy profesional y amable. Recomiendo encarecidamente esta experiencia. Vistas espectaculares y un gran momento. El despegue y el aterrizaje fueron muy suaves. ¡Muy agradable recibir los certificados de vuelo y celebrarlo! ❤️',
+  },
+  {
+    name: 'Laura S.',
+    initial: 'L',
+    stars: 5,
+    meta: 'Agosto 2026 · En pareja',
+    text: 'Experiencia increíble. Hospitalidad profunda. ¡Programaría otra experiencia sin pensármelo dos veces!',
+  },
+];
 
 // Enlace a las reseñas reales en TripAdvisor (la empresa no está en Viator).
 export const reviewsUrl =

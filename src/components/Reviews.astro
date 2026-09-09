@@ -47,10 +47,13 @@ const accents = ['#7FC7E8', '#FF8A5B', '#6FD8A4'];
             </div>
             <blockquote class="flex-1 font-body text-ink/85">"{r.text}"</blockquote>
             <figcaption class="mt-5 flex items-center gap-3">
-              <span class="grid h-11 w-11 place-items-center rounded-full border-2 border-ink font-display text-xl text-ink" style={`background:${accents[i % accents.length]}`}>
+              <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full border-2 border-ink font-display text-xl text-ink" style={`background:${accents[i % accents.length]}`}>
                 {r.initial}
               </span>
-              <span class="font-sub font-semibold text-ink">{r.name}</span>
+              <span class="min-w-0">
+                <span class="block font-sub font-semibold text-ink">{r.name}</span>
+                {r.meta && <span class="block font-body text-xs text-ink/55">{r.meta}</span>}
+              </span>
             </figcaption>
           </figure>
         ))}

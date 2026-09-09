@@ -781,15 +781,20 @@
     dateEl.addEventListener('change', refresh);
   });
 
-  // ---- Reviews ---- (vacío: sin testimonios inventados; solo la calificación real 5.0)
-  var REVIEWS = [];
+  // ---- Reviews ---- (reseñas reales de TripAdvisor, compartidas por el cliente)
+  var REVIEWS = [
+    {n:'Karina Isabel S.', i:'K', a:'#7FC7E8', m:'Abril 2026 · En familia', t:'Una experiencia muy recomendable. Todo el personal fue muy amable y tuvieron muchas atenciones con nosotros desde que nos recogieron. El vuelo estuvo espectacular. Contratamos el servicio de fotografía y video con dron y definitivamente valió la pena: la vista desde arriba es asombrosa. ¡Definitivamente lo repetiríamos! La empresa Happy, ¡la mejor!'},
+    {n:'Oksana I.', i:'O', a:'#FF8A5B', m:'Julio 2026 · En pareja', t:'Fue una experiencia increíble. El capitán fue muy profesional y amable. Recomiendo encarecidamente esta experiencia. Vistas espectaculares y un gran momento. El despegue y el aterrizaje fueron muy suaves. ¡Muy agradable recibir los certificados de vuelo y celebrarlo! ❤️'},
+    {n:'Laura S.', i:'L', a:'#6FD8A4', m:'Agosto 2026 · En pareja', t:'Experiencia increíble. Hospitalidad profunda. ¡Programaría otra experiencia sin pensármelo dos veces!'}
+  ];
   var star = '<svg width="20" height="20" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 19.4 7.4 12.9 2.4 8.6 9 8z"/></svg>';
   var rg = document.getElementById('rev-grid');
   REVIEWS.forEach(function(r){
     var fig = document.createElement('figure'); fig.className='review';
     fig.innerHTML = '<div class="stars">'+star+star+star+star+star+'</div>'+
       '<blockquote>“'+r.t+'”</blockquote>'+
-      '<figcaption><span class="avatar" style="background:'+r.a+'">'+r.i+'</span><b>'+r.n+'</b></figcaption>';
+      '<figcaption><span class="avatar" style="background:'+r.a+'">'+r.i+'</span>'+
+      '<span><b>'+r.n+'</b><small style="display:block;font-size:12px;font-weight:400;color:rgba(29,29,29,.55)">'+(r.m||'')+'</small></span></figcaption>';
     rg.appendChild(fig);
   });
 
