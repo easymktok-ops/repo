@@ -214,6 +214,17 @@ input:focus-visible,
   transform: rotate(-3deg);
 }
 
+/* Globo carita flotante junto a cada paquete */
+.pkg-balloon-svg {
+  display: block;
+  transform-origin: 50% 42%;
+  animation: pkgfloat 4.5s ease-in-out infinite;
+}
+@keyframes pkgfloat {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50% { transform: translateY(-6px) rotate(3deg); }
+}
+
 /* ── Reduced motion: todo estático, cursor nativo ───────────── */
 @media (prefers-reduced-motion: reduce) {
   html {

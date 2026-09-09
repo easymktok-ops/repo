@@ -45,6 +45,7 @@ export const packages = [
     id: 'smile',
     name: 'SMILE',
     emoji: '🙂',
+    face: 'smile',
     price: 2199,
     tagline: 'El clásico feliz para estrenarte en el cielo.',
     includes: [
@@ -63,6 +64,7 @@ export const packages = [
     id: 'happy',
     name: 'HAPPY',
     emoji: '😄',
+    face: 'grin',
     price: 2399,
     tagline: 'Vuelo + experiencias culturales para un día completo.',
     includes: [
@@ -79,6 +81,7 @@ export const packages = [
     id: 'cool',
     name: 'COOL',
     emoji: '😎',
+    face: 'cool',
     price: 2799,
     tagline: 'Sin preocuparte por el traslado: nosotros te llevamos.',
     includes: [
@@ -93,6 +96,7 @@ export const packages = [
     id: 'star',
     name: 'STAR',
     emoji: '⭐',
+    face: 'star',
     price: 2999,
     tagline: 'La experiencia estrella: desayuno en cueva y traslados.',
     includes: [
@@ -110,6 +114,7 @@ export const packages = [
     id: 'big-happy',
     name: 'BIG HAPPY',
     emoji: '🌟',
+    face: 'biggrin',
     price: 3199,
     tagline: 'Todo incluido + acceso a la Zona Arqueológica.',
     includes: [
@@ -124,6 +129,7 @@ export const packages = [
     id: 'love',
     name: 'LOVE',
     emoji: '💛',
+    face: 'love',
     price: 12000,
     tagline: 'Globo PRIVADO para 2. El cielo, solo de ustedes.',
     includes: [

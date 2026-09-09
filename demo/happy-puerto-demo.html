@@ -121,7 +121,9 @@
   .card-body { padding: 26px; display: flex; flex-direction: column; flex: 1; }
   .card .name { display: flex; align-items: center; gap: 8px; }
   .card .name h3 { font-family: var(--font-display); letter-spacing: .04em; font-size: 2.1rem; }
-  .card .name .em { font-size: 1.5rem; }
+  .card .name .em { display: inline-flex; align-items: center; margin-right: 2px; }
+  .pkg-balloon-svg { display: block; animation: floaty 4.5s ease-in-out infinite; transform-origin: 50% 42%; }
+  @keyframes floaty { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-6px) rotate(3deg); } }
   .card .tag { margin-top: 4px; font-family: var(--font-sub); font-weight: 500; color: rgba(29,29,29,.68); font-size: 15px; }
   .price { display: flex; align-items: flex-end; gap: 8px; margin-top: 16px; }
   .price .big { font-family: var(--font-display); font-size: 3rem; line-height: .9; }
@@ -693,12 +695,41 @@
   }
   var todayISO = (function(){ var t=new Date(); t.setMinutes(t.getMinutes()-t.getTimezoneOffset()); return t.toISOString().slice(0,10); })();
 
-  document.querySelectorAll('.pkg').forEach(function(card){
+  // Globo carita flotante por paquete (cara según el modelo)
+  var FACES = {
+    smile: '<circle cx="25" cy="31" r="2.7" fill="#1D1D1D"/><circle cx="39" cy="31" r="2.7" fill="#1D1D1D"/><path d="M24 40 q8 7 16 0" stroke="#1D1D1D" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
+    grin: '<circle cx="25" cy="30" r="2.7" fill="#1D1D1D"/><circle cx="39" cy="30" r="2.7" fill="#1D1D1D"/><path d="M23 38 q9 10 18 0 Z" fill="#1D1D1D"/>',
+    cool: '<rect x="17" y="28" width="12" height="7.5" rx="3.2" fill="#1D1D1D"/><rect x="35" y="28" width="12" height="7.5" rx="3.2" fill="#1D1D1D"/><path d="M29 30.5 h6" stroke="#1D1D1D" stroke-width="2"/><path d="M26 41 q6 5 12 0" stroke="#1D1D1D" stroke-width="2.2" fill="none" stroke-linecap="round"/>',
+    star: '<path d="M25 27.5 l1.1 2.4 2.6 .3 -1.9 1.8 .5 2.6 -2.3 -1.3 -2.3 1.3 .5 -2.6 -1.9 -1.8 2.6 -.3Z" fill="#1D1D1D"/><path d="M39 27.5 l1.1 2.4 2.6 .3 -1.9 1.8 .5 2.6 -2.3 -1.3 -2.3 1.3 .5 -2.6 -1.9 -1.8 2.6 -.3Z" fill="#1D1D1D"/><path d="M25 40 q7 6 14 0" stroke="#1D1D1D" stroke-width="2.2" fill="none" stroke-linecap="round"/>',
+    biggrin: '<circle cx="25" cy="30" r="2.7" fill="#1D1D1D"/><circle cx="39" cy="30" r="2.7" fill="#1D1D1D"/><path d="M22 37 q10 12 20 0 Z" fill="#1D1D1D"/><path d="M46 17 l.9 2 2.1 .2 -1.6 1.4 .5 2.1 -1.9 -1.1 -1.9 1.1 .5 -2.1 -1.6 -1.4 2.1 -.2Z" fill="#FFE066"/>',
+    love: '<g fill="#ef3e6d"><path d="M25 34 c-2.2-1.8-4.2-3-4.2-4.9 0-1.2 1-2.1 2.2-2.1 .9 0 1.6 .5 2 1.2 .4-.7 1.1-1.2 2-1.2 1.2 0 2.2 .9 2.2 2.1 0 1.9-2 3.1-4.2 4.9Z"/><path d="M39 34 c-2.2-1.8-4.2-3-4.2-4.9 0-1.2 1-2.1 2.2-2.1 .9 0 1.6 .5 2 1.2 .4-.7 1.1-1.2 2-1.2 1.2 0 2.2 .9 2.2 2.1 0 1.9-2 3.1-4.2 4.9Z"/></g><path d="M25 40 q7 6 14 0" stroke="#1D1D1D" stroke-width="2.2" fill="none" stroke-linecap="round"/>'
+  };
+  var FACEMAP = { 'SMILE':'smile','HAPPY':'grin','COOL':'cool','STAR':'star','BIG HAPPY':'biggrin','LOVE':'love' };
+  function balloonSVG(face){
+    return '<svg class="pkg-balloon-svg" width="42" height="54" viewBox="0 0 64 82" fill="none" aria-hidden="true">'
+      + '<path d="M26 55 L29 66 M40 55 L37 66" stroke="#1D1D1D" stroke-width="1.8" stroke-linecap="round"/>'
+      + '<path d="M32 5 C15 5 7 18 7 31 c0 12 8 20 16 25 h18 c8-5 16-13 16-25 C57 18 49 5 32 5 Z" fill="#F4B400" stroke="#1D1D1D" stroke-width="2.6"/>'
+      + '<path d="M32 5 C22 5 15 13 13 24 c6-4 13-5 19-3 C33 13 32 5 32 5 Z" fill="#FFE066" opacity="0.5"/>'
+      + '<path d="M32 5 C25 22 25 46 26 57 M32 5 C39 22 39 46 38 57" stroke="#C49000" stroke-width="1.3" opacity="0.55" fill="none"/>'
+      + (FACES[face] || FACES.smile)
+      + '<path d="M27 55 h10 l-1.4 8 h-7.2 Z" fill="#7a4f27" stroke="#1D1D1D" stroke-width="1.6" stroke-linejoin="round"/>'
+      + '</svg>';
+  }
+
+  document.querySelectorAll('.pkg').forEach(function(card, ci){
     var name = card.getAttribute('data-name');
     var price = card.getAttribute('data-price');
     var accent = card.getAttribute('data-accent');
     var fixed = card.getAttribute('data-fixed')==='1';
     var persons = parseInt(card.getAttribute('data-persons')||'1', 10);
+
+    // globo flotante (reemplaza el emoji del nombre)
+    var em = card.querySelector('.em');
+    if (em) {
+      em.innerHTML = balloonSVG(FACEMAP[name] || 'smile');
+      var bsvg = em.querySelector('svg');
+      if (bsvg) bsvg.style.animationDelay = (ci * 0.35) + 's';
+    }
 
     // includes
     var ul = card.querySelector('.incl');

@@ -2,6 +2,29 @@ import { useMemo, useState, useId } from 'react';
 
 const PHONE = '525656531771'; // +52 56 56531771
 
+// Globo carita flotante por paquete (cara según el modelo de globo)
+const FACES = {
+  smile: '<circle cx="25" cy="31" r="2.7" fill="#1D1D1D"/><circle cx="39" cy="31" r="2.7" fill="#1D1D1D"/><path d="M24 40 q8 7 16 0" stroke="#1D1D1D" stroke-width="2.4" fill="none" stroke-linecap="round"/>',
+  grin: '<circle cx="25" cy="30" r="2.7" fill="#1D1D1D"/><circle cx="39" cy="30" r="2.7" fill="#1D1D1D"/><path d="M23 38 q9 10 18 0 Z" fill="#1D1D1D"/>',
+  cool: '<rect x="17" y="28" width="12" height="7.5" rx="3.2" fill="#1D1D1D"/><rect x="35" y="28" width="12" height="7.5" rx="3.2" fill="#1D1D1D"/><path d="M29 30.5 h6" stroke="#1D1D1D" stroke-width="2"/><path d="M26 41 q6 5 12 0" stroke="#1D1D1D" stroke-width="2.2" fill="none" stroke-linecap="round"/>',
+  star: '<path d="M25 27.5 l1.1 2.4 2.6 .3 -1.9 1.8 .5 2.6 -2.3 -1.3 -2.3 1.3 .5 -2.6 -1.9 -1.8 2.6 -.3Z" fill="#1D1D1D"/><path d="M39 27.5 l1.1 2.4 2.6 .3 -1.9 1.8 .5 2.6 -2.3 -1.3 -2.3 1.3 .5 -2.6 -1.9 -1.8 2.6 -.3Z" fill="#1D1D1D"/><path d="M25 40 q7 6 14 0" stroke="#1D1D1D" stroke-width="2.2" fill="none" stroke-linecap="round"/>',
+  biggrin: '<circle cx="25" cy="30" r="2.7" fill="#1D1D1D"/><circle cx="39" cy="30" r="2.7" fill="#1D1D1D"/><path d="M22 37 q10 12 20 0 Z" fill="#1D1D1D"/><path d="M46 17 l.9 2 2.1 .2 -1.6 1.4 .5 2.1 -1.9 -1.1 -1.9 1.1 .5 -2.1 -1.6 -1.4 2.1 -.2Z" fill="#FFE066"/>',
+  love: '<g fill="#ef3e6d"><path d="M25 34 c-2.2-1.8-4.2-3-4.2-4.9 0-1.2 1-2.1 2.2-2.1 .9 0 1.6 .5 2 1.2 .4-.7 1.1-1.2 2-1.2 1.2 0 2.2 .9 2.2 2.1 0 1.9-2 3.1-4.2 4.9Z"/><path d="M39 34 c-2.2-1.8-4.2-3-4.2-4.9 0-1.2 1-2.1 2.2-2.1 .9 0 1.6 .5 2 1.2 .4-.7 1.1-1.2 2-1.2 1.2 0 2.2 .9 2.2 2.1 0 1.9-2 3.1-4.2 4.9Z"/></g><path d="M25 40 q7 6 14 0" stroke="#1D1D1D" stroke-width="2.2" fill="none" stroke-linecap="round"/>',
+};
+
+function BalloonMascot({ face, size = 44 }) {
+  return (
+    <svg className="pkg-balloon-svg shrink-0" width={size} height={(size * 54) / 42} viewBox="0 0 64 82" fill="none" aria-hidden="true">
+      <path d="M26 55 L29 66 M40 55 L37 66" stroke="#1D1D1D" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M32 5 C15 5 7 18 7 31 c0 12 8 20 16 25 h18 c8-5 16-13 16-25 C57 18 49 5 32 5 Z" fill="#F4B400" stroke="#1D1D1D" strokeWidth="2.6" />
+      <path d="M32 5 C22 5 15 13 13 24 c6-4 13-5 19-3 C33 13 32 5 32 5 Z" fill="#FFE066" opacity="0.5" />
+      <path d="M32 5 C25 22 25 46 26 57 M32 5 C39 22 39 46 38 57" stroke="#C49000" strokeWidth="1.3" opacity="0.55" fill="none" />
+      <g dangerouslySetInnerHTML={{ __html: FACES[face] || FACES.smile }} />
+      <path d="M27 55 h10 l-1.4 8 h-7.2 Z" fill="#7a4f27" stroke="#1D1D1D" strokeWidth="1.6" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 function formatDateForMsg(iso) {
   if (!iso) return 'por definir';
   const [y, m, d] = iso.split('-');
@@ -76,7 +99,7 @@ function Stepper({ persons, setPersons, accent, idBase, max = 8 }) {
 }
 
 export default function PackageCard(pkg) {
-  const { name, emoji, price, tagline, includes = [], accent = '#F4B400', badge, variant, image, imageAlt } = pkg;
+  const { name, face, price, tagline, includes = [], accent = '#F4B400', badge, variant, image, imageAlt } = pkg;
   const isLove = variant === 'love';
   const startPersons = isLove ? 2 : 1;
   const [persons, setPersons] = useState(startPersons);
@@ -173,7 +196,7 @@ export default function PackageCard(pkg) {
 
           <div className="p-6 sm:p-8">
             <div className="mb-2 flex items-center gap-2">
-              <span className="text-3xl" aria-hidden="true">{emoji}</span>
+              <BalloonMascot face={face} size={50} />
               <h3 className="font-display text-4xl tracking-[0.04em] text-ink sm:text-5xl">{name}</h3>
             </div>
             <p className="font-sub text-lg font-medium" style={{ color: '#d63f7d' }}>{tagline}</p>
@@ -205,7 +228,7 @@ export default function PackageCard(pkg) {
       )}
 
       <div className="mt-2 flex items-center gap-2">
-        <span className="text-2xl" aria-hidden="true">{emoji}</span>
+        <BalloonMascot face={face} size={44} />
         <h3 className="font-display text-3xl tracking-[0.04em] text-ink sm:text-4xl">{name}</h3>
       </div>
       <p className="mt-1 font-sub text-[15px] font-medium text-ink/70">{tagline}</p>
