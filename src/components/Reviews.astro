@@ -1,8 +1,8 @@
 ---
-import { reviews, reviewsUrl } from '../data/site.js';
+import { reviews, rating, reviewsUrl } from '../data/site.js';
 
-// ⚠️ Las 3 reseñas mostradas son de EJEMPLO — reemplazar por reseñas reales
-// (el botón ya enlaza a las reseñas verificadas en TripAdvisor).
+// Muestra la calificación real de TripAdvisor. Los testimonios (tarjetas)
+// solo aparecen si hay reseñas reales cargadas en site.js (nunca inventadas).
 const accents = ['#7FC7E8', '#FF8A5B', '#6FD8A4'];
 ---
 
@@ -20,26 +20,42 @@ const accents = ['#7FC7E8', '#FF8A5B', '#6FD8A4'];
       </p>
     </header>
 
-    <div class="grid gap-6 md:grid-cols-3">
-      {reviews.map((r, i) => (
-        <figure class="reveal flex h-full flex-col rounded-blob border-2 border-ink bg-cream p-6 shadow-card" style={`transition-delay:${i * 80}ms`}>
-          <div class="mb-3 flex items-center gap-1" aria-label={`${r.stars} de 5 estrellas`}>
-            {Array.from({ length: 5 }).map((_, s) => (
-              <svg width="20" height="20" viewBox="0 0 24 24" fill={s < r.stars ? '#F4B400' : '#E5E0CF'} aria-hidden="true">
-                <path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 19.4 7.4 12.9 2.4 8.6 9 8z" />
-              </svg>
-            ))}
-          </div>
-          <blockquote class="flex-1 font-body text-ink/85">"{r.text}"</blockquote>
-          <figcaption class="mt-5 flex items-center gap-3">
-            <span class="grid h-11 w-11 place-items-center rounded-full border-2 border-ink font-display text-xl text-ink" style={`background:${accents[i % accents.length]}`}>
-              {r.initial}
-            </span>
-            <span class="font-sub font-semibold text-ink">{r.name}</span>
-          </figcaption>
-        </figure>
-      ))}
+    <!-- Calificación real (TripAdvisor) -->
+    <div class="reveal mx-auto mb-12 flex max-w-md flex-col items-center rounded-blob border-2 border-ink bg-cream p-8 text-center shadow-card">
+      <span class="font-display text-6xl leading-none text-ink sm:text-7xl">{rating.score}</span>
+      <div class="mt-3 flex items-center gap-1" aria-label={`${rating.score} de 5 estrellas`}>
+        {Array.from({ length: 5 }).map(() => (
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="#F4B400" aria-hidden="true">
+            <path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 19.4 7.4 12.9 2.4 8.6 9 8z" />
+          </svg>
+        ))}
+      </div>
+      <p class="mt-3 font-sub text-lg font-semibold text-ink">{rating.label} en {rating.source}</p>
+      <p class="mt-1 font-body text-sm text-ink/60">Opiniones verificadas de viajeros que ya volaron con nosotros.</p>
     </div>
+
+    {reviews.length > 0 && (
+      <div class="grid gap-6 md:grid-cols-3">
+        {reviews.map((r, i) => (
+          <figure class="reveal flex h-full flex-col rounded-blob border-2 border-ink bg-cream p-6 shadow-card" style={`transition-delay:${i * 80}ms`}>
+            <div class="mb-3 flex items-center gap-1" aria-label={`${r.stars} de 5 estrellas`}>
+              {Array.from({ length: 5 }).map((_, s) => (
+                <svg width="20" height="20" viewBox="0 0 24 24" fill={s < r.stars ? '#F4B400' : '#E5E0CF'} aria-hidden="true">
+                  <path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 19.4 7.4 12.9 2.4 8.6 9 8z" />
+                </svg>
+              ))}
+            </div>
+            <blockquote class="flex-1 font-body text-ink/85">"{r.text}"</blockquote>
+            <figcaption class="mt-5 flex items-center gap-3">
+              <span class="grid h-11 w-11 place-items-center rounded-full border-2 border-ink font-display text-xl text-ink" style={`background:${accents[i % accents.length]}`}>
+                {r.initial}
+              </span>
+              <span class="font-sub font-semibold text-ink">{r.name}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    )}
 
     <div class="mt-10 text-center reveal">
       <a

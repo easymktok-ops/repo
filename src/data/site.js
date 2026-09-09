@@ -12,9 +12,7 @@ export const asset = (p) => `${BASE}${p}`.replace(/\/{2,}/g, '/');
 export const contact = {
   whatsappPhone: '525656531771', // +52 56 56531771 (dato del cliente ✓)
   whatsappDisplay: '+52 56 5653 1771',
-  // ⚠️ CONFIRMAR CON EL CLIENTE: el brief pide mostrar un email pero no dio uno.
-  // Este es un placeholder — reemplazar por el correo real antes de publicar.
-  email: 'hola@happypuerto.com',
+  email: 'info@happypuerto.com', // dato confirmado por el cliente ✓
   address: 'Camino Campestre S/N, San Martín de las Pirámides, Estado de México',
   mapsQuery: 'Camino Campestre S/N, San Martín de las Pirámides',
 };
@@ -203,29 +201,15 @@ export const gallery = [
   { src: 'assets/ocasiones/ocasion-pedida.jpg', alt: 'Pareja celebrando frente al globo de Happy Puerto' },
 ];
 
-// ── Reseñas (PLACEHOLDER Fase 1) ──────────────────────────────────
-// TODO Fase 2: reemplazar por reseñas reales (Google / Viator) vía API o feed.
-export const reviews = [
-  {
-    name: 'María F.',
-    initial: 'M',
-    stars: 5,
-    text: 'Una experiencia inolvidable. El equipo súper atento y la vista de las pirámides al amanecer no tiene comparación. ¡Volvería mil veces!',
-  },
-  {
-    name: 'Carlos R.',
-    initial: 'C',
-    stars: 5,
-    text: 'Reservamos por WhatsApp en minutos. Todo puntual, seguro y muy divertido. El brindis al final fue el broche perfecto.',
-  },
-  {
-    name: 'Ana & Diego',
-    initial: 'A',
-    stars: 5,
-    text: 'Elegimos el globo privado para nuestro aniversario. Mágico de principio a fin. Gracias Happy Puerto por hacerlo especial.',
-  },
-];
-// Enlace a reseñas reales en TripAdvisor (no están en Viator).
+// ── Reseñas ───────────────────────────────────────────────────────
+// Calificación real verificada en TripAdvisor (5.0 ★).
+export const rating = { score: '5.0', label: 'Excelente', source: 'TripAdvisor' };
+
+// Testimonios: vacío hasta pegar textos reales del cliente (NO inventar).
+// Cuando el cliente comparta reseñas, agregar objetos { name, initial, stars, text }.
+export const reviews = [];
+
+// Enlace a las reseñas reales en TripAdvisor (la empresa no está en Viator).
 export const reviewsUrl =
   'https://www.tripadvisor.com.mx/Attraction_Review-g3172174-d21060015-Reviews-Happy_Puerto-San_Martin_de_las_Piramides_Central_Mexico_and_Gulf_Coast.html';
 

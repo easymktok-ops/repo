@@ -509,6 +509,18 @@
       <h2 class="sec-title">Nos llenan de <span style="color:var(--yellow-dk)">estrellas</span></h2>
       <p class="sec-sub">Esto dicen quienes ya volaron con nosotros.</p>
     </div>
+    <div style="max-width:420px;margin:0 auto 8px;display:flex;flex-direction:column;align-items:center;text-align:center;border:2px solid var(--ink);background:var(--cream);border-radius:30px;padding:32px;box-shadow:var(--shadow-card)">
+      <span style="font-family:var(--font-display);font-size:4rem;line-height:.9;color:var(--ink)">5.0</span>
+      <div style="display:flex;gap:2px;margin-top:10px" aria-label="5.0 de 5 estrellas">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 19.4 7.4 12.9 2.4 8.6 9 8z"/></svg>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 19.4 7.4 12.9 2.4 8.6 9 8z"/></svg>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 19.4 7.4 12.9 2.4 8.6 9 8z"/></svg>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 19.4 7.4 12.9 2.4 8.6 9 8z"/></svg>
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 19.4 7.4 12.9 2.4 8.6 9 8z"/></svg>
+      </div>
+      <p style="margin:12px 0 0;font-family:var(--font-sub);font-weight:600;font-size:1.15rem">Excelente en TripAdvisor</p>
+      <p style="margin:4px 0 0;font-size:14px;color:rgba(29,29,29,.6)">Opiniones verificadas de viajeros que ya volaron con nosotros.</p>
+    </div>
     <div class="rev-grid" id="rev-grid"></div>
     <div class="viator">
       <a class="cta-fly" style="display:inline-flex;width:auto;background:var(--yellow);margin-top:0" href="https://www.tripadvisor.com.mx/Attraction_Review-g3172174-d21060015-Reviews-Happy_Puerto-San_Martin_de_las_Piramides_Central_Mexico_and_Gulf_Coast.html" target="_blank" rel="noopener">Ver todas las reseñas en TripAdvisor
@@ -548,9 +560,9 @@
           <span class="ic" style="background:#7FC7E8"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h3l1.5 5-2 1.5a11 11 0 0 0 5 5l1.5-2 5 1.5V19a2 2 0 0 1-2 2A16 16 0 0 1 4 6a2 2 0 0 1 1-2Z"/></svg></span>
           <span><span class="lab">Teléfono</span><span class="val">+52 56 5653 1771</span></span>
         </a>
-        <a class="con-card" href="mailto:hola@happypuerto.com">
+        <a class="con-card" href="mailto:info@happypuerto.com">
           <span class="ic" style="background:#FF8A5B"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg></span>
-          <span><span class="lab">Email</span><span class="val" style="word-break:break-word">hola@happypuerto.com</span></span>
+          <span><span class="lab">Email</span><span class="val" style="word-break:break-word">info@happypuerto.com</span></span>
         </a>
         <div class="con-card">
           <span class="ic" style="background:#B98BD6"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
@@ -740,12 +752,8 @@
     dateEl.addEventListener('change', refresh);
   });
 
-  // ---- Reviews ----
-  var REVIEWS = [
-    {n:'María F.', i:'M', a:'#7FC7E8', t:'Una experiencia inolvidable. El equipo súper atento y la vista de las pirámides al amanecer no tiene comparación. ¡Volvería mil veces!'},
-    {n:'Carlos R.', i:'C', a:'#FF8A5B', t:'Reservamos por WhatsApp en minutos. Todo puntual, seguro y muy divertido. El brindis al final fue el broche perfecto.'},
-    {n:'Ana & Diego', i:'A', a:'#6FD8A4', t:'Elegimos el globo privado para nuestro aniversario. Mágico de principio a fin. Gracias Happy Puerto por hacerlo especial.'}
-  ];
+  // ---- Reviews ---- (vacío: sin testimonios inventados; solo la calificación real 5.0)
+  var REVIEWS = [];
   var star = '<svg width="20" height="20" viewBox="0 0 24 24" fill="#F4B400"><path d="M12 2l2.9 6 6.6.6-5 4.3 1.5 6.5L12 16.9 5.9 19.4 7.4 12.9 2.4 8.6 9 8z"/></svg>';
   var rg = document.getElementById('rev-grid');
   REVIEWS.forEach(function(r){
