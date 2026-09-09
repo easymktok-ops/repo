@@ -99,8 +99,22 @@ function Stepper({ persons, setPersons, accent, idBase, max = 8 }) {
 }
 
 export default function PackageCard(pkg) {
-  const { name, face, price, tagline, includes = [], accent = '#F4B400', badge, variant, image, imageAlt } = pkg;
+  const { name, face, logo, price, tagline, includes = [], accent = '#F4B400', badge, variant, image, imageAlt } = pkg;
   const isLove = variant === 'love';
+  const logoSrc = logo ? `${import.meta.env.BASE_URL}${logo}`.replace(/\/{2,}/g, '/') : null;
+  // Encabezado: logo oficial del modelo si existe; si no, globo dibujado + nombre.
+  const Heading = ({ big }) =>
+    logoSrc ? (
+      <>
+        <img src={logoSrc} alt={`Modelo ${name}`} className="pkg-logo" style={{ maxWidth: big ? 230 : 185, width: '100%' }} />
+        <h3 className="sr-only">{name}</h3>
+      </>
+    ) : (
+      <>
+        <BalloonMascot face={face} size={big ? 50 : 44} />
+        <h3 className={`font-display tracking-[0.04em] text-ink ${big ? 'text-4xl sm:text-5xl' : 'text-3xl sm:text-4xl'}`}>{name}</h3>
+      </>
+    );
   const startPersons = isLove ? 2 : 1;
   const [persons, setPersons] = useState(startPersons);
   const [date, setDate] = useState('');
@@ -196,8 +210,7 @@ export default function PackageCard(pkg) {
 
           <div className="p-6 sm:p-8">
             <div className="mb-2 flex items-center gap-2">
-              <BalloonMascot face={face} size={50} />
-              <h3 className="font-display text-4xl tracking-[0.04em] text-ink sm:text-5xl">{name}</h3>
+              <Heading big />
             </div>
             <p className="font-sub text-lg font-medium" style={{ color: '#d63f7d' }}>{tagline}</p>
             <div className="mt-4">{priceBlock}</div>
@@ -228,8 +241,7 @@ export default function PackageCard(pkg) {
       )}
 
       <div className="mt-2 flex items-center gap-2">
-        <BalloonMascot face={face} size={44} />
-        <h3 className="font-display text-3xl tracking-[0.04em] text-ink sm:text-4xl">{name}</h3>
+        <Heading />
       </div>
       <p className="mt-1 font-sub text-[15px] font-medium text-ink/70">{tagline}</p>
 

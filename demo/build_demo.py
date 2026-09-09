@@ -29,9 +29,18 @@ IMAGES = {
     "@@OCP@@": jpg(os.path.join(A, "ocasiones", "ocasion-pedida.jpg")),
 }
 
-# Logo -> <img> data URI (se usa 2 veces; evita colisión de IDs de <defs>)
-logo_uri = datauri(os.path.join(A, "logo-happy-puerto.svg"), "image/svg+xml")
+# Logo oficial (sello) -> <img> data URI (se usa 2 veces)
+logo_uri = datauri(os.path.join(A, "logo-oficial.png"), "image/png")
 LOGO_IMG = f'<img src="{logo_uri}" alt="Happy Puerto" width="48" height="48" />'
+
+# Logos de cada modelo (firmas) -> data URIs
+MODELS = {
+    "@@M_SMILE@@": datauri(os.path.join(A, "modelos", "smile.svg"), "image/svg+xml"),
+    "@@M_HAPPY@@": datauri(os.path.join(A, "modelos", "happy.svg"), "image/svg+xml"),
+    "@@M_COOL@@": datauri(os.path.join(A, "modelos", "cool.svg"), "image/svg+xml"),
+    "@@M_STAR@@": datauri(os.path.join(A, "modelos", "star.svg"), "image/svg+xml"),
+    "@@M_LOVE@@": datauri(os.path.join(A, "modelos", "love.svg"), "image/svg+xml"),
+}
 
 # Cursor -> SVG inline (una sola instancia)
 with open(os.path.join(A, "balloon-cursor.svg"), "r", encoding="utf-8") as f:
@@ -40,6 +49,8 @@ with open(os.path.join(A, "balloon-cursor.svg"), "r", encoding="utf-8") as f:
 src = open(os.path.join(ROOT, "demo", "_inner.html"), "r", encoding="utf-8").read()
 
 for token, uri in IMAGES.items():
+    src = src.replace(token, uri)
+for token, uri in MODELS.items():
     src = src.replace(token, uri)
 src = src.replace("@@LOGO@@", LOGO_IMG)
 src = src.replace("@@CURSOR@@", CURSOR_SVG)

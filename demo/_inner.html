@@ -116,6 +116,9 @@
   .card .name .em { display: inline-flex; align-items: center; margin-right: 2px; }
   .pkg-balloon-svg { display: block; animation: floaty 4.5s ease-in-out infinite; transform-origin: 50% 42%; }
   @keyframes floaty { 0%,100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-6px) rotate(3deg); } }
+  .pkg-logo { width: 100%; max-width: 185px; height: auto; display: block; animation: pkgfloatY 5s ease-in-out infinite; }
+  .love .pkg-logo { max-width: 210px; }
+  @keyframes pkgfloatY { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
   .card .tag { margin-top: 4px; font-family: var(--font-sub); font-weight: 500; color: rgba(29,29,29,.68); font-size: 15px; }
   .price { display: flex; align-items: flex-end; gap: 8px; margin-top: 16px; }
   .price .big { font-family: var(--font-display); font-size: 3rem; line-height: .9; }
@@ -346,7 +349,7 @@
           <span class="badge-corner">Más elegido</span>
           <div class="strip" style="background:#F4B400"></div>
           <div class="card-body">
-            <div class="name"><span class="em">🙂</span><h3>SMILE</h3></div>
+            <div class="name"><img class="pkg-logo" src="@@M_SMILE@@" alt="SMILE" /></div>
             <p class="tag">El clásico feliz para estrenarte en el cielo.</p>
             <div class="price"><span class="big">$2,199</span><span class="u">MXN por persona</span></div>
             <ul class="incl" data-accent="#F4B400"></ul>
@@ -359,7 +362,7 @@
         <article class="card pkg" data-name="HAPPY" data-price="2399" data-accent="#6FD8A4">
           <div class="strip" style="background:#6FD8A4"></div>
           <div class="card-body">
-            <div class="name"><span class="em">😄</span><h3>HAPPY</h3></div>
+            <div class="name"><img class="pkg-logo" src="@@M_HAPPY@@" alt="HAPPY" /></div>
             <p class="tag">Vuelo + experiencias culturales para un día completo.</p>
             <div class="price"><span class="big">$2,399</span><span class="u">MXN por persona</span></div>
             <ul class="incl" data-accent="#6FD8A4"></ul>
@@ -372,7 +375,7 @@
         <article class="card pkg" data-name="COOL" data-price="2799" data-accent="#7FC7E8">
           <div class="strip" style="background:#7FC7E8"></div>
           <div class="card-body">
-            <div class="name"><span class="em">😎</span><h3>COOL</h3></div>
+            <div class="name"><img class="pkg-logo" src="@@M_COOL@@" alt="COOL" /></div>
             <p class="tag">Sin preocuparte por el traslado: nosotros te llevamos.</p>
             <div class="price"><span class="big">$2,799</span><span class="u">MXN por persona</span></div>
             <ul class="incl" data-accent="#7FC7E8"></ul>
@@ -385,7 +388,7 @@
         <article class="card pkg" data-name="STAR" data-price="2999" data-accent="#FF8A5B">
           <div class="strip" style="background:#FF8A5B"></div>
           <div class="card-body">
-            <div class="name"><span class="em">⭐</span><h3>STAR</h3></div>
+            <div class="name"><img class="pkg-logo" src="@@M_STAR@@" alt="STAR" /></div>
             <p class="tag">La experiencia estrella: desayuno en cueva y traslados.</p>
             <div class="price"><span class="big">$2,999</span><span class="u">MXN por persona</span></div>
             <ul class="incl" data-accent="#FF8A5B"></ul>
@@ -415,7 +418,7 @@
             <span class="pill">Exclusivo · Privado</span>
           </div>
           <div class="card-body">
-            <div class="name"><span class="em">💛</span><h3>LOVE</h3></div>
+            <div class="name"><img class="pkg-logo" src="@@M_LOVE@@" alt="LOVE" /></div>
             <p class="tag" style="color:#d63f7d">Globo PRIVADO para 2. El cielo, solo de ustedes.</p>
             <div class="price"><span class="big">$12,000</span><span class="u">MXN total</span></div>
             <ul class="incl" data-accent="#FF6FA5"></ul>
