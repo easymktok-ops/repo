@@ -1,0 +1,158 @@
+---
+import Icon from "@components/ui/Icon.astro";
+import { type Locale } from "@config/site";
+
+/**
+ * BookingPickup: recordatorio de recoleccion/punto de encuentro dentro del
+ * flujo de reserva. Reafirma (no inventa) los datos reales de traslado que ya
+ * viven en el Globopuerto: recogida dentro de 4 km del Angel de la
+ * Independencia y regreso al mismo punto, mas la alternativa en auto propio.
+ * La clienta pidio verlo tambien aqui, junto al widget de reserva.
+ */
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+
+const t = {
+  es: {
+    eyebrow: "Antes de tu vuelo",
+    title: "¿Dónde te recogemos?",
+    lead: "El despegue es en San Martín de las Pirámides. Puedes llegar por tu cuenta o subir a nuestro transporte desde la Ciudad de México.",
+    ways: [
+      {
+        icon: "van",
+        tag: "Con transporte Aerodiverti",
+        body: "Te recogemos desde las 04:00 h en un punto acordado, dentro de un radio de 4 km del Ángel de la Independencia. Al terminar el vuelo, el regreso es al Ángel (punto alterno: Monumento a la Revolución).",
+      },
+      {
+        icon: "car-simple",
+        tag: "En tu auto",
+        body: "A unos 45 min de CDMX por la México-Tulancingo (132D) hasta San Martín de las Pirámides. Incluye estacionamiento privado y gratuito mientras vuelas.",
+      },
+    ],
+    note: "El punto exacto de encuentro lo confirmamos por WhatsApp una vez agendada tu fecha.",
+  },
+  en: {
+    eyebrow: "Before your flight",
+    title: "Where do we pick you up?",
+    lead: "Takeoff is in San Martín de las Pirámides. You can arrive on your own or board our shuttle from Mexico City.",
+    ways: [
+      {
+        icon: "van",
+        tag: "With Aerodiverti transport",
+        body: "We pick you up from 04:00 at an agreed point within 4 km of the Ángel de la Independencia. After the flight, we return you to the Ángel (alternate point: Monumento a la Revolución).",
+      },
+      {
+        icon: "car-simple",
+        tag: "In your own car",
+        body: "About 45 min from Mexico City on the México-Tulancingo (132D) to San Martín de las Pirámides. Free private parking while you fly.",
+      },
+    ],
+    note: "We confirm the exact meeting point over WhatsApp once your date is scheduled.",
+  },
+}[locale];
+---
+
+<section class="bp" aria-labelledby="bp-title">
+  <p class="bp-eyebrow"><Icon name="map-pin" /> {t.eyebrow}</p>
+  <h2 id="bp-title" class="bp-title">{t.title}</h2>
+  <p class="bp-lead">{t.lead}</p>
+  <div class="bp-ways">
+    {t.ways.map((w) => (
+      <article class="bp-way">
+        <span class="bp-way-ico"><Icon name={w.icon} /></span>
+        <div class="bp-way-body">
+          <span class="bp-way-tag">{w.tag}</span>
+          <p>{w.body}</p>
+        </div>
+      </article>
+    ))}
+  </div>
+  <p class="bp-note"><Icon name="chat-circle" /> {t.note}</p>
+</section>
+
+<style>
+  .bp {
+    margin-top: var(--space-xl);
+    padding: var(--space-lg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background:
+      radial-gradient(120% 140% at 0% 0%, var(--accent-wash), transparent 55%),
+      var(--surface);
+  }
+  .bp-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+  }
+  .bp-title {
+    margin-top: var(--space-xs);
+    font-size: var(--step-2);
+  }
+  .bp-lead {
+    margin-top: 0.35rem;
+    color: var(--ink-soft);
+    font-size: var(--step-0);
+  }
+  .bp-ways {
+    margin-top: var(--space-lg);
+    display: grid;
+    gap: var(--space-md);
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 640px) {
+    .bp-ways { grid-template-columns: 1fr 1fr; }
+  }
+  .bp-way {
+    display: flex;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    border: 1px solid var(--line-faint);
+    border-radius: var(--radius-card);
+    background: var(--surface-sunken);
+  }
+  .bp-way-ico {
+    display: inline-grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+    border-radius: var(--radius-input);
+    background: var(--accent-wash);
+    color: var(--accent);
+    font-size: 1.4rem;
+  }
+  .bp-way-tag {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    margin-bottom: 0.3rem;
+  }
+  .bp-way p {
+    color: var(--muted);
+    font-size: var(--step-0);
+    line-height: 1.55;
+  }
+  .bp-note {
+    margin-top: var(--space-md);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.45rem;
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+  .bp-note :global(.icon) {
+    color: var(--accent);
+    margin-top: 0.15rem;
+  }
+</style>

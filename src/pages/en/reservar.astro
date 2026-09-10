@@ -2,6 +2,7 @@
 import PageShell from "@layouts/PageShell.astro";
 import PageHeader from "@components/ui/PageHeader.astro";
 import BookingWidget from "@components/islands/BookingWidget";
+import BookingPickup from "@components/sections/BookingPickup.astro";
 import { getCollection } from "astro:content";
 import { whatsappUrl, advisorLinks } from "@config/site";
 
@@ -42,6 +43,7 @@ const advisors = advisorLinks(
   />
   <section class="container-narrow booking-wrap">
     <BookingWidget client:load locale={locale} packages={packages} whatsappUrl={wa} advisors={advisors} />
+    <BookingPickup locale={locale} />
   </section>
 </PageShell>
 
