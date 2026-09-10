@@ -34,6 +34,11 @@ public_folder: "/src/assets/uploads"
 
 locale: "es"
 
+# Enlace "Ver sitio" en la barra del CMS (la vista previa real es el sitio
+# publicado, no un panel dentro del editor).
+site_url: https://aerodiverti.com.mx
+display_url: https://aerodiverti.com.mx
+
 collections:
   # --- PAQUETES DE VUELO ---------------------------------------------------
   - name: "packages"
@@ -131,6 +136,7 @@ collections:
     label_singular: "Pregunta"
     folder: "src/content/faq"
     create: true
+    summary: "{{question.es}}"
     fields:
       - {
           label: "Pregunta",
@@ -169,6 +175,7 @@ collections:
     label_singular: "Testimonio"
     folder: "src/content/testimonials"
     create: true
+    summary: "{{author}}"
     fields:
       - { label: "Autor", name: "author", widget: "string" }
       - { label: "Ubicación / etiqueta", name: "location", widget: "string", required: false, hint: "Ej. Costa Rica, Cliente verificado." }
@@ -194,6 +201,7 @@ collections:
     label_singular: "Promoción"
     folder: "src/content/promos"
     create: true
+    summary: "{{title.es}}"
     fields:
       - {
           label: "Título",
@@ -287,6 +295,7 @@ collections:
     label_singular: "Foto"
     folder: "src/content/gallery"
     create: true
+    summary: "{{alt.es}}"
     fields:
       - { label: "Imagen", name: "image", widget: "image" }
       - {
