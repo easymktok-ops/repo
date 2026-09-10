@@ -20,6 +20,10 @@ $config = load_config();
 
 // --- CORS (por defecto mismo origen; refleja solo origenes permitidos) -------
 $siteOrigin = rtrim((string) $config['site_url'], '/');
+// Host de este sitio (dominio-agnostico: sale de site_url, nunca hardcodeado).
+// Se etiqueta en la metadata de Stripe para que, cuando una cuenta de Stripe es
+// compartida por varios sitios, cada webhook procese SOLO sus propias ventas.
+$originHost = parse_url($siteOrigin, PHP_URL_HOST) ?: $siteOrigin;
 $allowed = array_filter(array_merge([$siteOrigin], $config['allowed_origins'] ?? []));
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 if ($origin && in_array($origin, $allowed, true)) {
@@ -164,6 +168,7 @@ $params = [
         'booking_id' => (string) $bookingId,
         'mode' => $mode,
         'passengers' => (string) $passengers,
+        'origin_site' => $originHost,
     ],
     'payment_intent_data' => [
         'metadata' => [

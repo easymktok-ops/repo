@@ -41,6 +41,19 @@ if ($type !== 'checkout.session.completed') {
 }
 
 $session = $event['data']['object'] ?? [];
+
+// Cuentas de Stripe compartidas por varios sitios: Stripe entrega el evento a
+// TODOS los endpoints. Si la sesion trae 'origin_site' y NO es el nuestro, es
+// una venta de otro sitio: respondemos 200 y salimos (no la procesamos ni
+// mandamos correo). Si no trae la etiqueta, seguimos con la busqueda normal
+// (que ya ignora en silencio las reservas que no son nuestras).
+$ourHost = parse_url((string) $config['site_url'], PHP_URL_HOST) ?: '';
+$originSite = (string) ($session['metadata']['origin_site'] ?? '');
+if ($originSite !== '' && $ourHost !== '' && strcasecmp($originSite, $ourHost) !== 0) {
+    log_line('webhook', 'evento de otro sitio ignorado', ['origin_site' => $originSite]);
+    json_response(200, ['ignored' => 'other_site', 'origin_site' => $originSite]);
+}
+
 $sessionId = (string) ($session['id'] ?? '');
 $reference = (string) ($session['client_reference_id'] ?? ($session['metadata']['reference'] ?? ''));
 $paymentIntent = (string) ($session['payment_intent'] ?? '');
