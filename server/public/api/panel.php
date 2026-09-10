@@ -408,7 +408,7 @@ function render_detail(array $b, array $ntf): string
             <div><dt>Correo</dt><dd><a href="mailto:<?= h($b['customer_email']) ?>"><?= h($b['customer_email']) ?></a></dd></div>
             <div><dt>Telefono / WhatsApp</dt><dd><a href="tel:<?= h($b['customer_phone']) ?>"><?= h($b['customer_phone']) ?></a></dd></div>
             <div><dt>Pasajeros</dt><dd><?= (int) $b['passengers'] ?></dd></div>
-            <div><dt>Fecha tentativa de vuelo</dt><dd><?= h($b['flight_date'] ?: 'Sin fecha') ?></dd></div>
+            <div><dt>Fecha del vuelo</dt><dd><?= h($b['flight_date'] ?: 'Sin fecha') ?></dd></div>
             <div><dt>Modo de pago</dt><dd><?= $b['mode'] === 'deposit' ? 'Apartar (anticipo)' : 'Pago total' ?></dd></div>
             <div><dt>Reserva creada</dt><dd><?= h($b['created_at']) ?></dd></div>
             <?php if (!empty($b['paid_at'])): ?><div><dt>Pago confirmado</dt><dd><?= h($b['paid_at']) ?></dd></div><?php endif; ?>
@@ -432,7 +432,10 @@ function render_detail(array $b, array $ntf): string
                 </li>
               <?php endforeach; ?>
             </ul>
-            <p class="muted sm">En esta demo el envio esta en modo registro: se traza pero no se manda correo.</p>
+            <?php $emailProvider = load_config()['notifications']['email_provider'] ?? 'log'; ?>
+            <?php if ($emailProvider === 'log'): ?>
+              <p class="muted sm">Modo registro: las notificaciones se trazan pero no se envia correo. Para activar el envio, cambia notifications.email_provider a 'smtp' en config.php.</p>
+            <?php endif; ?>
           <?php endif; ?>
         </div>
       </div>
@@ -514,6 +517,20 @@ function panel_favicon(): string
     return '<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,' . base64_encode($svg) . '">';
 }
 
+/** Marca del panel: globo Aerodiverti en AZUL + wordmark (look administrativo). */
+function panel_brandmark(): string
+{
+    $svg = '<svg class="bm-ico" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'
+        . '<defs><linearGradient id="bmg" x1="16" y1="3" x2="16" y2="24" gradientUnits="userSpaceOnUse">'
+        . '<stop offset="0" stop-color="#9cc2f5"/><stop offset="1" stop-color="#3f76c9"/></linearGradient></defs>'
+        . '<path d="M16 3.4C10 3.4 5.8 7.9 5.8 13.1c0 4.6 3.3 7.8 7.3 9.3l1.1 1.8h3.6l1.1-1.8c4-1.5 7.3-4.7 7.3-9.3C26.2 7.9 22 3.4 16 3.4Z" fill="url(#bmg)"/>'
+        . '<g stroke="#2b3350" stroke-width="0.9" fill="none" opacity="0.4" stroke-linecap="round">'
+        . '<path d="M16 3.6 16 22.4"/><path d="M16 3.6C12.3 8 11 15 12.8 22.1"/><path d="M16 3.6C19.7 8 21 15 19.2 22.1"/></g>'
+        . '<path d="M13.4 22.6 14.4 24.4M18.6 22.6 17.6 24.4" stroke="#9cc2f5" stroke-width="1.3" stroke-linecap="round"/>'
+        . '<rect x="13.5" y="24.4" width="5" height="3.4" rx="1" fill="#9cc2f5"/></svg>';
+    return $svg . '<span class="bm-text">Aerodiverti</span>';
+}
+
 function render_login(): void
 {
     $csrf = csrf_token();
@@ -529,7 +546,7 @@ function render_login(): void
     <body class="loginbg">
       <main class="loginwrap">
         <form class="card login" method="post" action="panel.php">
-          <div class="brand">🎈 Aerodiverti</div>
+          <div class="brand"><?= panel_brandmark() ?></div>
           <h1>Panel de ventas</h1>
           <p class="muted">Acceso solo para el equipo.</p>
           <?php if ($flash): ?><p class="flash err"><?= h($flash['msg']) ?></p><?php endif; ?>
@@ -557,7 +574,7 @@ function render_layout(string $title, string $body, array $kpi, bool $showKpi): 
     </head>
     <body>
       <header class="topbar">
-        <a class="brand" href="panel.php">🎈 Aerodiverti</a>
+        <a class="brand" href="panel.php"><?= panel_brandmark() ?></a>
         <div class="topright">
           <span class="muted sm">Sesion: <?= $user ?></span>
           <a class="btn ghost sm" href="<?= h(self_url(['do' => 'logout'])) ?>">Salir</a>
@@ -588,6 +605,7 @@ function panel_css(): string
         --ink:#ecedf1;--ink-soft:#d3d7df;--muted:#a6abb5;--faint:#878e9b;
         --line:#333844;--line-soft:#262b34;--accent:#ea83c1;--accent-strong:#f7a0d4;
         --accent-ink:#17131a;--ok:#57c98d;--warn:#e6b450;--bad:#ef6d6d;--done:#7bb8ef;
+        --admin:#8fb8f2;
         --font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
         --mono:ui-monospace,"SFMono-Regular","Cascadia Code",Menlo,monospace;
       }
@@ -602,8 +620,12 @@ function panel_css(): string
       .topbar{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;
         gap:1rem;padding:.8rem 1.1rem;background:color-mix(in srgb,var(--bg) 88%,transparent);
         backdrop-filter:blur(8px);border-bottom:1px solid var(--line-soft)}
-      .brand{font-weight:700;color:var(--accent);font-size:1.05rem}
-      .topright{display:flex;align-items:center;gap:.7rem}
+      .brand{display:inline-flex;align-items:center;gap:.5rem;font-weight:700;color:var(--admin);font-size:1.05rem}
+      .brand:hover{text-decoration:none}
+      .bm-ico{width:22px;height:22px;flex-shrink:0;display:block}
+      .bm-text{color:var(--admin);letter-spacing:-.01em}
+      .topright{display:flex;align-items:center;gap:.7rem;flex-shrink:0}
+      .topright .sm{white-space:nowrap}
       .wrap{max-width:1120px;margin:0 auto;padding:1.4rem 1.1rem 4rem}
       h1{font-size:1.5rem;letter-spacing:-.02em} h2{font-size:1.2rem;letter-spacing:-.01em}
       h3{font-size:1rem;margin-bottom:.7rem}
@@ -685,7 +707,8 @@ function panel_css(): string
       .loginbg{min-height:100dvh;display:grid;place-items:center;background:radial-gradient(120% 90% at 50% 0%,#1a1c24,var(--bg))}
       .loginwrap{width:100%;max-width:380px;padding:1.2rem}
       .login{display:grid;gap:.7rem}
-      .login .brand{color:var(--accent);font-weight:700;font-size:1.1rem}
+      .login .brand{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;color:var(--admin);font-weight:700;font-size:1.1rem}
+      .login .bm-ico{width:24px;height:24px}
       .login h1{font-size:1.35rem;margin-top:.2rem}
       .login label{display:grid;gap:.3rem;font-size:.85rem;color:var(--muted)}
       .login input{font:inherit;background:var(--bg2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:.6rem .75rem}
