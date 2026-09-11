@@ -30,3 +30,8 @@ server/data/catalog.json
 server/data/*.sqlite
 server/data/*.sqlite-wal
 server/data/*.sqlite-shm
+
+# Artefactos de entrega (ZIPs generados, no son fuente)
+server-backend.zip
+dist-aerodiverti-*.zip
+*-backend.zip
