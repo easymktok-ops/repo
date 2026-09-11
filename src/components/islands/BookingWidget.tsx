@@ -35,6 +35,7 @@ const T = {
     weightNote: "El precio aplica hasta 99 kg por pasajero. Cada kilo extra cuesta 50 pesos, que cobra el equipo el día del vuelo.",
     optional: "opcional",
     perPerson: "por persona",
+    fillData: "Completa tus datos para continuar.",
     name: "Nombre completo",
     email: "Correo",
     phone: "Telefono o WhatsApp",
@@ -75,6 +76,7 @@ const T = {
     weightNote: "Price applies up to 99 kg per passenger. Each extra kilo is 50 pesos, collected by the crew on the day of the flight.",
     optional: "optional",
     perPerson: "per person",
+    fillData: "Fill in your details to continue.",
     name: "Full name",
     email: "Email",
     phone: "Phone or WhatsApp",
@@ -139,6 +141,27 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
   const [error, setError] = useState<string | null>(null);
   const [touched, setTouched] = useState(false);
   const detailsRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // Al cambiar de paso, lleva la vista al inicio del widget (no dejar al usuario
+  // abajo, donde estaba el boton). Respeta prefers-reduced-motion y deja aire
+  // para la barra superior fija.
+  function scrollToTop() {
+    const el = rootRef.current;
+    if (!el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const y = el.getBoundingClientRect().top + window.scrollY - 90;
+    window.scrollTo({ top: Math.max(0, y), behavior: reduce ? "auto" : "smooth" });
+  }
+
+  // Navega a un paso sin marcar errores (no "regañar" campos que el usuario aun
+  // no ha intentado enviar). Los rojos solo aparecen si intenta continuar.
+  function goTo(n: number) {
+    setError(null);
+    setTouched(false);
+    setStep(n);
+    scrollToTop();
+  }
 
   // Al elegir un vuelo: feedback visible. El resumen y los controles de
   // Pasajeros/Fecha quedan mas abajo, asi que llevamos la vista hacia ellos
@@ -197,19 +220,27 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
   const nameOk = name.trim().length >= 2;
 
   function goStep2() {
-    setTouched(true);
-    if (!flightDate) return setError(t.errDate);
+    if (!flightDate) {
+      setTouched(true);
+      return setError(t.errDate);
+    }
     setError(null);
+    setTouched(false);
     setStep(2);
+    scrollToTop();
   }
 
   function goStep3() {
-    setTouched(true);
-    if (!nameOk) return setError(t.errName);
-    if (!emailOk) return setError(t.errEmail);
-    if (!phoneOk) return setError(t.errPhone);
+    if (!nameOk || !emailOk || !phoneOk) {
+      setTouched(true);
+      if (!nameOk) return setError(t.errName);
+      if (!emailOk) return setError(t.errEmail);
+      return setError(t.errPhone);
+    }
     setError(null);
+    setTouched(false);
     setStep(3);
+    scrollToTop();
     track("begin_checkout", {
       currency,
       value: now,
@@ -269,7 +300,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
   }
 
   return (
-    <div className="bk">
+    <div className="bk" ref={rootRef}>
       {/* Stepper */}
       <ol className="bk-steps" aria-label={t.steps.join(", ")}>
         {t.steps.map((label, i) => {
@@ -403,6 +434,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
 
           {step === 2 && (
             <div className="bk-fields">
+              <p className="bk-fill">{t.fillData}</p>
               <div className="bk-field">
                 <label className="bk-label" htmlFor="bk-name">
                   {t.name}
@@ -458,7 +490,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
               </div>
 
               <div className="bk-actions">
-                <button type="button" className="bk-btn bk-ghost" onClick={() => setStep(1)}>
+                <button type="button" className="bk-btn bk-ghost" onClick={() => goTo(1)}>
                   {t.back}
                 </button>
                 <button type="button" className="bk-btn bk-primary" onClick={goStep3}>
@@ -514,7 +546,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
                 <button
                   type="button"
                   className="bk-btn bk-ghost"
-                  onClick={() => setStep(2)}
+                  onClick={() => goTo(2)}
                   disabled={submitting}
                 >
                   {t.back}
