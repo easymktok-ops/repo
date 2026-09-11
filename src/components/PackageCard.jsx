@@ -102,19 +102,24 @@ export default function PackageCard(pkg) {
   const { name, face, logo, price, tagline, includes = [], accent = '#F4B400', badge, variant, image, imageAlt } = pkg;
   const isLove = variant === 'love';
   const logoSrc = logo ? `${import.meta.env.BASE_URL}${logo}`.replace(/\/{2,}/g, '/') : null;
-  // Encabezado: logo oficial del modelo si existe; si no, globo dibujado + nombre.
-  const Heading = ({ big }) =>
-    logoSrc ? (
-      <>
-        <img src={logoSrc} alt={`Modelo ${name}`} className="pkg-logo" style={{ maxWidth: big ? 230 : 185, width: '100%' }} />
-        <h3 className="sr-only">{name}</h3>
-      </>
-    ) : (
-      <>
+  // Encabezado: globito flotante + nombre en letra normal, y la firma del
+  // modelo (logo script) en pequeño debajo.
+  const Heading = ({ big }) => (
+    <div>
+      <div className="flex items-center gap-2">
         <BalloonMascot face={face} size={big ? 50 : 44} />
         <h3 className={`font-display tracking-[0.04em] text-ink ${big ? 'text-4xl sm:text-5xl' : 'text-3xl sm:text-4xl'}`}>{name}</h3>
-      </>
-    );
+      </div>
+      {logoSrc && (
+        <img
+          src={logoSrc}
+          alt={`Firma del globo modelo ${name}`}
+          className="pkg-firma mt-1"
+          style={{ maxWidth: big ? 150 : 118 }}
+        />
+      )}
+    </div>
+  );
   const startPersons = isLove ? 2 : 1;
   const [persons, setPersons] = useState(startPersons);
   const [date, setDate] = useState('');
@@ -209,7 +214,7 @@ export default function PackageCard(pkg) {
           </div>
 
           <div className="p-6 sm:p-8">
-            <div className="mb-2 flex items-center gap-2">
+            <div className="mb-2">
               <Heading big />
             </div>
             <p className="font-sub text-lg font-medium" style={{ color: '#d63f7d' }}>{tagline}</p>
@@ -240,7 +245,7 @@ export default function PackageCard(pkg) {
         </span>
       )}
 
-      <div className="mt-2 flex items-center gap-2">
+      <div className="mt-2">
         <Heading />
       </div>
       <p className="mt-1 font-sub text-[15px] font-medium text-ink/70">{tagline}</p>

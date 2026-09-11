@@ -46,6 +46,9 @@ MODELS = {
 with open(os.path.join(A, "balloon-cursor.svg"), "r", encoding="utf-8") as f:
     CURSOR_SVG = f.read().strip()
 
+# Cursor como data URI (para los globitos del parallax, usados varias veces)
+CURSOR_URI = datauri(os.path.join(A, "balloon-cursor.svg"), "image/svg+xml")
+
 src = open(os.path.join(ROOT, "demo", "_inner.html"), "r", encoding="utf-8").read()
 
 for token, uri in IMAGES.items():
@@ -53,6 +56,7 @@ for token, uri in IMAGES.items():
 for token, uri in MODELS.items():
     src = src.replace(token, uri)
 src = src.replace("@@LOGO@@", LOGO_IMG)
+src = src.replace("@@CURSORURI@@", CURSOR_URI)
 src = src.replace("@@CURSOR@@", CURSOR_SVG)
 
 leftover = re.findall(r"@@[A-Z0-9_]+@@", src)
