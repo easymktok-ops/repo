@@ -1,23 +1,30 @@
 name: Deploy sitio (build + FTP)
 
-# Reconstruye el sitio estatico y lo publica en el hosting cada vez que cambia
-# la rama del proyecto (incluye los commits que hace el panel de contenido
-# /admin al publicar). Tambien se puede lanzar a mano desde la pestana Actions
-# (workflow_dispatch).
+# Reconstruye el sitio estatico y, SI la publicacion automatica esta activada,
+# lo sube al hosting por FTP. Se ejecuta en cada cambio de la rama del proyecto
+# (incluye los commits que hace /admin al publicar) y tambien a mano desde la
+# pestana Actions (workflow_dispatch).
 #
 # SEGURIDAD: el sitio estatico vive en la misma carpeta que el backend PHP y la
 # base de reservas (server/ y su SQLite). El bloque `exclude` PROTEGE esas rutas:
 # nunca se suben ni se borran desde aqui. No quites esas lineas.
 #
-# CONFIGURACION (una sola vez, en GitHub -> Settings -> Secrets and variables ->
-# Actions):
-#   Variables:  PUBLIC_SITE_URL = https://aerodiverti.com.mx
-#               FTP_SERVER_DIR  = public_html/
-#   Secrets:    FTP_SERVER      = (host FTP de Webempresa)
-#               FTP_USERNAME    = (usuario FTP dedicado a public_html)
-#               FTP_PASSWORD    = (contrasena de ese usuario FTP)
-# Mientras falten los secrets, el workflow COMPILA pero se salta la subida (no
-# marca error). En cuanto los agregues, el siguiente cambio se publica solo.
+# ---------------------------------------------------------------------------
+# INTERRUPTOR DE PUBLICACION AUTOMATICA
+# Por defecto esta APAGADA: el workflow solo COMPILA (queda en verde, sin subir
+# nada y sin mandar correos de error). Para ACTIVARLA, en GitHub ->
+# Settings -> Secrets and variables -> Actions:
+#   Variables:
+#     AUTO_DEPLOY     = on
+#     PUBLIC_SITE_URL = https://aerodiverti.com.mx
+#     FTP_SERVER_DIR  = public_html/
+#   Secrets (del hosting; ver "Cuentas FTP" en Webempresa, boton
+#            "Configurar cliente FTP" para el usuario/host EXACTOS):
+#     FTP_SERVER      = host FTP (p.ej. cp5027.webempresa.eu)
+#     FTP_USERNAME    = usuario FTP EXACTO (a veces usuario@aerodiverti.com.mx)
+#     FTP_PASSWORD    = su contrasena
+# Un "530 Login authentication failed" = usuario/clave/host incorrectos.
+# ---------------------------------------------------------------------------
 
 on:
   push:
@@ -45,26 +52,23 @@ jobs:
       - name: Construir el sitio
         run: npm run build
         env:
-          # URL absoluta del entorno destino (sitemap/canonical). Se define como
-          # Variable del repo, no se hardcodea.
           PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
 
-      - name: Comprobar credenciales FTP
-        run: echo "HAVE_FTP=${{ secrets.FTP_SERVER != '' && secrets.FTP_USERNAME != '' && secrets.FTP_PASSWORD != '' }}" >> "$GITHUB_ENV"
+      - name: Estado de publicacion automatica
+        run: echo "DEPLOY_ON=${{ vars.AUTO_DEPLOY == 'on' && secrets.FTP_SERVER != '' && secrets.FTP_USERNAME != '' && secrets.FTP_PASSWORD != '' }}" >> "$GITHUB_ENV"
 
-      - name: Aviso si falta configurar
-        if: env.HAVE_FTP != 'true'
-        run: echo "::notice::Build OK. Falta configurar FTP_SERVER/FTP_USERNAME/FTP_PASSWORD (y las variables PUBLIC_SITE_URL/FTP_SERVER_DIR) para publicar automaticamente."
+      - name: Aviso (publicacion automatica apagada)
+        if: env.DEPLOY_ON != 'true'
+        run: echo "::notice::Build OK. Publicacion automatica APAGADA. Para activarla pon la variable AUTO_DEPLOY=on y los secrets FTP correctos (ver el encabezado de deploy.yml)."
 
       - name: Publicar por FTP
-        if: env.HAVE_FTP == 'true'
+        if: env.DEPLOY_ON == 'true'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
-          # Carpeta raiz del sitio en el hosting (p.ej. "public_html/").
           server-dir: ${{ vars.FTP_SERVER_DIR }}
           local-dir: ./dist/
           # --- PROTECCION: nunca subir ni borrar el backend ni los datos ---
