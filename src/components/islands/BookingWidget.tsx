@@ -223,7 +223,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
     try {
       const res = await fetch(booking.checkoutEndpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({
           packageSlug: selected.slug,
           passengers,
@@ -236,11 +236,34 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
           locale,
         }),
       });
-      const data = await res.json();
-      if (!res.ok || !data.url) throw new Error(data.error || t.errGeneric);
+
+      // Leemos como texto y parseamos nosotros: si el backend devuelve una
+      // pagina (404/500 en HTML, ruta /api mal enrutada), NO usamos res.json()
+      // porque Safari lanza un error cripto ("The string did not match the
+      // expected pattern"). Asi mostramos un mensaje claro con salida a WhatsApp.
+      const raw = await res.text();
+      let data: { url?: string; error?: string } | null = null;
+      try {
+        data = raw ? JSON.parse(raw) : null;
+      } catch {
+        data = null;
+      }
+
+      if (!res.ok || !data || !data.url) {
+        if (import.meta.env.DEV) {
+          console.error("checkout fallo", res.status, raw.slice(0, 300));
+        }
+        // Solo reusamos el mensaje del backend si vino como JSON (es en espanol
+        // y seguro). Si no hubo JSON, mensaje generico con salida a WhatsApp.
+        throw new Error((data && data.error) || t.errGeneric);
+      }
       window.location.href = data.url;
     } catch (e) {
-      setError(e instanceof Error && e.message ? e.message : t.errGeneric);
+      const msg = e instanceof Error ? e.message : "";
+      // Nunca mostramos errores crudos del navegador/red al cliente.
+      const isBrowserNoise =
+        !msg || /expected pattern|JSON|Unexpected|Load failed|Failed to fetch|NetworkError|fetch/i.test(msg);
+      setError(isBrowserNoise ? t.errGeneric : msg);
       setSubmitting(false);
     }
   }

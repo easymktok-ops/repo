@@ -1,0 +1,20 @@
+# ============================================================================
+# .htaccess para la RAIZ del sitio  ->  sube esto como  public_html/.htaccess
+# ----------------------------------------------------------------------------
+# Si el checkout falla ("no deja reservar" / error raro en el pago), casi
+# siempre es porque falta esta regla: /api/* debe enrutarse al backend PHP.
+# Sin ella, /api/create-checkout-session.php no existe y el sitio devuelve una
+# pagina en lugar de datos, y la reserva truena.
+# ============================================================================
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # 1) IMPRESCINDIBLE: enruta /api/* al backend (pagos, panel, CMS).
+  RewriteCond %{REQUEST_URI} ^/api/
+  RewriteRule ^api/(.*)$ server/public/api/$1 [L]
+
+  # 2) Canonico: www -> sin www (301).
+  RewriteCond %{HTTP_HOST} ^www\.aerodiverti\.com\.mx$ [NC]
+  RewriteRule ^(.*)$ https://aerodiverti.com.mx/$1 [R=301,L]
+</IfModule>
