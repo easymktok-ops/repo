@@ -1,0 +1,87 @@
+/* ============================================================
+   Kosecha — design tokens
+   Fuente: moodboard de marca (Drive › Kosecha › "moodboards").
+   Confirmados en el moodboard: #1a532b, #f4e9cd, Poppins.
+   Acentos (amarillo / lima / naranja): pendientes de confirmar
+   contra el manual de marca — ver ASSETS-TODO.md.
+   ============================================================ */
+
+@font-face {
+  font-family: 'Rustic Delight';
+  src: url('/fonts/RusticDelight.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* --- Par principal --- */
+  --kos-verde: #1a532b;
+  --kos-crema: #f4e9cd;
+
+  /* --- Acentos de categoría --- */
+  --kos-amarillo: #fdc929;
+  --kos-lima: #9abc1d;
+  --kos-naranja: #eb611e;
+
+  /* --- Derivados (mezclas del par principal, sin colores nuevos) --- */
+  --kos-verde-900: #11391d;
+  --kos-verde-700: #174926;
+  --kos-verde-300: rgba(26 83 43 / 0.32);
+  --kos-verde-120: rgba(26 83 43 / 0.12);
+  --kos-crema-claro: #fbf6ea;
+  --kos-crema-200: rgba(244 233 205 / 0.2);
+  --kos-tinta: #142016;
+  --kos-tinta-suave: rgba(20 32 22 / 0.68);
+  --kos-blanco: #ffffff;
+
+  /* --- Tipografía --- */
+  --kos-font-display: 'Rustic Delight', 'Georgia', 'Times New Roman', serif;
+  --kos-font-texto: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --kos-size-xs: 0.75rem;
+  --kos-size-sm: 0.875rem;
+  --kos-size-base: 1rem;
+  --kos-size-lg: 1.125rem;
+  --kos-size-xl: clamp(1.25rem, 1.05rem + 0.9vw, 1.6rem);
+  --kos-size-2xl: clamp(1.6rem, 1.2rem + 1.9vw, 2.4rem);
+  --kos-size-3xl: clamp(2.1rem, 1.4rem + 3.2vw, 3.6rem);
+  --kos-size-4xl: clamp(2.6rem, 1.5rem + 4.8vw, 5rem);
+
+  --kos-leading-tight: 1.12;
+  --kos-leading-normal: 1.5;
+  --kos-leading-relaxed: 1.7;
+
+  /* --- Espaciado --- */
+  --kos-space-1: 0.25rem;
+  --kos-space-2: 0.5rem;
+  --kos-space-3: 0.75rem;
+  --kos-space-4: 1rem;
+  --kos-space-5: 1.5rem;
+  --kos-space-6: 2rem;
+  --kos-space-7: 3rem;
+  --kos-space-8: 4.5rem;
+  --kos-space-9: 7rem;
+
+  /* --- Radios y sombras --- */
+  --kos-radio-sm: 0.5rem;
+  --kos-radio-md: 1rem;
+  --kos-radio-lg: 1.75rem;
+  --kos-radio-pill: 999px;
+  --kos-sombra-suave: 0 8px 24px rgba(20 32 22 / 0.08);
+  --kos-sombra-media: 0 16px 40px rgba(20 32 22 / 0.14);
+  --kos-sombra-bowl: 0 26px 48px rgba(20 32 22 / 0.28);
+
+  /* --- Movimiento (la rueda) --- */
+  --kos-ease-rueda: cubic-bezier(0.22, 1, 0.36, 1);
+  --kos-dur-rueda: 800ms;
+  --kos-dur-fade: 220ms;
+
+  /* --- Layout --- */
+  --kos-ancho-max: 1180px;
+  --kos-gutter: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  :root { --kos-gutter: 2.5rem; }
+}

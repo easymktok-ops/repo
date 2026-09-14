@@ -1,0 +1,28 @@
+{
+  "name": "kosecha-web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "oxlint",
+    "preview": "vite preview",
+    "optimizar": "node scripts/optimizar-imagenes.mjs",
+    "verificar": "node scripts/verificar-ui.mjs"
+  },
+  "dependencies": {
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@vitejs/plugin-react": "^6.1.1",
+    "oxlint": "^1.81.0",
+    "playwright": "^1.63.0",
+    "sharp": "^0.35.4",
+    "vite": "^8.3.0"
+  },
+  "description": "Sitio de Kosecha \u2014 comida sana en Libres, Puebla. Conversi\u00f3n por WhatsApp."
+}
