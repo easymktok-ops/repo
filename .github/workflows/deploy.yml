@@ -60,18 +60,14 @@ jobs:
       - name: Aviso (publicacion automatica EN PAUSA)
         run: echo "::notice::Build OK. Publicacion automatica EN PAUSA. Webempresa rechaza el FTP externo (error 530). Ticket abierto con soporte. Mientras tanto el sitio se publica subiendo el ZIP a mano."
 
-      # Imprime la IP publica del runner (para el ticket de Webempresa: la IP
-      # desde la que se intenta el FTP; es dinamica, cambia en cada corrida).
-      - name: IP publica del runner
-        run: |
-          IP=$(curl -s https://api.ipify.org || echo "desconocida")
-          echo "IP publica del runner: $IP"
-          echo "::notice::IP publica del runner (para soporte Webempresa): $IP"
-
-      # REACTIVADO TEMPORALMENTE (para generar un 530 con IP+hora conocidas y
-      # entregarlas al soporte de Webempresa). Volver a  if: ${{ false }}  luego.
+      # -----------------------------------------------------------------------
+      # PAUSADO: Webempresa rechaza el login FTP/FTPS desde las IPs de GitHub
+      # Actions (530 Login authentication failed) aunque el usuario/clave son
+      # correctos. Ticket abierto con su soporte. PARA REACTIVAR cuando lo
+      # confirmen: cambiar el 'if' de abajo por  ->  if: env.DEPLOY_ON == 'true'
+      # -----------------------------------------------------------------------
       - name: Publicar por FTP
-        if: env.DEPLOY_ON == 'true'
+        if: ${{ false }}
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
