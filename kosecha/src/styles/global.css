@@ -375,6 +375,12 @@ section[id] { scroll-margin-top: 84px; }
     scale(1.22);
 }
 .rueda__foto { display: block; width: 100%; height: 100%; }
+/* El plato activo gira despacio sobre sí mismo, como en la referencia. Es la
+   contrarrotación la que lo mantiene derecho al girar la rueda; esto es un
+   movimiento propio, encima de aquella. */
+@keyframes kos-plato { to { transform: rotate(360deg); } }
+.rueda__bowl--activo .rueda__foto { animation: kos-plato 55s linear infinite; }
+.rueda--arrastrando .rueda__foto { animation-play-state: paused; }
 .rueda__foto img,
 .rueda__foto picture,
 .rueda__foto .bowl { width: 100%; height: 100%; object-fit: contain; }
@@ -480,13 +486,21 @@ section[id] { scroll-margin-top: 84px; }
   width: 170px;
   height: 170px;
   border-radius: 50%;
-  background: color-mix(in srgb, var(--acento) 12%, var(--kos-crema));
+  /* Con las fotos recortadas, teñir el disco de color de categoría ensucia el
+     plato. El acento ya está en la pill y en el punto del panel. */
+  background: var(--kos-crema);
   display: grid;
   place-items: center;
   overflow: hidden;
   margin-bottom: var(--kos-space-2);
 }
-.tarjeta__foto img { width: 100%; height: 100%; object-fit: contain; }
+.tarjeta__foto picture,
+.tarjeta__foto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 .tarjeta__nombre { font-size: var(--kos-size-xl); color: var(--kos-verde); margin: 0; }
 .tarjeta__descripcion {
   font-size: var(--kos-size-sm);
@@ -771,6 +785,7 @@ section[id] { scroll-margin-top: 84px; }
   .hero__bajada,
   .hero__texto .panel,
   .hero__rueda { animation: none; }
+  .rueda__bowl--activo .rueda__foto { animation: none; }
   *,
   *::before,
   *::after {

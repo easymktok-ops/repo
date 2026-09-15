@@ -16,7 +16,7 @@ export default function Nav() {
       </a>
       <div className="nav__interior">
         <a className="nav__logo" href="#inicio" aria-label="Kosecha, inicio">
-          <Logo />
+          <Logo alto={44} />
         </a>
         <nav aria-label="Secciones">
           <ul className="nav__lista">

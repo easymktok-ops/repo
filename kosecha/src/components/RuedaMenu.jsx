@@ -156,7 +156,12 @@ export default function RuedaMenu({ platillos, activo, onCambiar, onActivarCta }
                 }}
               >
                 <span className="rueda__foto">
-                  <FotoPlatillo platillo={platillo} tamano={260} prioridad={esActivo} />
+                  <FotoPlatillo
+                    platillo={platillo}
+                    tamano={260}
+                    sizes="(min-width: 900px) 215px, 40vw"
+                    prioridad={esActivo}
+                  />
                 </span>
               </button>
             </div>

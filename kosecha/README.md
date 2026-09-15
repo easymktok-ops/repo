@@ -18,7 +18,9 @@ npm run preview
 | `npm run dev` | Servidor de desarrollo |
 | `npm run build` | Build de producción en `dist/` |
 | `npm run lint` | oxlint |
-| `npm run optimizar` | Genera los `.webp` de `public/assets/` y avisa si una foto de platillo no tiene fondo transparente |
+| `npm run recortar` | Recorta las fotos de `assets-origen/platillos/` sobre su fondo blanco y genera webp de 480 y 900px con PNG de respaldo |
+| `npm run optimizar` | Genera los `.webp` de `public/assets/` y avisa si una foto no tiene fondo transparente |
+| `npm run fuentes` | Vuelve a bajar Poppins de Google Fonts a `public/fonts/` para auto-hospedarla |
 | `npm run verificar` | Chequeo de humo en un navegador real (rueda, CTAs, teclado, reduced-motion) |
 | `npm run auditar` | Contraste medido de cada texto, blancos de click de 44px y desborde horizontal de 320 a 1920 |
 
@@ -39,8 +41,21 @@ src/
   lib/whatsapp.js   el número vive acá y en ningún otro lado
   lib/analytics.js  evento pedido_whatsapp
   components/       Nav, Hero, RuedaMenu, PanelPlatillo, MenuCompleto, …
-public/assets/      logo/ platillos/ fotos/   (ver ASSETS-TODO.md)
+assets-origen/      fotos originales sin tocar, como llegaron de la marca
+public/assets/      logo/ platillos/ fotos/   (generadas, ver ASSETS-TODO.md)
+public/fonts/       Poppins auto-hospedada
+reference/          el video de la referencia de interacción
 ```
+
+### Las fotos
+
+Las de origen son tomas cenitales sobre fondo blanco. `npm run recortar` las
+deja con fondo transparente: el plato también es blanco, así que no alcanza con
+borrar lo blanco ni con inundar desde los bordes (se filtra por la sombra y se
+come el plato). Para los platos ajusta un círculo a su filo por mínimos
+cuadrados; para el wrap y el sándwich, que no son redondos, inunda desde los
+bordes con umbral de blanco puro. Si cambian las fotos, se vuelve a correr y
+listo.
 
 ### La rueda de menú
 

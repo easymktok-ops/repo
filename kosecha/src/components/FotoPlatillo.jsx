@@ -62,18 +62,30 @@ function BowlDibujado({ platillo, tamano }) {
  * /assets/platillos/ (y su .webp hermano, que genera scripts/optimizar-imagenes.mjs).
  * Mientras el archivo no exista, dibuja el bowl de arriba.
  */
-export default function FotoPlatillo({ platillo, tamano = 320, prioridad = false, className = '' }) {
+export default function FotoPlatillo({
+  platillo,
+  tamano = 320,
+  prioridad = false,
+  className = '',
+  /* Tamaño real en pantalla, no el del atributo width: de esto depende qué
+     variante baja el navegador. Mal puesto, se trae la de 900px al teléfono. */
+  sizes = `${tamano}px`,
+}) {
   const [falla, setFalla] = useState(false);
 
   if (falla || !platillo.imagen) {
     return <BowlDibujado platillo={platillo} tamano={tamano} />;
   }
 
-  const webp = platillo.imagen.replace(/\.png$/i, '.webp');
+  const base = platillo.imagen.replace(/\.png$/i, '');
 
   return (
     <picture>
-      <source srcSet={webp} type="image/webp" />
+      <source
+        type="image/webp"
+        srcSet={`${base}-480.webp 480w, ${base}.webp 900w`}
+        sizes={sizes}
+      />
       <img
         className={className}
         src={platillo.imagen}
@@ -81,7 +93,7 @@ export default function FotoPlatillo({ platillo, tamano = 320, prioridad = false
         width={tamano}
         height={tamano}
         loading={prioridad ? 'eager' : 'lazy'}
-        fetchPriority={prioridad ? 'high' : 'auto'}
+        fetchPriority={prioridad ? 'high' : 'low'}
         decoding={prioridad ? 'sync' : 'async'}
         onError={() => setFalla(true)}
       />

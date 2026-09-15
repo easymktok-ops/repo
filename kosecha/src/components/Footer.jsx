@@ -7,7 +7,7 @@ export default function Footer() {
     <footer className="pie">
       <div className="pie__interior">
         <span className="pie__mono">
-          <Logo monograma alto={56} />
+          <Logo variante="monograma" alto={64} />
         </span>
         <div className="pie__cols">
           <p className="pie__frase">De la tierra de Libres a tu plato.</p>

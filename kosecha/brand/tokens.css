@@ -47,6 +47,7 @@
   /* --- Tipografía --- */
   --kos-font-display: 'Rustic Delight', 'Georgia', 'Times New Roman', serif;
   --kos-font-texto: 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Poppins se sirve desde /fonts (ver scripts/traer-fuentes.mjs). */
 
   --kos-size-xs: 0.75rem;
   --kos-size-sm: 0.875rem;

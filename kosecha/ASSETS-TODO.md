@@ -1,107 +1,73 @@
 # Pendientes de contenido y assets
 
-Estado al armar el sitio. Nada de esto está inventado en el código: donde falta
-el dato, el bloque simplemente no se muestra.
+Estado después de integrar lo que subiste al repo. Lo que falta no está
+inventado en el código: donde no hay dato, el bloque no se muestra.
 
-## 1. Fotos de platillo (bloqueante para la rueda)
+## Listo
 
-La rueda del hero y las tarjetas del menú esperan **PNG recortados con fondo
-transparente**, al contorno del bowl. Mientras el archivo no exista, cada
-platillo se dibuja con los colores de sus propios ingredientes
-(`src/lib/paleta.js`), así que la rueda ya distingue una Kosecha de otra y el
-layout es real. Aun así son ilustraciones: las fotos son el corazón del diseño
-y hay que subirlas antes de publicar.
+- **Las 9 fotos de platillo.** Llegaron como tomas cenitales de 1080px sobre
+  fondo blanco, sin canal alfa. Recortadas con `npm run recortar`, que borra el
+  blanco de alrededor sin comerse el plato (que también es blanco): para los
+  platos ajusta un círculo a su filo, y para el wrap y el sándwich, que no son
+  redondos, inunda desde los bordes. Quedan en `public/assets/platillos/` en
+  webp de 480 y 900px con PNG de respaldo. Los originales quedan intactos en
+  `assets-origen/platillos/`.
+- **Logo.** `kosecha.png` en el nav, el monograma K en crema en el footer.
+  También quedó la versión crema del logotipo para fondos verdes.
+- **Poppins auto-hospedada** en `public/fonts/` (`npm run fuentes`). El sitio ya
+  no depende de fonts.googleapis.com, que además es un request que bloquea el
+  render.
+- **Video de referencia** en `reference/nutri-bowls.mp4`, analizado.
 
-Subir a `public/assets/platillos/` con estos nombres exactos (vienen de Drive ›
-Kosecha):
+## 1. Tipografía display
 
-| Archivo en Drive | Nombre en el repo |
-| --- | --- |
-| `Mediterránea.png` | `mediterranea.png` |
-| `Bosque.png` | `bosque.png` |
-| `Sureña.png` | `surena.png` |
-| `Asiática.png` | `asiatica.png` |
-| `Coles.png` | `coles.png` |
-| `Kale.png` | `kale.png` |
-| `Personalizada.png` | `personalizada.png` |
-| `Sandiwch.png` | `sandwich.png` |
-| `Wrap.png` | `wrap.png` |
+- [ ] `RusticDelight.woff2` en `public/fonts/`. El `@font-face` está declarado
+      en `brand/tokens.css`; hasta que llegue, los títulos usan la serif de
+      respaldo. Es lo único que hoy separa al sitio del logo, que sí usa la
+      serif de marca.
 
-Después de subirlas: `npm run optimizar`. El script genera el `.webp` de cada
-una y **avisa si alguna no trae canal alfa** (es decir, si vino con fondo).
+## 2. Datos que faltan del menú
 
-- [ ] Confirmar que los 9 PNG están recortados con transparencia.
-- [ ] Falta foto propia por variante de sándwich: hoy los 5 sándwiches comparten
-      `sandwich.png`.
+El MENÚ.docx que subiste dice exactamente lo mismo que el documento de Drive,
+así que estos siguen abiertos:
 
-## 2. Logo
-
-Subir a `public/assets/logo/`:
-
-- [ ] `kosecha.png` — logo horizontal para el nav (hoy cae en el logotipo tipográfico).
-- [ ] `kosecha-monograma.png` — la K del footer.
-
-## 3. Tipografía
-
-- [ ] `RusticDelight.woff2` en `public/fonts/`. El `@font-face` ya está declarado
-      en `brand/tokens.css`; hasta que llegue el archivo, los títulos usan la
-      serif de fallback.
-
-## 4. Datos que faltan del menú
-
-- [ ] **Macros** (kcal, proteína, carbohidratos, grasas). No están en el
-      documento MENÚ. El campo `macros` de cada platillo está en `null` y el
-      panel no muestra el bloque. Al cargarlos, el panel se puede reactivar.
+- [ ] **Macros** (kcal, proteína, carbohidratos, grasas). El campo `macros` de
+      cada platillo está en `null` y el panel no muestra el bloque.
 - [ ] **Precio de los smoothies** y de los extras (quesos, vegetales, carnes).
-      Hoy figuran como texto descriptivo, sin precio.
-- [ ] Confirmar el mapeo de colores de acento por categoría: ensaladas → lima,
+- [ ] Confirmar el mapeo de acentos por categoría: ensaladas → lima,
       sándwiches → naranja, wraps → amarillo, arma la tuya → verde.
 
-## 5. Ubicación y contacto
+## 3. Ubicación y contacto
 
 - [ ] **Dirección exacta en Libres** (calle, número, colonia, CP). Hoy el sitio
-      solo dice "Cobertura en Libres, Puebla" y el JSON-LD lleva localidad, no
-      calle. Hace falta para el SEO local y para el mapa.
-- [ ] **Horarios de atención**, para mostrarlos y para el
-      `openingHoursSpecification` del JSON-LD.
+      dice "Cobertura en Libres, Puebla" y el JSON-LD lleva localidad, no calle.
+- [ ] **Horarios de atención**, para la sección y para el
+      `openingHoursSpecification`.
 - [ ] Confirmar que el WhatsApp de pedidos es **+52 276 112 0304**
-      (`wa.me/522761120304`). Vive en una sola constante,
-      `src/lib/whatsapp.js`, y se puede pisar con `VITE_WHATSAPP_NUMERO`.
+      (`wa.me/522761120304`), en `src/lib/whatsapp.js` o en
+      `VITE_WHATSAPP_NUMERO`.
 
-## 6. Fotografía de marca
+## 4. Fotos que todavía no hay
 
-- [ ] Foto real para "Quiénes somos" en `public/assets/fotos/equipo.jpg`
-      (4:5, comida real / madera / luz natural). Mientras no esté, ese lugar
-      muestra un marco vacío.
+- [ ] Foto para "Quiénes somos" en `public/assets/fotos/equipo.jpg` (4:5).
+      Mientras no esté, ese lugar muestra un marco vacío.
+- [ ] Foto propia por variante de sándwich: los 5 comparten `sandwich.png`.
 
-## 7. Manual de marca
+## 5. Manual de marca
 
-El repo no tenía `brand/BRAND.md`. Lo reconstruí en `brand/BRAND.md` con lo que
-sí está confirmado en el moodboard de Drive.
+- [ ] Confirmar los acentos `#FDC929`, `#9ABC1D` y `#EB611E`: salen del brief,
+      no del moodboard. Para texto y botones se usan versiones más hondas
+      porque los originales no llegan a 4.5:1 sobre crema.
+- [ ] Faltan las 4 capturas de `web-reference/` que menciona el brief.
 
-- [ ] Confirmar los tres acentos (`#FDC929`, `#9ABC1D`, `#EB611E`): salen del
-      brief, no del moodboard.
-- [ ] Faltan las 4 capturas de `web-reference/` que menciona el brief. El
-      conector de Drive devuelve el texto del moodboard, no sus imágenes.
+## 6. Medición
 
-## 8. Referencia de animación
+- [ ] ID de GA4 o Pixel de Meta. `src/lib/analytics.js` ya dispara
+      `pedido_whatsapp` con el id del platillo; falta cargar el tag.
 
-- [ ] Subir el video de Behance (ya está en Drive como
-      `1-nutri-bowls-ui-design-sushmita-lakshme-1080.mp4`) a `reference/`.
-      Con el archivo en el repo se extraen los frames
-      (`ffmpeg -i reference/nutri-bowls.mp4 -vf fps=4 reference/frames/frame-%03d.png`)
-      y se calibran duración y easing de la rueda contra la referencia.
-      Hoy usa 800 ms con `cubic-bezier(0.22, 1, 0.36, 1)`, los valores del brief.
+## 7. Copy nuevo (no es copy aprobado)
 
-## 9. Medición
-
-- [ ] ID de GA4 y/o Pixel de Meta. `src/lib/analytics.js` ya dispara el evento
-      `pedido_whatsapp` con el id del platillo; solo falta cargar el tag.
-
-## 10. Copy nuevo (no es copy aprobado)
-
-El texto del hero — "Comer sano sí sabe deli" y su bajada — lo escribí yo para
-llenar el hueco. Los textos de "Quiénes somos" y "Trazabilidad" sí son verbatim
-del manual. Todo el copy de interfaz habla de tú, como el manual.
+El hero — "Comer sano sí sabe deli" y su bajada — lo escribí yo. "Quiénes
+somos" y "Trazabilidad" sí son verbatim del manual.
 
 - [ ] Aprobar o reemplazar el copy del hero.

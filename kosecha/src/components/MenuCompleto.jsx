@@ -48,7 +48,11 @@ export default function MenuCompleto() {
               style={{ '--acento': acentoDe(platillo.categoria) }}
             >
               <div className="tarjeta__foto">
-                <FotoPlatillo platillo={platillo} tamano={platillo.destacado ? 320 : 220} />
+                <FotoPlatillo
+                  platillo={platillo}
+                  tamano={platillo.destacado ? 320 : 220}
+                  sizes={platillo.destacado ? '(min-width: 900px) 208px, 170px' : '170px'}
+                />
               </div>
               <div className="tarjeta__cuerpo">
                 {platillo.destacado ? <p className="tarjeta__etiqueta">{platillo.etiqueta}</p> : null}

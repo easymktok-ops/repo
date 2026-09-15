@@ -37,7 +37,9 @@ de color y el nombre de la categoría.
 
 - **Display**: Rustic Delight (pendiente), fallback Georgia. Títulos, precios y
   la frase de cierre de trazabilidad.
-- **Texto**: Poppins 300/400/500/600.
+- **Texto**: Poppins 300/400/500/600, auto-hospedada en `/fonts` (sin pedido a
+  terceros en la ruta crítica; con el `<link>` a Google el LCP medido era de
+  3,8 s y ahora es de 0,7 s).
 - Escala fluida con `clamp()`, razón ≥1.25 entre pasos.
 - `text-wrap: balance` en los títulos, `pretty` en la prosa larga.
 
@@ -60,8 +62,8 @@ como una plantilla de tarjetas iguales.
 - **CTA de WhatsApp**: único botón del sitio. Tres variantes (naranja hondo
   sobre crema, crema sobre verde, contorno en tarjetas). 48px de alto mínimo.
 - **Pills de categoría**: filtro del menú, 44px, punto de color + nombre.
-- **Bowl dibujado**: ilustración provisional generada con los colores de los
-  ingredientes de cada platillo. Se reemplaza sola cuando llega el PNG.
+- **Bowl dibujado**: ilustración de respaldo generada con los colores de los
+  ingredientes. Solo aparece si la foto falta o falla.
 
 ## Movimiento
 
@@ -73,6 +75,13 @@ como una plantilla de tarjetas iguales.
 | Entrada del panel | 260 ms | ease-ui |
 | Press de botón | 140 ms | ease-ui, `scale(0.97)` |
 | Entrada de página | 420-620 ms, escalonada 60 ms | ease-ui |
+| Giro propio del plato activo | 55 s por vuelta | linear |
+
+El plato activo gira despacio sobre sí mismo: es lo que hace la referencia con
+su bowl grande y funciona porque las fotos son cenitales y redondas. Medida
+contra el video, la transición completa de la referencia dura unos 2,5 s con
+forma ease-in-out; acá la rueda gira en 800 ms, que es lo que pide el brief y lo
+que aguanta una interacción que se repite.
 
 La rueda es la pieza narrativa y puede durar; todo lo que responde al dedo vive
 por debajo de los 300 ms. El bowl activo escala más rápido que el giro, así la
