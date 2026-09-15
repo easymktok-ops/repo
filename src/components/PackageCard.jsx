@@ -147,7 +147,7 @@ export default function PackageCard(pkg) {
           min={min}
           value={date}
           onChange={(e) => setDate(e.target.value)}
-          className="w-full rounded-xl border-2 border-ink bg-white px-4 py-2.5 font-body text-ink outline-none focus:border-yellow-dk"
+          className="block w-full min-w-0 max-w-full appearance-none rounded-xl border-2 border-ink bg-white px-4 py-2.5 font-body text-base text-ink outline-none focus:border-yellow-dk"
         />
       </div>
 
