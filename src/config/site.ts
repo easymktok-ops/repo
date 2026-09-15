@@ -58,7 +58,7 @@ export const site = {
     gtmId: import.meta.env.PUBLIC_GTM_ID ?? "GTM-KGHQBRLX",
     gaId: import.meta.env.PUBLIC_GA_ID ?? "G-DD2R37C1V9",
     googleAdsId: import.meta.env.PUBLIC_GOOGLE_ADS_ID ?? "AW-18320918955",
-    metaPixelId: import.meta.env.PUBLIC_META_PIXEL_ID ?? "1085215598312916",
+    metaPixelId: import.meta.env.PUBLIC_META_PIXEL_ID ?? "141551953168954",
     plausibleDomain: import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN ?? "",
   },
 } as const;
