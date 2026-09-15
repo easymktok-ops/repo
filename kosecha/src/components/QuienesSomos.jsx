@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { quienesSomos } from '../data/contenido.js';
+import { ruta } from '../lib/ruta.js';
 
 /** Texto verbatim del manual de marca: no editar acá. */
 export default function QuienesSomos() {
@@ -13,7 +14,7 @@ export default function QuienesSomos() {
             <span className="nosotros__pendiente">Foto del equipo pendiente</span>
           ) : (
             <img
-              src="/assets/fotos/equipo.jpg"
+              src={ruta("assets/fotos/equipo.jpg")}
               alt="El equipo de Kosecha preparando ensaladas"
               width={720}
               height={900}

@@ -21,6 +21,7 @@ npm run preview
 | `npm run recortar` | Recorta las fotos de `assets-origen/platillos/` sobre su fondo blanco y genera webp de 480 y 900px con PNG de respaldo |
 | `npm run optimizar` | Genera los `.webp` de `public/assets/` y avisa si una foto no tiene fondo transparente |
 | `npm run fuentes` | Vuelve a bajar Poppins de Google Fonts a `public/fonts/` para auto-hospedarla |
+| `npm run exportar` | Arma `export/kosecha-sitio.zip`, el paquete para subir a mano a un hosting |
 | `npm run verificar` | Chequeo de humo en un navegador real (rueda, CTAs, teclado, reduced-motion) |
 | `npm run auditar` | Contraste medido de cada texto, blancos de click de 44px y desborde horizontal de 320 a 1920 |
 
@@ -83,6 +84,19 @@ WCAG 2.1 AA. Los acentos de marca no llegan a 4.5:1 sobre crema, así que para
 texto y botones se usan `--kos-naranja-hondo` y `--kos-lima-hondo`; los acentos
 originales solo pintan superficies. `npm run auditar` mide esto en el navegador
 y tiene que dar cero en las tres métricas.
+
+## Subirlo a un hosting
+
+`npm run exportar` deja un ZIP cuyo contenido va directo a `public_html/`. Es un
+sitio estático: no necesita Node ni base de datos en el servidor. El build usa
+`base: './'` y todas las rutas de assets pasan por `src/lib/ruta.js`, así que el
+mismo paquete funciona en la raíz del dominio o en una subcarpeta de prueba.
+
+Dentro del ZIP van también un `.htaccess` con compresión y caché para hostings
+Apache (si el hosting usa nginx se ignora sin romper nada) y un `LEEME.txt` con
+el paso a paso para quien lo suba.
+
+El paquete no se versiona: se regenera cuando hace falta.
 
 ## Antes de publicar
 

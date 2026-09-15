@@ -1,0 +1,44 @@
+KOSECHA — SITIO WEB
+Paquete para subir a mano al hosting.
+
+QUÉ ES ESTO
+Un sitio estático: solo archivos. No necesita Node, ni base de datos, ni
+instalar nada en el servidor. Cualquier hosting con espacio web lo sirve.
+
+CÓMO SUBIRLO
+1. Entra al gestor de archivos del hosting (o conéctate por FTP).
+2. Abre la carpeta pública del dominio. Suele llamarse public_html,
+   www o htdocs.
+3. Copia AHÍ DENTRO todo el contenido de este paquete: index.html, la
+   carpeta assets, la carpeta fonts, favicon.svg y el archivo .htaccess.
+   Ojo: el contenido, no la carpeta que lo envuelve. En public_html tiene
+   que quedar index.html, no una carpeta con index.html adentro.
+4. Abre https://www.kosecha.fit y listo.
+
+El archivo .htaccess empieza con punto y algunos gestores lo ocultan. Si no
+lo ves después de subirlo, activa "mostrar archivos ocultos". Si el hosting
+no lo acepta, no pasa nada: el sitio funciona igual, solo carga un poco más
+lento la primera vez.
+
+PARA PROBARLO SIN TOCAR EL DOMINIO PRINCIPAL
+Crea una subcarpeta, por ejemplo public_html/prueba/, y sube todo ahí.
+Queda en https://www.kosecha.fit/prueba/. El sitio está armado con rutas
+relativas, así que funciona igual en la raíz o en una subcarpeta.
+
+EL NÚMERO DE WHATSAPP
+Está fijado en +52 276 112 0304. Cada botón abre WhatsApp con el pedido ya
+escrito. Si el número cambia, hay que volver a generar el paquete: está en
+una sola constante del código (src/lib/whatsapp.js).
+
+LO QUE FALTA ANTES DE DARLO POR PUBLICADO
+- La tipografía Rustic Delight. Cuando tengas el archivo
+  RusticDelight.woff2, súbelo a la carpeta fonts/ junto a los demás y los
+  títulos la toman solos, sin volver a generar nada.
+- La dirección exacta y los horarios en Libres: hoy el sitio dice solo
+  "Cobertura en Libres, Puebla".
+- La foto para "Quiénes somos" (ese lugar se ve vacío).
+- Las macros de los platillos, si se quieren mostrar.
+
+CÓMO ACTUALIZARLO MÁS ADELANTE
+Este paquete sale del repositorio con: npm run exportar
+Genera de nuevo el ZIP con los últimos cambios.

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ruta } from '../lib/ruta.js';
 
 const VARIANTES = {
   completo: { archivo: 'kosecha', w: 640, h: 190, alt: 'Kosecha, comida sana' },
@@ -28,9 +29,9 @@ export default function Logo({ variante = 'completo', alto = 40 }) {
 
   return (
     <picture>
-      <source srcSet={`/assets/logo/${archivo}.webp`} type="image/webp" />
+      <source srcSet={ruta(`assets/logo/${archivo}.webp`)} type="image/webp" />
       <img
-        src={`/assets/logo/${archivo}.png`}
+        src={ruta(`assets/logo/${archivo}.png`)}
         alt={alt}
         width={w}
         height={h}

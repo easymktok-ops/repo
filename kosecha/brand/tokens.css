@@ -6,13 +6,9 @@
    contra el manual de marca — ver ASSETS-TODO.md.
    ============================================================ */
 
-@font-face {
-  font-family: 'Rustic Delight';
-  src: url('/fonts/RusticDelight.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
+/* La declaración de Rustic Delight vive en public/fonts/display.css: así el
+   archivo de la fuente se puede dejar caer en esa carpeta sin recompilar. */
+
 
 :root {
   /* --- Par principal --- */

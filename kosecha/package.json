@@ -12,7 +12,8 @@
     "verificar": "node scripts/verificar-ui.mjs",
     "auditar": "node scripts/auditar-a11y.mjs",
     "recortar": "node scripts/recortar-platillos.mjs",
-    "fuentes": "node scripts/traer-fuentes.mjs"
+    "fuentes": "node scripts/traer-fuentes.mjs",
+    "exportar": "node scripts/exportar.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",

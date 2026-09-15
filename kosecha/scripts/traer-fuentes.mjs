@@ -48,7 +48,7 @@ const declaraciones = piezas
   font-style: ${p.estilo};
   font-weight: ${p.peso};
   font-display: swap;
-  src: url('/fonts/${p.archivo}') format('woff2');
+  src: url('./${p.archivo}') format('woff2');
   unicode-range: ${p.rango};
 }`,
   )

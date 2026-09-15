@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { acentoDe } from '../data/platillos.js';
 import { paletaDe, semilla } from '../lib/paleta.js';
+import { ruta } from '../lib/ruta.js';
 
 /** Bowl dibujado con los colores de los ingredientes del platillo. */
 function BowlDibujado({ platillo, tamano }) {
@@ -77,7 +78,7 @@ export default function FotoPlatillo({
     return <BowlDibujado platillo={platillo} tamano={tamano} />;
   }
 
-  const base = platillo.imagen.replace(/\.png$/i, '');
+  const base = ruta(platillo.imagen).replace(/\.png$/i, '');
 
   return (
     <picture>
@@ -88,7 +89,7 @@ export default function FotoPlatillo({
       />
       <img
         className={className}
-        src={platillo.imagen}
+        src={ruta(platillo.imagen)}
         alt={platillo.nombre}
         width={tamano}
         height={tamano}
