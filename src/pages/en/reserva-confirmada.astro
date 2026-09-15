@@ -49,8 +49,13 @@ const wa = whatsappUrl("Hi, I just booked my flight. I'd like to confirm the det
         el.textContent = "Your booking number is " + ref + ". Your confirmation email is on its way.";
       }
     }
+    // Purchase event -> dataLayer. GTM fires GA4 purchase, Google Ads
+    // conversion and Meta Purchase from it. No direct gtag/fbq here (managed in
+    // GTM to avoid double counting). Without consent, GTM never loads.
     try {
-      if (ref && window.dataLayer) {
+      window.dataLayer = window.dataLayer || [];
+      if (ref) {
+        window.dataLayer.push({ ecommerce: null });
         window.dataLayer.push({
           event: "purchase",
           ecommerce: {
@@ -59,9 +64,6 @@ const wa = whatsappUrl("Hi, I just booked my flight. I'd like to confirm the det
             value: isNaN(amt) ? undefined : amt,
           },
         });
-      }
-      if (ref && typeof window.fbq === "function") {
-        window.fbq("track", "Purchase", { value: isNaN(amt) ? undefined : amt, currency: cur });
       }
     } catch (e) {}
   })();

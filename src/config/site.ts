@@ -52,6 +52,10 @@ export const site = {
   // IDs de analitica: publicos (viven en el cliente). Default a los del negocio,
   // overridable por env. Se cargan SOLO tras consentimiento (ver Analytics.astro).
   analytics: {
+    // GTM es el gestor unico de etiquetas. Cuando gtmId esta puesto, GA4,
+    // Google Ads y Meta se configuran DENTRO de GTM (no directo) para no medir
+    // doble. gaId/googleAdsId/metaPixelId quedan de referencia / fallback.
+    gtmId: import.meta.env.PUBLIC_GTM_ID ?? "GTM-KGHQBRLX",
     gaId: import.meta.env.PUBLIC_GA_ID ?? "G-P4S5W2B2Y8",
     googleAdsId: import.meta.env.PUBLIC_GOOGLE_ADS_ID ?? "AW-18320918955",
     metaPixelId: import.meta.env.PUBLIC_META_PIXEL_ID ?? "1085215598312916",

@@ -49,10 +49,14 @@ const wa = whatsappUrl("Hola, acabo de reservar mi vuelo. Quiero confirmar los d
         el.textContent = "Tu número de reserva es " + ref + ". En breve te llega el correo de confirmación.";
       }
     }
-    // Conversion: purchase (dedupe por transaction_id). Solo si hay consentimiento
-    // (dataLayer existe cuando el usuario acepto cookies).
+    // Conversion: evento "purchase" al dataLayer (dedupe por transaction_id).
+    // GTM lo usa para disparar GA4 purchase, la conversion de Google Ads y
+    // Meta Purchase. No llamamos a gtag/fbq aqui: todo se gestiona en GTM para
+    // no medir doble. Si no hubo consentimiento, GTM no carga y no se rastrea.
     try {
-      if (ref && window.dataLayer) {
+      window.dataLayer = window.dataLayer || [];
+      if (ref) {
+        window.dataLayer.push({ ecommerce: null }); // limpia ecommerce previo
         window.dataLayer.push({
           event: "purchase",
           ecommerce: {
@@ -61,9 +65,6 @@ const wa = whatsappUrl("Hola, acabo de reservar mi vuelo. Quiero confirmar los d
             value: isNaN(amt) ? undefined : amt,
           },
         });
-      }
-      if (ref && typeof window.fbq === "function") {
-        window.fbq("track", "Purchase", { value: isNaN(amt) ? undefined : amt, currency: cur });
       }
     } catch (e) {}
   })();

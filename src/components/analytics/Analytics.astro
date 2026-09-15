@@ -14,7 +14,7 @@ interface Props {
 }
 const { locale } = Astro.props;
 const a = site.analytics;
-const hasAny = Boolean(a.gaId || a.googleAdsId || a.metaPixelId);
+const hasAny = Boolean(a.gtmId || a.gaId || a.googleAdsId || a.metaPixelId);
 const privacyHref = localizedPath("/aviso-de-privacidad", locale);
 
 const t = {
@@ -55,7 +55,7 @@ const t = {
 
       <script
         is:inline
-        define:vars={{ gaId: a.gaId, adsId: a.googleAdsId, pixelId: a.metaPixelId }}
+        define:vars={{ gtmId: a.gtmId, gaId: a.gaId, adsId: a.googleAdsId, pixelId: a.metaPixelId }}
       >
         (function () {
           window.dataLayer = window.dataLayer || [];
@@ -101,6 +101,13 @@ const t = {
               ad_user_data: "granted",
               ad_personalization: "granted",
             });
+            // GTM: gestor unico. Si esta configurado, carga SOLO GTM (GA4,
+            // Google Ads y Meta se configuran dentro de GTM) para no medir doble.
+            if (gtmId) {
+              window.dataLayer.push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
+              inject("https://www.googletagmanager.com/gtm.js?id=" + gtmId);
+              return;
+            }
             if (gaId || adsId) {
               inject("https://www.googletagmanager.com/gtag/js?id=" + (gaId || adsId));
               gtag("js", new Date());
