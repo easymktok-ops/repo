@@ -111,10 +111,12 @@
   /* ---------- Packages ---------- */
   .pk-sec { background: var(--cream); }
   .blob { position: absolute; border-radius: 999px; filter: blur(60px); pointer-events: none; }
-  .pk-grid { display: grid; grid-template-columns: 1fr; gap: 22px; margin-top: 44px; }
-  @media (min-width: 680px){ .pk-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (min-width: 1024px){ .pk-grid { grid-template-columns: repeat(12, 1fr); gap: 24px; } .s8{grid-column:span 8;} .s4{grid-column:span 4;} .s12{grid-column:span 12;} }
-  @media (min-width: 680px) and (max-width: 1023px){ .s12{ grid-column: span 2; } }
+  /* Tarjetas homologadas: mismo ancho, centradas; LOVE a lo ancho */
+  .pk-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 22px; margin-top: 44px; }
+  .pk-grid > div { flex: 0 1 360px; min-width: 0; }
+  .pk-grid > .s12 { flex-basis: 100%; }
+  @media (min-width: 1024px){ .pk-grid { gap: 24px; } }
+  @media (max-width: 400px){ .pk-grid > div { flex-basis: 100%; } }
   .card { position: relative; background: #fff; border: 2px solid var(--ink); border-radius: 30px; box-shadow: var(--shadow-card); transition: transform .2s, box-shadow .2s; height: 100%; display: flex; flex-direction: column; overflow: hidden; }
   .card:hover { transform: translateY(-5px) scale(1.01); box-shadow: var(--shadow-cardh); }
   .card .strip { height: 10px; }
@@ -237,6 +239,7 @@
   @media (min-width: 980px){ .con-grid { grid-template-columns: 1fr 1fr; } }
   .con-cards { display: grid; grid-template-columns: 1fr; gap: 16px; }
   @media (min-width: 560px){ .con-cards { grid-template-columns: 1fr 1fr; } }
+  .con-cards .wide { grid-column: 1 / -1; }
   .con-card { display: flex; gap: 14px; align-items: flex-start; text-decoration: none; color: inherit; border: 2px solid var(--ink); background: var(--cream); border-radius: 26px; padding: 20px; box-shadow: var(--shadow-pop); transition: transform .18s; }
   .con-card:hover { transform: translateY(-4px); }
   .con-card .ic { width: 48px; height: 48px; border-radius: 999px; border: 2px solid var(--ink); display: grid; place-items: center; flex-shrink: 0; }
@@ -620,11 +623,11 @@
           <span class="ic" style="background:#7FC7E8"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h3l1.5 5-2 1.5a11 11 0 0 0 5 5l1.5-2 5 1.5V19a2 2 0 0 1-2 2A16 16 0 0 1 4 6a2 2 0 0 1 1-2Z"/></svg></span>
           <span><span class="lab">Teléfono</span><span class="val">+52 56 5653 1771</span></span>
         </a>
-        <a class="con-card" href="mailto:Ventas@happypuerto.com">
+        <a class="con-card wide" href="mailto:Ventas@happypuerto.com">
           <span class="ic" style="background:#FF8A5B"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/></svg></span>
           <span><span class="lab">Email</span><span class="val" style="word-break:break-word">Ventas@happypuerto.com</span></span>
         </a>
-        <div class="con-card">
+        <div class="con-card wide">
           <span class="ic" style="background:#B98BD6"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
           <span><span class="lab">Dónde estamos</span><span class="val">Camino Campestre S/N, San Martín de las Pirámides, Edo. de México</span></span>
         </div>

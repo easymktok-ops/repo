@@ -28,6 +28,7 @@ const cards = [
     value: contact.email,
     href: `mailto:${contact.email}`,
     accent: '#FF8A5B',
+    wide: true,
     icon: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 7l8 6 8-6"/>',
   },
   {
@@ -35,6 +36,7 @@ const cards = [
     label: 'Dónde estamos',
     value: contact.address,
     accent: '#B98BD6',
+    wide: true,
     icon: '<path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/>',
   },
 ];
@@ -63,7 +65,7 @@ const cards = [
             <Tag
               href={c.href}
               {...(c.external ? { target: '_blank', rel: 'noopener' } : {})}
-              class="group flex items-start gap-4 rounded-blob border-2 border-ink bg-cream p-5 shadow-pop transition-transform hover:-translate-y-1"
+              class:list={["group flex items-start gap-4 rounded-blob border-2 border-ink bg-cream p-5 shadow-pop transition-transform hover:-translate-y-1", c.wide && 'sm:col-span-2']}
             >
               <span class="grid h-12 w-12 shrink-0 place-items-center rounded-full border-2 border-ink text-ink" style={`background:${c.accent}`}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={c.icon} />
