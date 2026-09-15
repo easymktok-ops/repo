@@ -31,6 +31,7 @@ export default function MenuCompleto() {
                   aria-pressed={filtro === pill.id}
                   onClick={() => setFiltro(pill.id)}
                 >
+                  <span className="pill__marca" aria-hidden="true" />
                   {pill.nombre}
                   {pill.precioDesde ? <span className="pill__precio">${pill.precioDesde}</span> : null}
                 </button>
@@ -43,16 +44,19 @@ export default function MenuCompleto() {
           {visibles.map((platillo) => (
             <article
               key={platillo.id}
-              className="tarjeta"
+              className={`tarjeta ${platillo.destacado ? 'tarjeta--destacada' : ''}`}
               style={{ '--acento': acentoDe(platillo.categoria) }}
             >
               <div className="tarjeta__foto">
-                <FotoPlatillo platillo={platillo} tamano={220} />
+                <FotoPlatillo platillo={platillo} tamano={platillo.destacado ? 320 : 220} />
               </div>
-              <h3 className="tarjeta__nombre">{platillo.nombre}</h3>
-              <p className="tarjeta__descripcion">{platillo.descripcion}</p>
-              <p className="tarjeta__precio">${platillo.precio} MXN</p>
-              <BotonWhatsApp platillo={platillo} origen="menu" variante="linea" />
+              <div className="tarjeta__cuerpo">
+                {platillo.destacado ? <p className="tarjeta__etiqueta">{platillo.etiqueta}</p> : null}
+                <h3 className="tarjeta__nombre">{platillo.nombre}</h3>
+                <p className="tarjeta__descripcion">{platillo.descripcion}</p>
+                <p className="tarjeta__precio">${platillo.precio} MXN</p>
+                <BotonWhatsApp platillo={platillo} origen="menu" variante="linea" />
+              </div>
             </article>
           ))}
         </div>

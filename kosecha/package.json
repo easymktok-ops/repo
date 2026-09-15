@@ -9,7 +9,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "optimizar": "node scripts/optimizar-imagenes.mjs",
-    "verificar": "node scripts/verificar-ui.mjs"
+    "verificar": "node scripts/verificar-ui.mjs",
+    "auditar": "node scripts/auditar-a11y.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",

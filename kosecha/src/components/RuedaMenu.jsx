@@ -122,7 +122,7 @@ export default function RuedaMenu({ platillos, activo, onCambiar, onActivarCta }
         className={clases}
         style={{ '--angulo': angulo, '--paso': `${paso}deg` }}
         role="group"
-        aria-label="Selector de platillos. Usá las flechas para girar la rueda."
+        aria-label="Selector de platillos. Usa las flechas para girar la rueda."
         onKeyDown={alTeclear}
         onPointerDown={alPresionar}
         onPointerMove={alMover}
@@ -140,7 +140,7 @@ export default function RuedaMenu({ platillos, activo, onCambiar, onActivarCta }
                 aria-pressed={esActivo}
                 data-activo={esActivo}
                 aria-label={`${platillo.nombre}. $${platillo.precio} pesos.${
-                  esActivo ? ' Seleccionado. Enter para pedir por WhatsApp.' : ''
+                  esActivo ? ' Seleccionado. Enter para pedirlo por WhatsApp.' : ''
                 }`}
                 tabIndex={esActivo ? 0 : -1}
                 onClick={() => {

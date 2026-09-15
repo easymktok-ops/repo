@@ -1,3 +1,4 @@
+import IconoTraza from './IconosTraza.jsx';
 import { trazabilidad } from '../data/contenido.js';
 
 /** Texto verbatim del manual de marca: no editar acá. */
@@ -12,17 +13,17 @@ export default function Trazabilidad() {
           ))}
         </header>
 
-        <ol className="traza__lista">
-          {trazabilidad.puntos.map((punto, i) => (
+        <ul className="traza__lista">
+          {trazabilidad.puntos.map((punto) => (
             <li key={punto.id} className="traza__punto" style={{ '--acento': punto.acento }}>
-              <span className="traza__numero" aria-hidden="true">
-                {String(i + 1).padStart(2, '0')}
+              <span className="traza__marca">
+                <IconoTraza id={punto.id} />
               </span>
               <h3>{punto.titulo}</h3>
               <p>{punto.texto}</p>
             </li>
           ))}
-        </ol>
+        </ul>
 
         <p className="traza__cierre">{trazabilidad.cierre}</p>
       </div>

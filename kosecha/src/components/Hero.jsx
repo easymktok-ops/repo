@@ -16,8 +16,8 @@ export default function Hero() {
             Comer sano <em>sí</em> sabe deli
           </h1>
           <p className="hero__bajada">
-            Girá la rueda, elegí tu Kosecha y cerrá el pedido por WhatsApp. Sin
-            carrito, sin vueltas: lo preparamos y te lo confirmamos en el chat.
+            Gira la rueda, elige tu Kosecha y pídela por WhatsApp. Te
+            confirmamos disponibilidad en el chat y te la preparamos.
           </p>
 
           <PanelPlatillo platillo={platillosRueda[activo]} refCta={refCta} />
@@ -31,7 +31,7 @@ export default function Hero() {
             onActivarCta={() => refCta.current?.click()}
           />
           <p className="hero__ayuda">
-            Tocá un platillo para girar la rueda · deslizá con el dedo · flechas ← →
+            Toca un platillo para traerlo al frente · arrastra la rueda · flechas ← →
           </p>
         </div>
       </div>

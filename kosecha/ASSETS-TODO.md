@@ -6,9 +6,11 @@ el dato, el bloque simplemente no se muestra.
 ## 1. Fotos de platillo (bloqueante para la rueda)
 
 La rueda del hero y las tarjetas del menú esperan **PNG recortados con fondo
-transparente**, al contorno del bowl. Mientras el archivo no exista se dibuja un
-placeholder circular con el color de la categoría, así que el sitio funciona
-igual, pero las fotos reales son el corazón del diseño.
+transparente**, al contorno del bowl. Mientras el archivo no exista, cada
+platillo se dibuja con los colores de sus propios ingredientes
+(`src/lib/paleta.js`), así que la rueda ya distingue una Kosecha de otra y el
+layout es real. Aun así son ilustraciones: las fotos son el corazón del diseño
+y hay que subirlas antes de publicar.
 
 Subir a `public/assets/platillos/` con estos nombres exactos (vienen de Drive ›
 Kosecha):
@@ -100,6 +102,6 @@ sí está confirmado en el moodboard de Drive.
 
 El texto del hero — "Comer sano sí sabe deli" y su bajada — lo escribí yo para
 llenar el hueco. Los textos de "Quiénes somos" y "Trazabilidad" sí son verbatim
-del manual.
+del manual. Todo el copy de interfaz habla de tú, como el manual.
 
 - [ ] Aprobar o reemplazar el copy del hero.

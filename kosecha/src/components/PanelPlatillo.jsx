@@ -38,21 +38,23 @@ export default function PanelPlatillo({ platillo, refCta }) {
       className={`panel ${visible ? 'panel--visible' : 'panel--saliendo'}`}
       style={{ '--acento': acento }}
     >
-      <p className="panel__categoria">
-        <span className="panel__punto" aria-hidden="true" />
-        {datos.etiqueta ?? categoria?.nombre}
-      </p>
+      <div className="panel__cuerpo">
+        <p className="panel__categoria">
+          <span className="panel__punto" aria-hidden="true" />
+          {datos.etiqueta ?? categoria?.nombre}
+        </p>
 
-      <div aria-live="polite" aria-atomic="true">
-        <h2 className="panel__nombre">{datos.nombre}</h2>
-        <p className="panel__descripcion">{datos.descripcion}</p>
+        <div aria-live="polite" aria-atomic="true">
+          <h2 className="panel__nombre">{datos.nombre}</h2>
+          <p className="panel__descripcion">{datos.descripcion}</p>
+        </div>
+
+        <ul className="panel__ingredientes">
+          {datos.ingredientes.map((ingrediente) => (
+            <li key={ingrediente}>{ingrediente}</li>
+          ))}
+        </ul>
       </div>
-
-      <ul className="panel__ingredientes">
-        {datos.ingredientes.map((ingrediente) => (
-          <li key={ingrediente}>{ingrediente}</li>
-        ))}
-      </ul>
 
       <div className="panel__pie">
         <p className="panel__precio">

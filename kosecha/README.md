@@ -19,11 +19,17 @@ npm run preview
 | `npm run build` | Build de producción en `dist/` |
 | `npm run lint` | oxlint |
 | `npm run optimizar` | Genera los `.webp` de `public/assets/` y avisa si una foto de platillo no tiene fondo transparente |
-| `npm run verificar` | Chequeo de humo en un navegador real (rueda, CTAs, teclado, reduced-motion). Necesita el dev server en el puerto 5179: `npx vite --port 5179` |
+| `npm run verificar` | Chequeo de humo en un navegador real (rueda, CTAs, teclado, reduced-motion) |
+| `npm run auditar` | Contraste medido de cada texto, blancos de click de 44px y desborde horizontal de 320 a 1920 |
+
+Los dos últimos necesitan el dev server en el puerto 5179 (`npx vite --port 5179`)
+y el chromium de Playwright (`npx playwright install chromium`).
 
 ## Cómo está armado
 
 ```
+PRODUCT.md          registro, usuarios, personalidad, anti-referencias
+DESIGN.md           sistema visual: color, tipografía, componentes, motion
 brand/
   BRAND.md          manual reconstruido desde el moodboard
   tokens.css        variables CSS (color, tipografía, espaciado, motion)
@@ -55,6 +61,13 @@ Cada platillo genera su propio enlace con el pedido ya escrito
 (`src/lib/whatsapp.js`). El CTA vive dentro del panel del platillo activo y
 cambia de destino con cada rotación. El número se puede pisar sin tocar código
 con la variable de entorno `VITE_WHATSAPP_NUMERO` (ver `.env.example`).
+
+## Accesibilidad
+
+WCAG 2.1 AA. Los acentos de marca no llegan a 4.5:1 sobre crema, así que para
+texto y botones se usan `--kos-naranja-hondo` y `--kos-lima-hondo`; los acentos
+originales solo pintan superficies. `npm run auditar` mide esto en el navegador
+y tiene que dar cero en las tres métricas.
 
 ## Antes de publicar
 

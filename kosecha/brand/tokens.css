@@ -24,6 +24,13 @@
   --kos-lima: #9abc1d;
   --kos-naranja: #eb611e;
 
+  /* Versiones para texto y botones: los acentos de marca no llegan a 4.5:1
+     sobre crema. Son el mismo tono, más hondo, medidos contra #FBF6EA:
+     naranja 4.7:1, lima 4.6:1. Los originales quedan para manchas de color. */
+  --kos-naranja-hondo: #ae4816;
+  --kos-naranja-hondo-hover: #963d11;
+  --kos-lima-hondo: #5c7111;
+
   /* --- Derivados (mezclas del par principal, sin colores nuevos) --- */
   --kos-verde-900: #11391d;
   --kos-verde-700: #174926;
@@ -31,6 +38,8 @@
   --kos-verde-120: rgba(26 83 43 / 0.12);
   --kos-crema-claro: #fbf6ea;
   --kos-crema-200: rgba(244 233 205 / 0.2);
+  /* Sobre verde: 78% da 5.3:1, 65% se queda en 4.2:1. */
+  --kos-crema-texto: color-mix(in srgb, #f4e9cd 80%, transparent);
   --kos-tinta: #142016;
   --kos-tinta-suave: rgba(20 32 22 / 0.68);
   --kos-blanco: #ffffff;
@@ -72,10 +81,17 @@
   --kos-sombra-media: 0 16px 40px rgba(20 32 22 / 0.14);
   --kos-sombra-bowl: 0 26px 48px rgba(20 32 22 / 0.28);
 
-  /* --- Movimiento (la rueda) --- */
+  /* --- Movimiento --- */
+  /* La rueda es la pieza narrativa: puede durar. Todo lo demás responde
+     al dedo y vive por debajo de los 300 ms. */
   --kos-ease-rueda: cubic-bezier(0.22, 1, 0.36, 1);
+  --kos-ease-ui: cubic-bezier(0.23, 1, 0.32, 1);
   --kos-dur-rueda: 800ms;
-  --kos-dur-fade: 220ms;
+  --kos-dur-bowl: 420ms;
+  --kos-dur-sale: 180ms;
+  --kos-dur-entra: 260ms;
+  --kos-dur-press: 140ms;
+  --kos-dur-hover: 200ms;
 
   /* --- Layout --- */
   --kos-ancho-max: 1180px;

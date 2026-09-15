@@ -1,39 +1,72 @@
 import { useState } from 'react';
 import { acentoDe } from '../data/platillos.js';
+import { paletaDe, semilla } from '../lib/paleta.js';
+
+/** Bowl dibujado con los colores de los ingredientes del platillo. */
+function BowlDibujado({ platillo, tamano }) {
+  const colores = paletaDe(platillo);
+  const azar = semilla(platillo.id);
+  const acento = acentoDe(platillo.categoria);
+
+  // Dos anillos de ingredientes, sembrados con ruido determinístico.
+  const trozos = [];
+  const anillos = [
+    { radio: 17, cantidad: 7, tamanoBase: 6.5 },
+    { radio: 29, cantidad: 11, tamanoBase: 5.5 },
+  ];
+  for (const anillo of anillos) {
+    for (let i = 0; i < anillo.cantidad; i += 1) {
+      const angulo = (i / anillo.cantidad) * Math.PI * 2 + azar() * 0.5;
+      const radio = anillo.radio + (azar() - 0.5) * 7;
+      trozos.push({
+        cx: 50 + Math.cos(angulo) * radio,
+        cy: 50 + Math.sin(angulo) * radio,
+        r: anillo.tamanoBase * (0.7 + azar() * 0.6),
+        fill: colores[Math.floor(azar() * colores.length)],
+        rotacion: azar() * 90,
+      });
+    }
+  }
+
+  return (
+    <svg
+      className="bowl"
+      viewBox="0 0 100 100"
+      width={tamano}
+      height={tamano}
+      role="img"
+      aria-label={`${platillo.nombre}: ilustración provisional con los colores de sus ingredientes`}
+    >
+      <circle cx="50" cy="50" r="48" fill="#ffffff" />
+      <circle cx="50" cy="50" r="48" fill="none" stroke={acento} strokeOpacity="0.35" strokeWidth="1.5" />
+      <circle cx="50" cy="50" r="41" fill="#f7f2e4" />
+      <circle cx="50" cy="50" r="38" fill={colores[0]} fillOpacity="0.22" />
+      {trozos.map((t, i) => (
+        <rect
+          key={`${platillo.id}-${i}`}
+          x={t.cx - t.r}
+          y={t.cy - t.r}
+          width={t.r * 2}
+          height={t.r * 2}
+          rx={t.r * 0.62}
+          fill={t.fill}
+          transform={`rotate(${t.rotacion} ${t.cx} ${t.cy})`}
+        />
+      ))}
+    </svg>
+  );
+}
 
 /**
  * Foto del platillo. Espera un PNG recortado con fondo transparente en
  * /assets/platillos/ (y su .webp hermano, que genera scripts/optimizar-imagenes.mjs).
- * Mientras el archivo no exista, dibuja un placeholder circular con el color
- * de la categoría — así el layout es real desde el día uno.
+ * Mientras el archivo no exista, dibuja el bowl de arriba.
  */
 export default function FotoPlatillo({ platillo, tamano = 320, prioridad = false, className = '' }) {
   const [falla, setFalla] = useState(false);
-  const acento = acentoDe(platillo.categoria);
 
   if (falla || !platillo.imagen) {
-    return (
-      <span
-        className={`foto-placeholder ${className}`}
-        style={{ '--acento': acento, width: tamano, height: tamano }}
-        role="img"
-        aria-label={`${platillo.nombre} (foto pendiente)`}
-      >
-        <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">
-          <circle cx="50" cy="50" r="46" className="foto-placeholder__plato" />
-          <path
-            d="M50 22c12 0 22 6 26 15-8 5-17 7-26 7s-18-2-26-7c4-9 14-15 26-15Z"
-            className="foto-placeholder__hoja"
-          />
-          <circle cx="36" cy="58" r="7" className="foto-placeholder__semilla" />
-          <circle cx="58" cy="62" r="9" className="foto-placeholder__semilla" />
-          <circle cx="68" cy="47" r="5" className="foto-placeholder__semilla" />
-        </svg>
-        <span className="foto-placeholder__inicial" aria-hidden="true">
-          {(platillo.nombre.trim().split(/\s+/).pop() ?? '').charAt(0).toUpperCase()}
-        </span>
-      </span>
-    );
+    return <BowlDibujado platillo={platillo} tamano={tamano} />;
   }
 
   const webp = platillo.imagen.replace(/\.png$/i, '.webp');

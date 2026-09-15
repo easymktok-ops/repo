@@ -10,7 +10,7 @@ export default function Footer() {
           <Logo monograma alto={56} />
         </span>
         <div className="pie__cols">
-          <p className="pie__frase">Comer sano, de la tierra de Libres a tu plato.</p>
+          <p className="pie__frase">De la tierra de Libres a tu plato.</p>
           <ul className="pie__enlaces">
             <li>
               <a href={linkWhatsAppGeneral()} target="_blank" rel="noopener">
