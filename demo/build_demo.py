@@ -46,14 +46,23 @@ MODELS = {
 with open(os.path.join(A, "balloon-cursor.svg"), "r", encoding="utf-8") as f:
     CURSOR_SVG = f.read().strip()
 
-# Cursor como data URI (para los globitos del parallax, usados varias veces)
+# Cursor como data URI (para el cursor mascota)
 CURSOR_URI = datauri(os.path.join(A, "balloon-cursor.svg"), "image/svg+xml")
+
+# Globos REALES recortados (PNG con transparencia) para el parallax
+png = lambda p: datauri(p, "image/png")
+CUTS = {
+    "@@CUTSMILE@@": png(os.path.join(A, "globos", "globo-smile.png")),
+    "@@CUTSTAR@@": png(os.path.join(A, "globos", "globo-star.png")),
+}
 
 src = open(os.path.join(ROOT, "demo", "_inner.html"), "r", encoding="utf-8").read()
 
 for token, uri in IMAGES.items():
     src = src.replace(token, uri)
 for token, uri in MODELS.items():
+    src = src.replace(token, uri)
+for token, uri in CUTS.items():
     src = src.replace(token, uri)
 src = src.replace("@@LOGO@@", LOGO_IMG)
 src = src.replace("@@CURSORURI@@", CURSOR_URI)

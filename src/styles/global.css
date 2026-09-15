@@ -266,6 +266,12 @@ input:focus-visible,
 /* ── Globos decorativos con parallax (sutil, detrás del contenido) ── */
 .parallax-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
 .parallax-balloon { position: absolute; will-change: transform; }
+/* En móvil solo asomamos 2 globos (esquinas opuestas) y más tenues */
+@media (max-width: 640px) {
+  .parallax-balloon:nth-child(2),
+  .parallax-balloon:nth-child(3) { display: none; }
+  .parallax-balloon { opacity: 0.7 !important; }
+}
 
 /* ── Reduced motion: todo estático, cursor nativo ───────────── */
 @media (prefers-reduced-motion: reduce) {

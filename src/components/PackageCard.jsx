@@ -230,17 +230,17 @@ export default function PackageCard(pkg) {
   // ── Variante estándar ─────────────────────────────────────────
   return (
     <article
-      className="group relative flex h-full flex-col rounded-blob border-2 border-ink bg-white p-6 shadow-card transition-all duration-200 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-cardHover sm:p-7"
+      className="group relative flex h-full flex-col overflow-hidden rounded-blob border-2 border-ink bg-white p-6 shadow-card transition-all duration-200 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-cardHover sm:p-7"
     >
-      {/* franja de color superior */}
+      {/* franja de color superior (recortada por el overflow del article) */}
       <span
-        className="absolute inset-x-0 top-0 h-2.5 rounded-t-blob"
+        className="absolute inset-x-0 top-0 h-2.5"
         style={{ background: accent }}
         aria-hidden="true"
       />
 
       {badge && (
-        <span className="absolute -right-2 -top-3 rotate-3 rounded-full border-2 border-ink bg-yellow px-3 py-1 font-sub text-xs font-bold text-ink shadow-pop">
+        <span className="absolute right-3 top-3 rotate-3 rounded-full border-2 border-ink bg-yellow px-3 py-1 font-sub text-xs font-bold text-ink shadow-pop">
           {badge}
         </span>
       )}

@@ -12,7 +12,7 @@ export const asset = (p) => `${BASE}${p}`.replace(/\/{2,}/g, '/');
 export const contact = {
   whatsappPhone: '525656531771', // +52 56 56531771 (dato del cliente ✓)
   whatsappDisplay: '+52 56 5653 1771',
-  email: 'info@happypuerto.com', // dato confirmado por el cliente ✓
+  email: 'Ventas@happypuerto.com', // dato confirmado por el cliente ✓
   address: 'Camino Campestre S/N, San Martín de las Pirámides, Estado de México',
   mapsQuery: 'Camino Campestre S/N, San Martín de las Pirámides',
 };
