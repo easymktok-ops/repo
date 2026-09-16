@@ -263,14 +263,18 @@ input:focus-visible,
 .topbar-item svg { color: var(--yellow); flex-shrink: 0; }
 @media (max-width: 640px) { .topbar-inner { font-size: 12px; gap: 5px 14px; padding: 7px 12px; } }
 
-/* ── Globos decorativos con parallax (sutil, detrás del contenido) ── */
-.parallax-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
-.parallax-balloon { position: absolute; will-change: transform; }
-/* En móvil solo asomamos 2 globos (esquinas opuestas), más chicos y tenues */
+/* ── Globos con parallax ENFRENTE de las tarjetas (como magicballoons) ── */
+/* pointer-events:none
+   deja pasar los toques; overflow visible para que no se recorten al frente. */
+.parallax-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 6; }
+.parallax-balloon { position: absolute; will-change: transform; filter: drop-shadow(0 12px 22px rgba(29,29,29,.22)); }
+/* En móvil: 3 globos repartidos SOBRE las tarjetas (bordes alternados) */
 @media (max-width: 640px) {
-  .parallax-balloon:nth-child(2),
-  .parallax-balloon:nth-child(3) { display: none; }
-  .parallax-balloon { opacity: 0.6 !important; width: 190px !important; }
+  .parallax-balloon { width: 175px !important; }
+  .parallax-balloon:nth-child(4) { display: none !important; }
+  .parallax-balloon:nth-child(1) { top: 7% !important; right: -8% !important; left: auto !important; bottom: auto !important; }
+  .parallax-balloon:nth-child(2) { top: 40% !important; right: -9% !important; left: auto !important; bottom: auto !important; }
+  .parallax-balloon:nth-child(3) { top: 53% !important; right: -8% !important; left: auto !important; bottom: auto !important; }
 }
 
 /* ── Reduced motion: todo estático, cursor nativo ───────────── */

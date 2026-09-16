@@ -11,12 +11,12 @@ const gStar = `${BASE}assets/globos/globo-star.png`.replace(/\/{2,}/g, '/');
   <div class="pointer-events-none absolute -left-16 top-24 h-40 w-40 rounded-full bg-mint/25 blur-2xl" aria-hidden="true"></div>
   <div class="pointer-events-none absolute right-0 top-1/2 h-52 w-52 rounded-full bg-sky/20 blur-3xl" aria-hidden="true"></div>
 
-  <!-- Globos REALES recortados con parallax (grandes, hacia el centro) -->
+  <!-- Globos REALES recortados con parallax, ENFRENTE de las tarjetas -->
   <div class="parallax-layer" aria-hidden="true">
-    <img src={gSmile} class="parallax-balloon" data-speed="0.13" style="left:1%;top:-1%;width:470px;opacity:.95;transform:rotate(-6deg)" alt="" />
-    <img src={gStar} class="parallax-balloon" data-speed="0.22" style="right:0%;top:7%;width:410px;opacity:.92;transform:rotate(5deg)" alt="" />
-    <img src={gStar} class="parallax-balloon" data-speed="0.10" style="left:2%;bottom:2%;width:360px;opacity:.9;transform:rotate(4deg)" alt="" />
-    <img src={gSmile} class="parallax-balloon" data-speed="0.18" style="right:0%;bottom:-1%;width:440px;opacity:.92;transform:rotate(-5deg)" alt="" />
+    <img src={gSmile} class="parallax-balloon" data-speed="0.13" style="left:-11%;top:3%;width:300px;opacity:1;transform:rotate(-6deg)" alt="" />
+    <img src={gStar} class="parallax-balloon" data-speed="0.20" style="right:-10%;top:9%;width:300px;opacity:1;transform:rotate(5deg)" alt="" />
+    <img src={gStar} class="parallax-balloon" data-speed="0.10" style="left:-11%;bottom:4%;width:260px;opacity:1;transform:rotate(4deg)" alt="" />
+    <img src={gSmile} class="parallax-balloon" data-speed="0.17" style="right:-10%;bottom:1%;width:300px;opacity:1;transform:rotate(-5deg)" alt="" />
   </div>
 
   <div class="relative mx-auto max-w-7xl px-4 sm:px-6">
@@ -78,7 +78,9 @@ const gStar = `${BASE}assets/globos/globo-star.png`.replace(/\/{2,}/g, '/');
       balloons.forEach((el) => {
         const speed = parseFloat(el.getAttribute('data-speed')) || 0;
         const base = el.getAttribute('data-rot') || '';
-        el.style.transform = `translate3d(0, ${(-center * speed).toFixed(1)}px, 0) ${base}`;
+        let ty = -center * speed;
+        if (ty > 64) ty = 64; else if (ty < -64) ty = -64; // desplazamiento sutil, estable
+        el.style.transform = `translate3d(0, ${ty.toFixed(1)}px, 0) ${base}`;
       });
     };
 
