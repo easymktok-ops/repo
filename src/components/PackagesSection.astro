@@ -11,12 +11,12 @@ const gStar = `${BASE}assets/globos/globo-star.png`.replace(/\/{2,}/g, '/');
   <div class="pointer-events-none absolute -left-16 top-24 h-40 w-40 rounded-full bg-mint/25 blur-2xl" aria-hidden="true"></div>
   <div class="pointer-events-none absolute right-0 top-1/2 h-52 w-52 rounded-full bg-sky/20 blur-3xl" aria-hidden="true"></div>
 
-  <!-- Globos REALES recortados con parallax, ENFRENTE de las tarjetas -->
+  <!-- Globos REALES enfrente, concentrados ARRIBA: el 1º casi estático,
+       el 2º con más desplazamiento; suben al hacer scroll dejando limpias
+       las tarjetas de abajo (como magicballoons) -->
   <div class="parallax-layer" aria-hidden="true">
-    <img src={gSmile} class="parallax-balloon" data-speed="0.13" style="left:-11%;top:3%;width:300px;opacity:1;transform:rotate(-6deg)" alt="" />
-    <img src={gStar} class="parallax-balloon" data-speed="0.20" style="right:-10%;top:9%;width:300px;opacity:1;transform:rotate(5deg)" alt="" />
-    <img src={gStar} class="parallax-balloon" data-speed="0.10" style="left:-11%;bottom:4%;width:260px;opacity:1;transform:rotate(4deg)" alt="" />
-    <img src={gSmile} class="parallax-balloon" data-speed="0.17" style="right:-10%;bottom:1%;width:300px;opacity:1;transform:rotate(-5deg)" alt="" />
+    <img src={gSmile} class="parallax-balloon" data-speed="0.05" style="left:-9%;top:6%;width:310px;opacity:1;transform:rotate(-6deg)" alt="" />
+    <img src={gStar} class="parallax-balloon" data-speed="0.15" style="right:-8%;top:1%;width:260px;opacity:1;transform:rotate(5deg)" alt="" />
   </div>
 
   <div class="relative mx-auto max-w-7xl px-4 sm:px-6">
@@ -54,9 +54,9 @@ const gStar = `${BASE}assets/globos/globo-star.png`.replace(/\/{2,}/g, '/');
 </section>
 
 <script>
-  // Parallax sutil de los globitos detrás de las tarjetas.
-  // Se mueven a distintas velocidades según data-speed cuando la sección
-  // cruza el viewport. Respeta prefers-reduced-motion y solo corre si hay globos.
+  // Parallax: los globos SUBEN al hacer scroll (más desplazamiento a mayor
+  // data-speed), dejando limpias las tarjetas de abajo. Respeta
+  // prefers-reduced-motion y solo corre si hay globos.
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const section = document.getElementById('paquetes');
   const balloons = section
@@ -70,16 +70,13 @@ const gStar = `${BASE}assets/globos/globo-star.png`.replace(/\/{2,}/g, '/');
       ticking = false;
       const rect = section.getBoundingClientRect();
       const vh = window.innerHeight || document.documentElement.clientHeight;
-      // 0 cuando el centro de la sección está en el centro del viewport;
-      // negativo al subir, positivo al bajar.
-      const center = rect.top + rect.height / 2 - vh / 2;
-      // Solo animamos si la sección está (casi) en pantalla.
-      if (rect.bottom < -200 || rect.top > vh + 200) return;
+      if (rect.bottom < -600 || rect.top > vh + 400) return;
+      const scrolled = -rect.top; // crece al hacer scroll hacia abajo en la sección
       balloons.forEach((el) => {
         const speed = parseFloat(el.getAttribute('data-speed')) || 0;
         const base = el.getAttribute('data-rot') || '';
-        let ty = -center * speed;
-        if (ty > 64) ty = 64; else if (ty < -64) ty = -64; // desplazamiento sutil, estable
+        let ty = -scrolled * speed; // negativo = sube
+        if (ty > 220) ty = 220; else if (ty < -900) ty = -900;
         el.style.transform = `translate3d(0, ${ty.toFixed(1)}px, 0) ${base}`;
       });
     };

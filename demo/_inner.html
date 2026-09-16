@@ -168,12 +168,9 @@
   .parallax-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 6; }
   .parallax-balloon { position: absolute; will-change: transform; filter: drop-shadow(0 12px 22px rgba(29,29,29,.22)); }
   @media (max-width: 640px){
-    /* En móvil: 3 globos repartidos SOBRE las tarjetas (bordes alternados) */
-    .parallax-balloon{ width: 175px !important; }
-    .parallax-balloon:nth-child(4){ display: none !important; }
-    .parallax-balloon:nth-child(1){ top: 7% !important; right: -8% !important; left: auto !important; bottom: auto !important; }
-    .parallax-balloon:nth-child(2){ top: 40% !important; right: -9% !important; left: auto !important; bottom: auto !important; }
-    .parallax-balloon:nth-child(3){ top: 53% !important; right: -8% !important; left: auto !important; bottom: auto !important; }
+    /* En móvil: 2 globos arriba (sobre la 1ª tarjeta y el cielo), suben al scroll */
+    .parallax-balloon:nth-child(1){ top: 7% !important; right: -9% !important; left: auto !important; bottom: auto !important; width: 185px !important; }
+    .parallax-balloon:nth-child(2){ top: 1% !important; left: -8% !important; right: auto !important; bottom: auto !important; width: 140px !important; }
   }
 
   /* ---------- Steps ---------- */
@@ -383,12 +380,12 @@
   <div class="blob" style="width:180px;height:180px;left:-40px;top:80px;background:rgba(111,216,164,.28)"></div>
   <div class="blob" style="width:220px;height:220px;right:0;top:50%;background:rgba(127,199,232,.22)"></div>
 
-  <!-- Globos REALES recortados con parallax (grandes, hacia el centro) -->
+  <!-- Globos REALES enfrente, concentrados ARRIBA: el 1º casi estático,
+       el 2º con más desplazamiento; suben al hacer scroll dejando limpias
+       las tarjetas de abajo (como magicballoons) -->
   <div class="parallax-layer" aria-hidden="true">
-    <img src="@@CUTSMILE@@" class="parallax-balloon" data-speed="0.13" style="left:-11%;top:3%;width:300px;opacity:1;transform:rotate(-6deg)" alt="" />
-    <img src="@@CUTSTAR@@" class="parallax-balloon" data-speed="0.20" style="right:-10%;top:9%;width:300px;opacity:1;transform:rotate(5deg)" alt="" />
-    <img src="@@CUTSTAR@@" class="parallax-balloon" data-speed="0.10" style="left:-11%;bottom:4%;width:260px;opacity:1;transform:rotate(4deg)" alt="" />
-    <img src="@@CUTSMILE@@" class="parallax-balloon" data-speed="0.17" style="right:-10%;bottom:1%;width:300px;opacity:1;transform:rotate(-5deg)" alt="" />
+    <img src="@@CUTSMILE@@" class="parallax-balloon" data-speed="0.05" style="left:-9%;top:6%;width:310px;opacity:1;transform:rotate(-6deg)" alt="" />
+    <img src="@@CUTSTAR@@" class="parallax-balloon" data-speed="0.15" style="right:-8%;top:1%;width:260px;opacity:1;transform:rotate(5deg)" alt="" />
   </div>
 
   <div class="wrap" style="position:relative">
@@ -892,7 +889,7 @@
   function evalCursor(){ if(mqDesktop.matches && !mqReduce.matches) enable(); else disable(); }
   evalCursor(); mqDesktop.addEventListener('change', evalCursor); mqReduce.addEventListener('change', evalCursor);
 
-  // ---- Parallax sutil de los globitos detrás de las tarjetas ----
+  // ---- Parallax: los globos SUBEN al hacer scroll (dejan la card limpia) ----
   (function(){
     if (mqReduce.matches) return;
     var section = document.getElementById('paquetes');
@@ -908,13 +905,13 @@
       ticking = false;
       var rect = section.getBoundingClientRect();
       var vh = window.innerHeight || document.documentElement.clientHeight;
-      if (rect.bottom < -200 || rect.top > vh + 200) return;
-      var center = rect.top + rect.height/2 - vh/2;
+      if (rect.bottom < -600 || rect.top > vh + 400) return;
+      var scrolled = -rect.top; // crece al hacer scroll hacia abajo dentro de la sección
       balloons.forEach(function(el){
         var speed = parseFloat(el.getAttribute('data-speed')) || 0;
         var base = el.getAttribute('data-rot') || '';
-        var ty = -center * speed;
-        if (ty > 64) ty = 64; else if (ty < -64) ty = -64; // desplazamiento sutil, estable
+        var ty = -scrolled * speed; // negativo = sube; a mayor speed, más desplazamiento
+        if (ty > 220) ty = 220; else if (ty < -900) ty = -900;
         el.style.transform = 'translate3d(0,'+ty.toFixed(1)+'px,0) '+base;
       });
     }
