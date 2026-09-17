@@ -1,14 +1,14 @@
+import { NUMERO_WHATSAPP_POR_DEFECTO } from '../data/negocio.js';
+
 /**
  * Generación de enlaces de WhatsApp.
  *
- * El número vive acá y en ningún otro lado. Para cambiarlo sin tocar código,
- * definir VITE_WHATSAPP_NUMERO en el entorno de build (.env / panel del host).
- *
- * Formato: código de país + número, solo dígitos. México: 52 + 10 dígitos.
- * Fuente del número: documento MENÚ (WhatsApp: 276 112 0304).
+ * El número sale de src/data/negocio.js, que también leen los scripts de SEO.
+ * Para cambiarlo sin tocar código, definir VITE_WHATSAPP_NUMERO en el entorno
+ * de build (.env o el panel del hosting).
  */
 export const NUMERO_WHATSAPP =
-  import.meta.env.VITE_WHATSAPP_NUMERO ?? '522761120304';
+  import.meta.env.VITE_WHATSAPP_NUMERO ?? NUMERO_WHATSAPP_POR_DEFECTO;
 
 const base = (texto) =>
   `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(texto)}`;

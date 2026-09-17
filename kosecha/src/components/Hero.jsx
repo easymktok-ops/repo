@@ -11,8 +11,8 @@ export default function Hero() {
     <section className="hero" id="inicio">
       <div className="hero__interior">
         <div className="hero__texto">
-          <p className="hero__kicker">Comida sana en Libres, Puebla</p>
           <h1 className="hero__titulo">
+            <span className="hero__kicker">Comida sana en Libres, Puebla</span>
             Comer sano <em>sí</em> sabe deli
           </h1>
           <p className="hero__bajada">

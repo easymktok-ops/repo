@@ -57,8 +57,9 @@ export const trazabilidad = {
 };
 
 /**
- * Datos de contacto. Fuente: documento MENÚ (Drive › Kosecha).
- * PENDIENTE: dirección exacta y horarios — ver ASSETS-TODO.md.
+ * Datos de contacto. Fuente: documento MENÚ (Drive › Kosecha) y la ficha de
+ * Google Maps del local.
+ * PENDIENTE: dirección en texto y horarios — ver ASSETS-TODO.md.
  */
 export const contacto = {
   ciudad: 'Libres, Puebla',
@@ -70,4 +71,13 @@ export const contacto = {
   webUrl: 'https://www.kosecha.fit',
   direccion: null, // TODO: calle, número, colonia y CP en Libres
   horarios: null, // TODO: horarios de atención
+  coordenadas: { lat: 19.4582082, lng: -97.6876632 },
+};
+
+/** El local en Google Maps. El embed sale de la ficha del negocio. */
+export const mapa = {
+  embed:
+    'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3761.9387319904467!2d-97.6876632!3d19.458208199999998!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85daadc86ff41d9d%3A0xfe727428e98a8d5d!2sKosecha!5e0!3m2!1ses!2smx!4v1789681895239!5m2!1ses!2smx',
+  ver: `https://www.google.com/maps/search/?api=1&query=${contacto.coordenadas.lat},${contacto.coordenadas.lng}`,
+  comoLlegar: `https://www.google.com/maps/dir/?api=1&destination=${contacto.coordenadas.lat},${contacto.coordenadas.lng}`,
 };

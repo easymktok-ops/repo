@@ -3,6 +3,7 @@ import Hero from './components/Hero.jsx';
 import MenuCompleto from './components/MenuCompleto.jsx';
 import QuienesSomos from './components/QuienesSomos.jsx';
 import Trazabilidad from './components/Trazabilidad.jsx';
+import Preguntas from './components/Preguntas.jsx';
 import Ubicacion from './components/Ubicacion.jsx';
 import Footer from './components/Footer.jsx';
 
@@ -15,6 +16,7 @@ export default function App() {
         <MenuCompleto />
         <QuienesSomos />
         <Trazabilidad />
+        <Preguntas />
         <Ubicacion />
       </main>
       <Footer />

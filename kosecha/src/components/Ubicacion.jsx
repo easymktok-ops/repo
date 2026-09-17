@@ -1,9 +1,6 @@
 import BotonWhatsApp from './BotonWhatsApp.jsx';
-import { contacto } from '../data/contenido.js';
-
-const mapaUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-  'Kosecha Libres Puebla',
-)}`;
+import { contacto, mapa } from '../data/contenido.js';
+import { NUMERO_WHATSAPP } from '../lib/whatsapp.js';
 
 export default function Ubicacion() {
   return (
@@ -31,7 +28,9 @@ export default function Ubicacion() {
             ) : null}
             <div>
               <dt>WhatsApp</dt>
-              <dd>{contacto.whatsappVisible}</dd>
+              <dd>
+                <a href={`tel:+${NUMERO_WHATSAPP}`}>{contacto.whatsappVisible}</a>
+              </dd>
             </div>
             <div>
               <dt>Instagram</dt>
@@ -43,16 +42,30 @@ export default function Ubicacion() {
             </div>
           </dl>
 
-          <BotonWhatsApp origen="ubicacion">Pedir por WhatsApp</BotonWhatsApp>
+          <div className="ubicacion__acciones">
+            <BotonWhatsApp origen="ubicacion">Pedir por WhatsApp</BotonWhatsApp>
+            <a
+              className="btn-wa btn-wa--linea"
+              href={mapa.comoLlegar}
+              target="_blank"
+              rel="noopener"
+            >
+              Cómo llegar
+            </a>
+          </div>
         </div>
 
-        <a className="ubicacion__mapa" href={mapaUrl} target="_blank" rel="noopener">
-          <span className="ubicacion__mapa-pin" aria-hidden="true" />
-          <span className="ubicacion__mapa-texto">
-            Libres, Puebla
-            <small>Abrir en Google Maps</small>
-          </span>
-        </a>
+        {/* El iframe es de Google: con loading="lazy" no pide nada hasta que la
+            sección se acerca al viewport. */}
+        <div className="ubicacion__mapa">
+          <iframe
+            src={mapa.embed}
+            title="Kosecha en el mapa de Libres, Puebla"
+            loading="lazy"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allowFullScreen
+          />
+        </div>
       </div>
     </section>
   );

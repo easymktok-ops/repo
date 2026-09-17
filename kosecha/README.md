@@ -21,6 +21,7 @@ npm run preview
 | `npm run recortar` | Recorta las fotos de `assets-origen/platillos/` sobre su fondo blanco y genera webp de 480 y 900px con PNG de respaldo |
 | `npm run optimizar` | Genera los `.webp` de `public/assets/` y avisa si una foto no tiene fondo transparente |
 | `npm run fuentes` | Vuelve a bajar Poppins de Google Fonts a `public/fonts/` para auto-hospedarla |
+| `npm run seo` | Regenera el JSON-LD, el sitemap y el robots desde `src/data/` (corre solo antes de cada build) |
 | `npm run exportar` | Arma `export/kosecha-sitio.zip`, el paquete para subir a mano a un hosting |
 | `npm run verificar` | Chequeo de humo en un navegador real (rueda, CTAs, teclado, reduced-motion) |
 | `npm run auditar` | Contraste medido de cada texto, blancos de click de 44px y desborde horizontal de 320 a 1920 |
@@ -77,6 +78,28 @@ Cada platillo genera su propio enlace con el pedido ya escrito
 (`src/lib/whatsapp.js`). El CTA vive dentro del panel del platillo activo y
 cambia de destino con cada rotación. El número se puede pisar sin tocar código
 con la variable de entorno `VITE_WHATSAPP_NUMERO` (ver `.env.example`).
+
+## SEO local
+
+El negocio vive de que lo encuentren en Libres, así que los datos estructurados
+se generan desde `src/data/` en vez de escribirse a mano en el head: el menú,
+los precios y el teléfono ya viven ahí, y un schema que miente sobre el precio
+es peor que no tener schema.
+
+`npm run seo` escribe en `index.html` un JSON-LD con:
+
+- **Restaurant**: nombre, teléfono, coordenadas, mapa, Instagram, zona de
+  cobertura, y el menú completo como `Menu` → `MenuSection` → `MenuItem` con
+  precio en MXN.
+- **FAQPage**: las mismas preguntas que se ven en la página (Google solo acepta
+  el schema si el contenido está visible).
+- **WebPage**.
+
+Y genera `public/sitemap.xml` y `public/robots.txt`.
+
+Lo que no está confirmado no se declara: sin horarios no hay
+`openingHoursSpecification`, sin dirección en texto el schema lleva localidad y
+coordenadas. Ver `ASSETS-TODO.md`.
 
 ## Accesibilidad
 

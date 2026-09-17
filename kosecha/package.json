@@ -13,7 +13,9 @@
     "auditar": "node scripts/auditar-a11y.mjs",
     "recortar": "node scripts/recortar-platillos.mjs",
     "fuentes": "node scripts/traer-fuentes.mjs",
-    "exportar": "node scripts/exportar.mjs"
+    "exportar": "node scripts/exportar.mjs",
+    "seo": "node scripts/generar-seo.mjs",
+    "prebuild": "node scripts/generar-seo.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",

@@ -18,6 +18,14 @@ inventado en el código: donde no hay dato, el bloque no se muestra.
   no depende de fonts.googleapis.com, que además es un request que bloquea el
   render.
 - **Video de referencia** en `reference/nutri-bowls.mp4`, analizado.
+- **Mapa del local.** El embed de la ficha de Google Maps está en la sección de
+  ubicación, con `loading="lazy"`: no pide nada a Google hasta que la sección
+  entra en pantalla. De ahí salen también las coordenadas del schema
+  (19.4582082, -97.6876632) y el botón "Cómo llegar".
+- **SEO local**: JSON-LD de Restaurant con el menú completo y sus precios,
+  FAQPage, WebPage, sitemap.xml, robots.txt, imagen para compartir en WhatsApp
+  e Instagram (`og.jpg`) y metadatos geográficos. Todo generado desde
+  `src/data/` por `npm run seo`, que corre solo antes de cada build.
 
 ## 1. Tipografía display
 
@@ -39,18 +47,25 @@ así que estos siguen abiertos:
 
 ## 3. Ubicación y contacto
 
-- [ ] **Dirección exacta en Libres** (calle, número, colonia, CP). Hoy el sitio
-      dice "Cobertura en Libres, Puebla" y el JSON-LD lleva localidad, no calle.
-- [ ] **Horarios de atención**, para la sección y para el
-      `openingHoursSpecification`.
+- [ ] **Dirección exacta en Libres** (calle, número, colonia, CP). El mapa ya
+      ubica el local, pero el schema lleva localidad y coordenadas, no calle.
+      Google Business Profile la pide igual que el sitio: conviene que digan
+      exactamente lo mismo, letra por letra.
+- [ ] **Horarios de atención**. Es lo que más falta para el SEO local: sin
+      ellos no se declara `openingHoursSpecification` y Google no puede mostrar
+      "Abierto ahora" en los resultados. Un horario inventado manda gente al
+      local cuando está cerrado, así que el schema lo omite a propósito.
+- [ ] **¿Hay entrega a domicilio?** Si la hay, se declara el área y el tipo de
+      servicio; hoy el schema solo dice que se retira en el local.
 - [ ] Confirmar que el WhatsApp de pedidos es **+52 276 112 0304**
       (`wa.me/522761120304`), en `src/lib/whatsapp.js` o en
       `VITE_WHATSAPP_NUMERO`.
 
 ## 4. Fotos que todavía no hay
 
-- [ ] Foto para "Quiénes somos" en `public/assets/fotos/equipo.jpg` (4:5).
-      Mientras no esté, ese lugar muestra un marco vacío.
+- [ ] Foto de la fachada para "Quiénes somos" en
+      `public/assets/fotos/fachada.jpg`. Mientras no esté, ese lugar muestra un
+      marco vacío. Se puede subir directo desde GitHub a esa carpeta.
 - [ ] Foto propia por variante de sándwich: los 5 comparten `sandwich.png`.
 
 ## 5. Manual de marca
@@ -60,10 +75,16 @@ así que estos siguen abiertos:
       porque los originales no llegan a 4.5:1 sobre crema.
 - [ ] Faltan las 4 capturas de `web-reference/` que menciona el brief.
 
-## 6. Medición
+## 6. Medición y presencia
 
 - [ ] ID de GA4 o Pixel de Meta. `src/lib/analytics.js` ya dispara
       `pedido_whatsapp` con el id del platillo; falta cargar el tag.
+- [ ] **Google Business Profile.** El sitio ya declara todo lo que la ficha
+      necesita, pero quien mueve la aguja en búsquedas locales es la ficha:
+      conviene reclamarla, poner el mismo nombre, teléfono y dirección que el
+      sitio, subir estas mismas fotos y enlazar kosecha.fit.
+- [ ] **Search Console.** Dar de alta el dominio y mandar
+      `https://www.kosecha.fit/sitemap.xml`.
 
 ## 7. Copy nuevo (no es copy aprobado)
 

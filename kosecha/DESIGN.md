@@ -64,6 +64,10 @@ como una plantilla de tarjetas iguales.
 - **Pills de categoría**: filtro del menú, 44px, punto de color + nombre.
 - **Bowl dibujado**: ilustración de respaldo generada con los colores de los
   ingredientes. Solo aparece si la foto falta o falla.
+- **Preguntas frecuentes**: `<details>` nativo, sin JavaScript. Se abre con
+  teclado y con lector de pantalla; el signo más gira hasta la cruz al abrir.
+- **Mapa**: iframe de Google con `loading="lazy"`, en un marco 4:3 redondeado.
+  Hasta que la sección se acerca al viewport, la página no pide nada a Google.
 
 ## Movimiento
 

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="apple-touch-icon" href="./apple-touch-icon.png" />
     <meta name="theme-color" content="#1A532B" />
 
     <title>Kosecha · Ensaladas y comida sana en Libres, Puebla</title>
@@ -22,7 +23,21 @@
       content="Elige tu ensalada y pídela por WhatsApp. Verdes locales, fruits & veggies de temporada y cero desperdicio."
     />
     <meta property="og:url" content="https://www.kosecha.fit/" />
+    <meta property="og:image" content="https://www.kosecha.fit/og.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Kosecha, comida sana en Libres, Puebla: una ensalada servida en plato blanco"
+    />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://www.kosecha.fit/og.jpg" />
+
+    <!-- Señales de negocio local -->
+    <meta name="geo.region" content="MX-PUE" />
+    <meta name="geo.placename" content="Libres, Puebla" />
+    <meta name="geo.position" content="19.4582082;-97.6876632" />
+    <meta name="ICBM" content="19.4582082, -97.6876632" />
 
     <!-- Poppins auto-hospedada (scripts/traer-fuentes.mjs): sin terceros en la
          ruta crítica. El precarga es la del texto que se lee primero. -->
@@ -36,34 +51,331 @@
       crossorigin
     />
 
-    <!-- SEO local. Pendiente de la marca: streetAddress, postalCode y horarios. -->
+    <!-- seo:jsonld:inicio — generado por scripts/generar-seo.mjs desde
+         src/data/. No editar a mano: se reescribe en cada build. -->
     <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Restaurant",
-        "name": "Kosecha",
-        "url": "https://www.kosecha.fit/",
-        "servesCuisine": "Healthy",
-        "priceRange": "$$",
-        "currenciesAccepted": "MXN",
-        "telephone": "+52 276 112 0304",
-        "sameAs": ["https://instagram.com/kosecha_mx"],
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Libres",
-          "addressRegion": "Puebla",
-          "addressCountry": "MX"
+      [
+        {
+          "@context": "https://schema.org",
+          "@type": "Restaurant",
+          "@id": "https://www.kosecha.fit/#kosecha",
+          "name": "Kosecha",
+          "alternateName": "Kosecha Comida Sana",
+          "description": "Ensaladas, wraps y sándwiches saludables en Libres, Puebla. Se pide por WhatsApp. Verdes locales y fruta de temporada de productores de la región.",
+          "slogan": "Comida Sana",
+          "url": "https://www.kosecha.fit/",
+          "logo": "https://www.kosecha.fit/assets/logo/kosecha.png",
+          "image": [
+            "https://www.kosecha.fit/og.jpg",
+            "https://www.kosecha.fit/assets/platillos/mediterranea.png",
+            "https://www.kosecha.fit/assets/platillos/bosque.png"
+          ],
+          "telephone": "+522761120304",
+          "priceRange": "$$",
+          "currenciesAccepted": "MXN",
+          "servesCuisine": [
+            "Comida saludable",
+            "Ensaladas",
+            "Sándwiches",
+            "Wraps"
+          ],
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "Libres",
+            "addressRegion": "Puebla",
+            "addressCountry": "MX"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 19.4582082,
+            "longitude": -97.6876632
+          },
+          "hasMap": "https://www.google.com/maps/search/?api=1&query=19.4582082,-97.6876632",
+          "sameAs": [
+            "https://instagram.com/kosecha_mx"
+          ],
+          "areaServed": {
+            "@type": "City",
+            "name": "Libres",
+            "containedInPlace": {
+              "@type": "State",
+              "name": "Puebla"
+            }
+          },
+          "knowsLanguage": "es-MX",
+          "potentialAction": {
+            "@type": "OrderAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://wa.me/522761120304",
+              "inLanguage": "es-MX",
+              "actionPlatform": [
+                "https://schema.org/DesktopWebPlatform",
+                "https://schema.org/MobileWebPlatform"
+              ]
+            },
+            "deliveryMethod": "https://schema.org/OnSitePickup"
+          },
+          "hasMenu": {
+            "@type": "Menu",
+            "name": "Menú Kosecha",
+            "inLanguage": "es-MX",
+            "url": "https://www.kosecha.fit/#menu",
+            "hasMenuSection": [
+              {
+                "@type": "MenuSection",
+                "name": "Ensaladas",
+                "hasMenuItem": [
+                  {
+                    "@type": "MenuItem",
+                    "name": "Kosecha mediterránea",
+                    "description": "Espinacas, aderezo italiano, pasta, jitomate cherry, cebolla morada, aceitunas, queso de cabra y pollo a las finas hierbas.",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "110",
+                      "priceCurrency": "MXN",
+                      "availability": "https://schema.org/InStock"
+                    },
+                    "image": "https://www.kosecha.fit/assets/platillos/mediterranea.png"
+                  },
+                  {
+                    "@type": "MenuItem",
+                    "name": "Kosecha del bosque",
+                    "description": "Mezcla de lechugas, aderezo de jamaica, fresas, arándanos, gajos de toronja, crutones, queso panela y jamón serrano.",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "110",
+                      "priceCurrency": "MXN",
+                      "availability": "https://schema.org/InStock"
+                    },
+                    "image": "https://www.kosecha.fit/assets/platillos/bosque.png"
+                  },
+                  {
+                    "@type": "MenuItem",
+                    "name": "Kosecha sureña",
+                    "description": "Mezcla de lechugas, aderezo de cilantro, pasta, jitomates, cebolla morada, semillas caramelizadas y pollo al limón.",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "110",
+                      "priceCurrency": "MXN",
+                      "availability": "https://schema.org/InStock"
+                    },
+                    "image": "https://www.kosecha.fit/assets/platillos/surena.png"
+                  },
+                  {
+                    "@type": "MenuItem",
+                    "name": "Kosecha asiática",
+                    "description": "Mezcla de lechugas, aderezo de mango picante, pasta, jícama, melón, uvas, fresas, almendras y pollo picante.",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "110",
+                      "priceCurrency": "MXN",
+                      "availability": "https://schema.org/InStock"
+                    },
+                    "image": "https://www.kosecha.fit/assets/platillos/asiatica.png"
+                  },
+                  {
+                    "@type": "MenuItem",
+                    "name": "Kosecha de coles",
+                    "description": "Col morada y blanca, arúgula, aderezo de mayonesa al ajo, pepino, jícama, zanahoria, ajonjolí negro y pollo a la plancha.",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "110",
+                      "priceCurrency": "MXN",
+                      "availability": "https://schema.org/InStock"
+                    },
+                    "image": "https://www.kosecha.fit/assets/platillos/coles.png"
+                  },
+                  {
+                    "@type": "MenuItem",
+                    "name": "Kosecha de kale",
+                    "description": "Hojas de kale, aderezo de miel y oliva, pasta, pepino, cebolla, jícama, zanahoria, semillas caramelizadas y pollo a las hierbas con parmesano.",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "110",
+                      "priceCurrency": "MXN",
+                      "availability": "https://schema.org/InStock"
+                    },
+                    "image": "https://www.kosecha.fit/assets/platillos/kale.png"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuSection",
+                "name": "Sándwiches",
+                "hasMenuItem": [
+                  {
+                    "@type": "MenuItem",
+                    "name": "Sándwich de pollo",
+                    "description": "Pan Oroweat, mayonesa chipotle, lechuga, germinado, jitomate, cebolla morada, aguacate, queso panela y pollo.",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "90",
+                      "priceCurrency": "MXN",
+                      "availability": "https://schema.org/InStock"
+                    },
+                    "image": "https://www.kosecha.fit/assets/platillos/sandwich.png"
+                  },
+                  {
+                    "@type": "MenuItem",
+                    "name": "Sándwich de salmón",
+                    "description": "Pan Oroweat, mayonesa habanero, lechuga, germinado, jitomate, cebolla morada, queso panela, aguacate y salmón.",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "90",
+                      "priceCurrency": "MXN",
+                      "availability": "https://schema.org/InStock"
+                    },
+                    "image": "https://www.kosecha.fit/assets/platillos/sandwich.png"
+                  },
+                  {
+                    "@type": "MenuItem",
+                    "name": "Sándwich de jamón de pavo",
+                    "description": "Pan Oroweat, mayonesa, lechuga, germinado, jitomate, cebolla morada, queso panela, aguacate y jamón de pavo.",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "90",
+                      "priceCurrency": "MXN",
+                      "availability": "https://schema.org/InStock"
+                    },
+                    "image": "https://www.kosecha.fit/assets/platillos/sandwich.png"
+                  },
+                  {
+                    "@type": "MenuItem",
+                    "name": "Sándwich de jamón serrano",
+                    "description": "Pan Oroweat, mayonesa, espinacas, germinado, jitomate, queso manchego, aguacate y jamón serrano.",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "90",
+                      "priceCurrency": "MXN",
+                      "availability": "https://schema.org/InStock"
+                    },
+                    "image": "https://www.kosecha.fit/assets/platillos/sandwich.png"
+                  },
+                  {
+                    "@type": "MenuItem",
+                    "name": "Sándwich de carnes frías",
+                    "description": "Pan Oroweat, mayonesa, espinacas, germinado, jitomate, queso manchego, jamón serrano, chorizo Pamplona y salami.",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "90",
+                      "priceCurrency": "MXN",
+                      "availability": "https://schema.org/InStock"
+                    },
+                    "image": "https://www.kosecha.fit/assets/platillos/sandwich.png"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuSection",
+                "name": "Wraps",
+                "hasMenuItem": [
+                  {
+                    "@type": "MenuItem",
+                    "name": "Wrap Kosecha",
+                    "description": "Tortilla de harina, aderezo, lechugas, vegetales, proteína (no lleva semillas).",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "80",
+                      "priceCurrency": "MXN",
+                      "availability": "https://schema.org/InStock"
+                    },
+                    "image": "https://www.kosecha.fit/assets/platillos/wrap.png"
+                  }
+                ]
+              },
+              {
+                "@type": "MenuSection",
+                "name": "Arma la tuya",
+                "hasMenuItem": [
+                  {
+                    "@type": "MenuItem",
+                    "name": "Crea tu ensalada",
+                    "description": "Elige y mezcla: 1 Base + 1 Aderezo + 3 Vegetales/Frutas + 1 Carbohidrato + 1 Semilla + 1 Proteína.",
+                    "offers": {
+                      "@type": "Offer",
+                      "price": "110",
+                      "priceCurrency": "MXN",
+                      "availability": "https://schema.org/InStock"
+                    },
+                    "image": "https://www.kosecha.fit/assets/platillos/personalizada.png"
+                  }
+                ]
+              }
+            ]
+          }
         },
-        "areaServed": {
-          "@type": "City",
-          "name": "Libres, Puebla"
+        {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "@id": "https://www.kosecha.fit/#preguntas",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "¿Cómo hago un pedido?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Elige tu platillo en el menú y toca \"Pedir por WhatsApp\". Se abre el chat con tu pedido ya escrito: nosotros te confirmamos disponibilidad y lo preparamos. No hay carrito ni pago en línea."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Dónde están?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "En Libres, Puebla. En la sección de ubicación está el mapa y el botón \"Cómo llegar\", que abre la ruta en Google Maps."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Cuánto cuestan?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Las ensaladas cuestan $110, los sándwiches $90 y los wraps $80. El combo con agua del día suma $15."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Puedo armar mi propia ensalada?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sí. Eliges 1 base, 1 aderezo, 3 frutas o vegetales, 1 carbohidrato, 1 semilla y 1 proteína, por $110. También hay extras: quesos, palmito, alcachofa, elotitos, jamón serrano, lomo, salami y salmón."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Las ensaladas se pueden pedir como wrap o sándwich?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sí, todas las ensaladas se pueden hacer wrap o sándwich. Avísanos en el mismo chat de WhatsApp al hacer el pedido."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿De dónde vienen los ingredientes?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Las hojas verdes las elegimos cada semana en el Miércoles de Agrotianquis de La Estación, y el huevo, la miel, los quesos y la fruta de temporada vienen de productores de la región de Libres."
+              }
+            }
+          ]
         },
-        "potentialAction": {
-          "@type": "OrderAction",
-          "target": "https://wa.me/522761120304"
+        {
+          "@context": "https://schema.org",
+          "@type": "WebPage",
+          "@id": "https://www.kosecha.fit/#pagina",
+          "url": "https://www.kosecha.fit/",
+          "name": "Kosecha · Ensaladas y comida sana en Libres, Puebla",
+          "inLanguage": "es-MX",
+          "about": {
+            "@id": "https://www.kosecha.fit/#kosecha"
+          },
+          "primaryImageOfPage": "https://www.kosecha.fit/og.jpg",
+          "description": "¡Hola! En Kosecha somos apasionados del wellness, la nutrición y el fitness. Nacimos en Libres con una meta clarísima: demostrarte que comer sano no es pasar hambre ni comer lechuga sin chiste, sino darle a tu cuerpo energía de mejor calidad para rendir al 100%."
         }
-      }
+      ]
     </script>
+    <!-- seo:jsonld:fin -->
   </head>
   <body>
     <div id="root"></div>

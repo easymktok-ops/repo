@@ -11,11 +11,11 @@ export default function QuienesSomos() {
       <div className="nosotros__interior">
         <figure className={`nosotros__foto ${sinFoto ? 'nosotros__foto--pendiente' : ''}`}>
           {sinFoto ? (
-            <span className="nosotros__pendiente">Foto del equipo pendiente</span>
+            <span className="nosotros__pendiente">Foto pendiente</span>
           ) : (
             <img
-              src={ruta("assets/fotos/equipo.jpg")}
-              alt="El equipo de Kosecha preparando ensaladas"
+              src={ruta("assets/fotos/fachada.jpg")}
+              alt="La fachada de Kosecha en Libres: toldo verde, puerta abierta y dos plantas en la entrada"
               width={720}
               height={900}
               loading="lazy"
