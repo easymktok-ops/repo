@@ -168,9 +168,12 @@
   .parallax-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 6; }
   .parallax-balloon { position: absolute; will-change: transform; filter: drop-shadow(0 12px 22px rgba(29,29,29,.22)); }
   @media (max-width: 640px){
-    /* En móvil: 2 globos arriba (sobre la 1ª tarjeta y el cielo), suben al scroll */
-    .parallax-balloon:nth-child(1){ top: 7% !important; right: -9% !important; left: auto !important; bottom: auto !important; width: 185px !important; }
-    .parallax-balloon:nth-child(2){ top: 1% !important; left: -8% !important; right: auto !important; bottom: auto !important; width: 140px !important; }
+    /* En móvil: 4 globos en los márgenes (2 arriba, 2 abajo); pequeños y muy
+       hacia el borde para no tapar el texto; suben rápido al hacer scroll */
+    .parallax-balloon:nth-child(1){ top: 8% !important;  right: -22% !important; left: auto !important; bottom: auto !important; width: 150px !important; }
+    .parallax-balloon:nth-child(2){ top: 2% !important;  left: -22% !important;  right: auto !important; bottom: auto !important; width: 120px !important; }
+    .parallax-balloon:nth-child(3){ top: 50% !important; left: -15% !important;  right: auto !important; bottom: auto !important; width: 140px !important; }
+    .parallax-balloon:nth-child(4){ top: 64% !important; right: -15% !important; left: auto !important; bottom: auto !important; width: 130px !important; }
   }
 
   /* ---------- Steps ---------- */
@@ -380,12 +383,14 @@
   <div class="blob" style="width:180px;height:180px;left:-40px;top:80px;background:rgba(111,216,164,.28)"></div>
   <div class="blob" style="width:220px;height:220px;right:0;top:50%;background:rgba(127,199,232,.22)"></div>
 
-  <!-- Globos REALES enfrente, concentrados ARRIBA: el 1º casi estático,
-       el 2º con más desplazamiento; suben al hacer scroll dejando limpias
-       las tarjetas de abajo (como magicballoons) -->
+  <!-- Globos REALES enfrente: 2 arriba (flanquean el encabezado) y 2 abajo
+       (flanquean las tarjetas). Suben RÁPIDO al hacer scroll para despejar
+       el texto; siempre pegados a los márgenes (como magicballoons) -->
   <div class="parallax-layer" aria-hidden="true">
-    <img src="@@CUTSMILE@@" class="parallax-balloon" data-speed="0.05" style="left:-9%;top:6%;width:310px;opacity:1;transform:rotate(-6deg)" alt="" />
-    <img src="@@CUTSTAR@@" class="parallax-balloon" data-speed="0.15" style="right:-8%;top:1%;width:260px;opacity:1;transform:rotate(5deg)" alt="" />
+    <img src="@@CUTSMILE@@" class="parallax-balloon" data-speed="0.55" style="left:-9%;top:4%;width:260px;opacity:1;transform:rotate(-6deg)" alt="" />
+    <img src="@@CUTSTAR@@" class="parallax-balloon" data-speed="0.65" style="right:-5%;top:3%;width:250px;opacity:1;transform:rotate(5deg)" alt="" />
+    <img src="@@CUTSTAR@@" class="parallax-balloon" data-speed="0.18" style="left:-7%;top:50%;width:230px;opacity:1;transform:rotate(6deg)" alt="" />
+    <img src="@@CUTSMILE@@" class="parallax-balloon" data-speed="0.22" style="right:-7%;top:64%;width:210px;opacity:1;transform:rotate(-5deg)" alt="" />
   </div>
 
   <div class="wrap" style="position:relative">
@@ -911,7 +916,8 @@
         var speed = parseFloat(el.getAttribute('data-speed')) || 0;
         var base = el.getAttribute('data-rot') || '';
         var ty = -scrolled * speed; // negativo = sube; a mayor speed, más desplazamiento
-        if (ty > 220) ty = 220; else if (ty < -900) ty = -900;
+        // Solo suben (nunca bajan del punto base) para no tapar el texto al entrar
+        if (ty > 0) ty = 0; else if (ty < -1100) ty = -1100;
         el.style.transform = 'translate3d(0,'+ty.toFixed(1)+'px,0) '+base;
       });
     }

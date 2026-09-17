@@ -11,12 +11,14 @@ const gStar = `${BASE}assets/globos/globo-star.png`.replace(/\/{2,}/g, '/');
   <div class="pointer-events-none absolute -left-16 top-24 h-40 w-40 rounded-full bg-mint/25 blur-2xl" aria-hidden="true"></div>
   <div class="pointer-events-none absolute right-0 top-1/2 h-52 w-52 rounded-full bg-sky/20 blur-3xl" aria-hidden="true"></div>
 
-  <!-- Globos REALES enfrente, concentrados ARRIBA: el 1º casi estático,
-       el 2º con más desplazamiento; suben al hacer scroll dejando limpias
-       las tarjetas de abajo (como magicballoons) -->
+  <!-- Globos REALES enfrente: 2 arriba (flanquean el encabezado) y 2 abajo
+       (flanquean las tarjetas). Suben RÁPIDO al hacer scroll para despejar
+       el texto; siempre pegados a los márgenes (como magicballoons) -->
   <div class="parallax-layer" aria-hidden="true">
-    <img src={gSmile} class="parallax-balloon" data-speed="0.05" style="left:-9%;top:6%;width:310px;opacity:1;transform:rotate(-6deg)" alt="" />
-    <img src={gStar} class="parallax-balloon" data-speed="0.15" style="right:-8%;top:1%;width:260px;opacity:1;transform:rotate(5deg)" alt="" />
+    <img src={gSmile} class="parallax-balloon" data-speed="0.55" style="left:-9%;top:4%;width:260px;opacity:1;transform:rotate(-6deg)" alt="" />
+    <img src={gStar} class="parallax-balloon" data-speed="0.65" style="right:-5%;top:3%;width:250px;opacity:1;transform:rotate(5deg)" alt="" />
+    <img src={gStar} class="parallax-balloon" data-speed="0.18" style="left:-7%;top:50%;width:230px;opacity:1;transform:rotate(6deg)" alt="" />
+    <img src={gSmile} class="parallax-balloon" data-speed="0.22" style="right:-7%;top:64%;width:210px;opacity:1;transform:rotate(-5deg)" alt="" />
   </div>
 
   <div class="relative mx-auto max-w-7xl px-4 sm:px-6">
@@ -76,7 +78,8 @@ const gStar = `${BASE}assets/globos/globo-star.png`.replace(/\/{2,}/g, '/');
         const speed = parseFloat(el.getAttribute('data-speed')) || 0;
         const base = el.getAttribute('data-rot') || '';
         let ty = -scrolled * speed; // negativo = sube
-        if (ty > 220) ty = 220; else if (ty < -900) ty = -900;
+        // Solo suben (nunca bajan del punto base) para no tapar el texto al entrar
+        if (ty > 0) ty = 0; else if (ty < -1100) ty = -1100;
         el.style.transform = `translate3d(0, ${ty.toFixed(1)}px, 0) ${base}`;
       });
     };

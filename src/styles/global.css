@@ -268,10 +268,13 @@ input:focus-visible,
    deja pasar los toques; overflow visible para que no se recorten al frente. */
 .parallax-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 6; }
 .parallax-balloon { position: absolute; will-change: transform; filter: drop-shadow(0 12px 22px rgba(29,29,29,.22)); }
-/* En móvil: 2 globos arriba (sobre la 1ª tarjeta y el cielo), suben al scroll */
+/* En móvil: 4 globos en los márgenes (2 arriba, 2 abajo); pequeños y muy hacia
+   el borde para no tapar el texto; suben rápido al hacer scroll */
 @media (max-width: 640px) {
-  .parallax-balloon:nth-child(1) { top: 7% !important; right: -9% !important; left: auto !important; bottom: auto !important; width: 185px !important; }
-  .parallax-balloon:nth-child(2) { top: 1% !important; left: -8% !important; right: auto !important; bottom: auto !important; width: 140px !important; }
+  .parallax-balloon:nth-child(1) { top: 8% !important;  right: -22% !important; left: auto !important; bottom: auto !important; width: 150px !important; }
+  .parallax-balloon:nth-child(2) { top: 2% !important;  left: -22% !important;  right: auto !important; bottom: auto !important; width: 120px !important; }
+  .parallax-balloon:nth-child(3) { top: 50% !important; left: -15% !important;  right: auto !important; bottom: auto !important; width: 140px !important; }
+  .parallax-balloon:nth-child(4) { top: 64% !important; right: -15% !important; left: auto !important; bottom: auto !important; width: 130px !important; }
 }
 
 /* ── Reduced motion: todo estático, cursor nativo ───────────── */
