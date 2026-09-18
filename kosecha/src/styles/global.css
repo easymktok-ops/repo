@@ -585,10 +585,16 @@ section[id] { scroll-margin-top: 84px; }
   border-radius: var(--kos-radio-lg);
   overflow: hidden;
   background: var(--kos-crema);
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 3 / 4;
   max-width: 100%;
 }
-.nosotros__foto img { width: 100%; height: 100%; object-fit: cover; }
+.nosotros__foto picture,
+.nosotros__foto img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 .nosotros__foto--pendiente { display: grid; place-items: center; border: 1px dashed var(--kos-verde-300); }
 .nosotros__pendiente { font-size: var(--kos-size-sm); color: var(--kos-tinta-suave); }
 .nosotros__texto p { color: var(--kos-tinta-suave); max-width: 62ch; }

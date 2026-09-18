@@ -80,6 +80,23 @@ for (const [nombre, viewport] of [['movil', { width: 390, height: 844 }], ['desk
   const anguloDespues = await page.$eval('.rueda', (el) => parseFloat(el.style.getPropertyValue('--angulo')));
   ok(Math.abs(anguloDespues - anguloAntes) <= 180.5, `[${nombre}] gira por el camino corto (${(anguloDespues - anguloAntes).toFixed(1)}°)`);
 
+  // 6b. el evento de conversión llega a dataLayer (lo que lee GTM)
+  await page.route('**/wa.me/**', (r) => r.abort());
+  page.on('popup', (pop) => pop.close().catch(() => {}));
+  await page.evaluate(() => {
+    window.dataLayer = [];
+  });
+  await page.locator('.panel .btn-wa').click();
+  await page.waitForTimeout(300);
+  const empujados = await page.evaluate(() => (window.dataLayer ?? []).map((e) => e && e.event));
+  const detalle = await page.evaluate(
+    () => (window.dataLayer ?? []).find((e) => e && e.event === 'pedido_whatsapp') ?? null,
+  );
+  ok(
+    empujados.includes('pedido_whatsapp') && !!detalle?.id && !!detalle?.origen,
+    `[${nombre}] el click empuja pedido_whatsapp a dataLayer (${detalle?.id} · ${detalle?.origen})`,
+  );
+
   // 7. secciones y CTAs
   const ctas = await page.locator('a.btn-wa').count();
   ok(ctas >= 10, `[${nombre}] hay CTA de WhatsApp en las tarjetas (${ctas} en total)`);

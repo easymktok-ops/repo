@@ -18,6 +18,13 @@ inventado en el código: donde no hay dato, el bloque no se muestra.
   no depende de fonts.googleapis.com, que además es un request que bloquea el
   render.
 - **Video de referencia** en `reference/nutri-bowls.mp4`, analizado.
+- **Foto de la fachada** en "Quiénes somos". El original queda en
+  `assets-origen/fotos/fachada.jpg`; en `public/` va la versión de 900px con su
+  webp.
+- **Google Tag Manager** (`GTM-W82HZVCF`) en el `<head>`, con su `<noscript>`.
+  El evento `pedido_whatsapp` ya llega solo a `dataLayer` en cada click de CTA,
+  con el id del platillo y el origen (`rueda`, `menu`, `armador`, `nav`,
+  `ubicacion`). Falta armar el activador y las etiquetas dentro de GTM.
 - **Mapa del local.** El embed de la ficha de Google Maps está en la sección de
   ubicación, con `loading="lazy"`: no pide nada a Google hasta que la sección
   entra en pantalla. De ahí salen también las coordenadas del schema
@@ -63,10 +70,8 @@ así que estos siguen abiertos:
 
 ## 4. Fotos que todavía no hay
 
-- [ ] Foto de la fachada para "Quiénes somos" en
-      `public/assets/fotos/fachada.jpg`. Mientras no esté, ese lugar muestra un
-      marco vacío. Se puede subir directo desde GitHub a esa carpeta.
 - [ ] Foto propia por variante de sándwich: los 5 comparten `sandwich.png`.
+- [ ] Fotos del interior o del equipo, si más adelante se quiere una galería.
 
 ## 5. Manual de marca
 
@@ -77,8 +82,9 @@ así que estos siguen abiertos:
 
 ## 6. Medición y presencia
 
-- [ ] ID de GA4 o Pixel de Meta. `src/lib/analytics.js` ya dispara
-      `pedido_whatsapp` con el id del platillo; falta cargar el tag.
+- [ ] Dentro de GTM: crear el activador de evento personalizado
+      `pedido_whatsapp` y enviarlo a GA4 y/o a Meta. El sitio ya lo empuja; lo
+      que falta es del lado del contenedor, no del código.
 - [ ] **Google Business Profile.** El sitio ya declara todo lo que la ficha
       necesita, pero quien mueve la aguja en búsquedas locales es la ficha:
       conviene reclamarla, poner el mismo nombre, teléfono y dirección que el

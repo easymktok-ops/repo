@@ -86,6 +86,19 @@ se generan desde `src/data/` en vez de escribirse a mano en el head: el menú,
 los precios y el teléfono ya viven ahí, y un schema que miente sobre el precio
 es peor que no tener schema.
 
+### Medición
+
+Google Tag Manager (`GTM-W82HZVCF`) está en el `<head>` de `index.html`. El
+sitio empuja a `dataLayer` el evento `pedido_whatsapp` en cada click de CTA, con
+`id`, `nombre`, `precio` y `origen` del platillo, así que las etiquetas se
+arman dentro de GTM sin volver a tocar código. `npm run verificar` comprueba que
+el evento efectivamente llegue.
+
+Es el único tercero que carga la página: las fuentes están auto-hospedadas y el
+mapa no pide nada hasta que su sección entra en pantalla.
+
+### Datos estructurados
+
 `npm run seo` escribe en `index.html` un JSON-LD con:
 
 - **Restaurant**: nombre, teléfono, coordenadas, mapa, Instagram, zona de

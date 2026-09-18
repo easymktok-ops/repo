@@ -13,15 +13,18 @@ export default function QuienesSomos() {
           {sinFoto ? (
             <span className="nosotros__pendiente">Foto pendiente</span>
           ) : (
-            <img
-              src={ruta("assets/fotos/fachada.jpg")}
-              alt="La fachada de Kosecha en Libres: toldo verde, puerta abierta y dos plantas en la entrada"
-              width={720}
-              height={900}
-              loading="lazy"
-              decoding="async"
-              onError={() => setSinFoto(true)}
-            />
+            <picture>
+              <source srcSet={ruta('assets/fotos/fachada.webp')} type="image/webp" />
+              <img
+                src={ruta('assets/fotos/fachada.jpg')}
+                alt="La fachada de Kosecha en Libres: toldo verde con el logotipo, puerta abierta y dos plantas en la entrada"
+                width={900}
+                height={1200}
+                loading="lazy"
+                decoding="async"
+                onError={() => setSinFoto(true)}
+              />
+            </picture>
           )}
         </figure>
 

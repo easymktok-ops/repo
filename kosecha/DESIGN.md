@@ -37,9 +37,8 @@ de color y el nombre de la categoría.
 
 - **Display**: Rustic Delight (pendiente), fallback Georgia. Títulos, precios y
   la frase de cierre de trazabilidad.
-- **Texto**: Poppins 300/400/500/600, auto-hospedada en `/fonts` (sin pedido a
-  terceros en la ruta crítica; con el `<link>` a Google el LCP medido era de
-  3,8 s y ahora es de 0,7 s).
+- **Texto**: Poppins 300/400/500/600, auto-hospedada en `/fonts` (con el
+  `<link>` a Google el LCP medido era de 3,8 s y ahora es de 0,7 s).
 - Escala fluida con `clamp()`, razón ≥1.25 entre pasos.
 - `text-wrap: balance` en los títulos, `pretty` en la prosa larga.
 
