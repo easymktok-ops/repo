@@ -29,6 +29,12 @@ inventado en el código: donde no hay dato, el bloque no se muestra.
   ubicación, con `loading="lazy"`: no pide nada a Google hasta que la sección
   entra en pantalla. De ahí salen también las coordenadas del schema
   (19.4582082, -97.6876632) y el botón "Cómo llegar".
+- **Dirección, horario y entrega.** Calle Galeana esquina Av. 16 de Septiembre,
+  CP 73782; lunes a viernes de 9:00 a 17:00; entrega a domicilio desde $25 o
+  pick up en sucursal. El sitio muestra además si el local está **abierto ahora**,
+  calculado en la hora de Libres, no en la del visitante.
+- **Extras a +$20** en el armador de ensaladas.
+- **Smoothies y paquetes fuera del menú**: la marca todavía no los ofrece.
 - **SEO local**: JSON-LD de Restaurant con el menú completo y sus precios,
   FAQPage, WebPage, sitemap.xml, robots.txt, imagen para compartir en WhatsApp
   e Instagram (`og.jpg`) y metadatos geográficos. Todo generado desde
@@ -43,30 +49,21 @@ inventado en el código: donde no hay dato, el bloque no se muestra.
 
 ## 2. Datos que faltan del menú
 
-El MENÚ.docx que subiste dice exactamente lo mismo que el documento de Drive,
-así que estos siguen abiertos:
-
 - [ ] **Macros** (kcal, proteína, carbohidratos, grasas). El campo `macros` de
-      cada platillo está en `null` y el panel no muestra el bloque.
-- [ ] **Precio de los smoothies** y de los extras (quesos, vegetales, carnes).
+      cada platillo está en `null` y el panel no muestra el bloque. Es lo único
+      que queda del menú.
 - [ ] Confirmar el mapeo de acentos por categoría: ensaladas → lima,
       sándwiches → naranja, wraps → amarillo, arma la tuya → verde.
 
 ## 3. Ubicación y contacto
 
-- [ ] **Dirección exacta en Libres** (calle, número, colonia, CP). El mapa ya
-      ubica el local, pero el schema lleva localidad y coordenadas, no calle.
-      Google Business Profile la pide igual que el sitio: conviene que digan
-      exactamente lo mismo, letra por letra.
-- [ ] **Horarios de atención**. Es lo que más falta para el SEO local: sin
-      ellos no se declara `openingHoursSpecification` y Google no puede mostrar
-      "Abierto ahora" en los resultados. Un horario inventado manda gente al
-      local cuando está cerrado, así que el schema lo omite a propósito.
-- [ ] **¿Hay entrega a domicilio?** Si la hay, se declara el área y el tipo de
-      servicio; hoy el schema solo dice que se retira en el local.
 - [ ] Confirmar que el WhatsApp de pedidos es **+52 276 112 0304**
-      (`wa.me/522761120304`), en `src/lib/whatsapp.js` o en
+      (`wa.me/522761120304`), en `src/data/negocio.js` o en
       `VITE_WHATSAPP_NUMERO`.
+
+Dirección, horario y formas de entrega ya están cargados y declarados en el
+schema. Si cambian, se editan en `src/data/contenido.js` y `npm run seo`
+actualiza el JSON-LD solo.
 
 ## 4. Fotos que todavía no hay
 

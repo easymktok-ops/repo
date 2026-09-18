@@ -67,6 +67,10 @@ como una plantilla de tarjetas iguales.
   teclado y con lector de pantalla; el signo más gira hasta la cruz al abrir.
 - **Mapa**: iframe de Google con `loading="lazy"`, en un marco 4:3 redondeado.
   Hasta que la sección se acerca al viewport, la página no pide nada a Google.
+- **Estado del local**: píldora de "Abierto ahora / Cerrado ahora" con el
+  próximo horario. Se calcula en `America/Mexico_City` (`src/lib/horario.js`),
+  así que un visitante en otro huso ve si está abierto **allá**, no acá, y se
+  refresca cada minuto para que no envejezca con la pestaña abierta.
 
 ## Movimiento
 

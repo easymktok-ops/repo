@@ -9,7 +9,8 @@
  *    muestra el bloque. No inventar valores.
  *  - Los 5 sándwiches comparten una sola foto (`sandwich.png`); falta foto por
  *    variante.
- *  - Smoothies y paquetes todavía no tienen precio confirmado.
+ *  - Los smoothies y los paquetes salieron del menú: la marca todavía no los
+ *    ofrece.
  */
 
 export const categorias = [
@@ -357,6 +358,8 @@ export const armador = {
       opciones: ['Atún', 'Huevo', 'Pollo a la plancha', 'Pollo al limón', 'Pollo a las hierbas', 'Pollo picante', 'Queso panela'],
     },
   ],
+  /** Cada extra suma $20 al platillo. */
+  precioExtra: 20,
   extras: [
     {
       nombre: 'Quesos',
@@ -365,12 +368,4 @@ export const armador = {
     { nombre: 'Vegetales', opciones: ['Palmito', 'Alcachofa', 'Elotitos'] },
     { nombre: 'Carnes', opciones: ['Jamón serrano', 'Lomo', 'Salami', 'Salmón'] },
   ],
-};
-
-/** Smoothies y paquetes. PENDIENTE: precios. */
-export const smoothiesYPaquetes = {
-  smoothies:
-    'Base de leche o jugo, 1 taza de fruta congelada (se entrega en vaso con papel sellado).',
-  paquetes:
-    'Ensalada mediana + vaso de agua del día. Arma tu combo con agua del día por +$15.',
 };

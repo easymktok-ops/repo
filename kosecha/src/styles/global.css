@@ -567,8 +567,12 @@ section[id] { scroll-margin-top: 84px; }
 .armador__extras { margin-bottom: var(--kos-space-5); }
 .armador__extras h4 { font-family: var(--kos-font-texto); font-weight: 600; color: var(--kos-verde); }
 .armador__extras li { font-size: var(--kos-size-sm); color: var(--kos-tinta-suave); margin-bottom: var(--kos-space-1); }
-.armador__combos { display: grid; gap: var(--kos-space-2); margin-bottom: var(--kos-space-5); }
-.armador__combos p { font-size: var(--kos-size-sm); color: var(--kos-tinta-suave); margin: 0; }
+.armador__extra-precio {
+  font-family: var(--kos-font-texto);
+  font-weight: 600;
+  font-size: var(--kos-size-sm);
+  color: var(--kos-naranja-hondo);
+}
 
 /* ---------- Quiénes somos ---------- */
 .nosotros { padding-block: var(--kos-space-8); }
@@ -691,7 +695,43 @@ section[id] { scroll-margin-top: 84px; }
   gap: var(--kos-space-6);
   align-items: center;
 }
+/* Abierto / cerrado, calculado en la hora de Libres */
+.estado {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--kos-space-2);
+  padding: 0.45rem 0.9rem 0.45rem 0.7rem;
+  border-radius: var(--kos-radio-pill);
+  font-size: var(--kos-size-sm);
+  margin-bottom: var(--kos-space-5);
+}
+.estado strong { font-weight: 600; }
+.estado__punto {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  flex: none;
+}
+.estado--abierto {
+  background: color-mix(in srgb, var(--kos-lima) 20%, transparent);
+  color: var(--kos-verde-900);
+}
+.estado--abierto .estado__punto { background: var(--kos-lima-hondo); }
+.estado--cerrado {
+  background: var(--kos-verde-120);
+  color: var(--kos-tinta);
+}
+.estado--cerrado .estado__punto { background: var(--kos-tinta-suave); }
+
 .ubicacion__lista { display: grid; gap: var(--kos-space-3); margin: 0 0 var(--kos-space-5); }
+.ubicacion__horario { display: grid; gap: var(--kos-space-1); }
+.ubicacion__horario li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--kos-space-4);
+  max-width: 22rem;
+}
+.ubicacion__horario li span:last-child { color: var(--kos-tinta-suave); }
 .ubicacion__lista dt {
   font-size: var(--kos-size-xs);
   text-transform: uppercase;

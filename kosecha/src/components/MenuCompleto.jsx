@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import FotoPlatillo from './FotoPlatillo.jsx';
 import BotonWhatsApp from './BotonWhatsApp.jsx';
-import { acentoDe, categorias, platillos, armador, smoothiesYPaquetes } from '../data/platillos.js';
+import { acentoDe, categorias, platillos, armador } from '../data/platillos.js';
 
 export default function MenuCompleto() {
   const [filtro, setFiltro] = useState('todo');
@@ -85,7 +85,9 @@ export default function MenuCompleto() {
             ))}
           </ol>
           <div className="armador__extras">
-            <h4>Extras</h4>
+            <h4>
+              Extras <span className="armador__extra-precio">+${armador.precioExtra} c/u</span>
+            </h4>
             <ul>
               {armador.extras.map((extra) => (
                 <li key={extra.nombre}>
@@ -93,14 +95,6 @@ export default function MenuCompleto() {
                 </li>
               ))}
             </ul>
-          </div>
-          <div className="armador__combos">
-            <p>
-              <strong>Smoothies.</strong> {smoothiesYPaquetes.smoothies}
-            </p>
-            <p>
-              <strong>Paquetes.</strong> {smoothiesYPaquetes.paquetes}
-            </p>
           </div>
           <BotonWhatsApp origen="armador">Armar mi ensalada por WhatsApp</BotonWhatsApp>
         </div>

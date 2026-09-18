@@ -97,10 +97,26 @@
           ],
           "address": {
             "@type": "PostalAddress",
+            "streetAddress": "Calle Galeana, esquina Av. 16 de Septiembre",
+            "postalCode": "73782",
             "addressLocality": "Libres",
             "addressRegion": "Puebla",
             "addressCountry": "MX"
           },
+          "openingHoursSpecification": [
+            {
+              "@type": "OpeningHoursSpecification",
+              "dayOfWeek": [
+                "https://schema.org/Monday",
+                "https://schema.org/Tuesday",
+                "https://schema.org/Wednesday",
+                "https://schema.org/Thursday",
+                "https://schema.org/Friday"
+              ],
+              "opens": "09:00",
+              "closes": "17:00"
+            }
+          ],
           "geo": {
             "@type": "GeoCoordinates",
             "latitude": 19.4582082,
@@ -130,7 +146,10 @@
                 "https://schema.org/MobileWebPlatform"
               ]
             },
-            "deliveryMethod": "https://schema.org/OnSitePickup"
+            "deliveryMethod": [
+              "http://purl.org/goodrelations/v1#DeliveryModeOwnFleet",
+              "https://schema.org/OnSitePickup"
+            ]
           },
           "hasMenu": {
             "@type": "Menu",
@@ -336,10 +355,18 @@
             },
             {
               "@type": "Question",
-              "name": "¿Dónde están?",
+              "name": "¿Dónde están y a qué hora abren?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "En Libres, Puebla. En la sección de ubicación está el mapa y el botón \"Cómo llegar\", que abre la ruta en Google Maps."
+                "text": "En Calle Galeana, esquina Av. 16 de Septiembre, Libres, Puebla. Abrimos de lunes a viernes de 9:00 a 17:00; sábado y domingo cerramos. En la sección de ubicación está el mapa y el botón \"Cómo llegar\"."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Hacen entrega a domicilio?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sí, entregamos a domicilio desde $25 según la zona, y también puedes pasar a recogerlo a la sucursal. Nos dices cuál prefieres en el mismo chat de WhatsApp."
               }
             },
             {
@@ -347,7 +374,7 @@
               "name": "¿Cuánto cuestan?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Las ensaladas cuestan $110, los sándwiches $90 y los wraps $80. El combo con agua del día suma $15."
+                "text": "Las ensaladas cuestan $110, los sándwiches $90 y los wraps $80. Cada extra (quesos, palmito, alcachofa, elotitos, jamón serrano, lomo, salami o salmón) suma $20."
               }
             },
             {
@@ -355,7 +382,7 @@
               "name": "¿Puedo armar mi propia ensalada?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Sí. Eliges 1 base, 1 aderezo, 3 frutas o vegetales, 1 carbohidrato, 1 semilla y 1 proteína, por $110. También hay extras: quesos, palmito, alcachofa, elotitos, jamón serrano, lomo, salami y salmón."
+                "text": "Sí. Eliges 1 base, 1 aderezo, 3 frutas o vegetales, 1 carbohidrato, 1 semilla y 1 proteína, por $110. Cada extra suma $20."
               }
             },
             {

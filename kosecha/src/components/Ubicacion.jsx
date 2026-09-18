@@ -1,31 +1,72 @@
+import { useEffect, useState } from 'react';
 import BotonWhatsApp from './BotonWhatsApp.jsx';
-import { contacto, mapa } from '../data/contenido.js';
+import { contacto, entrega, horarios, mapa } from '../data/contenido.js';
 import { NUMERO_WHATSAPP } from '../lib/whatsapp.js';
+import { estadoDelLocal, formatoHora } from '../lib/horario.js';
 
 export default function Ubicacion() {
+  const [estado, setEstado] = useState(() => estadoDelLocal());
+
+  // La página puede quedar abierta horas: el estado se refresca cada minuto.
+  useEffect(() => {
+    const id = setInterval(() => setEstado(estadoDelLocal()), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
   return (
     <section className="ubicacion" id="ubicacion">
       <div className="ubicacion__interior">
         <div className="ubicacion__datos">
           <h2 className="titulo-seccion">Dónde estamos</h2>
 
+          <p className={`estado ${estado.abierto ? 'estado--abierto' : 'estado--cerrado'}`}>
+            <span className="estado__punto" aria-hidden="true" />
+            {estado.abierto ? (
+              <>
+                <strong>Abierto ahora</strong> · cierra a las {formatoHora(estado.cierra)}
+              </>
+            ) : (
+              <>
+                <strong>Cerrado ahora</strong>
+                {estado.proximo
+                  ? ` · abre ${estado.proximo.cuando} a las ${formatoHora(estado.proximo.hora)}`
+                  : null}
+              </>
+            )}
+          </p>
+
           <dl className="ubicacion__lista">
             <div>
-              <dt>Zona</dt>
-              <dd>{contacto.cobertura}</dd>
+              <dt>Dirección</dt>
+              <dd>
+                {contacto.direccion}
+                <br />
+                {contacto.codigoPostal} {contacto.ciudad}
+              </dd>
             </div>
-            {contacto.direccion ? (
-              <div>
-                <dt>Dirección</dt>
-                <dd>{contacto.direccion}</dd>
-              </div>
-            ) : null}
-            {contacto.horarios ? (
-              <div>
-                <dt>Horarios</dt>
-                <dd>{contacto.horarios}</dd>
-              </div>
-            ) : null}
+            <div>
+              <dt>Horario</dt>
+              <dd>
+                <ul className="ubicacion__horario">
+                  {horarios.tramos.map((tramo) => (
+                    <li key={tramo.etiqueta}>
+                      <span>{tramo.etiqueta}</span>
+                      <span>
+                        {tramo.abre
+                          ? `${formatoHora(tramo.abre)} a ${formatoHora(tramo.cierra)}`
+                          : 'Cerrado'}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </dd>
+            </div>
+            <div>
+              <dt>Cómo lo recibes</dt>
+              <dd>
+                {entrega.domicilio.texto} o {entrega.sucursal.texto.toLowerCase()}.
+              </dd>
+            </div>
             <div>
               <dt>WhatsApp</dt>
               <dd>

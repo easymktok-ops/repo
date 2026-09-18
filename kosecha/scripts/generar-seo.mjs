@@ -18,7 +18,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 
 import { categorias, platillos } from '../src/data/platillos.js';
-import { contacto, mapa, quienesSomos } from '../src/data/contenido.js';
+import { contacto, entrega, horarios, mapa, quienesSomos } from '../src/data/contenido.js';
 import { preguntas } from '../src/data/faq.js';
 import { NUMERO_WHATSAPP_POR_DEFECTO, SITIO } from '../src/data/negocio.js';
 
@@ -70,10 +70,20 @@ const restaurante = {
   servesCuisine: ['Comida saludable', 'Ensaladas', 'Sándwiches', 'Wraps'],
   address: {
     '@type': 'PostalAddress',
+    streetAddress: contacto.direccion,
+    postalCode: contacto.codigoPostal,
     addressLocality: 'Libres',
     addressRegion: 'Puebla',
     addressCountry: 'MX',
   },
+  openingHoursSpecification: horarios.tramos
+    .filter((t) => t.abre)
+    .map((t) => ({
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: t.dias.map((d) => `https://schema.org/${d}`),
+      opens: t.abre,
+      closes: t.cierra,
+    })),
   geo: {
     '@type': 'GeoCoordinates',
     latitude: contacto.coordenadas.lat,
@@ -94,7 +104,12 @@ const restaurante = {
         'https://schema.org/MobileWebPlatform',
       ],
     },
-    deliveryMethod: 'https://schema.org/OnSitePickup',
+    deliveryMethod: [
+      ...(entrega.domicilio.disponible
+        ? ['http://purl.org/goodrelations/v1#DeliveryModeOwnFleet']
+        : []),
+      ...(entrega.sucursal.disponible ? ['https://schema.org/OnSitePickup'] : []),
+    ],
   },
   hasMenu: {
     '@type': 'Menu',
@@ -104,11 +119,6 @@ const restaurante = {
     hasMenuSection: categorias.map(seccionMenu),
   },
 };
-
-// Sin horarios confirmados no se declara openingHours: un horario inventado
-// manda gente al local cuando está cerrado.
-if (contacto.horarios) restaurante.openingHours = contacto.horarios;
-if (contacto.direccion) restaurante.address.streetAddress = contacto.direccion;
 
 const faq = {
   '@context': 'https://schema.org',
@@ -179,5 +189,5 @@ const items = restaurante.hasMenu.hasMenuSection.reduce(
 );
 console.log(`✓ JSON-LD en index.html: Restaurant (${items} platillos), FAQPage (${preguntas.length}), WebPage`);
 console.log('✓ public/sitemap.xml y public/robots.txt');
-if (!contacto.horarios) console.log('· sin horarios confirmados: no se declara openingHours');
-if (!contacto.direccion) console.log('· sin dirección en texto: el schema lleva localidad y coordenadas');
+const tramos = restaurante.openingHoursSpecification.length;
+console.log(`· horario declarado en ${tramos} tramo(s) y dirección completa con CP`);

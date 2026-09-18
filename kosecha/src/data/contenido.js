@@ -69,9 +69,38 @@ export const contacto = {
   instagramUrl: 'https://instagram.com/kosecha_mx',
   web: 'www.kosecha.fit',
   webUrl: 'https://www.kosecha.fit',
-  direccion: null, // TODO: calle, número, colonia y CP en Libres
-  horarios: null, // TODO: horarios de atención
+  direccion: 'Calle Galeana, esquina Av. 16 de Septiembre',
+  codigoPostal: '73782',
   coordenadas: { lat: 19.4582082, lng: -97.6876632 },
+};
+
+/**
+ * Horario del local, en la hora de Libres (America/Mexico_City).
+ * `dias` usa el día de la semana en inglés porque es lo que devuelve Intl y lo
+ * que pide schema.org; la etiqueta que se muestra va aparte.
+ */
+export const horarios = {
+  zona: 'America/Mexico_City',
+  tramos: [
+    {
+      etiqueta: 'Lunes a viernes',
+      dias: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      abre: '09:00',
+      cierra: '17:00',
+    },
+    {
+      etiqueta: 'Sábado y domingo',
+      dias: ['Saturday', 'Sunday'],
+      abre: null,
+      cierra: null,
+    },
+  ],
+};
+
+/** Cómo se recibe el pedido. */
+export const entrega = {
+  domicilio: { disponible: true, desde: 25, texto: 'Entrega a domicilio desde $25' },
+  sucursal: { disponible: true, texto: 'Pick up en sucursal' },
 };
 
 /** El local en Google Maps. El embed sale de la ficha del negocio. */

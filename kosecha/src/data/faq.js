@@ -17,21 +17,27 @@ export const preguntas = [
   },
   {
     id: 'donde-estan',
-    pregunta: '¿Dónde están?',
+    pregunta: '¿Dónde están y a qué hora abren?',
     respuesta:
-      'En Libres, Puebla. En la sección de ubicación está el mapa y el botón "Cómo llegar", que abre la ruta en Google Maps.',
+      'En Calle Galeana, esquina Av. 16 de Septiembre, Libres, Puebla. Abrimos de lunes a viernes de 9:00 a 17:00; sábado y domingo cerramos. En la sección de ubicación está el mapa y el botón "Cómo llegar".',
+  },
+  {
+    id: 'entrega',
+    pregunta: '¿Hacen entrega a domicilio?',
+    respuesta:
+      'Sí, entregamos a domicilio desde $25 según la zona, y también puedes pasar a recogerlo a la sucursal. Nos dices cuál prefieres en el mismo chat de WhatsApp.',
   },
   {
     id: 'precios',
     pregunta: '¿Cuánto cuestan?',
     respuesta:
-      'Las ensaladas cuestan $110, los sándwiches $90 y los wraps $80. El combo con agua del día suma $15.',
+      'Las ensaladas cuestan $110, los sándwiches $90 y los wraps $80. Cada extra (quesos, palmito, alcachofa, elotitos, jamón serrano, lomo, salami o salmón) suma $20.',
   },
   {
     id: 'armar-ensalada',
     pregunta: '¿Puedo armar mi propia ensalada?',
     respuesta:
-      'Sí. Eliges 1 base, 1 aderezo, 3 frutas o vegetales, 1 carbohidrato, 1 semilla y 1 proteína, por $110. También hay extras: quesos, palmito, alcachofa, elotitos, jamón serrano, lomo, salami y salmón.',
+      'Sí. Eliges 1 base, 1 aderezo, 3 frutas o vegetales, 1 carbohidrato, 1 semilla y 1 proteína, por $110. Cada extra suma $20.',
   },
   {
     id: 'wrap-o-sandwich',
