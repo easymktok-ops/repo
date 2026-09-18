@@ -57,17 +57,22 @@ jobs:
       - name: Estado de publicacion automatica
         run: echo "DEPLOY_ON=${{ vars.AUTO_DEPLOY == 'on' && secrets.FTP_SERVER != '' && secrets.FTP_USERNAME != '' && secrets.FTP_PASSWORD != '' }}" >> "$GITHUB_ENV"
 
-      - name: Aviso (publicacion automatica EN PAUSA)
-        run: echo "::notice::Build OK. Publicacion automatica EN PAUSA. Webempresa rechaza el FTP externo (error 530). Ticket abierto con soporte. Mientras tanto el sitio se publica subiendo el ZIP a mano."
+      - name: Aviso de estado
+        run: |
+          if [ "$DEPLOY_ON" = "true" ]; then
+            echo "::notice::Build OK. Publicacion automatica ACTIVA: subiendo el sitio por FTP."
+          else
+            echo "::notice::Build OK. Publicacion automatica en pausa (AUTO_DEPLOY no esta en 'on' o faltan secrets FTP). No se sube nada."
+          fi
 
       # -----------------------------------------------------------------------
-      # PAUSADO: Webempresa rechaza el login FTP/FTPS desde las IPs de GitHub
-      # Actions (530 Login authentication failed) aunque el usuario/clave son
-      # correctos. Ticket abierto con su soporte. PARA REACTIVAR cuando lo
-      # confirmen: cambiar el 'if' de abajo por  ->  if: env.DEPLOY_ON == 'true'
+      # ACTIVO: la cuenta de deploy esta en la lista blanca de Webempresa
+      # (Seguridad FTP -> Cuenta FTP, sin restriccion regional), por lo que el
+      # login FTPS desde las IPs rotativas de GitHub Actions ya no se bloquea.
+      # El paso solo corre si AUTO_DEPLOY='on' y los 3 secrets FTP existen.
       # -----------------------------------------------------------------------
       - name: Publicar por FTP
-        if: ${{ false }}
+        if: env.DEPLOY_ON == 'true'
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
