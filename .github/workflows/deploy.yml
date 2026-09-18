@@ -61,7 +61,6 @@ jobs:
 
       - name: Aviso de estado
         run: |
-          echo "::notice::diag  PUBLIC_SITE_URL_set=${{ vars.PUBLIC_SITE_URL != '' }}  DEPLOY_TOKEN_set=${{ secrets.DEPLOY_TOKEN != '' }}  AUTO_DEPLOY=${{ vars.AUTO_DEPLOY }}"
           if [ "$DEPLOY_ON" != "true" ]; then
             echo "::notice::Build OK. Publicacion automatica en pausa (AUTO_DEPLOY no esta en 'on' o faltan secrets FTP). No se sube nada."
           elif [ "$FAST_DEPLOY" = "true" ]; then
@@ -146,7 +145,9 @@ jobs:
       # El paso solo corre si AUTO_DEPLOY='on' y los 3 secrets FTP existen.
       # -----------------------------------------------------------------------
       - name: Publicar por FTP (lftp con reconexion) [respaldo]
-        if: env.DEPLOY_ON == 'true' && (env.FAST_DEPLOY != 'true' || steps.fast.outcome == 'failure')
+        # Corre solo si la via rapida NO tuvo exito: 'skipped' (sin DEPLOY_TOKEN)
+        # o 'failure' (extractor cayo). Si la rapida fue 'success', se salta.
+        if: env.DEPLOY_ON == 'true' && steps.fast.outcome != 'success'
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
