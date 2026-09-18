@@ -15,7 +15,8 @@
     "fuentes": "node scripts/traer-fuentes.mjs",
     "exportar": "node scripts/exportar.mjs",
     "seo": "node scripts/generar-seo.mjs",
-    "prebuild": "node scripts/generar-seo.mjs"
+    "prebuild": "node scripts/generar-seo.mjs",
+    "display": "node scripts/convertir-display.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",

@@ -21,6 +21,7 @@ npm run preview
 | `npm run recortar` | Recorta las fotos de `assets-origen/platillos/` sobre su fondo blanco y genera webp de 480 y 900px con PNG de respaldo |
 | `npm run optimizar` | Genera los `.webp` de `public/assets/` y avisa si una foto no tiene fondo transparente |
 | `npm run fuentes` | Vuelve a bajar Poppins de Google Fonts a `public/fonts/` para auto-hospedarla |
+| `npm run display` | Convierte los OTF de Rustic Delight a woff2 recortados al latín (necesita `pip install fonttools brotli`) |
 | `npm run seo` | Regenera el JSON-LD, el sitemap y el robots desde `src/data/` (corre solo antes de cada build) |
 | `npm run exportar` | Arma `export/kosecha-sitio.zip`, el paquete para subir a mano a un hosting |
 | `npm run verificar` | Chequeo de humo en un navegador real (rueda, CTAs, teclado, reduced-motion) |

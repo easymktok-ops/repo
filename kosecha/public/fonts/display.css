@@ -1,12 +1,20 @@
-/* Tipografía display de la marca.
-   Este archivo se sirve tal cual desde /fonts, así que la ruta al woff2 es
-   relativa a él: en cuanto RusticDelight.woff2 se copie a esta carpeta, los
-   títulos la toman sin tocar código ni volver a compilar.
-   Mientras no esté, cae en la serif de respaldo declarada en tokens.css. */
+/* Tipografía display de la marca: Rustic Delight (TimelessType).
+   Se sirve desde esta misma carpeta, así que las rutas son relativas al
+   archivo y el sitio funciona igual en la raíz del dominio que en una
+   subcarpeta. Los woff2 los genera scripts/convertir-display.mjs a partir de
+   los OTF originales, recortados al latín. */
 @font-face {
   font-family: 'Rustic Delight';
   src: url('./RusticDelight.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Rustic Delight';
+  src: url('./RusticDelight-Italic.woff2') format('woff2');
+  font-weight: 400;
+  font-style: italic;
   font-display: swap;
 }

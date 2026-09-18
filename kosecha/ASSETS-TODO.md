@@ -42,10 +42,16 @@ inventado en el código: donde no hay dato, el bloque no se muestra.
 
 ## 1. Tipografía display
 
-- [ ] `RusticDelight.woff2` en `public/fonts/`. El `@font-face` está declarado
-      en `brand/tokens.css`; hasta que llegue, los títulos usan la serif de
-      respaldo. Es lo único que hoy separa al sitio del logo, que sí usa la
-      serif de marca.
+Rustic Delight (TimelessType) ya está puesta: los títulos del sitio usan la
+misma tipografía que el logo. Los OTF originales quedan en
+`assets-origen/fuentes/` y `npm run display` los convierte a woff2 recortados al
+latín (de 143 KB a 24 KB cada uno).
+
+- [ ] **Confirmar que la licencia cubre uso web.** Los archivos que llegaron son
+      OTF de escritorio y muchas fundiciones venden la licencia web aparte. El
+      sitio sirve la fuente desde su propio dominio, que es justo lo que esa
+      licencia regula. Vale una consulta a TimelessType antes de publicar; si no
+      la cubre, se compra el add-on web o se cambia la display.
 
 ## 2. Datos que faltan del menú
 

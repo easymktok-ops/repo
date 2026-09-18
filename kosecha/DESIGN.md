@@ -35,8 +35,11 @@ de color y el nombre de la categoría.
 
 ## Tipografía
 
-- **Display**: Rustic Delight (pendiente), fallback Georgia. Títulos, precios y
-  la frase de cierre de trazabilidad.
+- **Display**: Rustic Delight (TimelessType), regular e itálica, auto-hospedada
+  en `/fonts` y recortada al latín: 24 KB por archivo contra los 143 KB del OTF
+  original. Es la misma tipografía del logo, así que el h1 y el logotipo hablan
+  el mismo idioma. Va en títulos, precios y la frase de cierre de trazabilidad;
+  la itálica solo en el "sí" del hero. Respaldo: Georgia.
 - **Texto**: Poppins 300/400/500/600, auto-hospedada en `/fonts` (con el
   `<link>` a Google el LCP medido era de 3,8 s y ahora es de 0,7 s).
 - Escala fluida con `clamp()`, razón ≥1.25 entre pasos.
