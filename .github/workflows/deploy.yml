@@ -69,32 +69,57 @@ jobs:
       # ACTIVO: la cuenta de deploy esta en la lista blanca de Webempresa
       # (Seguridad FTP -> Cuenta FTP, sin restriccion regional), por lo que el
       # login FTPS desde las IPs rotativas de GitHub Actions ya no se bloquea.
+      #
+      # Se usa lftp (no una action) porque el servidor CORTA la sesion FTPS a
+      # mitad del primer envio (cientos de variantes AVIF): "Server sent FIN
+      # packet unexpectedly". lftp RECONECTA solo y REANUDA el mirror, asi que
+      # el envio completo se logra en varios tramos automaticos.
+      #
+      # SEGURIDAD DEL BACKEND: se usa `mirror -R` (subida) SIN `--delete`, por
+      # lo que NUNCA se borra nada en el servidor. El backend (server/, la BD
+      # SQLite, config.php) y el .htaccess de produccion quedan intactos: no
+      # viven en dist/ y, al no borrar, siguen ahi. SI se sube data/ porque ahi
+      # va catalog.json (autoridad de precios que LEE el backend); excluir data/
+      # dejaria los precios sin actualizar en el cobro.
+      #
+      # Dos tiers:
+      #   1) _assets/  -> nombres con huella de contenido (inmutables): mirror
+      #      con --ignore-time (compara tamano/existencia) => reanudable, salta
+      #      lo ya subido tras cada reconexion.
+      #   2) resto     -> pocos archivos mutables (HTML, data/catalog.json,
+      #      admin/): mirror por tiempo. El checkout deja mtime "ahora" > remoto,
+      #      asi que SIEMPRE se re-suben => capta ediciones aunque el archivo
+      #      quede del mismo tamano (p.ej. cambiar 2200 por 2500).
+      #
       # El paso solo corre si AUTO_DEPLOY='on' y los 3 secrets FTP existen.
       # -----------------------------------------------------------------------
-      - name: Publicar por FTP
+      - name: Publicar por FTP (lftp con reconexion)
         if: env.DEPLOY_ON == 'true'
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-        with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          protocol: ftps
-          server-dir: ${{ vars.FTP_SERVER_DIR }}
-          local-dir: ./dist/
-          # --- PROTECCION: nunca subir ni borrar el backend ni los datos ---
-          exclude: |
-            server/**
-            **/server/**
-            data/**
-            **/data/**
-            aerodiverti.com/**
-            **/aerodiverti.com/**
-            .htaccess
-            **/.htaccess
-            .htaccess.old
-            **/.htaccess.old
-            LEEME-PRIMERO.txt
-            **/LEEME-PRIMERO.txt
-            .well-known/**
-            **/.well-known/**
-            **/.ftp-deploy-sync-state.json
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_DIR: ${{ vars.FTP_SERVER_DIR }}
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq lftp
+          REMOTE="${FTP_DIR%/}/"
+          echo "Publicando dist/ -> ${REMOTE} en ${FTP_SERVER}"
+          lftp -c "
+            set cmd:fail-exit true;
+            set ftp:ssl-force true;
+            set ftp:ssl-protect-data true;
+            set ssl:verify-certificate no;
+            set net:max-retries 20;
+            set net:persist-retries 20;
+            set net:reconnect-interval-base 5;
+            set net:reconnect-interval-max 30;
+            set net:timeout 25;
+            set mirror:parallel-transfer-count 1;
+            set mirror:set-permissions off;
+            open -u \"${FTP_USERNAME}\",\"${FTP_PASSWORD}\" \"${FTP_SERVER}\";
+            mirror -R --ignore-time --no-perms --verbose=1 ./dist/_assets/ \"${REMOTE}_assets/\";
+            mirror -R --no-perms --verbose=1 --exclude '^_assets/' --exclude '^server/' --exclude-glob .htaccess --exclude-glob .htaccess.old --exclude '^\.well-known/' --exclude-glob .ftp-deploy-sync-state.json ./dist/ \"${REMOTE}\";
+          "
+          echo "Deploy completado."
