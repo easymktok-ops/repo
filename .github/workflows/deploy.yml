@@ -111,7 +111,12 @@ jobs:
           "
           echo "Zip subido. Llamando al extractor..."
           DEPLOY_URL="${DEPLOY_BASE%/}/api/deploy-extract.php"
-          code="$(curl -sS -o /tmp/extract_resp.txt -w '%{http_code}' --max-time 120 -X POST "$DEPLOY_URL" -H "X-Deploy-Token: ${DEPLOY_TOKEN}")"
+          UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+          code="$(curl -sS -o /tmp/extract_resp.txt -w '%{http_code}' --max-time 120 \
+            -A "$UA" \
+            -X POST "$DEPLOY_URL" \
+            -H "X-Deploy-Token: ${DEPLOY_TOKEN}" \
+            --data-urlencode "token=${DEPLOY_TOKEN}")"
           echo "HTTP status: $code"
           echo "----- cuerpo de la respuesta -----"; cat /tmp/extract_resp.txt 2>/dev/null || true; echo; echo "----------------------------------"
           test "$code" = "200"
