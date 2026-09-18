@@ -61,6 +61,7 @@ jobs:
 
       - name: Aviso de estado
         run: |
+          echo "::notice::diag  PUBLIC_SITE_URL_set=${{ vars.PUBLIC_SITE_URL != '' }}  DEPLOY_TOKEN_set=${{ secrets.DEPLOY_TOKEN != '' }}  AUTO_DEPLOY=${{ vars.AUTO_DEPLOY }}"
           if [ "$DEPLOY_ON" != "true" ]; then
             echo "::notice::Build OK. Publicacion automatica en pausa (AUTO_DEPLOY no esta en 'on' o faltan secrets FTP). No se sube nada."
           elif [ "$FAST_DEPLOY" = "true" ]; then
