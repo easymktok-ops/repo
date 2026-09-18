@@ -155,10 +155,10 @@ jobs:
       # El paso solo corre si AUTO_DEPLOY='on' y los 3 secrets FTP existen.
       # -----------------------------------------------------------------------
       - name: Publicar por FTP (lftp con reconexion) [respaldo]
-        # DIAGNOSTICO TEMPORAL: respaldo desactivado para que la corrida termine
-        # rapido y se pueda leer el cuerpo del 403. Se reactiva enseguida con:
-        #   if: env.DEPLOY_ON == 'true' && env.FAST_OK != '1'
-        if: false
+        # Corre solo si la via rapida NO dejo la bandera FAST_OK=1 (porque se
+        # salto por falta de DEPLOY_TOKEN, o porque el extractor fallo). Asi una
+        # publicacion nunca se queda sin subir aunque el modo rapido falle.
+        if: env.DEPLOY_ON == 'true' && env.FAST_OK != '1'
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
