@@ -55,18 +55,68 @@ jobs:
           PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
 
       - name: Estado de publicacion automatica
-        run: echo "DEPLOY_ON=${{ vars.AUTO_DEPLOY == 'on' && secrets.FTP_SERVER != '' && secrets.FTP_USERNAME != '' && secrets.FTP_PASSWORD != '' }}" >> "$GITHUB_ENV"
+        run: |
+          echo "DEPLOY_ON=${{ vars.AUTO_DEPLOY == 'on' && secrets.FTP_SERVER != '' && secrets.FTP_USERNAME != '' && secrets.FTP_PASSWORD != '' }}" >> "$GITHUB_ENV"
+          echo "FAST_DEPLOY=${{ vars.DEPLOY_URL != '' && secrets.DEPLOY_TOKEN != '' }}" >> "$GITHUB_ENV"
 
       - name: Aviso de estado
         run: |
-          if [ "$DEPLOY_ON" = "true" ]; then
-            echo "::notice::Build OK. Publicacion automatica ACTIVA: subiendo el sitio por FTP."
-          else
+          if [ "$DEPLOY_ON" != "true" ]; then
             echo "::notice::Build OK. Publicacion automatica en pausa (AUTO_DEPLOY no esta en 'on' o faltan secrets FTP). No se sube nada."
+          elif [ "$FAST_DEPLOY" = "true" ]; then
+            echo "::notice::Build OK. Publicacion RAPIDA (ZIP + extractor PHP) activa. Si falla, cae al respaldo lftp."
+          else
+            echo "::notice::Build OK. Publicacion por lftp (mirror). Configura DEPLOY_URL + DEPLOY_TOKEN para el modo rapido (ZIP)."
           fi
 
       # -----------------------------------------------------------------------
-      # ACTIVO: la cuenta de deploy esta en la lista blanca de Webempresa
+      # VIA RAPIDA (recomendada): comprime dist/ en UN zip, lo sube por FTP (un
+      # solo archivo, sin los cortes de sesion) y llama al extractor PHP que lo
+      # descomprime en el servidor. Deploy de ~1-2 min. Requiere en el hosting:
+      #   - server/public/api/deploy-extract.php subido,
+      #   - 'deploy_token' en config.php == secret DEPLOY_TOKEN de GitHub,
+      #   - variable DEPLOY_URL = https://<dominio>/api/deploy-extract.php
+      # Si falla (continue-on-error), corre el respaldo lftp de abajo, asi que
+      # una publicacion nunca se queda sin subir.
+      # -----------------------------------------------------------------------
+      - name: Publicar rapido (ZIP + extractor PHP)
+        id: fast
+        if: env.DEPLOY_ON == 'true' && env.FAST_DEPLOY == 'true'
+        continue-on-error: true
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_DIR: ${{ vars.FTP_SERVER_DIR }}
+          DEPLOY_URL: ${{ vars.DEPLOY_URL }}
+          DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq lftp zip
+          ( cd dist && zip -r -q -X ../site-deploy.zip . )
+          echo "Zip creado: $(du -h site-deploy.zip | cut -f1)"
+          REMOTE="${FTP_DIR%/}/"
+          # Sube UN solo archivo (lftp reanuda si el host corta la conexion).
+          lftp -c "
+            set ftp:ssl-force true;
+            set ftp:ssl-protect-data true;
+            set ssl:verify-certificate no;
+            set net:max-retries 15;
+            set net:persist-retries 15;
+            set net:reconnect-interval-base 4;
+            set net:timeout 25;
+            open -u \"${FTP_USERNAME}\",\"${FTP_PASSWORD}\" \"${FTP_SERVER}\";
+            put -O \"${REMOTE}\" site-deploy.zip;
+          "
+          echo "Zip subido. Llamando al extractor..."
+          resp="$(curl -fsS --max-time 120 -X POST "$DEPLOY_URL" -H "X-Deploy-Token: ${DEPLOY_TOKEN}")"
+          echo "Respuesta del extractor: $resp"
+          echo "$resp" | grep -q '"ok":true'
+          echo "Publicacion rapida OK."
+
+      # -----------------------------------------------------------------------
+      # RESPALDO: la cuenta de deploy esta en la lista blanca de Webempresa
       # (Seguridad FTP -> Cuenta FTP, sin restriccion regional), por lo que el
       # login FTPS desde las IPs rotativas de GitHub Actions ya no se bloquea.
       #
@@ -93,8 +143,8 @@ jobs:
       #
       # El paso solo corre si AUTO_DEPLOY='on' y los 3 secrets FTP existen.
       # -----------------------------------------------------------------------
-      - name: Publicar por FTP (lftp con reconexion)
-        if: env.DEPLOY_ON == 'true'
+      - name: Publicar por FTP (lftp con reconexion) [respaldo]
+        if: env.DEPLOY_ON == 'true' && (env.FAST_DEPLOY != 'true' || steps.fast.outcome == 'failure')
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}

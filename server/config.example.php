@@ -36,6 +36,19 @@ return [
     // src/config/booking.ts. Fuente de verdad de negocio.
     'deposit_per_passenger' => 1000,
 
+    // --- Publicacion rapida (deploy por ZIP) ------------------------------
+    // Token secreto que autoriza /api/deploy-extract.php a descomprimir el
+    // site-deploy.zip que sube GitHub Actions. DEBE ser largo y aleatorio, y
+    // coincidir EXACTAMENTE con el secret DEPLOY_TOKEN de GitHub Actions.
+    // Genera uno con: openssl rand -hex 32   (o similar).
+    'deploy_token' => 'CAMBIA_ESTE_TOKEN',
+
+    // Raiz web ABSOLUTA donde se publica el sitio (donde vive index.html). Si
+    // se deja vacio, se usa $_SERVER['DOCUMENT_ROOT'] automaticamente (lo normal
+    // en Webempresa). Solo se rellena si DOCUMENT_ROOT no fuera fiable.
+    // Ej.: '/home/USUARIO/www/aerodiverti.com.mx'
+    'web_root' => '',
+
     // --- Base de datos -----------------------------------------------------
     // Por defecto SQLite: un archivo, sin servidor MySQL ni credenciales. El
     // esquema se crea SOLO en el primer arranque. Ideal cuando el plan tiene
