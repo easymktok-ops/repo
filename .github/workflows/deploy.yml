@@ -111,9 +111,11 @@ jobs:
           "
           echo "Zip subido. Llamando al extractor..."
           DEPLOY_URL="${DEPLOY_BASE%/}/api/deploy-extract.php"
-          resp="$(curl -fsS --max-time 120 -X POST "$DEPLOY_URL" -H "X-Deploy-Token: ${DEPLOY_TOKEN}")"
-          echo "Respuesta del extractor: $resp"
-          echo "$resp" | grep -q '"ok":true'
+          code="$(curl -sS -o /tmp/extract_resp.txt -w '%{http_code}' --max-time 120 -X POST "$DEPLOY_URL" -H "X-Deploy-Token: ${DEPLOY_TOKEN}")"
+          echo "HTTP status: $code"
+          echo "----- cuerpo de la respuesta -----"; cat /tmp/extract_resp.txt 2>/dev/null || true; echo; echo "----------------------------------"
+          test "$code" = "200"
+          grep -q '"ok":true' /tmp/extract_resp.txt
           # Bandera para que el respaldo lftp se salte: solo se escribe si TODO
           # lo anterior salio bien (set -e aborta antes si algo fallo).
           echo "FAST_OK=1" >> "$GITHUB_ENV"
@@ -148,9 +150,10 @@ jobs:
       # El paso solo corre si AUTO_DEPLOY='on' y los 3 secrets FTP existen.
       # -----------------------------------------------------------------------
       - name: Publicar por FTP (lftp con reconexion) [respaldo]
-        # Corre solo si la via rapida NO dejo la bandera FAST_OK=1 (porque se
-        # salto por falta de DEPLOY_TOKEN, o porque el extractor fallo).
-        if: env.DEPLOY_ON == 'true' && env.FAST_OK != '1'
+        # DIAGNOSTICO TEMPORAL: respaldo desactivado para que la corrida termine
+        # rapido y se pueda leer el cuerpo del 403. Se reactiva enseguida con:
+        #   if: env.DEPLOY_ON == 'true' && env.FAST_OK != '1'
+        if: false
         env:
           FTP_SERVER: ${{ secrets.FTP_SERVER }}
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
