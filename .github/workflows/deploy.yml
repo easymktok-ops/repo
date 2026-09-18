@@ -54,6 +54,11 @@ jobs:
         env:
           PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
 
+      # Sella el build con el commit: permite verificar despues que el sitio EN
+      # VIVO ya sirve exactamente esta version publicada.
+      - name: Sellar deploy-id
+        run: echo -n "${GITHUB_SHA}" > dist/deploy-id.txt
+
       - name: Estado de publicacion automatica
         run: |
           echo "DEPLOY_ON=${{ vars.AUTO_DEPLOY == 'on' && secrets.FTP_SERVER != '' && secrets.FTP_USERNAME != '' && secrets.FTP_PASSWORD != '' }}" >> "$GITHUB_ENV"
@@ -187,3 +192,31 @@ jobs:
             mirror -R --no-perms --verbose=1 --exclude '^_assets/' --exclude '^server/' --exclude-glob .htaccess --exclude-glob .htaccess.old --exclude '^\.well-known/' --exclude-glob .ftp-deploy-sync-state.json ./dist/ \"${REMOTE}\";
           "
           echo "Deploy completado."
+
+      # -----------------------------------------------------------------------
+      # VERIFICACION EN VIVO: confirma que el sitio publico ya sirve ESTE commit
+      # (compara /deploy-id.txt contra GITHUB_SHA). Corre desde el runner, que si
+      # alcanza el sitio. Reintenta unos segundos por si la caché/propagacion
+      # tardan. No falla el deploy si no coincide (solo avisa), para no marcar en
+      # rojo por un retraso de caché; el deploy en si ya quedo hecho.
+      # -----------------------------------------------------------------------
+      - name: Verificar publicacion en vivo
+        if: env.DEPLOY_ON == 'true'
+        env:
+          DEPLOY_BASE: ${{ vars.PUBLIC_SITE_URL }}
+        run: |
+          set -uo pipefail
+          UA="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+          BASE="${DEPLOY_BASE%/}"
+          ok=0
+          for i in 1 2 3 4 5 6; do
+            live="$(curl -fsS -A "$UA" --max-time 30 "${BASE}/deploy-id.txt?cb=${GITHUB_SHA}${i}" 2>/dev/null || true)"
+            if [ "$live" = "$GITHUB_SHA" ]; then ok=1; break; fi
+            echo "Intento $i: en vivo='${live:-<vacio>}' (esperado ${GITHUB_SHA}); reintento en 10s..."
+            sleep 10
+          done
+          if [ "$ok" = "1" ]; then
+            echo "::notice::Verificado: el sitio en vivo ya sirve el commit ${GITHUB_SHA}."
+          else
+            echo "::warning::No se pudo confirmar el commit en vivo (posible cache/propagacion). El deploy se realizo; revisa con Ctrl+Shift+R."
+          fi
