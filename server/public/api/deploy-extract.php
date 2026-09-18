@@ -40,6 +40,11 @@ if ($expected === '' || $expected === 'CAMBIA_ESTE_TOKEN') {
     json_response(500, ['ok' => false, 'error' => 'deploy no configurado']);
 }
 $provided = (string) ($_SERVER['HTTP_X_DEPLOY_TOKEN'] ?? '');
+if ($provided === '') {
+    // Fallback: algunos hosts/WAF eliminan cabeceras X-*. Aceptar el token
+    // tambien desde el cuerpo POST (campo 'token').
+    $provided = (string) ($_POST['token'] ?? '');
+}
 if ($provided === '' || !hash_equals($expected, $provided)) {
     log_line('deploy', 'token invalido en intento de deploy', [
         'ip' => $_SERVER['REMOTE_ADDR'] ?? '?',
