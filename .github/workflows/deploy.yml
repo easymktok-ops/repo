@@ -57,7 +57,7 @@ jobs:
       - name: Estado de publicacion automatica
         run: |
           echo "DEPLOY_ON=${{ vars.AUTO_DEPLOY == 'on' && secrets.FTP_SERVER != '' && secrets.FTP_USERNAME != '' && secrets.FTP_PASSWORD != '' }}" >> "$GITHUB_ENV"
-          echo "FAST_DEPLOY=${{ vars.DEPLOY_URL != '' && secrets.DEPLOY_TOKEN != '' }}" >> "$GITHUB_ENV"
+          echo "FAST_DEPLOY=${{ vars.PUBLIC_SITE_URL != '' && secrets.DEPLOY_TOKEN != '' }}" >> "$GITHUB_ENV"
 
       - name: Aviso de estado
         run: |
@@ -66,7 +66,7 @@ jobs:
           elif [ "$FAST_DEPLOY" = "true" ]; then
             echo "::notice::Build OK. Publicacion RAPIDA (ZIP + extractor PHP) activa. Si falla, cae al respaldo lftp."
           else
-            echo "::notice::Build OK. Publicacion por lftp (mirror). Configura DEPLOY_URL + DEPLOY_TOKEN para el modo rapido (ZIP)."
+            echo "::notice::Build OK. Publicacion por lftp (mirror). Configura el secret DEPLOY_TOKEN para el modo rapido (ZIP)."
           fi
 
       # -----------------------------------------------------------------------
@@ -74,10 +74,10 @@ jobs:
       # solo archivo, sin los cortes de sesion) y llama al extractor PHP que lo
       # descomprime en el servidor. Deploy de ~1-2 min. Requiere en el hosting:
       #   - server/public/api/deploy-extract.php subido,
-      #   - 'deploy_token' en config.php == secret DEPLOY_TOKEN de GitHub,
-      #   - variable DEPLOY_URL = https://<dominio>/api/deploy-extract.php
-      # Si falla (continue-on-error), corre el respaldo lftp de abajo, asi que
-      # una publicacion nunca se queda sin subir.
+      #   - 'deploy_token' en config.php == secret DEPLOY_TOKEN de GitHub.
+      # La URL del extractor se deriva sola de PUBLIC_SITE_URL (no hace falta una
+      # variable DEPLOY_URL aparte). Si falla (continue-on-error), corre el
+      # respaldo lftp de abajo, asi que una publicacion nunca se queda sin subir.
       # -----------------------------------------------------------------------
       - name: Publicar rapido (ZIP + extractor PHP)
         id: fast
@@ -88,7 +88,7 @@ jobs:
           FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_DIR: ${{ vars.FTP_SERVER_DIR }}
-          DEPLOY_URL: ${{ vars.DEPLOY_URL }}
+          DEPLOY_BASE: ${{ vars.PUBLIC_SITE_URL }}
           DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         run: |
           set -euo pipefail
@@ -110,6 +110,7 @@ jobs:
             put -O \"${REMOTE}\" site-deploy.zip;
           "
           echo "Zip subido. Llamando al extractor..."
+          DEPLOY_URL="${DEPLOY_BASE%/}/api/deploy-extract.php"
           resp="$(curl -fsS --max-time 120 -X POST "$DEPLOY_URL" -H "X-Deploy-Token: ${DEPLOY_TOKEN}")"
           echo "Respuesta del extractor: $resp"
           echo "$resp" | grep -q '"ok":true'
