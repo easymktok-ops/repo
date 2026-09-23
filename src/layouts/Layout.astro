@@ -13,6 +13,16 @@ const favicon = `${import.meta.env.BASE_URL}assets/favicon-180.png`.replace(/\/{
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- Google tag (gtag.js) -->
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=AW-18470622763"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'AW-18470622763');
+    </script>
+
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="theme-color" content="#F4B400" />
