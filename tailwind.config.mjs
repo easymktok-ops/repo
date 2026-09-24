@@ -19,6 +19,7 @@ export default {
         mint: '#6FD8A4', // valle
         grape: '#B98BD6', // lavanda / altura
         rose: '#FF6FA5', // romántico (paquete LOVE)
+        wa: '#25D366', // verde WhatsApp
       },
       fontFamily: {
         display: ['Bangers', 'cursive'],

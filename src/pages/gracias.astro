@@ -1,0 +1,88 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import WAButton from '../components/WAButton.astro';
+import { contact, waGeneral } from '../data/site.js';
+
+const BASE = import.meta.env.BASE_URL;
+const home = `${BASE}`.replace(/\/{2,}/g, '/');
+const waLink = waGeneral('Hola 😊 Acabo de enviar una solicitud de cotización por la web de Happy Puerto y quiero continuar por aquí.');
+---
+
+<Layout title="¡Gracias! · Happy Puerto" description="Recibimos tu solicitud de cotización. Te contactamos muy pronto." noindex={true}>
+  <Nav />
+  <main>
+    <section class="relative flex min-h-[86vh] items-center overflow-hidden bg-cream py-24">
+      <!-- deco -->
+      <div class="pointer-events-none absolute -left-16 top-16 h-52 w-52 rounded-full bg-yellow/25 blur-3xl" aria-hidden="true"></div>
+      <div class="pointer-events-none absolute -right-10 bottom-10 h-56 w-56 rounded-full bg-mint/25 blur-3xl" aria-hidden="true"></div>
+
+      <div class="relative mx-auto w-full max-w-2xl px-4 text-center sm:px-6">
+        <div class="mx-auto mb-6 grid h-24 w-24 place-items-center rounded-full border-2 border-ink bg-yellow shadow-pop">
+          <!-- globo carita feliz -->
+          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#1D1D1D" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 2a7 7 0 0 1 7 7c0 3.5-3 6.5-5 8h-4c-2-1.5-5-4.5-5-8a7 7 0 0 1 7-7Z"/>
+            <path d="M10 17h4l-.5 3h-3L10 17Z"/>
+            <circle cx="9.5" cy="9" r=".6" fill="#1D1D1D"/>
+            <circle cx="14.5" cy="9" r=".6" fill="#1D1D1D"/>
+            <path d="M9.3 12a3 3 0 0 0 5.4 0"/>
+          </svg>
+        </div>
+
+        <span class="sticker mb-4 inline-block rounded-full bg-yellow-lt px-4 py-1.5 font-sub text-sm font-semibold text-ink">
+          Solicitud recibida
+        </span>
+        <h1 class="font-display text-[clamp(2.6rem,9vw,4.5rem)] leading-[0.95] text-ink">
+          ¡Gracias! <span class="text-yellow-dk">Vamos a volar</span>
+        </h1>
+        <p class="mx-auto mt-5 max-w-xl font-body text-lg text-ink/75">
+          Recibimos tu solicitud de cotización. Nuestro equipo te contactará muy pronto por
+          WhatsApp o teléfono para confirmar disponibilidad y armar tu vuelo feliz. 🎈
+        </p>
+
+        <div class="mt-9 flex flex-wrap items-center justify-center gap-3">
+          <a
+            href={waLink}
+            target="_blank"
+            rel="noopener"
+            class="inline-flex items-center gap-2 rounded-full border-2 border-ink bg-wa px-6 py-3.5 font-sub text-base font-semibold text-white shadow-pop transition-transform hover:-translate-y-0.5"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm5.6 14.2c-.2.6-1.2 1.2-1.7 1.2-.4 0-1 .1-3.2-.8-2.7-1.1-4.4-3.9-4.6-4.1-.1-.2-1-1.4-1-2.6 0-1.2.6-1.8.9-2 .2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.1.1.3 0 .5l-.5.6c-.1.2-.3.3-.1.6.5 1 1.6 1.9 2.6 2.3.2.1.4.1.5-.1l.6-.7c.2-.2.3-.2.6-.1l1.9.9c.2.1.4.2.4.3.1.2.1.6-.1 1.1Z"/></svg>
+            Continuar por WhatsApp
+          </a>
+          <a
+            href={home}
+            class="inline-flex items-center gap-2 rounded-full border-2 border-ink bg-white px-6 py-3.5 font-sub text-base font-semibold text-ink transition-transform hover:-translate-y-0.5"
+          >
+            Volver al inicio
+          </a>
+        </div>
+
+        <p class="mt-8 font-sub text-sm text-ink/55">
+          ¿Urgente? Llámanos al
+          <a href={`tel:+${contact.whatsappPhone}`} class="font-semibold text-ink underline decoration-yellow decoration-2 underline-offset-4">{contact.whatsappDisplay}</a>
+        </p>
+      </div>
+    </section>
+  </main>
+  <Footer />
+  <WAButton />
+
+  <!-- ============================================================
+       Conversión de Google Ads — envío de formulario
+       ⚠️ easy mkt: cuando tu socio cree la ACCIÓN DE CONVERSIÓN en
+       Google Ads, reemplaza FORM_LABEL por la etiqueta que te den
+       (queda como 'AW-18470622763/xxxxxxxxxxxxxxxxx'). Sin esa
+       etiqueta el disparo no registra nada (no rompe el sitio).
+       ============================================================ -->
+  <script is:inline>
+    (function () {
+      var SEND_TO = 'AW-18470622763/FORM_LABEL'; // <-- reemplazar FORM_LABEL
+      if (SEND_TO.indexOf('FORM_LABEL') !== -1) return; // sin etiqueta real, no dispara
+      if (typeof gtag === 'function') {
+        gtag('event', 'conversion', { send_to: SEND_TO });
+      }
+    })();
+  </script>
+</Layout>

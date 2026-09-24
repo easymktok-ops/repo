@@ -38,6 +38,14 @@ body {
   overflow-x: hidden;
 }
 
+/* Contención horizontal por sección: el carrusel de "Cómo funciona" y los
+   globos/decoraciones absolutas no deben sumar ancho a la página (refuerzo
+   para iOS Safari, que no siempre respeta overflow-x en body). */
+#experiencia,
+#paquetes {
+  overflow-x: clip;
+}
+
 ::selection {
   background: var(--yellow);
   color: var(--ink);
@@ -268,13 +276,12 @@ input:focus-visible,
    deja pasar los toques; overflow visible para que no se recorten al frente. */
 .parallax-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 6; }
 .parallax-balloon { position: absolute; will-change: transform; filter: drop-shadow(0 12px 22px rgba(29,29,29,.22)); }
-/* En móvil: 4 globos en los márgenes (2 arriba, 2 abajo); pequeños y muy hacia
-   el borde para no tapar el texto; suben rápido al hacer scroll */
+/* En móvil: 3 globos ENTEROS (completos, dentro de la pantalla) que cruzan
+   sobre las tarjetas al hacer scroll; suben rápido y no se estacionan */
 @media (max-width: 640px) {
-  .parallax-balloon:nth-child(1) { top: 8% !important;  right: -22% !important; left: auto !important; bottom: auto !important; width: 150px !important; }
-  .parallax-balloon:nth-child(2) { top: 2% !important;  left: -22% !important;  right: auto !important; bottom: auto !important; width: 120px !important; }
-  .parallax-balloon:nth-child(3) { top: 50% !important; left: -15% !important;  right: auto !important; bottom: auto !important; width: 140px !important; }
-  .parallax-balloon:nth-child(4) { top: 64% !important; right: -15% !important; left: auto !important; bottom: auto !important; width: 130px !important; }
+  .parallax-balloon:nth-child(1) { top: 15% !important; right: 1% !important;  left: auto !important; bottom: auto !important; width: 120px !important; }
+  .parallax-balloon:nth-child(2) { top: 43% !important; left: 1% !important;   right: auto !important; bottom: auto !important; width: 132px !important; }
+  .parallax-balloon:nth-child(3) { top: 28% !important; right: 3% !important;  left: auto !important; bottom: auto !important; width: 108px !important; }
 }
 
 /* ── Reduced motion: todo estático, cursor nativo ───────────── */

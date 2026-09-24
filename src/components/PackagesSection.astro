@@ -11,14 +11,13 @@ const gStar = `${BASE}assets/globos/globo-star.png`.replace(/\/{2,}/g, '/');
   <div class="pointer-events-none absolute -left-16 top-24 h-40 w-40 rounded-full bg-mint/25 blur-2xl" aria-hidden="true"></div>
   <div class="pointer-events-none absolute right-0 top-1/2 h-52 w-52 rounded-full bg-sky/20 blur-3xl" aria-hidden="true"></div>
 
-  <!-- Globos REALES enfrente: 2 arriba (flanquean el encabezado) y 2 abajo
-       (flanquean las tarjetas). Suben RÁPIDO al hacer scroll para despejar
-       el texto; siempre pegados a los márgenes (como magicballoons) -->
+  <!-- Globos REALES ENTEROS que CRUZAN sobre las tarjetas al hacer scroll:
+       se ven completos (no recortados) y suben rápido, así "corren" sobre las
+       cards sin estacionarse encima del texto. -->
   <div class="parallax-layer" aria-hidden="true">
-    <img src={gSmile} class="parallax-balloon" data-speed="0.55" style="left:-9%;top:4%;width:260px;opacity:1;transform:rotate(-6deg)" alt="" />
-    <img src={gStar} class="parallax-balloon" data-speed="0.65" style="right:-5%;top:3%;width:250px;opacity:1;transform:rotate(5deg)" alt="" />
-    <img src={gStar} class="parallax-balloon" data-speed="0.18" style="left:-7%;top:50%;width:230px;opacity:1;transform:rotate(6deg)" alt="" />
-    <img src={gSmile} class="parallax-balloon" data-speed="0.22" style="right:-7%;top:64%;width:210px;opacity:1;transform:rotate(-5deg)" alt="" />
+    <img src={gStar} class="parallax-balloon" data-speed="0.42" style="left:2%;top:16%;width:195px;opacity:1;transform:rotate(-5deg)" alt="" />
+    <img src={gSmile} class="parallax-balloon" data-speed="0.55" style="left:39%;top:46%;width:205px;opacity:1;transform:rotate(5deg)" alt="" />
+    <img src={gStar} class="parallax-balloon" data-speed="0.46" style="right:3%;top:26%;width:185px;opacity:1;transform:rotate(6deg)" alt="" />
   </div>
 
   <div class="relative mx-auto max-w-7xl px-4 sm:px-6">
