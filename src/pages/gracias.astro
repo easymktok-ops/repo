@@ -69,17 +69,11 @@ const waLink = waGeneral('Hola 😊 Acabo de enviar una solicitud de cotización
   <Footer />
   <WAButton />
 
-  <!-- ============================================================
-       Conversión de Google Ads — envío de formulario
-       ⚠️ easy mkt: cuando tu socio cree la ACCIÓN DE CONVERSIÓN en
-       Google Ads, reemplaza FORM_LABEL por la etiqueta que te den
-       (queda como 'AW-18470622763/xxxxxxxxxxxxxxxxx'). Sin esa
-       etiqueta el disparo no registra nada (no rompe el sitio).
-       ============================================================ -->
+  <!-- Conversión de Google Ads — "Envío formulario web" (se dispara al llegar
+       a /gracias, es decir, tras enviar el formulario correctamente). -->
   <script is:inline>
     (function () {
-      var SEND_TO = 'AW-18470622763/FORM_LABEL'; // <-- reemplazar FORM_LABEL
-      if (SEND_TO.indexOf('FORM_LABEL') !== -1) return; // sin etiqueta real, no dispara
+      var SEND_TO = 'AW-18470622763/-wguCMXGoYQdEKusvedE';
       if (typeof gtag === 'function') {
         gtag('event', 'conversion', { send_to: SEND_TO });
       }

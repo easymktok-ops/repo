@@ -55,17 +55,11 @@ const favicon = `${import.meta.env.BASE_URL}assets/favicon-180.png`.replace(/\/{
   <body>
     <slot />
 
-    <!-- ============================================================
-         Conversión de Google Ads — clic a WhatsApp
-         ⚠️ easy mkt: cuando tu socio cree la ACCIÓN DE CONVERSIÓN de
-         "Clic a WhatsApp" en Google Ads, reemplaza WHATSAPP_LABEL por
-         la etiqueta que te den. Mientras siga el placeholder no dispara
-         nada (no afecta el sitio).
-         ============================================================ -->
+    <!-- Conversión de Google Ads — "Clic a WhatsApp": se dispara al hacer clic
+         en cualquier enlace de WhatsApp (FAB, botones de paquete, etc.). -->
     <script is:inline>
       (function () {
-        var SEND_TO = 'AW-18470622763/WHATSAPP_LABEL'; // <-- reemplazar WHATSAPP_LABEL
-        if (SEND_TO.indexOf('WHATSAPP_LABEL') !== -1) return; // sin etiqueta real, no dispara
+        var SEND_TO = 'AW-18470622763/hS0SCNCfo4QdEKusvedE';
         document.addEventListener('click', function (e) {
           var a = e.target && e.target.closest ? e.target.closest('a[href*="wa.me"], a[href*="api.whatsapp.com"]') : null;
           if (!a) return;
