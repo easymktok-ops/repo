@@ -272,6 +272,28 @@
   .mapcard-btn { margin-top: 16px; display: inline-flex; align-items: center; gap: 8px; background: var(--ink); color: #fff; font-family: var(--font-sub); font-weight: 600; border-radius: 999px; padding: 10px 20px; transition: transform .18s; }
   .mapcard:hover .mapcard-btn { transform: translateY(-2px); }
 
+  /* Formulario de cotización (demo) */
+  .cform { border: 2px solid var(--ink); background: var(--cream); border-radius: 26px; padding: 24px; box-shadow: var(--shadow-pop); margin-top: 44px; }
+  .cform h3 { font-family: var(--font-display); font-size: 1.6rem; letter-spacing: .03em; }
+  .cform .sub2 { font-family: var(--font-sub); font-size: 13px; color: rgba(29,29,29,.6); margin: 2px 0 16px; }
+  .cform .row { display: grid; gap: 14px; grid-template-columns: 1fr; }
+  .cform .row + .row { margin-top: 14px; }
+  @media (min-width: 560px){ .cform .row.two { grid-template-columns: 1fr 1fr; } }
+  .cform .lb { display: block; font-family: var(--font-sub); font-weight: 600; font-size: 13px; margin-bottom: 5px; color: rgba(29,29,29,.8); }
+  .cform input, .cform select, .cform textarea { width: 100%; box-sizing: border-box; border: 2px solid var(--ink); border-radius: 12px; padding: 11px 14px; font-family: var(--font-body); font-size: 16px; background: #fff; color: var(--ink); }
+  .cform textarea { resize: vertical; min-height: 84px; }
+  .cform .req { color: var(--coral); }
+  .cform .chk { display: flex; gap: 9px; align-items: flex-start; font-family: var(--font-sub); font-size: 13px; color: rgba(29,29,29,.72); margin-top: 14px; }
+  .cform .chk input { width: 18px; height: 18px; flex: 0 0 auto; margin-top: 1px; }
+  .cform button { margin-top: 16px; width: 100%; border: 2px solid var(--ink); border-radius: 999px; padding: 13px; font-family: var(--font-sub); font-weight: 600; font-size: 1.02rem; background: var(--yellow); color: var(--ink); box-shadow: var(--shadow-pop); cursor: pointer; transition: transform .18s; }
+  .cform button:hover { transform: translateY(-2px); }
+  .cform .mini { text-align: center; font-family: var(--font-sub); font-size: 11px; color: rgba(29,29,29,.5); margin-top: 8px; }
+  .cform-ok { display: none; text-align: center; padding: 26px 10px; }
+  .cform-ok .em { font-size: 2.6rem; }
+  .cform-ok h3 { font-family: var(--font-display); font-size: 1.9rem; margin-top: 6px; }
+  .cform.done .cform-fields { display: none; }
+  .cform.done .cform-ok { display: block; }
+
   /* ---------- Footer ---------- */
   footer { background: var(--ink); color: #fff; }
   .foot-grid { display: grid; grid-template-columns: 1fr; gap: 36px; padding: 56px 0 0; }
@@ -629,8 +651,46 @@
     <div class="sec-head">
       <span class="eyebrow sticker" style="background:rgba(255,138,91,.4)">Contacto</span>
       <h2 class="sec-title">¿Listos para <span style="color:var(--coral)">volar</span>?</h2>
-      <p class="sec-sub">Escríbenos por WhatsApp y en minutos armamos tu vuelo feliz.</p>
+      <p class="sec-sub">Déjanos tus datos y te enviamos tu cotización, o escríbenos directo por WhatsApp.</p>
     </div>
+
+    <!-- Formulario de cotización -->
+    <form class="cform" id="cform" novalidate>
+      <div class="cform-fields">
+        <h3>Solicita tu cotización</h3>
+        <p class="sub2">Te contactamos por WhatsApp o teléfono. Sin pagos en línea.</p>
+        <div class="row two">
+          <label><span class="lb">Nombre <span class="req">*</span></span><input type="text" required placeholder="Tu nombre" /></label>
+          <label><span class="lb">WhatsApp / Teléfono <span class="req">*</span></span><input type="tel" required placeholder="55 1234 5678" /></label>
+        </div>
+        <div class="row"><label><span class="lb">Correo (opcional)</span><input type="email" placeholder="tucorreo@ejemplo.com" /></label></div>
+        <div class="row two">
+          <label><span class="lb">Personas</span><input type="number" min="1" value="2" /></label>
+          <label><span class="lb">Fecha tentativa</span><input type="date" /></label>
+        </div>
+        <div class="row"><label><span class="lb">Paquete de interés</span>
+          <select>
+            <option value="">Selecciona un paquete…</option>
+            <option>SMILE — $2,199 MXN</option>
+            <option>HAPPY — $2,399 MXN</option>
+            <option>COOL — $2,799 MXN</option>
+            <option>STAR — $2,999 MXN</option>
+            <option>BIG HAPPY — $3,199 MXN</option>
+            <option>LOVE — $12,000 MXN</option>
+            <option>Aún no lo sé, ayúdenme a elegir</option>
+          </select></label></div>
+        <div class="row"><label><span class="lb">Mensaje (opcional)</span><textarea placeholder="¿Alguna ocasión especial? Cuéntanos."></textarea></label></div>
+        <label class="chk"><input type="checkbox" required /><span>Acepto que Happy Puerto me contacte para dar seguimiento a mi solicitud. <span class="req">*</span></span></label>
+        <button type="submit">Enviar solicitud</button>
+        <p class="mini">Vista de demostración · en el sitio real el envío llega a Ventas@happypuerto.com</p>
+      </div>
+      <div class="cform-ok">
+        <div class="em">🎈</div>
+        <h3>¡Gracias! Solicitud recibida</h3>
+        <p class="sub2" style="max-width:40ch;margin:8px auto 0">Te contactaremos muy pronto por WhatsApp o teléfono para armar tu vuelo feliz.</p>
+      </div>
+    </form>
+
     <div class="con-grid">
       <div class="con-cards">
         <a class="con-card wa-link" data-msg="Hola 😊 Quiero información y disponibilidad para volar en globo con Happy Puerto.">
@@ -908,6 +968,20 @@
   document.getElementById('lb-next').addEventListener('click', function(){ show(idx+1); });
   lb.addEventListener('click', function(e){ if(e.target===lb) close(); });
   window.addEventListener('keydown', function(e){ if(!lb.classList.contains('open')) return; if(e.key==='Escape') close(); if(e.key==='ArrowLeft') show(idx-1); if(e.key==='ArrowRight') show(idx+1); });
+
+  // ---- Formulario de cotización (demo: muestra el "gracias" sin backend) ----
+  var cform = document.getElementById('cform');
+  if (cform) {
+    cform.addEventListener('submit', function(e){
+      e.preventDefault();
+      var reqs = cform.querySelectorAll('[required]');
+      var ok = true;
+      for (var i=0;i<reqs.length;i++){ if(!reqs[i].value || (reqs[i].type==='checkbox' && !reqs[i].checked)){ ok=false; reqs[i].focus(); break; } }
+      if(!ok) return;
+      cform.classList.add('done');
+      cform.scrollIntoView({ behavior:'smooth', block:'center' });
+    });
+  }
 
   // ---- Balloon cursor (desktop, lerp) ----
   var cursor = document.getElementById('balloon-cursor');
