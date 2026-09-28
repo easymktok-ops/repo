@@ -1,40 +1,43 @@
 # PROGRESS — Joyas Colombianas® Dinner & Show
 
-## Hecho
-- **2026-09-28** — Auditoría inicial del repositorio (`easymktok-ops/repo`, rama `claude/wonderful-allen-qhmfe5`).
-  - El repo NO contiene tema/código de WordPress. Solo trae un CLI npm sin relación (`markitdown-cli`, `cli.js` + `package.json`) y 12 archivos sueltos de imagen/video subidos por Norman: `hero-loop.mp4`, `hero-valle.jpg`, `galeria-01..07.jpg`, `ocasion-aniversario.jpg`, `ocasion-cumpleanos.jpg`, `ocasion-pedida.jpg`.
-  - No hay `docs/DESIGN-TOKENS.md` previo — no se ha recibido pantallazo/URL del sitio actual (`joyascolombianas...`) para auditar con `/impeccable`.
-- **2026-09-28** — Placeholder de video del hero confirmado: `hero-loop.mp4` ya cumple el formato objetivo.
-  - 1920×1080 (horizontal, 16:9), 10.1 s, 6.9 MB, sin audio detectado.
-  - Se usará como placeholder temporal en el hero mientras el cliente confirma si tiene material horizontal (la mayoría/totalidad del material bruto en Drive es vertical — MVI_0006..0050.MOV). Pendiente reemplazo por clip real aprobado.
+## Corrección de rumbo (2026-09-28)
+Sesión previa confundió el alcance: se trató el repo como si tuviera que auditarse tal cual, y se le dio demasiado peso a assets sueltos (`hero-valle.jpg`, `galeria-01..07.jpg`, `ocasion-aniversario/cumpleanos/pedida.jpg`) que **Norman confirmó que NO son de este proyecto** — se ignoran. También se abrió una propuesta de arquitectura basada en "child theme / tema propio" (WordPress) que queda **obsoleta**: Norman prefiere evitar WordPress. Todo lo de abajo refleja el alcance correcto: el brief completo dado al inicio del chat (sitio transaccional Joyas Colombianas® Dinner & Show), sin WordPress.
 
-- **2026-09-28** — Prototipo aislado del hero (`prototipo/hero.html`), independiente de la plataforma final: video diferido (poster primero para LCP), overlay para contraste, CTA con fade-in y feedback táctil, `prefers-reduced-motion` respetado, sin autoplay en conexión lenta/Save-Data. Usa `hero-loop.mp4` como placeholder y copy en `{{...}}`.
-- **2026-09-28** — Norman pide evitar WordPress (lo considera obsoleto/pesado) y pregunta por un enfoque tipo "aerodiverti" con autoadministración de títulos y datos básicos. No pude inspeccionar aerodiverti.com.mx (dominio bloqueado por la política de red de esta sesión) para ver qué stack usa. Recomendación dada en el chat: sitio a medida en PHP (sin WordPress) + panel de administración mínimo hecho a medida para los campos que realmente necesita editar el cliente, en vez de instalar un CMS genérico. Alternativa más "lista para usar" si prefieren un CMS real pero ligero: Grav (PHP, flat-file, sin base de datos). Pendiente decisión de Norman.
+## Hecho
+- Auditoría inicial del repo: confirma que no trae stack de WordPress ni código de sitio (solo un CLI npm sin relación, `markitdown-cli`, y los assets genéricos ya descartados arriba).
+- `hero-loop.mp4` se había tomado como placeholder de hero (1920×1080, 10.1s, 6.9MB) — **pendiente de confirmar con Norman** si es válido para este proyecto o si también hay que descartarlo junto con el resto de esos assets sueltos.
+- Prototipo aislado del hero (`prototipo/hero.html`): video diferido (poster primero para LCP), overlay de contraste, CTA con fade-in y feedback táctil, `prefers-reduced-motion` respetado, sin autoplay en conexión lenta/Save-Data. Copy en placeholders `{{...}}`. Construido para ser independiente de la plataforma final, así que sigue sirviendo aunque cambie el stack.
+- Decisión de plataforma: **sin WordPress**, sitio a medida (confirmado por Norman).
 
 ## Bloqueado (esperando a Norman / cliente)
-- **Pantallazos y URLs de referencia del sitio actual** — necesarios para extraer `docs/DESIGN-TOKENS.md` (paleta, tipografías, estilo de imagen, formas, densidad) antes de tocar CSS, por regla del proyecto.
-- **Aprobación de arquitectura técnica** — el proyecto exige "inspeccionar repo y entorno, proponer la opción más simple y esperar aprobación" antes de decidir el enfoque. Repo actual no tiene stack WP. Propuesta (ver abajo) pendiente de aprobación de Norman.
-- **Decisión de plataforma sin WordPress** — Norman debe confirmar entre: (a) sitio a medida en PHP + admin panel propio para campos básicos (recomendado), o (b) Grav CMS (flat-file, PHP, sin WP). Ambas corren en hosting compartido de Hostinger sin necesitar Node en producción.
-- **Confirmación de video horizontal del cliente** — Norman va a preguntar si existe material horizontal para el hero. Todo lo demás del banco de Drive revisado es vertical.
-- **Contenido de John** (copy, textos) — aún no entregado; todo el sitio usará placeholders `{{TITULAR_HERO}}` etc. hasta recibirlo.
-- **Decisión de páginas de llamada con la clienta** (Cartagena/Bogotá/Medellín, prioridad) — pendiente de que Norman confirme cuáles entran en este alcance.
+- **¿`hero-loop.mp4` es válido para este proyecto?** — pendiente respuesta directa.
+- **Pasarela de pago** — por definir (el brief inicial mencionaba Mercado Pago como oficial y Wompi/Stripe descartadas, pero Norman lo dejó abierto de nuevo — no asumir hasta confirmación).
+- **Pantallazos y URLs de referencia del sitio actual de la clienta** — necesarios para `docs/DESIGN-TOKENS.md` antes de tocar CSS definitivo.
+- **Stack técnico concreto sin WordPress** — falta decidir cómo se resuelve el checkout/webhook/ticket/door list sin WP (ver propuesta abajo, pendiente de aprobación).
+- **Confirmación de video horizontal del cliente** — el material bruto de Drive revisado hasta ahora es casi todo vertical (MVI_0006..0050.MOV).
+- **Contenido de John** (copy) — no entregado; todo placeholder `{{...}}`.
+- **Páginas de llamada con la clienta** (Cartagena/Bogotá/Medellín) — cuáles entran en este alcance, pendiente de Norman.
 
 ## Siguiente
-1. Norman aprueba enfoque técnico (ver propuesta abajo) para poder empezar a construir sobre una base real.
-2. Recibir pantallazos/URLs del sitio actual → auditoría `/impeccable` → `docs/DESIGN-TOKENS.md` → diagnóstico corto (se conserva/mejora/descarta) → aprobación.
-3. Mientras tanto: se puede avanzar en prototipo de home/hero en HTML/CSS puro (independiente de la arquitectura final) usando `hero-loop.mp4` como placeholder, sin tocar producción.
+1. Confirmar con Norman si `hero-loop.mp4` sirve o se descarta.
+2. Aprobar el stack técnico sin WordPress (propuesta abajo).
+3. Recibir pantallazos del sitio actual → auditoría `/impeccable` → `docs/DESIGN-TOKENS.md` → diagnóstico → aprobación.
+4. Definir pasarela de pago para diseñar el adaptador de pagos.
 
 ## Fuera de alcance / cotizar aparte
-_(vacío por ahora — se registrará aquí cualquier pedido que caiga en CRO, QR/escaneo en puerta, mapa de asientos, cupones, etc.)_
+_(vacío por ahora)_
 
 ---
 
-## Propuesta de arquitectura (pendiente de aprobación de Norman)
+## Propuesta de stack técnico sin WordPress (pendiente de aprobación)
 
-El repo actual no tiene stack de WordPress ni acceso a Hostinger desde esta sesión. Tres opciones posibles, en orden de preferencia dada la restricción "hosting básico + WordPress, sin servidor Node":
+Dado que el checkout, webhook de pago, ticket numerado atómico y door list exigen lógica de servidor real (no solo contenido editable), y que el hosting es Hostinger básico (compartido, sin proceso Node persistente), la opción más simple y acorde al alcance es:
 
-1. **Tema hijo (child theme) del tema activo actual** — más simple y de menor riesgo si el tema base de la clienta es mantenible; hereda actualizaciones del padre.
-2. **Tema propio ligero + plugin de funciones** — más control total (rendimiento, HTML limpio para Core Web Vitals), pero más trabajo inicial; recomendable si el tema actual es pesado/builder (Elementor/Divi) y estorba el objetivo de LCP < 2.5 s.
-3. **Build estático integrado** (HTML/CSS/JS compilado e insertado en WP vía plantilla mínima) — máximo control de performance, pero más fricción para que Norman edite contenido luego en WP.
+- **Sitio a medida en PHP** (HTML/CSS/JS en el front, PHP en el back) — corre nativo en cualquier plan de Hostinger, sin paquetes ni servicios adicionales.
+- **Base de datos**: SQLite o MySQL (lo que ya incluya el hosting) para tickets, reservas y door list.
+- **Panel de administración propio y mínimo**: solo los campos que la clienta necesita tocar (títulos, fechas de función, precios, textos de landings, media), sin plugins ni bloat de un CMS genérico.
+- **Capa de pagos detrás de un adaptador**, como ya pedía el brief, para poder cambiar de pasarela sin reescribir.
 
-**Recomendación preliminar:** necesito saber qué tema/builder corre el sitio actual (Norman: ¿qué tema tiene activo Hostinger/WordPress hoy — Elementor, Divi, Astra, uno a medida?) para poder recomendar entre 1 y 2 con criterio. Sin ese dato no tomo la decisión.
+Alternativa si prefieren no construir el panel de admin desde cero: **Grav CMS** (PHP, flat-file, sin base de datos, gratis, mucho más liviano que WordPress) — da un panel de edición ya armado a cambio de menos control fino.
+
+**Pendiente de Norman:** aprobar uno de los dos caminos para empezar a construir sobre una base real.
