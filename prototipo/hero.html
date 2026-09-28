@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prototipo — Hero Joyas Colombianas® Dinner &amp; Show</title>
+<!--
+  PROTOTIPO AISLADO — no depende de la plataforma final (WordPress, PHP a medida, etc).
+  Objetivo: validar estructura, jerarquía, carga de video y motion del hero.
+  No tiene tokens de marca reales todavía (falta auditoría del sitio actual) —
+  la paleta/tipografía de aquí es neutra y se reemplaza en cuanto llegue esa auditoría.
+  Copy en placeholders {{...}}: el texto final lo entrega John.
+-->
+<style>
+  :root {
+    color-scheme: dark;
+    --ink: oklch(0.97 0.005 90);
+    --ink-muted: oklch(0.86 0.01 90 / 0.85);
+    --surface: oklch(0.16 0.01 90);
+    --accent: oklch(0.78 0.14 75);
+    --accent-ink: oklch(0.18 0.02 75);
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --container: min(72rem, 100% - 2.5rem);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    background: var(--surface);
+  }
+
+  body {
+    font-family: -apple-system, "Segoe UI", Inter, system-ui, sans-serif;
+    color: var(--ink);
+  }
+
+  .hero {
+    position: relative;
+    min-height: 100svh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+  }
+
+  .hero__poster,
+  .hero__video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 35%;
+  }
+
+  /* Poster: pintado primero, cuenta como LCP. Placeholder de gradiente
+     hasta que exista un frame real extraído del clip elegido. */
+  .hero__poster {
+    background:
+      linear-gradient(180deg, oklch(0.12 0.02 250 / 0.55) 0%, oklch(0.08 0.01 250 / 0.85) 100%),
+      linear-gradient(135deg, oklch(0.22 0.05 250), oklch(0.10 0.02 250));
+  }
+
+  .hero__video {
+    opacity: 0;
+    transition: opacity 600ms var(--ease-out);
+  }
+
+  .hero__video[data-loaded="true"] {
+    opacity: 1;
+  }
+
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      180deg,
+      oklch(0.05 0.01 250 / 0.35) 0%,
+      oklch(0.05 0.01 250 / 0.15) 35%,
+      oklch(0.04 0.01 250 / 0.78) 100%
+    );
+  }
+
+  .hero__content {
+    width: var(--container);
+    margin-inline: auto;
+    padding-block: clamp(2.5rem, 8vw, 5rem);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    max-width: 42rem;
+  }
+
+  .hero__eyebrow {
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+    color: var(--ink-muted);
+    text-wrap: balance;
+  }
+
+  .hero__title {
+    margin: 0;
+    font-size: clamp(2.25rem, 6vw, 4rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  .hero__subtitle {
+    margin: 0;
+    font-size: clamp(1rem, 1.6vw, 1.125rem);
+    line-height: 1.5;
+    color: var(--ink-muted);
+    max-width: 38ch;
+    text-wrap: pretty;
+  }
+
+  .hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    font-size: 0.9375rem;
+    color: var(--ink-muted);
+    padding-block: 0.25rem;
+  }
+
+  .hero__meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.875rem;
+    margin-top: 0.5rem;
+    opacity: 0;
+    transform: translateY(6px);
+    animation: hero-cta-in 700ms var(--ease-out) 250ms forwards;
+  }
+
+  @keyframes hero-cta-in {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .btn {
+    appearance: none;
+    border: none;
+    border-radius: 999px;
+    padding: 0.9rem 1.75rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: transform 160ms var(--ease-out), background-color 160ms ease;
+  }
+
+  .btn:active {
+    transform: scale(0.97);
+  }
+
+  .btn--primary {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  .btn--primary:hover {
+    background: oklch(0.82 0.14 75);
+  }
+
+  .btn--ghost {
+    background: oklch(1 0 0 / 0.08);
+    color: var(--ink);
+    border: 1px solid oklch(1 0 0 / 0.28);
+  }
+
+  .btn--ghost:hover {
+    background: oklch(1 0 0 / 0.14);
+  }
+
+  .btn svg {
+    width: 1.1rem;
+    height: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn { transition: transform 160ms var(--ease-out), background-color 160ms ease; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__actions {
+      animation: none;
+      opacity: 1;
+      transform: none;
+    }
+    .hero__video {
+      transition: opacity 200ms linear;
+    }
+    .btn {
+      transition: background-color 160ms ease;
+    }
+    .btn:active {
+      transform: none;
+    }
+  }
+
+  @media (max-width: 30rem) {
+    .hero { align-items: flex-end; }
+    .hero__actions { flex-direction: column; }
+    .btn { width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero" data-hero>
+  <div class="hero__media">
+    <div class="hero__poster" aria-hidden="true"></div>
+    <video
+      class="hero__video"
+      data-hero-video
+      muted
+      loop
+      playsinline
+      preload="none"
+      aria-hidden="true"
+    >
+      <source data-src="../hero-loop.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="hero__scrim" aria-hidden="true"></div>
+
+  <div class="hero__content">
+    <p class="hero__eyebrow">{{EYEBROW_HERO — ej. ciudad / temporada}}</p>
+    <h1 class="hero__title">{{TITULAR_HERO}}</h1>
+    <p class="hero__subtitle">{{SUBTITULAR_HERO}}</p>
+
+    <div class="hero__meta">
+      <span>{{FECHA_FUNCION}}</span>
+      <span>Puertas 7:45&nbsp;PM</span>
+      <span>Dress code formal</span>
+    </div>
+
+    <div class="hero__actions">
+      <a class="btn btn--primary" href="#comprar">
+        {{CTA_PRINCIPAL — ej. Comprar boletos}}
+      </a>
+      <a class="btn btn--ghost" href="#whatsapp" aria-label="Escribir por WhatsApp">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M20.5 11.9a8.4 8.4 0 1 1-12.9-7.1L4 12l1.4-3.9a8.4 8.4 0 0 1 15.1 3.8Z"/>
+          <path d="M9 9.5c.3 2.6 2.6 4.9 5.2 5.2" stroke-linecap="round"/>
+        </svg>
+        {{CTA_WHATSAPP — ej. Escríbenos}}
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Carga diferida: el <video> no descarga nada (preload="none") hasta que
+  // la página terminó de pintar el LCP (el poster). Evita competir con el
+  // critical path en 4G. Si el visitante pide menos movimiento o la conexión
+  // es lenta (Save-Data / effectiveType 2g), nos quedamos solo con el poster.
+  (function () {
+    var el = document.querySelector('[data-hero-video]');
+    if (!el) return;
+
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var conn = navigator.connection || navigator.webkitConnection || navigator.mozConnection;
+    var slowConn = conn && (conn.saveData || /^(slow-2g|2g)$/.test(conn.effectiveType || ''));
+
+    if (reduceMotion || slowConn) return;
+
+    function loadVideo() {
+      var source = el.querySelector('source[data-src]');
+      if (source) {
+        source.src = source.getAttribute('data-src');
+        el.load();
+        el.addEventListener('canplay', function () {
+          el.setAttribute('data-loaded', 'true');
+          el.play().catch(function () {
+            /* autoplay bloqueado: nos quedamos con el poster, sin error visible */
+          });
+        }, { once: true });
+      }
+    }
+
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadVideo, { timeout: 2000 });
+    } else {
+      window.addEventListener('load', loadVideo, { once: true });
+    }
+  })();
+</script>
+
+</body>
+</html>

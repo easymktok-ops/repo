@@ -9,6 +9,8 @@ Ver reglas duras, alcance y exclusiones en el brief del proyecto (no se repiten 
 - [ ] Diagnóstico corto (se conserva / se mejora / se descarta) → aprobación Norman
 - [ ] Aprobación de arquitectura técnica (tema hijo / tema propio + plugin / build estático) — ver propuesta en `docs/PROGRESS.md`
 - [x] Placeholder de video para el hero banner (`hero-loop.mp4`, 1920×1080, 10.1s, 6.9MB) — confirmado apto, pendiente reemplazo por clip real
+- [x] Prototipo aislado del hero (`prototipo/hero.html`) — motion, carga diferida de video, accesibilidad
+- [ ] Norman confirma plataforma: sitio a medida en PHP + admin propio vs. Grav CMS (WordPress descartado)
 - [ ] Estructura base del home (secciones, sin copy final — placeholders `{{...}}`)
 
 ## Fase 2 — 5 a 9 oct: landings acordadas + contenido de John

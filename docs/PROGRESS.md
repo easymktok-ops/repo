@@ -8,9 +8,13 @@
   - 1920×1080 (horizontal, 16:9), 10.1 s, 6.9 MB, sin audio detectado.
   - Se usará como placeholder temporal en el hero mientras el cliente confirma si tiene material horizontal (la mayoría/totalidad del material bruto en Drive es vertical — MVI_0006..0050.MOV). Pendiente reemplazo por clip real aprobado.
 
+- **2026-09-28** — Prototipo aislado del hero (`prototipo/hero.html`), independiente de la plataforma final: video diferido (poster primero para LCP), overlay para contraste, CTA con fade-in y feedback táctil, `prefers-reduced-motion` respetado, sin autoplay en conexión lenta/Save-Data. Usa `hero-loop.mp4` como placeholder y copy en `{{...}}`.
+- **2026-09-28** — Norman pide evitar WordPress (lo considera obsoleto/pesado) y pregunta por un enfoque tipo "aerodiverti" con autoadministración de títulos y datos básicos. No pude inspeccionar aerodiverti.com.mx (dominio bloqueado por la política de red de esta sesión) para ver qué stack usa. Recomendación dada en el chat: sitio a medida en PHP (sin WordPress) + panel de administración mínimo hecho a medida para los campos que realmente necesita editar el cliente, en vez de instalar un CMS genérico. Alternativa más "lista para usar" si prefieren un CMS real pero ligero: Grav (PHP, flat-file, sin base de datos). Pendiente decisión de Norman.
+
 ## Bloqueado (esperando a Norman / cliente)
 - **Pantallazos y URLs de referencia del sitio actual** — necesarios para extraer `docs/DESIGN-TOKENS.md` (paleta, tipografías, estilo de imagen, formas, densidad) antes de tocar CSS, por regla del proyecto.
 - **Aprobación de arquitectura técnica** — el proyecto exige "inspeccionar repo y entorno, proponer la opción más simple y esperar aprobación" antes de decidir el enfoque. Repo actual no tiene stack WP. Propuesta (ver abajo) pendiente de aprobación de Norman.
+- **Decisión de plataforma sin WordPress** — Norman debe confirmar entre: (a) sitio a medida en PHP + admin panel propio para campos básicos (recomendado), o (b) Grav CMS (flat-file, PHP, sin WP). Ambas corren en hosting compartido de Hostinger sin necesitar Node en producción.
 - **Confirmación de video horizontal del cliente** — Norman va a preguntar si existe material horizontal para el hero. Todo lo demás del banco de Drive revisado es vertical.
 - **Contenido de John** (copy, textos) — aún no entregado; todo el sitio usará placeholders `{{TITULAR_HERO}}` etc. hasta recibirlo.
 - **Decisión de páginas de llamada con la clienta** (Cartagena/Bogotá/Medellín, prioridad) — pendiente de que Norman confirme cuáles entran en este alcance.
