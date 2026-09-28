@@ -8,9 +8,10 @@ Ver reglas duras, alcance y exclusiones en el brief del proyecto (no se repiten 
 - [ ] Auditoría `/impeccable` → `docs/DESIGN-TOKENS.md`
 - [ ] Diagnóstico corto (se conserva / se mejora / se descarta) → aprobación Norman
 - [x] Plataforma confirmada: sitio a medida sin WordPress (Norman)
-- [ ] Aprobación del stack concreto (PHP a medida + admin propio vs. Grav CMS) — ver propuesta en `docs/PROGRESS.md`
+- [x] Stack confirmado: PHP a medida + panel de administración propio (Norman, sobre Grav CMS) — ver `docs/PROGRESS.md`
 - [x] `hero-loop.mp4` descartado — Norman provee el video real (pendiente de recibirlo)
 - [x] Prototipo aislado del hero (`prototipo/hero.html`) — motion, carga diferida de video, accesibilidad (sin video real todavía, muestra poster)
+- [ ] Definir esquema de datos y campos del panel de administración
 - [ ] Estructura base del home (secciones, sin copy final — placeholders `{{...}}`)
 
 ## Fase 2 — 5 a 9 oct: landings acordadas + contenido de John
