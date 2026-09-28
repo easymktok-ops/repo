@@ -229,6 +229,11 @@
 <section class="hero" data-hero>
   <div class="hero__media">
     <div class="hero__poster" aria-hidden="true"></div>
+    <!--
+      Video real pendiente: lo provee Norman/la clienta (ver docs/PROGRESS.md).
+      Cuando llegue, poner el archivo junto a este prototipo y completar
+      data-src abajo. Mientras tanto el hero se queda con el poster de placeholder.
+    -->
     <video
       class="hero__video"
       data-hero-video
@@ -238,7 +243,7 @@
       preload="none"
       aria-hidden="true"
     >
-      <source data-src="../hero-loop.mp4" type="video/mp4">
+      <source data-src="" type="video/mp4">
     </video>
   </div>
   <div class="hero__scrim" aria-hidden="true"></div>
@@ -286,8 +291,9 @@
 
     function loadVideo() {
       var source = el.querySelector('source[data-src]');
-      if (source) {
-        source.src = source.getAttribute('data-src');
+      var src = source && source.getAttribute('data-src');
+      if (source && src) {
+        source.src = src;
         el.load();
         el.addEventListener('canplay', function () {
           el.setAttribute('data-loaded', 'true');
