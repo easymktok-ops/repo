@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 require __DIR__ . '/../../lib/bootstrap.php';
 require __DIR__ . '/../../lib/db.php';
+require __DIR__ . '/../../lib/panel_auth.php';
 
 $config = load_config();
 $panel = $config['panel'] ?? ['enabled' => false];
@@ -36,17 +37,7 @@ if (empty($panel['enabled'])) {
 }
 
 // --- Sesion -----------------------------------------------------------------
-$https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
-    || (($_SERVER['SERVER_PORT'] ?? '') == 443);
-session_name('aero_panel');
-session_set_cookie_params([
-    'lifetime' => 0,
-    'path' => '/',
-    'httponly' => true,
-    'samesite' => 'Lax',
-    'secure' => $https,
-]);
-session_start();
+panel_session_start();
 
 // --- Helpers ----------------------------------------------------------------
 function h($v): string
