@@ -124,6 +124,22 @@ archivo, sin dependencias, se sube junto a los demás endpoints.
   escapada, `noindex`. Aun así, el panel expone datos de clientes: usa una
   contraseña fuerte y siempre por HTTPS.
 
+## Tarifas por fecha y desarrollo local
+- **Bandera de reversa:** `pricing.rules_enabled` en `config.php`. En `false`
+  el checkout cobra exactamente como antes (anticipo fijo por pasajero) y
+  `/api/prices.php` responde `{"enabled":false}`. Se cambia sin redeploy.
+- **Subir al hosting:** `lib/pricing_rules.php`, `lib/pricing_store.php`,
+  `lib/panel_auth.php` y `public/api/prices.php` junto con el resto.
+  **No subir** `server/dev/` ni `server/tests/` (solo desarrollo; además se
+  niegan a correr fuera de la línea de comandos).
+- **Tests:** `npm run test:php` y `npm run lint:php74` (compatibilidad con
+  PHP 7.4; con `PHPCS=/ruta/phpcs` agrega PHPCompatibility).
+- **Staging local:** `npm run build`, luego
+  `php -S localhost:8000 server/dev/router.php` (sirve `dist/` y `/api/*`).
+  Con `npm run dev`, Astro reenvía `/api` a ese servidor. El `config.php`
+  local apunta `catalog_path` a `dist/data/catalog.json` y usa `sk_test_`.
+  Webhook: `stripe listen --forward-to localhost:8000/api/webhook.php`.
+
 ## Producción
 Cambia a llaves `sk_live_` y al `whsec_` del endpoint en vivo, y `site_url` al
 dominio final. Nada de código cambia entre entornos: solo `config.php`.
