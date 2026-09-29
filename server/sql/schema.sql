@@ -71,3 +71,59 @@ CREATE TABLE IF NOT EXISTS notifications_outbox (
     CONSTRAINT fk_outbox_booking FOREIGN KEY (booking_id)
         REFERENCES bookings (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------------------------
+-- Tarifas por fecha (temporadas, fechas especiales, dias de la semana y dias
+-- sin vuelo). En SQLite las crea ensure_pricing_schema(); en MySQL, este SQL.
+-- Dinero en centavos MXN; fechas 'YYYY-MM-DD' en hora de Mexico.
+-- --------------------------------------------------------------------------
+CREATE TABLE IF NOT EXISTS pricing_rules (
+    id              VARCHAR(40)  NOT NULL,             -- r_ + 8 hex
+    label           VARCHAR(80)  NOT NULL,
+    type            VARCHAR(10)  NOT NULL,             -- season | date | weekday | blocked
+    package_ids     TEXT         NOT NULL,             -- JSON: "all" o ["slug",...]
+    start_date      CHAR(10)     NOT NULL,
+    end_date        CHAR(10)     NOT NULL,             -- inclusivo
+    weekdays        VARCHAR(40)  NULL,                 -- JSON [0..6], 0 = domingo
+    price_cents     INT UNSIGNED NULL,                 -- NULL si blocked
+    deposit_percent TINYINT UNSIGNED NULL,             -- NULL = el del paquete
+    active          TINYINT(1)   NOT NULL DEFAULT 1,
+    updated_at      CHAR(19)     NOT NULL,
+    updated_by      VARCHAR(80)  NOT NULL,
+    PRIMARY KEY (id),
+    KEY idx_rules_range (active, start_date, end_date)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS package_pricing (
+    package_slug            VARCHAR(40) NOT NULL,
+    default_deposit_percent TINYINT UNSIGNED NOT NULL, -- 1..100
+    updated_at              CHAR(19)    NOT NULL,
+    updated_by              VARCHAR(80) NOT NULL,
+    PRIMARY KEY (package_slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS pricing_audit (
+    id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    at          CHAR(19)    NOT NULL,
+    user        VARCHAR(80) NOT NULL,
+    action      VARCHAR(20) NOT NULL,                  -- create|update|duplicate|activate|deactivate|delete|deposit_update
+    entity      VARCHAR(10) NOT NULL,                  -- rule | package
+    entity_id   VARCHAR(40) NOT NULL,
+    before_json TEXT NULL,
+    after_json  TEXT NULL,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS pricing_meta (
+    k VARCHAR(40) NOT NULL,
+    v VARCHAR(40) NOT NULL,
+    PRIMARY KEY (k)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Columnas de tarifa en la reserva (precio por persona resuelto, % de
+-- anticipo, regla aplicada y version de precios con la que se cobro).
+ALTER TABLE bookings
+    ADD COLUMN unit_price_cents INT UNSIGNED NULL,
+    ADD COLUMN deposit_percent  TINYINT UNSIGNED NULL,
+    ADD COLUMN rule_id          VARCHAR(40) NULL,
+    ADD COLUMN pricing_version  VARCHAR(40) NULL;
