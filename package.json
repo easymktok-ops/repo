@@ -15,7 +15,9 @@
     "check": "astro check",
     "cms:proxy": "decap-server",
     "format": "prettier --write \"src/**/*.{astro,ts,tsx,css,md,mdx}\" \"*.{ts,mjs,json,md}\"",
-    "format:check": "prettier --check \"src/**/*.{astro,ts,tsx,css,md,mdx}\""
+    "format:check": "prettier --check \"src/**/*.{astro,ts,tsx,css,md,mdx}\"",
+    "test:php": "php server/tests/run.php",
+    "lint:php74": "php server/tests/lint74.php"
   },
   "dependencies": {
     "@astrojs/react": "^4.2.0",
