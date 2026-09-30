@@ -16,6 +16,8 @@ const PANEL_PRICING_TABS = [
     'anticipos'  => 'Anticipo por paquete',
     'temporadas' => 'Temporadas y fechas especiales',
     'sin-vuelo'  => 'Días sin vuelo',
+    'historial'  => 'Historial',
+    'vista-previa' => 'Vista previa',
 ];
 const PANEL_MESES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
 const PANEL_DIAS = [1 => 'Lun', 2 => 'Mar', 3 => 'Mié', 4 => 'Jue', 5 => 'Vie', 6 => 'Sáb', 0 => 'Dom'];
@@ -68,6 +70,73 @@ function panel_tariff_text(array $b): string
     return $out;
 }
 
+const PANEL_NOMBRE_TIPO = [
+    'season' => 'esta temporada', 'date' => 'esta fecha especial',
+    'weekday' => 'esta tarifa de días de la semana', 'blocked' => 'este cierre',
+];
+const PANEL_TIPO_DE = [
+    'season' => 'la temporada', 'date' => 'la fecha especial', 'weekday' => 'los días de la semana', 'blocked' => 'el día sin vuelo',
+];
+
+/** "Del 20 dic 2026 al 24 dic 2026" / "El 25 dic 2026". */
+function panel_tramo(string $from, string $to): string
+{
+    return $from === $to ? 'El ' . panel_fecha_humana($from) : 'Del ' . panel_fecha_humana($from) . ' al ' . panel_fecha_humana($to);
+}
+
+/**
+ * Avisos (sin bloquear) de las fechas en que $rule coincide con otras.
+ * @return string[] frases en espanol llano
+ */
+function panel_overlap_notes(array $rule, array $rules): array
+{
+    $byId = [];
+    foreach ($rules as $r) {
+        $byId[$r['id']] = $r;
+    }
+    $notes = [];
+    foreach (pricing_overlaps($rule, $rules) as $o) {
+        $other = $byId[$o['other_id']] ?? null;
+        if ($other === null) {
+            continue;
+        }
+        $plural = $o['from'] !== $o['to'];
+        $tramo = panel_tramo($o['from'], $o['to']);
+        $name = PANEL_NOMBRE_TIPO[$rule['type']] ?? 'esta tarifa';
+        if ($rule['type'] === 'blocked') {
+            $notes[] = $tramo . ' coincide con \'' . $other['label'] . '\'. ' . ($plural ? 'Esos días no habrá vuelos.' : 'Ese día no habrá vuelos.');
+        } elseif ($o['outcome'] === 'no_flight') {
+            $notes[] = $tramo . ' coincide con \'Sin vuelo: ' . $other['label'] . '\'. ' . ($plural ? 'Esos días no habrá vuelos.' : 'Ese día no habrá vuelos.');
+        } elseif ($rule['type'] === $other['type']) {
+            $a = pricing_rule_span($rule);
+            $b = pricing_rule_span($other);
+            if ($o['outcome'] === 'other_wins') {
+                $why = $b < $a ? 'que abarca menos días' : 'que se editó más recientemente';
+                $notes[] = $tramo . ' ' . $name . ' coincide con \'' . $other['label'] . '\'. Se aplicará el precio de \'' . $other['label'] . '\', ' . $why . '.';
+            } else {
+                $why = $a < $b ? 'que abarca menos días' : 'que se editó más recientemente';
+                $notes[] = $tramo . ' ' . $name . ' coincide con \'' . $other['label'] . '\'. Se aplicará el precio de esta, ' . $why . '.';
+            }
+        } else {
+            $winner = $o['outcome'] === 'other_wins' ? $other['type'] : $rule['type'];
+            $notes[] = $tramo . ' ' . $name . ' coincide con \'' . $other['label'] . '\'. Se aplicará el precio de ' . PANEL_TIPO_DE[$winner] . '.';
+        }
+    }
+    return $notes;
+}
+
+function panel_notes_html(array $notes): string
+{
+    if (!$notes) {
+        return '';
+    }
+    $out = '<ul class="overlap" aria-label="Fechas que coinciden con otras tarifas">';
+    foreach ($notes as $n) {
+        $out .= '<li>' . h($n) . '</li>';
+    }
+    return $out . '</ul>';
+}
+
 function panel_pricing_tab(string $t): string
 {
     return isset(PANEL_PRICING_TABS[$t]) ? $t : 'anticipos';
@@ -80,12 +149,12 @@ function panel_pkg_name(array $pkg): string
 
 /**
  * Datos comunes de la pestana. ok=false si no se pudo preparar (mensaje en error).
- * @return array{ok:bool,error:string,packages:array,rules:array,known:array,enabled:bool,version:string}
+ * @return array{ok:bool,error:string,packages:array,rules:array,known:array,enabled:bool,version:string,pdo:PDO}
  */
 function panel_pricing_context(array $config, PDO $pdo): array
 {
     $ctx = [
-        'ok' => false, 'error' => '', 'packages' => [], 'rules' => [], 'known' => [],
+        'ok' => false, 'error' => '', 'packages' => [], 'rules' => [], 'known' => [], 'pdo' => $pdo,
         'enabled' => !empty($config['pricing']['rules_enabled']), 'version' => '',
     ];
     if (!ensure_pricing_schema($pdo)) {
@@ -357,6 +426,12 @@ function panel_pricing_render(string $tab, array $ctx, array $state = []): strin
     if ($tab === 'sin-vuelo') {
         return $out . panel_pricing_render_blocked($ctx, $state);
     }
+    if ($tab === 'historial') {
+        return $out . panel_pricing_render_history($ctx);
+    }
+    if ($tab === 'vista-previa') {
+        return $out . panel_pricing_render_preview($ctx);
+    }
     return $out . panel_pricing_render_deposits($ctx, $state);
 }
 
@@ -498,6 +573,10 @@ function panel_pricing_render_seasons(array $ctx, array $state): string
             . panel_pricing_btn('rule_delete', 'temporadas', $r['id'], 'Eliminar', 'danger',
                 "¿Eliminar '" . $r['label'] . "'? Esta acción no se puede deshacer")
             . '</div></td></tr>';
+        $notes = panel_overlap_notes($r, $ctx['rules']);
+        if ($notes) {
+            $out .= '<tr class="notes"><td colspan="8">' . panel_notes_html($notes) . '</td></tr>';
+        }
     }
     return $out . '</tbody></table></div>';
 }
@@ -576,6 +655,15 @@ function panel_pricing_rule_form(array $v, array $errors, array $ctx, bool $bloc
       </div>
       <?php endif; ?>
 
+      <?php
+        if ($isEdit) {
+            foreach ($ctx['rules'] as $existing) {
+                if ($existing['id'] === $v['id']) {
+                    echo panel_notes_html(panel_overlap_notes($existing, $ctx['rules']));
+                }
+            }
+        }
+        ?>
       <div class="actions">
         <button class="btn primary" type="submit"><?= $blocked ? 'Marcar sin vuelo' : 'Guardar' ?></button>
         <?php if (!$blocked): ?><a class="btn ghost" href="<?= h(self_url(['view' => 'precios', 'tab' => 'temporadas'])) ?>">Cancelar</a><?php endif; ?>
@@ -627,12 +715,164 @@ function panel_pricing_render_blocked(array $ctx, array $state): string
     }
     foreach ($rules as $r) {
         $out .= '<tr><td>' . h(panel_fecha_rango($r['start_date'], $r['end_date'])) . '</td>'
-            . '<td class="strong">' . h($r['label']) . '</td>'
+            . '<td class="strong">' . h($r['label']) . panel_notes_html(panel_overlap_notes($r, $ctx['rules'])) . '</td>'
             . '<td>' . h(panel_pricing_pkg_label($r, $ctx)) . '</td>'
             . '<td>' . panel_pricing_btn('rule_delete', 'sin-vuelo', $r['id'], 'Volver a abrir', 'ghost',
                 "¿Volver a abrir '" . $r['label'] . "'? Esas fechas se podrán reservar de nuevo.") . '</td></tr>';
     }
     return $out . '</tbody></table></div>';
+}
+
+/* ---------------------------------------------------------------------------
+   Historial
+--------------------------------------------------------------------------- */
+
+/** Resumen legible de una fila de pricing_audit. */
+function panel_audit_summary(array $row, array $ctx): string
+{
+    $b = $row['before'];
+    $a = $row['after'];
+    $act = $row['action'];
+
+    if ($row['entity'] === 'package') {
+        $slug = (string) $row['entity_id'];
+        $name = isset($ctx['packages'][$slug]) ? panel_pkg_name($ctx['packages'][$slug]) : $slug;
+        $new = (int) ($a['default_deposit_percent'] ?? 0);
+        if ($b === null) {
+            return "Fijó el anticipo de {$name} en {$new} %";
+        }
+        return "Cambió el anticipo de {$name} de " . (int) $b['default_deposit_percent'] . " % a {$new} %";
+    }
+
+    $label = (string) (($a['label'] ?? null) ?? ($b['label'] ?? $row['entity_id']));
+    $type = (string) (($a['type'] ?? null) ?? ($b['type'] ?? 'season'));
+    $de = PANEL_TIPO_DE[$type] ?? 'la tarifa';
+
+    switch ($act) {
+        case 'create':
+            return "Creó {$de} '{$label}'";
+        case 'duplicate':
+            return "Duplicó una tarifa: '{$label}'";
+        case 'activate':
+            return "Activó '{$label}'";
+        case 'deactivate':
+            return "Pausó '{$label}'";
+        case 'delete':
+            return $type === 'blocked' ? "Volvió a abrir '{$label}'" : "Eliminó {$de} '{$label}'";
+    }
+
+    $changes = [];
+    if ($b !== null && $a !== null) {
+        $oldLabel = (string) $b['label'];
+        if ($oldLabel !== $label) {
+            $changes[] = "Renombró '{$oldLabel}' a '{$label}'";
+        }
+        if ($b['price_cents'] !== $a['price_cents']) {
+            $changes[] = "Cambió el precio de '{$label}' de " . panel_pesos((int) $b['price_cents']) . ' a ' . panel_pesos((int) $a['price_cents']);
+        }
+        if ($b['deposit_percent'] !== $a['deposit_percent']) {
+            if ($b['deposit_percent'] === null) {
+                $changes[] = "Fijó el anticipo de '{$label}' en " . (int) $a['deposit_percent'] . ' %';
+            } elseif ($a['deposit_percent'] === null) {
+                $changes[] = "Quitó el anticipo propio de '{$label}' (usa el del paquete)";
+            } else {
+                $changes[] = "Cambió el anticipo de '{$label}' de " . (int) $b['deposit_percent'] . ' % a ' . (int) $a['deposit_percent'] . ' %';
+            }
+        }
+        if ($b['start_date'] !== $a['start_date'] || $b['end_date'] !== $a['end_date']) {
+            $changes[] = "Cambió las fechas de '{$label}' a " . panel_fecha_rango($a['start_date'], $a['end_date']);
+        }
+        if ($b['package_ids'] !== $a['package_ids']) {
+            $changes[] = "Cambió los paquetes de '{$label}'";
+        }
+        if ($b['weekdays'] !== $a['weekdays']) {
+            $changes[] = "Cambió los días de '{$label}'";
+        }
+    }
+    return $changes ? implode('. ', $changes) : "Editó '{$label}'";
+}
+
+function panel_pricing_render_history(array $ctx): string
+{
+    $page = max(1, (int) ($_GET['p'] ?? 1));
+    $res = pricing_audit_list($ctx['pdo'], $page, 25);
+    $pages = max(1, (int) ceil($res['total'] / $res['per_page']));
+
+    $out = '<p class="muted">Todo cambio de precios queda registrado: quién lo hizo y qué cambió.</p>'
+        . '<div class="tablewrap"><table class="ptable"><thead><tr><th>Fecha</th><th>Quién</th><th>Qué</th></tr></thead><tbody>';
+    if (!$res['rows']) {
+        $out .= '<tr><td class="empty" colspan="3">Todavía no hay cambios.</td></tr>';
+    }
+    foreach ($res['rows'] as $r) {
+        $out .= '<tr><td class="nowrap">' . h(panel_fecha_humana(substr((string) $r['at'], 0, 10)) . ' · ' . substr((string) $r['at'], 11, 5)) . '</td>'
+            . '<td>' . h($r['user']) . '</td>'
+            . '<td>' . h(panel_audit_summary($r, $ctx)) . '</td></tr>';
+    }
+    $out .= '</tbody></table></div>';
+    if ($pages > 1) {
+        $out .= '<div class="pager">';
+        if ($res['page'] > 1) {
+            $out .= '<a class="btn sm ghost" href="' . h(self_url(['view' => 'precios', 'tab' => 'historial', 'p' => $res['page'] - 1])) . '">← Más recientes</a>';
+        }
+        $out .= '<span class="muted sm">Página ' . $res['page'] . ' de ' . $pages . '</span>';
+        if ($res['page'] < $pages) {
+            $out .= '<a class="btn sm ghost" href="' . h(self_url(['view' => 'precios', 'tab' => 'historial', 'p' => $res['page'] + 1])) . '">Anteriores →</a>';
+        }
+        $out .= '</div>';
+    }
+    return $out;
+}
+
+/* ---------------------------------------------------------------------------
+   Vista previa (tabla de 60 dias con las mismas reglas que el checkout)
+--------------------------------------------------------------------------- */
+
+function panel_pricing_render_preview(array $ctx): string
+{
+    $slug = (string) ($_GET['pkg'] ?? '');
+    if (!isset($ctx['packages'][$slug])) {
+        $slug = (string) (array_keys($ctx['packages'])[0] ?? '');
+    }
+    $out = '<p class="muted">Así verá el precio cada día un cliente que reserve, con las tarifas que hay hoy '
+        . '(aunque las tarifas por fecha sigan apagadas para el público).</p>'
+        . '<form method="get" action="panel.php" class="filters"><input type="hidden" name="view" value="precios" />'
+        . '<input type="hidden" name="tab" value="vista-previa" />'
+        . '<label class="sr" for="pv-pkg">Paquete</label><select id="pv-pkg" name="pkg" onchange="this.form.submit()">';
+    foreach ($ctx['packages'] as $s => $p) {
+        $out .= '<option value="' . h($s) . '"' . ($s === $slug ? ' selected' : '') . '>' . h(panel_pkg_name($p)) . '</option>';
+    }
+    $out .= '</select><noscript><button class="btn sm" type="submit">Ver</button></noscript></form>';
+
+    if ($slug === '') {
+        return $out . '<p class="empty">No hay paquetes reservables.</p>';
+    }
+    $pkg = $ctx['packages'][$slug];
+    if ($pkg['default_deposit_percent'] === null) {
+        return $out . '<p class="note">A este paquete le falta el anticipo. Mientras tanto se cobra como hoy. Captúralo en \'Anticipo por paquete\'.</p>';
+    }
+
+    $byId = [];
+    foreach ($ctx['rules'] as $r) {
+        $byId[$r['id']] = $r;
+    }
+    $from = pricing_add_days(pricing_today_mx(), 1);
+    $to = pricing_add_days($from, 59);
+    $out .= '<div class="tablewrap"><table class="ptable"><thead><tr><th>Día</th><th class="num">Precio</th>'
+        . '<th class="num hide-sm">Anticipo</th><th class="num hide-sm">Saldo</th><th>Tarifa</th></tr></thead><tbody>';
+    foreach (resolve_range($from, $to, $pkg, $ctx['rules'], $from, $to) as $d => $res) {
+        $dow = PANEL_DIAS[pricing_weekday($d)];
+        $day = h($dow . ' ' . panel_fecha_humana($d));
+        $rule = isset($res['rule_id']) ? ($byId[$res['rule_id']] ?? null) : null;
+        if ($res['status'] === 'blocked') {
+            $out .= '<tr class="blockedday"><td>' . $day . '</td><td class="num" colspan="3">Sin vuelo</td><td>' . h($rule['label'] ?? '') . '</td></tr>';
+            continue;
+        }
+        $out .= '<tr><td>' . $day . '</td><td class="num">' . h(panel_pesos($res['price'])) . '</td>'
+            . '<td class="num hide-sm">' . h(panel_pesos($res['deposit'])) . '</td>'
+            . '<td class="num hide-sm">' . h(panel_pesos($res['balance'])) . '</td>'
+            . '<td>' . ($rule !== null ? h($rule['label']) : '<span class="muted">Precio base</span>') . '</td></tr>';
+    }
+    return $out . '</tbody></table></div><p class="muted sm">Precios por persona. El saldo se paga en sitio.</p>';
 }
 
 function panel_pricing_css(): string
@@ -673,6 +913,11 @@ function panel_pricing_css(): string
       .ptable thead th{white-space:normal}
       .show-sm{display:none}
       @media(max-width:640px){.show-sm{display:inline}}
+      .ptable tr.notes td{padding-top:0;border-top:0}
+      .overlap{list-style:none;padding:0;margin:.35rem 0 0;display:grid;gap:.25rem;font-size:.82rem;color:var(--warn)}
+      .overlap li{padding-left:.6rem;border-left:2px solid var(--warn)}
+      .nowrap{white-space:nowrap}
+      .blockedday td{color:var(--muted);background:color-mix(in srgb,var(--bad) 7%,transparent)}
       .ptable .actions{gap:.35rem;flex-wrap:wrap;max-width:190px}
       .ptable td.dates{min-width:9.5rem}
       .ptable td.num{white-space:normal}
