@@ -152,6 +152,13 @@
   color: var(--faint);
   font-size: var(--step--1);
 }
+/* Con "Desde" el precio ya no cabe junto al titulo en pantallas angostas. */
+@media (max-width: 480px) {
+  .bk-pkg {
+    flex-wrap: wrap;
+    row-gap: 0.15rem;
+  }
+}
 
 /* --- Campos ----------------------------------------------------------------- */
 .bk-row {
@@ -584,5 +591,60 @@
   .bk-mode,
   .bk-step-n {
     transition-duration: 1ms;
+  }
+}
+
+/* --- Fecha con precio por dia (PriceCalendar) --------------------------------- */
+.bk-datefield.is-invalid .pc {
+  border-color: var(--danger);
+}
+.bk-picked {
+  margin: 0;
+  color: var(--ink);
+  font-size: var(--step-0);
+  font-weight: 550;
+}
+.bk-notice {
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-input);
+  background: var(--accent-wash);
+  color: var(--ink);
+  font-size: var(--step--1);
+}
+.bk-pkg-from {
+  color: var(--faint);
+  font-size: var(--step--1);
+  margin-right: 0.3rem;
+}
+.bk-cal-skel {
+  max-width: 34rem;
+  height: 22rem;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: linear-gradient(90deg, var(--surface), var(--surface-raised), var(--surface));
+  background-size: 200% 100%;
+  animation: bk-cal-pulse 1.4s var(--ease-in-out) infinite;
+}
+@keyframes bk-cal-pulse {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+.bk-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bk-cal-skel {
+    animation: none;
   }
 }

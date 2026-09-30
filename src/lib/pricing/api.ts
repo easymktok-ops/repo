@@ -48,7 +48,8 @@ export function clearPriceCache(): void {
 function isDayInfo(v: unknown): v is DayInfo {
   if (!v || typeof v !== "object") return false;
   const d = v as DayInfo;
-  if (d.status !== "available" && d.status !== "blocked" && d.status !== "unavailable") return false;
+  if (d.status !== "available" && d.status !== "blocked" && d.status !== "unavailable")
+    return false;
   return d.status !== "available" || typeof d.price === "number";
 }
 
@@ -75,7 +76,13 @@ export function parsePrices(json: unknown): MonthPrices {
   };
 }
 
-function cacheKey(endpoint: string, slug: string, year: number, month: number, preview: boolean): string {
+function cacheKey(
+  endpoint: string,
+  slug: string,
+  year: number,
+  month: number,
+  preview: boolean,
+): string {
   return [endpoint, preview ? "p" : "u", slug, monthRange(year, month).from].join("|");
 }
 

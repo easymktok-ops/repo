@@ -34,7 +34,8 @@ export function parseYmd(s: Ymd): { y: number; m: number; d: number } | null {
   const mo = Number(m[2]);
   const d = Number(m[3]);
   const dt = new Date(Date.UTC(y, mo - 1, d));
-  if (dt.getUTCFullYear() !== y || dt.getUTCMonth() !== mo - 1 || dt.getUTCDate() !== d) return null;
+  if (dt.getUTCFullYear() !== y || dt.getUTCMonth() !== mo - 1 || dt.getUTCDate() !== d)
+    return null;
   return { y, m: mo, d };
 }
 
@@ -137,7 +138,8 @@ export function priceTiers(days: Record<Ymd, DayInfo>, monthDates: Ymd[]): Recor
   const prices: number[] = [];
   for (const d of monthDates) {
     const info = days[d];
-    if (info && info.status === "available" && typeof info.price === "number") prices.push(info.price);
+    if (info && info.status === "available" && typeof info.price === "number")
+      prices.push(info.price);
   }
   const distinct = [...new Set(prices)].sort((a, b) => a - b);
   const k = distinct.length;
@@ -160,7 +162,9 @@ const NUM_LOCALE: Record<Locale, string> = { es: "es-MX", en: "en-US" };
 
 /** "2,650" (pesos enteros, sin simbolo): para la celda del calendario. */
 export function formatPesosShort(cents: number, locale: Locale): string {
-  return new Intl.NumberFormat(NUM_LOCALE[locale], { maximumFractionDigits: 0 }).format(Math.round(cents / 100));
+  return new Intl.NumberFormat(NUM_LOCALE[locale], { maximumFractionDigits: 0 }).format(
+    Math.round(cents / 100),
+  );
 }
 
 /** "$2,650" o "$1,192.50" (con centavos solo si hacen falta). */
@@ -176,16 +180,24 @@ export function formatPesos(cents: number, locale: Locale): string {
 }
 
 export function monthLabel(year: number, month: number, locale: Locale): string {
-  return new Intl.DateTimeFormat(NUM_LOCALE[locale], { month: "long", year: "numeric", timeZone: "UTC" }).format(
-    new Date(Date.UTC(year, month - 1, 1)),
-  );
+  return new Intl.DateTimeFormat(NUM_LOCALE[locale], {
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(year, month - 1, 1)));
 }
 
 /** Encabezados de columna cortos en el orden de la semana. */
-export function weekdayLabels(locale: Locale, weekStart: 0 | 1, width: "narrow" | "short" | "long"): string[] {
+export function weekdayLabels(
+  locale: Locale,
+  weekStart: 0 | 1,
+  width: "narrow" | "short" | "long",
+): string[] {
   const fmt = new Intl.DateTimeFormat(NUM_LOCALE[locale], { weekday: width, timeZone: "UTC" });
   // 2023-01-01 fue domingo.
-  return Array.from({ length: 7 }, (_, i) => fmt.format(new Date(Date.UTC(2023, 0, 1 + ((weekStart + i) % 7)))));
+  return Array.from({ length: 7 }, (_, i) =>
+    fmt.format(new Date(Date.UTC(2023, 0, 1 + ((weekStart + i) % 7)))),
+  );
 }
 
 export function longDate(s: Ymd, locale: Locale): string {

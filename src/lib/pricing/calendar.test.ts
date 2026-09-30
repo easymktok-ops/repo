@@ -80,7 +80,15 @@ describe("meses y cuadricula", () => {
     const g = monthGrid(2026, 12, 1);
     expect(g).toHaveLength(6);
     expect(g.every((w) => w.length === 7)).toBe(true);
-    expect(g[0]).toEqual([null, "2026-12-01", "2026-12-02", "2026-12-03", "2026-12-04", "2026-12-05", "2026-12-06"]);
+    expect(g[0]).toEqual([
+      null,
+      "2026-12-01",
+      "2026-12-02",
+      "2026-12-03",
+      "2026-12-04",
+      "2026-12-05",
+      "2026-12-06",
+    ]);
     expect(g.flat().filter(Boolean)).toHaveLength(31);
   });
 
@@ -139,7 +147,17 @@ describe("niveles de precio (tercios del mes visible)", () => {
     const ds = Array.from({ length: 9 }, (_, i) => `2026-12-0${i + 1}`);
     const days = Object.fromEntries(ds.map((d, i) => [d, avail(200000 + i * 10000)]));
     const t = priceTiers(days, ds);
-    expect(ds.map((d) => t[d])).toEqual(["low", "low", "low", "mid", "mid", "mid", "high", "high", "high"]);
+    expect(ds.map((d) => t[d])).toEqual([
+      "low",
+      "low",
+      "low",
+      "mid",
+      "mid",
+      "mid",
+      "high",
+      "high",
+      "high",
+    ]);
   });
 
   it("ignora bloqueados y no disponibles, y no los cuenta para los tercios", () => {
@@ -174,9 +192,15 @@ describe("formato y accesibilidad", () => {
     expect(label).toContain("19 de diciembre de 2026");
     expect(label).toContain("2,650 pesos por persona");
     expect(label).toContain("precio alto");
-    expect(dayAriaLabel("2026-12-25", { status: "blocked" }, undefined, "es")).toContain("sin vuelo");
-    expect(dayAriaLabel("2026-12-19", avail(265000), "low", "en", true)).toContain("lower price, selected");
-    expect(dayAriaLabel("2026-12-19", { status: "unavailable" }, undefined, "en")).toContain("unavailable");
+    expect(dayAriaLabel("2026-12-25", { status: "blocked" }, undefined, "es")).toContain(
+      "sin vuelo",
+    );
+    expect(dayAriaLabel("2026-12-19", avail(265000), "low", "en", true)).toContain(
+      "lower price, selected",
+    );
+    expect(dayAriaLabel("2026-12-19", { status: "unavailable" }, undefined, "en")).toContain(
+      "unavailable",
+    );
   });
 });
 
@@ -184,20 +208,30 @@ describe("cliente de /api/prices", () => {
   afterEach(() => clearPriceCache());
 
   const ok = (body: unknown) =>
-    vi.fn().mockImplementation(() => Promise.resolve(new Response(JSON.stringify(body), { status: 200 })));
+    vi
+      .fn()
+      .mockImplementation(() =>
+        Promise.resolve(new Response(JSON.stringify(body), { status: 200 })),
+      );
   const body = {
     enabled: true,
     currency: "MXN",
     pricingVersion: "3-abc",
     minDate: "2026-10-01",
     maxDate: "2027-09-30",
-    days: { "2026-12-19": { status: "available", price: 265000, deposit: 119250, balance: 145750 } },
+    days: {
+      "2026-12-19": { status: "available", price: 265000, deposit: 119250, balance: 145750 },
+    },
   };
 
   it("pide el mes completo del paquete y cachea", async () => {
     const f = ok(body);
-    const a = await getMonthPrices("/api/prices.php", "vuelo-compartido", 2026, 12, { fetchImpl: f });
-    const b = await getMonthPrices("/api/prices.php", "vuelo-compartido", 2026, 12, { fetchImpl: f });
+    const a = await getMonthPrices("/api/prices.php", "vuelo-compartido", 2026, 12, {
+      fetchImpl: f,
+    });
+    const b = await getMonthPrices("/api/prices.php", "vuelo-compartido", 2026, 12, {
+      fetchImpl: f,
+    });
     expect(f).toHaveBeenCalledTimes(1);
     expect(a).toBe(b);
     const url = String(f.mock.calls[0][0]);
@@ -219,29 +253,64 @@ describe("cliente de /api/prices", () => {
   });
 
   it("enabled:false se devuelve tal cual", async () => {
-    const r = await getMonthPrices("/api/prices.php", "a", 2026, 12, { fetchImpl: ok({ enabled: false }) });
+    const r = await getMonthPrices("/api/prices.php", "a", 2026, 12, {
+      fetchImpl: ok({ enabled: false }),
+    });
     expect(r).toEqual({ enabled: false });
   });
 
   it("errores de red, HTTP y forma invalida lanzan PriceApiError", async () => {
     await expect(
-      getMonthPrices("/x", "a", 2026, 12, { fetchImpl: vi.fn().mockRejectedValue(new TypeError("fail")) }),
+      getMonthPrices("/x", "a", 2026, 12, {
+        fetchImpl: vi.fn().mockRejectedValue(new TypeError("fail")),
+      }),
     ).rejects.toBeInstanceOf(PriceApiError);
     await expect(
       getMonthPrices("/x", "a", 2026, 12, {
         fetchImpl: vi.fn().mockResolvedValue(new Response("{}", { status: 500 })),
       }),
     ).rejects.toMatchObject({ status: 500 });
-    await expect(getMonthPrices("/x", "a", 2026, 12, { fetchImpl: ok({ hola: 1 }) })).rejects.toBeInstanceOf(
-      PriceApiError,
-    );
+    await expect(
+      getMonthPrices("/x", "a", 2026, 12, { fetchImpl: ok({ hola: 1 }) }),
+    ).rejects.toBeInstanceOf(PriceApiError);
     await expect(
       getMonthPrices("/x", "a", 2026, 12, {
         fetchImpl: vi.fn().mockResolvedValue(new Response("<html>", { status: 200 })),
       }),
     ).rejects.toBeInstanceOf(PriceApiError);
-    expect(() => parsePrices({ enabled: true, days: { "2026-12-01": { status: "available" } } })).toThrow(
-      PriceApiError,
-    );
+    expect(() =>
+      parsePrices({ enabled: true, days: { "2026-12-01": { status: "available" } } }),
+    ).toThrow(PriceApiError);
+  });
+});
+
+describe("montos de la reserva en centavos", () => {
+  it("pago total: todo ahora y sin saldo", async () => {
+    const { chargeCents } = await import("./charge");
+    expect(chargeCents("full", 265000, 119250, 3)).toEqual({
+      total: 795000,
+      now: 795000,
+      balance: 0,
+    });
+  });
+
+  it("anticipo con centavos sin errores de punto flotante", async () => {
+    const { chargeCents } = await import("./charge");
+    expect(chargeCents("deposit", 265000, 119250, 3)).toEqual({
+      total: 795000,
+      now: 357750,
+      balance: 437250,
+    });
+    // 1000.10 x 3 en pesos flotantes daria 3000.3000000000002.
+    expect(chargeCents("deposit", 300000, 100010, 3).now).toBe(300030);
+  });
+
+  it("sin fecha elegida se usa el precio base y el anticipo fijo de hoy", async () => {
+    const { chargeCents } = await import("./charge");
+    expect(chargeCents("deposit", 2200 * 100, 1000 * 100, 2)).toEqual({
+      total: 440000,
+      now: 200000,
+      balance: 240000,
+    });
   });
 });

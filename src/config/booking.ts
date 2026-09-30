@@ -32,13 +32,3 @@ export const booking = {
 } as const;
 
 export type BookingMode = "full" | "deposit";
-
-/** Calcula el monto (en pesos, no centavos) que se cobra AHORA para una reserva. */
-export function amountDueNow(
-  mode: BookingMode,
-  pricePerPerson: number,
-  passengers: number,
-): number {
-  if (mode === "deposit") return booking.depositPerPassenger * passengers;
-  return pricePerPerson * passengers;
-}

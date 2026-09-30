@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { WhatsappLogo } from "@phosphor-icons/react";
 import type { Locale } from "@config/site";
-import { booking, type BookingMode, amountDueNow } from "@config/booking";
+import { booking, type BookingMode } from "@config/booking";
+import { clearPriceCache, getMonthPrices } from "@lib/pricing/api";
+import { addDaysYmd, longDate, monthOf, todayMx } from "@lib/pricing/calendar";
+import { chargeCents } from "@lib/pricing/charge";
+import PriceCalendar, { type DayQuote } from "./PriceCalendar";
 import "./BookingWidget.css";
 
 /** Paquete reservable que la pagina pasa desde las Content Collections. */
@@ -64,6 +68,15 @@ const T = {
     quoteWa: "Cotizar por WhatsApp",
     was: "antes",
     minMax: (min: number, max: number) => `De ${min} a ${max} personas`,
+    from: "Desde",
+    loadingDates: "Cargando fechas y precios...",
+    pickedDate: (d: string, price: string) => `${d} · ${price} por persona`,
+    depositForDate: (amt: string) => `Anticipo de tu fecha: ${amt} por pasajero.`,
+    dateGone: "Esa fecha no está disponible para este vuelo. Elige otra.",
+    errBlocked: "Esta fecha ya no está disponible. Elige otra.",
+    errDateInvalid: "Elige una fecha de vuelo válida.",
+    errChanged: (per: string, now: string, go: string) =>
+      `El precio de esta fecha cambió: ahora es ${per} por persona y pagas ${now} hoy. Revísalo y vuelve a pulsar "${go}".`,
   },
   en: {
     steps: ["Choose your flight", "Passenger details", "Payment"],
@@ -105,6 +118,15 @@ const T = {
     quoteWa: "Quote on WhatsApp",
     was: "was",
     minMax: (min: number, max: number) => `From ${min} to ${max} people`,
+    from: "From",
+    loadingDates: "Loading dates and prices...",
+    pickedDate: (d: string, price: string) => `${d} · ${price} per person`,
+    depositForDate: (amt: string) => `Deposit for your date: ${amt} per passenger.`,
+    dateGone: "That date isn't available for this flight. Choose another.",
+    errBlocked: "This date is no longer available. Choose another.",
+    errDateInvalid: "Choose a valid flight date.",
+    errChanged: (per: string, now: string, go: string) =>
+      `The price for this date changed: it is now ${per} per person and you pay ${now} today. Review it and press "${go}" again.`,
   },
 };
 
@@ -117,6 +139,21 @@ function fmt(currency: string, locale: Locale, amount: number): string {
     }).format(amount);
   } catch {
     return "$" + amount.toLocaleString();
+  }
+}
+
+/** Igual que fmt pero recibe CENTAVOS (el anticipo de una fecha puede traer centavos). */
+function fmtC(currency: string, locale: Locale, cents: number): string {
+  const whole = cents % 100 === 0;
+  try {
+    return new Intl.NumberFormat(locale === "en" ? "en-US" : "es-MX", {
+      style: "currency",
+      currency: currency || "MXN",
+      minimumFractionDigits: whole ? 0 : 2,
+      maximumFractionDigits: whole ? 0 : 2,
+    }).format(cents / 100);
+  } catch {
+    return "$" + (cents / 100).toLocaleString();
   }
 }
 
@@ -142,6 +179,16 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
   const [touched, setTouched] = useState(false);
   const detailsRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  // Precios por fecha: "probing" = consultando al servidor; "on" = calendario con
+  // precio por dia; "off" = fecha nativa y montos de siempre (bandera apagada,
+  // paquete sin anticipo o el sondeo fallo: la reserva nunca se bloquea).
+  const [pricing, setPricing] = useState<"probing" | "on" | "off">("probing");
+  const [quote, setQuote] = useState<DayQuote | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const [calKey, setCalKey] = useState(0);
+  const [minDate, setMinDate] = useState("");
+  const flightDateRef = useRef(flightDate);
+  flightDateRef.current = flightDate;
 
   // Al cambiar de paso, lleva la vista al inicio del widget (no dejar al usuario
   // abajo, donde estaba el boton). Respeta prefers-reduced-motion y deja aire
@@ -185,6 +232,51 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
     }
   }
 
+  // "Manana" en hora de Mexico (no en UTC) como minimo de la fecha nativa. Se fija
+  // en el cliente para que el HTML prerenderizado no lleve la fecha del build.
+  useEffect(() => {
+    setMinDate(addDaysYmd(todayMx(), 1));
+  }, []);
+
+  // Sondeo de precios por fecha al cargar y al cambiar de paquete. Si ya hay una
+  // fecha elegida se vuelve a cotizar; si no esta disponible en el paquete nuevo,
+  // se limpia y se avisa. Cualquier fallo degrada a la fecha nativa.
+  useEffect(() => {
+    if (!slug) return;
+    let live = true;
+    setPricing("probing");
+    const date = flightDateRef.current;
+    const m = monthOf(date || addDaysYmd(todayMx(), 1));
+    getMonthPrices(booking.pricesEndpoint, slug, m.year, m.month)
+      .then((r) => {
+        if (!live) return;
+        if (!r.enabled) {
+          setQuote(null);
+          setPricing("off");
+          return;
+        }
+        setPricing("on");
+        if (!date) return;
+        const day = r.days[date];
+        if (day && day.status === "available" && typeof day.price === "number") {
+          setQuote({ price: day.price, deposit: day.deposit ?? 0, balance: day.balance ?? 0, ruleLabel: day.ruleLabel });
+        } else {
+          setFlightDate("");
+          setQuote(null);
+          setNotice(t.dateGone);
+        }
+      })
+      .catch(() => {
+        if (!live) return;
+        setQuote(null);
+        setPricing("off");
+      });
+    return () => {
+      live = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug]);
+
   // Preselecciona el paquete desde ?pkg= (viene del catalogo).
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -209,11 +301,13 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
   if (!selected) return null;
 
   const currency = selected.currency || "MXN";
-  const totalFull = selected.pricePerPerson * passengers;
-  const now = amountDueNow(mode, selected.pricePerPerson, passengers);
-  const balance = totalFull - now;
-
-  const tomorrow = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+  // Con fecha cotizada, el precio y el anticipo son los de ESA fecha; sin ella,
+  // el precio base y el anticipo fijo de siempre. Todo en centavos. El servidor
+  // recalcula el cobro real; esto es solo lo que se muestra.
+  const useQuote = pricing === "on" && quote !== null && !!flightDate;
+  const perC = useQuote ? quote.price : selected.pricePerPerson * 100;
+  const depC = useQuote ? quote.deposit : booking.depositPerPassenger * 100;
+  const { total: totalFullC, now: nowC, balance: balanceC } = chargeCents(mode, perC, depC, passengers);
 
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   const phoneOk = phone.replace(/\D+/g, "").length >= 8;
@@ -243,7 +337,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
     scrollToTop();
     track("begin_checkout", {
       currency,
-      value: now,
+      value: nowC / 100,
       items: [{ item_id: selected.slug, item_name: selected.title, quantity: passengers }],
     });
   }
@@ -260,6 +354,10 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
           passengers,
           mode,
           flightDate,
+          // Lo que la persona esta viendo, en centavos por persona. Solo informativo: si
+          // el servidor (con tarifas por fecha) resuelve otra cosa, responde 409 y no cobra.
+          expectedUnitPrice: perC,
+          expectedDeposit: depC,
           name: name.trim(),
           email: email.trim(),
           phone: phone.trim(),
@@ -273,11 +371,42 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
       // porque Safari lanza un error cripto ("The string did not match the
       // expected pattern"). Asi mostramos un mensaje claro con salida a WhatsApp.
       const raw = await res.text();
-      let data: { url?: string; error?: string } | null = null;
+      let data: {
+        url?: string;
+        error?: string;
+        code?: string;
+        current?: { price: number; deposit: number; balance: number };
+      } | null = null;
       try {
         data = raw ? JSON.parse(raw) : null;
       } catch {
         data = null;
+      }
+
+      // El precio de la fecha cambio entre ver y pagar: se muestran los montos
+      // nuevos y no se cobra hasta que la persona vuelva a pulsar "Ir a pagar".
+      if (res.status === 409 && data?.code === "price_changed" && data.current) {
+        const cur = data.current;
+        const c = chargeCents(mode, cur.price, cur.deposit, passengers);
+        setQuote({ price: cur.price, deposit: cur.deposit, balance: cur.balance });
+        setPricing("on");
+        setError(t.errChanged(fmtC(currency, locale, cur.price), fmtC(currency, locale, c.now), t.goPay));
+        setSubmitting(false);
+        return;
+      }
+      // La fecha ya no se puede reservar: de vuelta al paso 1 para elegir otra.
+      if ((res.status === 409 && data?.code === "date_blocked") || (res.status === 422 && data?.code === "date_invalid")) {
+        clearPriceCache();
+        setCalKey((k) => k + 1);
+        setFlightDate("");
+        setQuote(null);
+        setNotice(data.code === "date_blocked" ? t.errBlocked : t.errDateInvalid);
+        setSubmitting(false);
+        setError(null);
+        setTouched(false);
+        setStep(1);
+        scrollToTop();
+        return;
       }
 
       if (!res.ok || !data || !data.url) {
@@ -343,6 +472,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
                           {p.priceWas ? (
                             <s className="bk-pkg-was">{fmt(p.currency, locale, p.priceWas)}</s>
                           ) : null}
+                          {pricing === "on" && <span className="bk-pkg-from">{t.from}</span>}
                           <strong>{fmt(p.currency, locale, p.pricePerPerson)}</strong>
                           <span className="bk-pkg-unit">{t.perPerson}</span>
                         </span>
@@ -381,25 +511,78 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
                   <p className="bk-hint">{t.minMax(min, max)}</p>
                 </div>
 
-                <div className="bk-field">
-                  <label className="bk-label" htmlFor="bk-date">
+                {pricing === "off" && (
+                  <div className="bk-field">
+                    <label className="bk-label" htmlFor="bk-date">
+                      {t.dateLabel}{" "}
+                      <span className="bk-req" aria-hidden="true">
+                        *
+                      </span>
+                    </label>
+                    <input
+                      id="bk-date"
+                      className={`bk-input${touched && !flightDate ? " is-invalid" : ""}`}
+                      type="date"
+                      required
+                      min={minDate || undefined}
+                      value={flightDate}
+                      onChange={(e) => {
+                        setFlightDate((e.target as HTMLInputElement).value);
+                        setNotice(null);
+                      }}
+                    />
+                    <p className="bk-hint">{t.dateHint}</p>
+                  </div>
+                )}
+              </div>
+
+              {pricing === "probing" && (
+                <div className="bk-field" aria-busy="true">
+                  <span className="bk-label">{t.dateLabel}</span>
+                  <div className="bk-cal-skel" role="status">
+                    <span className="bk-sr">{t.loadingDates}</span>
+                  </div>
+                </div>
+              )}
+
+              {pricing === "on" && (
+                <div className={`bk-field bk-datefield${touched && !flightDate ? " is-invalid" : ""}`}>
+                  <span className="bk-label" id="lbl-date">
                     {t.dateLabel}{" "}
                     <span className="bk-req" aria-hidden="true">
                       *
                     </span>
-                  </label>
-                  <input
-                    id="bk-date"
-                    className={`bk-input${touched && !flightDate ? " is-invalid" : ""}`}
-                    type="date"
-                    required
-                    min={tomorrow}
-                    value={flightDate}
-                    onChange={(e) => setFlightDate((e.target as HTMLInputElement).value)}
-                  />
+                  </span>
+                  <div role="group" aria-labelledby="lbl-date">
+                    <PriceCalendar
+                      key={`${slug}-${calKey}`}
+                      locale={locale}
+                      packageSlug={slug}
+                      value={flightDate}
+                      endpoint={booking.pricesEndpoint}
+                      onDisabled={() => setPricing("off")}
+                      onChange={(date, q) => {
+                        setFlightDate(date);
+                        setQuote(q);
+                        setNotice(null);
+                        setError(null);
+                      }}
+                    />
+                  </div>
+                  {flightDate && quote && (
+                    <p className="bk-picked">
+                      {t.pickedDate(longDate(flightDate, locale), fmtC(currency, locale, quote.price))}
+                    </p>
+                  )}
                   <p className="bk-hint">{t.dateHint}</p>
                 </div>
-              </div>
+              )}
+
+              {notice && (
+                <p className="bk-notice" role="status">
+                  {notice}
+                </p>
+              )}
 
               <div className="bk-advisors">
                 <span className="bk-advisors-note">{t.availNote}</span>
@@ -514,7 +697,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
                   >
                     <span className="bk-mode-head">
                       <span className="bk-mode-title">{t.payFull}</span>
-                      <span className="bk-mode-amt">{fmt(currency, locale, totalFull)}</span>
+                      <span className="bk-mode-amt">{fmtC(currency, locale, totalFullC)}</span>
                     </span>
                     <span className="bk-mode-sub">{t.payFullSub}</span>
                   </button>
@@ -527,11 +710,12 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
                   >
                     <span className="bk-mode-head">
                       <span className="bk-mode-title">{t.payDeposit}</span>
-                      <span className="bk-mode-amt">
-                        {fmt(currency, locale, booking.depositPerPassenger * passengers)}
-                      </span>
+                      <span className="bk-mode-amt">{fmtC(currency, locale, depC * passengers)}</span>
                     </span>
-                    <span className="bk-mode-sub">{t.payDepositSub}</span>
+                    <span className="bk-mode-sub">
+                      {t.payDepositSub}
+                      {useQuote ? ` ${t.depositForDate(fmtC(currency, locale, depC))}` : ""}
+                    </span>
                   </button>
                 </div>
               </fieldset>
@@ -557,7 +741,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
                   onClick={submit}
                   disabled={submitting}
                 >
-                  {submitting ? t.processing : `${t.goPay} · ${fmt(currency, locale, now)}`}
+                  {submitting ? t.processing : `${t.goPay} · ${fmtC(currency, locale, nowC)}`}
                 </button>
               </div>
               <p className="bk-secure">{t.securedBy}</p>
@@ -584,24 +768,24 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
               <h3 className="bk-ticket-title">{selected.title}</h3>
               <p className="bk-ticket-meta">
                 {t.people(passengers)}
-                {flightDate ? ` · ${flightDate}` : ""}
+                {flightDate ? ` · ${longDate(flightDate, locale)}` : ""}
               </p>
             </div>
             <div className="bk-ticket-perf" aria-hidden="true"></div>
             <dl className="bk-ticket-lines">
               <div className="bk-line">
                 <dt>{t.total}</dt>
-                <dd>{fmt(currency, locale, totalFull)}</dd>
+                <dd>{fmtC(currency, locale, totalFullC)}</dd>
               </div>
               {mode === "deposit" && (
                 <div className="bk-line bk-line-muted">
                   <dt>{t.balance}</dt>
-                  <dd>{fmt(currency, locale, balance)}</dd>
+                  <dd>{fmtC(currency, locale, balanceC)}</dd>
                 </div>
               )}
               <div className="bk-line bk-line-total">
                 <dt>{t.payNow}</dt>
-                <dd>{fmt(currency, locale, now)}</dd>
+                <dd>{fmtC(currency, locale, nowC)}</dd>
               </div>
             </dl>
           </div>
