@@ -75,6 +75,23 @@ export function parsePrices(json: unknown): MonthPrices {
   };
 }
 
+function cacheKey(endpoint: string, slug: string, year: number, month: number, preview: boolean): string {
+  return [endpoint, preview ? "p" : "u", slug, monthRange(year, month).from].join("|");
+}
+
+/** Valor en cache (si sigue vigente) sin pedir nada: evita parpadeos al volver a un mes. */
+export function peekMonthPrices(
+  endpoint: string,
+  packageSlug: string,
+  year: number,
+  month: number,
+  opts: Pick<Options, "preview" | "ttlMs" | "now"> = {},
+): MonthPrices | null {
+  const hit = cache.get(cacheKey(endpoint, packageSlug, year, month, !!opts.preview));
+  const now = opts.now ?? Date.now;
+  return hit && now() - hit.at < (opts.ttlMs ?? 60_000) ? hit.value : null;
+}
+
 /** Precios del mes completo (dia 1 al ultimo) de un paquete. */
 export async function getMonthPrices(
   endpoint: string,
@@ -85,7 +102,7 @@ export async function getMonthPrices(
 ): Promise<MonthPrices> {
   const { from, to } = monthRange(year, month);
   const preview = !!opts.preview;
-  const key = [endpoint, preview ? "p" : "u", packageSlug, from].join("|");
+  const key = cacheKey(endpoint, packageSlug, year, month, preview);
   const now = opts.now ?? Date.now;
   const ttl = opts.ttlMs ?? 60_000;
 

@@ -23,6 +23,11 @@ export const booking = {
    */
   checkoutEndpoint:
     import.meta.env.PUBLIC_CHECKOUT_ENDPOINT ?? "/api/create-checkout-session.php",
+  /**
+   * Endpoint de precios por fecha (calendario). Relativo => mismo origen. Si el
+   * servidor responde enabled:false o falla, el formulario usa la fecha nativa.
+   */
+  pricesEndpoint: import.meta.env.PUBLIC_PRICES_ENDPOINT ?? "/api/prices.php",
   minPassengers: 1,
 } as const;
 

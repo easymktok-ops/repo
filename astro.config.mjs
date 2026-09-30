@@ -41,6 +41,8 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap({
+      // La vista previa del panel de precios no es una pagina publica.
+      filter: (page) => !page.includes("/panel-vista-previa"),
       i18n: {
         defaultLocale: "es",
         locales: { es: "es-MX", en: "en" },

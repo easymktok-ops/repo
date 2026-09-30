@@ -851,6 +851,11 @@ function panel_pricing_render_preview(array $ctx): string
         return $out . '<p class="note">A este paquete le falta el anticipo. Mientras tanto se cobra como hoy. Captúralo en \'Anticipo por paquete\'.</p>';
     }
 
+    $out .= '<iframe class="pvframe" title="Calendario de precios de ' . h(panel_pkg_name($pkg)) . '" '
+        . 'src="/panel-vista-previa/?pkg=' . h(rawurlencode($slug)) . '"></iframe>'
+        . '<p class="muted sm">Pasa el cursor sobre un día para ver qué tarifa aplica. Es el mismo calendario que verá el cliente.</p>'
+        . '<details class="pvlist"><summary>Ver la lista de los próximos 60 días</summary>';
+
     $byId = [];
     foreach ($ctx['rules'] as $r) {
         $byId[$r['id']] = $r;
@@ -872,7 +877,7 @@ function panel_pricing_render_preview(array $ctx): string
             . '<td class="num hide-sm">' . h(panel_pesos($res['balance'])) . '</td>'
             . '<td>' . ($rule !== null ? h($rule['label']) : '<span class="muted">Precio base</span>') . '</td></tr>';
     }
-    return $out . '</tbody></table></div><p class="muted sm">Precios por persona. El saldo se paga en sitio.</p>';
+    return $out . '</tbody></table></div><p class="muted sm">Precios por persona. El saldo se paga en sitio.</p></details>';
 }
 
 function panel_pricing_css(): string
@@ -917,6 +922,9 @@ function panel_pricing_css(): string
       .overlap{list-style:none;padding:0;margin:.35rem 0 0;display:grid;gap:.25rem;font-size:.82rem;color:var(--warn)}
       .overlap li{padding-left:.6rem;border-left:2px solid var(--warn)}
       .nowrap{white-space:nowrap}
+      .pvframe{display:block;width:100%;max-width:36rem;height:34rem;border:1px solid var(--line);border-radius:14px;background:var(--bg);margin:.4rem 0 .6rem}
+      .pvlist{margin-top:1.1rem}
+      .pvlist summary{cursor:pointer;color:var(--accent-strong);margin-bottom:.7rem}
       .blockedday td{color:var(--muted);background:color-mix(in srgb,var(--bad) 7%,transparent)}
       .ptable .actions{gap:.35rem;flex-wrap:wrap;max-width:190px}
       .ptable td.dates{min-width:9.5rem}

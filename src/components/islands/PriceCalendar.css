@@ -1,0 +1,339 @@
+/* PriceCalendar - usa solo tokens globales (tokens.css). Sin transition:all, sin
+   ease-in en UI, :active con scale(.97), reduced-motion respetado. */
+
+.pc {
+  --pc-cell: 3.4rem;
+  width: 100%;
+  max-width: 34rem;
+  padding: var(--space-sm);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+}
+
+/* --- Cabecera: mes + navegacion ---------------------------------------------- */
+.pc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xs);
+}
+.pc-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  letter-spacing: var(--tracking-flat);
+  font-weight: 600;
+  text-align: center;
+  flex: 1;
+}
+.pc-title::first-letter {
+  text-transform: uppercase;
+}
+.pc-nav {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    border-color var(--dur-press) var(--ease-out),
+    background-color var(--dur-press) var(--ease-out),
+    transform var(--dur-press) var(--ease-out);
+}
+.pc-nav:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.pc-nav:not(:disabled):active {
+  transform: scale(0.97);
+}
+@media (hover: hover) {
+  .pc-nav:not(:disabled):hover {
+    border-color: var(--line-strong);
+    background: var(--surface-raised);
+  }
+}
+.pc-nav:focus-visible,
+.pc-btn:focus-visible,
+.pc-day:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* --- Cuadricula -------------------------------------------------------------- */
+.pc-body {
+  display: grid;
+  gap: 0.25rem;
+}
+.pc-body[data-dir="1"] {
+  animation: pc-in-next var(--dur-pop) var(--ease-out);
+}
+.pc-body[data-dir="-1"] {
+  animation: pc-in-prev var(--dur-pop) var(--ease-out);
+}
+@keyframes pc-in-next {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+}
+@keyframes pc-in-prev {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+}
+.pc-row {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0.25rem;
+}
+.pc-dowcell {
+  padding: 0.25rem 0;
+  text-align: center;
+  font-size: var(--step--1);
+  color: var(--faint);
+  letter-spacing: var(--tracking-label);
+  text-transform: capitalize;
+}
+
+/* --- Celda de dia ------------------------------------------------------------ */
+.pc-day {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  min-height: var(--pc-cell);
+  min-width: 0;
+  padding: 0.3rem 0.1rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-input);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  line-height: 1.1;
+  cursor: default;
+  transition:
+    background-color var(--dur-press) var(--ease-out),
+    border-color var(--dur-press) var(--ease-out),
+    transform var(--dur-press) var(--ease-out);
+}
+.pc-pad {
+  min-height: var(--pc-cell);
+}
+.pc-num {
+  font-size: var(--step-0);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.pc-price {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+}
+.pc-note {
+  font-size: 0.62rem;
+  line-height: 1.1;
+  text-align: center;
+  color: var(--faint);
+}
+
+.pc-day.is-avail {
+  cursor: pointer;
+  border-color: var(--line-faint);
+  background: var(--surface-sunken);
+}
+.pc-day.is-avail:active {
+  transform: scale(0.97);
+}
+@media (hover: hover) {
+  .pc-day.is-avail:hover {
+    border-color: var(--line-strong);
+    background: var(--surface-raised);
+  }
+}
+.pc-day[aria-disabled="true"]:not(.is-avail) {
+  color: var(--faint);
+}
+.pc-day.is-blocked .pc-num {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+.pc-day.is-selected {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.pc-day.is-selected .pc-price {
+  color: var(--accent-ink);
+}
+@media (hover: hover) {
+  .pc-day.is-selected:hover {
+    background: var(--accent-strong);
+    border-color: var(--accent-strong);
+  }
+}
+
+/* --- Nivel de precio: indicador NO cromatico (1, 2 o 3 barras) + color ---------- */
+.pc-pips {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 0.7rem;
+  color: var(--muted);
+}
+.pc-pips i {
+  display: block;
+  width: 4px;
+  border-radius: 1px;
+  background: currentColor;
+  opacity: 0.25;
+}
+.pc-pips i:nth-child(1) {
+  height: 0.3rem;
+}
+.pc-pips i:nth-child(2) {
+  height: 0.5rem;
+}
+.pc-pips i:nth-child(3) {
+  height: 0.7rem;
+}
+.pc-pips[data-tier="low"] {
+  color: var(--ok);
+}
+.pc-pips[data-tier="high"] {
+  color: var(--warn);
+}
+.pc-pips[data-tier="low"] i:nth-child(1),
+.pc-pips[data-tier="mid"] i:nth-child(-n + 2),
+.pc-pips[data-tier="high"] i {
+  opacity: 1;
+}
+.pc-day.is-selected .pc-pips {
+  color: var(--accent-ink);
+}
+
+/* --- Carga: esqueleto (sin spinner) -------------------------------------------- */
+.pc-skel {
+  width: 60%;
+  height: 0.6rem;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--line-faint), var(--line), var(--line-faint));
+  background-size: 200% 100%;
+  animation: pc-shimmer 1.4s var(--ease-in-out) infinite;
+}
+@keyframes pc-shimmer {
+  from {
+    background-position: 100% 0;
+  }
+  to {
+    background-position: -100% 0;
+  }
+}
+
+/* --- Estados, leyenda y pie ---------------------------------------------------- */
+.pc-state {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-md) var(--space-sm);
+  text-align: center;
+  color: var(--muted);
+}
+.pc-state p {
+  margin: 0;
+}
+.pc-btn {
+  padding: 0.6rem 1.1rem;
+  min-height: 2.75rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    border-color var(--dur-press) var(--ease-out),
+    background-color var(--dur-press) var(--ease-out),
+    transform var(--dur-press) var(--ease-out);
+}
+.pc-btn:active {
+  transform: scale(0.97);
+}
+@media (hover: hover) {
+  .pc-btn:hover {
+    border-color: var(--accent);
+    background: var(--accent-wash);
+  }
+}
+.pc-caption {
+  min-height: 1.4rem;
+  margin: var(--space-2xs) 0 0;
+  font-size: var(--step--1);
+  color: var(--ink-soft);
+}
+.pc-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2xs) var(--space-sm);
+  margin-top: var(--space-xs);
+  padding-top: var(--space-xs);
+  border-top: 1px solid var(--line-faint);
+  font-size: var(--step--1);
+  color: var(--muted);
+}
+.pc-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs) var(--space-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.pc-key {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.pc-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .pc {
+    --pc-cell: 3.1rem;
+    padding: var(--space-xs);
+  }
+  .pc-price {
+    font-size: 0.66rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pc-body[data-dir],
+  .pc-skel {
+    animation: none;
+  }
+  .pc-nav,
+  .pc-day,
+  .pc-btn {
+    transition: none;
+  }
+}

@@ -21,6 +21,8 @@ interface Props {
   noindex?: boolean;
   /** true cuando la pagina usa el menu lateral persistente (offset del riel). */
   chrome?: boolean;
+  /** false en paginas internas (sin banner de cookies ni tracking). */
+  analytics?: boolean;
 }
 
 const {
@@ -30,6 +32,7 @@ const {
   ogImage,
   noindex = false,
   chrome = false,
+  analytics = true,
 } = Astro.props;
 
 const locale = getLocaleFromUrl(Astro.url);
@@ -91,6 +94,6 @@ const fullTitle = title === site.name ? title : `${title} · ${site.name}`;
       <slot />
     </main>
     <slot name="chrome-end" />
-    <Analytics locale={locale} />
+    {analytics && <Analytics locale={locale} />}
   </body>
 </html>

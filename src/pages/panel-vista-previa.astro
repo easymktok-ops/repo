@@ -1,0 +1,35 @@
+---
+import BaseLayout from "@layouts/BaseLayout.astro";
+import PricePreview from "@components/islands/PricePreview";
+
+/**
+ * Vista previa del calendario de precios, pensada para el iframe del panel
+ * (/api/panel.php, pestana Precios). Interna: noindex, fuera del sitemap, sin
+ * menu ni footer y sin enlaces desde el sitio.
+ */
+---
+
+<BaseLayout
+  title="Vista previa de precios"
+  description="Vista previa interna del calendario de precios."
+  logicalPath="/panel-vista-previa"
+  noindex
+  analytics={false}
+>
+  <main class="pv-wrap">
+    <PricePreview client:only="react" />
+  </main>
+</BaseLayout>
+
+<style>
+  .pv-wrap {
+    padding: var(--space-sm);
+    min-height: 100dvh;
+    background: var(--bg);
+  }
+  .pv-wrap :global(.pv-msg),
+  .pv-wrap :global(.pv-sel) {
+    margin: var(--space-sm) 0 0;
+    color: var(--ink-soft);
+  }
+</style>
