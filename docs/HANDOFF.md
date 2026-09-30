@@ -1,54 +1,40 @@
 # HANDOFF · Tarifas por temporada
-Punto alcanzado: P2   ·   Rama: claude/aerodiverti-seasonal-pricing-d7z472   ·   Último commit: ver `git log -1`
+Punto alcanzado: fin del Día 7 (antes del QA del Día 8)   ·   Rama: claude/aerodiverti-seasonal-pricing-d7z472   ·   Último commit: ver `git log -1`
 
-## Hecho (días 2 y 3)
-- `server/lib/pricing_rules.php`: `resolve_price` (única implementación), `resolve_range`,
-  `pricing_overlaps`, `pricing_validate_rule` y helpers de fecha en hora de México. Anticipo con
-  enteros (`intdiv($p*$pct+50,100)`).
-- `server/lib/schema.php`: `ensure_pricing_schema` (4 tablas + 4 columnas en `bookings`), fuera de
-  `ensure_schema`, nunca lanza. `server/sql/schema.sql` con el equivalente MySQL (`VARCHAR` en llaves).
-- `server/lib/pricing_store.php`: CRUD en transacción con `pricing_audit` y `pricing_meta.version`;
-  `pricing_version` = `"{version}-{sha1 precios base, 8}"`.
-- `server/public/api/prices.php` (contrato 3.4) y `server/lib/panel_auth.php` (sesión compartida).
-- Checkout (contrato 3.5): 422 `date_invalid`, 409 `date_blocked`, 409 `price_changed` con `current`,
-  columnas nuevas en `bookings` y metadata en la session y en `payment_intent_data`.
-  `compute_charge(..., ?array $resolved = null)`.
-- `server/tests/` (runner sin composer, 33 tests), `npm run test:php`, `npm run lint:php74`.
-- Staging local: `server/dev/router.php` + proxy `/api` en `astro.config.mjs` (solo `astro dev`).
+## Hecho
+- **Días 2-3 (P2):** `resolve_price`, tablas, `/api/prices.php`, checkout con recálculo, metadata, router local. Ver commits `Tarifas:` y `Checkout:`.
+- **Día 4-5, panel (`server/lib/panel_pricing.php`, pestaña Precios):** anticipo % por paquete, temporadas / fechas especiales / días de la semana (crear, editar, duplicar, pausar, eliminar), días sin vuelo (marcar / volver a abrir), avisos de coincidencia, historial legible y paginado, vista previa (iframe + lista de 60 días). Detalle de reserva muestra la tarifa aplicada y la versión.
+- **Día 6, calendario:** `src/lib/pricing/{calendar,api,charge}.ts` (26 tests vitest), `PriceCalendar.tsx/.css`, `PricePreview.tsx`, `src/pages/panel-vista-previa.astro` (noindex, fuera del sitemap, sin banner de cookies: `BaseLayout` nuevo prop `analytics`).
+- **Día 7, reserva:** `BookingWidget.tsx` sondea `/api/prices`; con tarifas muestra el calendario y cotiza por fecha (centavos), recotiza al cambiar de paquete, maneja 409 `price_changed` / `date_blocked` y 422 `date_invalid`; con bandera apagada, paquete sin anticipo o sondeo fallido usa la fecha nativa con `min` = mañana en hora de México.
 
-## Verificado en staging local (PHP 8.4, SQLite, datos de prueba solo locales)
-- Día base, temporada, fin de semana y fecha especial: montos en `bookings` iguales al cálculo manual.
-- `expected*` falsos → 409 sin fila; montos inventados en el body → ignorados; fecha bloqueada → 409;
-  pasada, vacía, 30 de febrero y fuera del horizonte → 422; ninguno crea reserva.
-- Metadata exacta que se enviaría a Stripe (arnés con la llamada a Stripe sustituida).
-- Bandera apagada: filas idénticas a las del código original `53156bc` ($1,000 por pasajero).
-
-## Siguiente paso inmediato (Día 4, Sonnet 5)
-Panel: pestaña "Precios" (anticipo por paquete, temporadas/fechas especiales, días sin vuelo) en
-`server/lib/panel_pricing.php`, usando `pricing_store.php`. Mostrar en el detalle de la reserva la
-regla aplicada y `pricing_version` (pendiente de 3.5). Las funciones de store ya incluyen
-`pricing_duplicate_rule` y `pricing_set_rule_active`.
+## Verificado (staging local, PHP 8.4, Chromium; sin Stripe)
+- Reserva completa en escritorio y móvil (390 px) con calendario; sin scroll horizontal; teclado completo; consola sin errores propios.
+- Precio cambiado entre ver y pagar: aviso con montos nuevos, sin fila nueva en `bookings`, el reintento cobra el precio nuevo.
+- Fecha bloqueada antes de pagar: vuelve al paso 1, limpia la fecha, el calendario ya la muestra cerrada.
+- Cambio de paquete con fecha elegida (recotiza / avisa / cae a fecha nativa si el paquete no tiene anticipo).
+- Bandera apagada y sondeo 500: fecha nativa, montos de siempre. 23:30 CDMX: `min` = mañana.
+- `npm run test:php` 39/39 · `npm test` 26/26 · `tsc --noEmit` OK · `npm run build` OK · `npm run lint:php74` OK.
 
 ## Decisiones tomadas y por qué
-- `pricing_overlaps($rule, $rules)` sin el parámetro `$packageTitles`: el texto lo arma el panel.
-- Paquete sin % de anticipo → flujo anterior completo, **incluidos los días sin vuelo** (no se
-  bloquean). Así el calendario (que responde `enabled:false`) y el cobro nunca divergen.
-- `ensure_pricing_schema` sin caché estática: es idempotente y se llama una vez por petición.
-- Una fecha con formato inválido y la bandera encendida sigue respondiendo el 422 genérico
-  "Fecha invalida." (sin `code`); con formato válido pero no vendible, 422 `date_invalid`.
-- Se corrigió en `pricing_valid_ymd` la regex para no aceptar `"2026-01-01\n"` (`\z` en vez de `$`).
+- El widget **siempre** envía `expectedUnitPrice` / `expectedDeposit` (lo que la persona ve). Con la bandera apagada el servidor los ignora. Cierra el caso "sondeo caído + bandera encendida": antes se cobraba $2,650 mostrando $2,200; ahora responde 409 y avisa.
+- Paquete sin % de anticipo se cobra como hoy, incluidos días sin vuelo (calendario y cobro no divergen).
+- `amountDueNow` se reemplazó por `chargeCents` (centavos, sin flotantes); el anticipo de una fecha puede traer centavos.
+- `BookingWidget.tsx` ya incumplía prettier antes de estos cambios; no se reformateó para no ensuciar el diff.
+- Texto del sitio: `grep` en `src/content` y `src/pages` **no** encuentra el monto fijo de $1,000 (D8 no requiere cambios de contenido).
+
+## Siguiente paso inmediato (Día 8, QA, checkpoint P3)
+Recorrer `docs/qa-tarifas.md` con la tabla de la sección 5 del plan. Pendiente de evidencia real: cobros en **Stripe test** (IDs de session y metadata en el dashboard, webhook con `stripe listen`), Lighthouse antes/después de `/reservar` y `/en/reservar`, dispositivo iOS/Android real, PHP 7.4 real.
 
 ## Riesgos / bloqueos abiertos
-- **Sin llave `sk_test`** en este entorno: falta el cobro de prueba real en Stripe test y el
-  webhook con `stripe listen`. Necesita que Norman comparta una `sk_test_` o lo corra localmente.
-- **PHP 7.4 sin Docker aquí:** se verificó con PHPCompatibility (7.4-) + lint por tokens. Sigue
-  pendiente confirmar la versión real del hosting.
-- `npm run check` no corre: el repo no tiene `@astrojs/check` (ya faltaba antes). `npm run build` OK.
-- Pendientes del pre-flight: D1 (aprobación del % por Berenice), D5, D10.
+- Sin `sk_test_` en este entorno: falta el cobro de prueba real (caso QA 1-3).
+- Versión de PHP del hosting sin confirmar; la compatibilidad 7.4 se verificó con PHPCompatibility.
+- `npm run check` no corre (falta `@astrojs/check`, ya faltaba antes).
+- Pendientes de negocio: D1 (Berenice aprueba los %), D2, D5, D10.
+- `/en/reservar` no se probó en navegador; comparte el widget (textos `en` incluidos).
 
 ## Cómo correr los tests
-npm run test:php · npm run lint:php74 (PHPCS=/ruta/phpcs para PHPCompatibility) · npm run build
-Staging local: php -S localhost:8000 server/dev/router.php  +  npm run dev
+npm run test:php · npm test · npx tsc --noEmit · npm run build · PHPCS=/ruta/phpcs npm run lint:php74
+Staging local: npm run build; php -S localhost:8000 server/dev/router.php (config local en `server/config.php`, no versionado)
 
 ## Consumo
-`/usage` y `/cost` no están disponibles en esta sesión en la nube. Fecha: 2026-09-29.
+`/usage` y `/cost` no disponibles en esta sesión en la nube. Fecha: 2026-09-30.
