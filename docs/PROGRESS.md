@@ -1,42 +1,47 @@
 # PROGRESS — Joyas Colombianas® Dinner & Show
 
-## Corrección de rumbo (2026-09-28)
-Sesión previa confundió el alcance: se trató el repo como si tuviera que auditarse tal cual, y se le dio demasiado peso a assets sueltos (`hero-valle.jpg`, `galeria-01..07.jpg`, `ocasion-aniversario/cumpleanos/pedida.jpg`) que **Norman confirmó que NO son de este proyecto** — se ignoran. También se abrió una propuesta de arquitectura basada en "child theme / tema propio" (WordPress) que queda **obsoleta**: Norman prefiere evitar WordPress. Todo lo de abajo refleja el alcance correcto: el brief completo dado al inicio del chat (sitio transaccional Joyas Colombianas® Dinner & Show), sin WordPress.
+Stack: `docs/STACK.md`. Tokens y diagnóstico: `docs/DESIGN-TOKENS.md`. Fotos pendientes: `docs/IMAGENES.md`. Cronograma: 15 sesiones de 1h, 28 sept a 16 oct, lanzamiento 17 oct.
 
 ## Hecho
-- Auditoría inicial del repo: confirma que no trae stack de WordPress ni código de sitio (solo un CLI npm sin relación, `markitdown-cli`, y los assets genéricos ya descartados arriba).
-- `hero-loop.mp4` **descartado** — Norman confirmó que no es de este proyecto, él provee el video real. Se eliminó del repo y del prototipo (`prototipo/hero.html` ahora solo muestra el poster de placeholder hasta que llegue el archivo).
-- Prototipo aislado del hero (`prototipo/hero.html`): video diferido (poster primero para LCP), overlay de contraste, CTA con fade-in y feedback táctil, `prefers-reduced-motion` respetado, sin autoplay en conexión lenta/Save-Data. Copy en placeholders `{{...}}`. Construido para ser independiente de la plataforma final, así que sigue sirviendo aunque cambie el stack.
-- Decisión de plataforma: **sin WordPress**, sitio a medida (confirmado por Norman).
-- Decisión de stack: **PHP a medida + panel de administración propio** (confirmado por Norman, sobre Grav CMS). Ver detalle en la propuesta al final de este archivo — deja de ser propuesta, es la línea base.
+- **28 sept** — Auditoría del repo, decisión de plataforma: sin WordPress, PHP a medida + panel propio (sobre Grav). Stack documentado.
+- **30 sept** — Estructura base + home completo (sesiones "estructura base" y "maquetación" del cronograma):
+  - Front controller PHP (`public/index.php`) con rutas: `/`, `/contacto` (POST), `/sitemap.xml`, páginas provisionales noindex para `/comprar/`, `/medellin/`, `/bogota/`, `/cartagena/`, `/politica-de-datos/`, y 404.
+  - Capa de contenido editable (`app/content/defaults.php`, sobrescribible por `storage/content.json`, que escribirá el panel de admin).
+  - Home full SEO: title, canonical, Open Graph, robots, schema.org (PerformingGroup + Event semanal con Offers 195.000 / 180.000 COP generados desde la programación), sitemap, robots.txt.
+  - Secciones en el mismo orden del sitio actual: hero, frase + marco de video, experiencia, banda, ciudades + programación 2026, ¿Qué es un Dinner Show?, banda, contacto, footer.
+  - Parallax por capas ligado al scroll (CSS, fuera del hilo principal) + profundidad por puntero en el hero (escritorio), todo desactivado con `prefers-reduced-motion`.
+  - Formulario con CSRF, honeypot, validación por campo y guardado en `storage/leads.csv` (fuera de la carpeta pública).
+  - Iconos SVG propios, fuentes locales (Cinzel, Montserrat, Great Vibes de respaldo para el logo, todas OFL).
+  - QA: sin errores de consola, sin desborde horizontal en 390px y 1440px, JSON-LD válido.
+- Contenido migrado: textos del sitio actual (pantallazo) y de la reseña oficial en Drive. Nombre normalizado a "Joyas Colombianas® Dinner & Show". Sin mención al recinto anterior.
 
-## Bloqueado (esperando a Norman / cliente)
-- **Video real del hero** — Norman lo va a proporcionar (pendiente de recibir el archivo).
-- **Pasarela de pago** — por definir (el brief inicial mencionaba Mercado Pago como oficial y Wompi/Stripe descartadas, pero Norman lo dejó abierto de nuevo — no asumir hasta confirmación).
-- **Pantallazos y URLs de referencia del sitio actual de la clienta** — necesarios para `docs/DESIGN-TOKENS.md` antes de tocar CSS definitivo.
-- **Confirmación de video horizontal del cliente** — el material bruto de Drive revisado hasta ahora es casi todo vertical (MVI_0006..0050.MOV).
-- **Contenido de John** (copy) — no entregado; todo placeholder `{{...}}`.
-- **Páginas de llamada con la clienta** (Cartagena/Bogotá/Medellín) — cuáles entran en este alcance, pendiente de Norman.
+## Confirmar con la clienta antes de publicar
+- **Número de WhatsApp** del botón (la reseña trae dos: Esteban Pardo +57 302 854 5902 y Diana López +57 300 308 3374). Hoy el botón apunta a #contacto.
+- **Medellín**: el sitio actual dice sábados 8:00 PM en Hotel Marriott Medellín; la reseña de Drive dice otro día, hora y recinto (desactualizada). Se usó la del sitio actual.
+- **Bogotá**: se puso Hotel Tequendama (notas de la reunión del 25 sept); el sitio actual solo dice "Funciones privadas".
+- **Duración del show**: la reseña dice "una hora en dos intervalos de 45 min" (no cuadra); no se publicó.
+- Dirección exacta del Marriott (para schema.org y Google My Business).
+- URLs de Facebook y TripAdvisor, y el texto de la reseña de TripAdvisor del footer.
+- Segundo botón del hero "Compra entradas COP": se retiró por duplicado; confirmar si era para otra moneda.
+- Texto de la política de tratamiento de datos (Ley 1581).
+
+## Bloqueado
+- **Fotos y logo**: la descarga directa de Drive y el sitio original están bloqueados por la red de esta sesión. Se dejaron espacios con el nombre de archivo esperado (`docs/IMAGENES.md`). Para desbloquear: Norman sube los archivos a `public/assets/img/`, o se agregan `joyascolombianasdinnershow.com` y `drive.google.com` a los dominios permitidos del entorno.
+- **Video del hero**: lo provee Norman.
+- **Copy SEO de John**: llega el 6 oct. Hoy hay contenido provisional migrado y `{{META_DESCRIPTION_HOME}}`.
+- **Pasarela**: Mercado Pago (confirmado en la reunión del 25 sept); validación de cobertura internacional el 13 oct.
+- **Hostinger**: versión de PHP, credenciales, staging.
 
 ## Siguiente
-1. Definir estructura de datos y campos del panel de administración (qué edita la clienta exactamente) y arrancar el esqueleto PHP.
-2. Recibir el video real del hero de Norman.
-3. Recibir pantallazos del sitio actual → auditoría `/impeccable` → `docs/DESIGN-TOKENS.md` → diagnóstico → aprobación.
-4. Definir pasarela de pago para diseñar el adaptador de pagos.
-5. Confirmar acceso a hosting de Hostinger (versión de PHP disponible, credenciales, staging) para validar compatibilidad del stack.
+1. Panel de administración mínimo (login + edición de `storage/content.json`: programación, precios, textos, WhatsApp).
+2. Landings de campaña (semana 2): Cartagena (marca, sin checkout), Medellín y Bogotá. **Enfoque 100% conversión UX/UI, noindex, sin prioridad SEO.** El home sí queda full SEO.
+3. Esquema MySQL: funciones, órdenes, tickets (`#JCD-1001…`), door list.
 
 ## Fuera de alcance / cotizar aparte
-_(vacío por ahora)_
+- A/B testing de CRO: lo hace John después del lanzamiento (15 días), no entra en esta construcción.
 
----
-
-## Stack técnico confirmado: PHP a medida + admin propio
-
-Decisión tomada (2026-09-28) sobre las dos opciones evaluadas (admin propio vs. Grav CMS — investigación con fuentes en el chat). Se descartó Grav: no reduce el trabajo de la parte que importa (checkout/webhook/ticket/door list, que es 100% a medida de todas formas) y suma una segunda pieza a mantener/actualizar separada del motor transaccional.
-
-- **Sitio a medida en PHP** (HTML/CSS/JS en el front, PHP en el back) — corre nativo en cualquier plan de Hostinger, sin paquetes ni servicios adicionales.
-- **Base de datos**: SQLite o MySQL (lo que ya incluya el hosting) para tickets, reservas y door list.
-- **Panel de administración propio y mínimo**: solo los campos que la clienta necesita tocar (títulos, fechas de función, precios, textos de landings, media), sin plugins ni bloat de un CMS genérico.
-- **Capa de pagos detrás de un adaptador**, como ya pedía el brief, para poder cambiar de pasarela sin reescribir.
-
-**Siguiente paso técnico:** definir el esquema de datos (tablas/campos) y los campos exactos del panel antes de escribir código de backend.
+## Cómo correrlo en local
+```
+php -S 127.0.0.1:8000 -t public public/index.php
+```
+En Hostinger: el contenido de `public/` va a `public_html/`; `app/`, `config/` y `storage/` quedan un nivel arriba (fuera de la carpeta pública). `config/config.php` se crea en el servidor a partir de `config/config.example.php`.

@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /comprar/
+
+Sitemap: https://joyascolombianasdinnershow.com/sitemap.xml
