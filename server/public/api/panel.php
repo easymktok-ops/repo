@@ -22,6 +22,8 @@ declare(strict_types=1);
 require __DIR__ . '/../../lib/bootstrap.php';
 require __DIR__ . '/../../lib/db.php';
 require __DIR__ . '/../../lib/panel_auth.php';
+require __DIR__ . '/../../lib/pricing.php';
+require __DIR__ . '/../../lib/panel_pricing.php';
 
 $config = load_config();
 $panel = $config['panel'] ?? ['enabled' => false];
@@ -173,6 +175,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $do === 'action') {
     redirect(self_url(['view' => 'booking', 'id' => $id]));
 }
 
+// --- Precios (tarifas por fecha) --------------------------------------------
+$pricingState = [];
+if ($do === 'pricing' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    $pricingCtx = panel_pricing_context($config, $pdo);
+    $pricingState = panel_pricing_post($pdo, $pricingCtx, (string) ($_SESSION['panel_user'] ?? ''));
+    if (isset($pricingState['redirect'])) {
+        redirect($pricingState['redirect']);
+    }
+    // Con errores: se vuelve a mostrar el formulario con lo que la persona escribio.
+    $_GET['view'] = 'precios';
+    $_GET['tab'] = $pricingState['tab'];
+}
+if (($_GET['view'] ?? '') === 'precios') {
+    $pricingCtx = $pricingCtx ?? panel_pricing_context($config, $pdo);
+    render_layout(
+        'Precios',
+        panel_pricing_render((string) ($_GET['tab'] ?? ''), $pricingCtx, $pricingState),
+        [],
+        false,
+        'pricing'
+    );
+    exit;
+}
+
 // --- Construccion de filtros (compartido por lista y export) ----------------
 $q = trim((string) ($_GET['q'] ?? ''));
 $fStatus = (string) ($_GET['status'] ?? '');
@@ -263,6 +289,15 @@ if (($_GET['view'] ?? '') === 'booking') {
     if (!$b) {
         render_layout('Reserva no encontrada', '<p class="muted">No existe esa reserva. <a href="' . h(self_url()) . '">Volver</a></p>', $kpi, false);
         exit;
+    }
+    if (!empty($b['rule_id'])) {
+        try {
+            $lbl = $pdo->prepare('SELECT label FROM pricing_rules WHERE id = :id');
+            $lbl->execute([':id' => $b['rule_id']]);
+            $b['rule_label'] = $lbl->fetchColumn() ?: null;
+        } catch (Throwable $e) {
+            $b['rule_label'] = null;
+        }
     }
     $ntf = $pdo->prepare('SELECT * FROM notifications_outbox WHERE booking_id = :id ORDER BY id');
     $ntf->execute([':id' => $id]);
@@ -401,6 +436,10 @@ function render_detail(array $b, array $ntf): string
             <div><dt>Pasajeros</dt><dd><?= (int) $b['passengers'] ?></dd></div>
             <div><dt>Fecha del vuelo</dt><dd><?= h($b['flight_date'] ?: 'Sin fecha') ?></dd></div>
             <div><dt>Modo de pago</dt><dd><?= $b['mode'] === 'deposit' ? 'Apartar (anticipo)' : 'Pago total' ?></dd></div>
+            <?php if (!empty($b['pricing_version'])): ?>
+              <div><dt>Tarifa aplicada</dt><dd><?= h(panel_tariff_text($b)) ?>
+                <br><span class="muted sm">Versión de precios <?= h($b['pricing_version']) ?></span></dd></div>
+            <?php endif; ?>
             <div><dt>Reserva creada</dt><dd><?= h($b['created_at']) ?></dd></div>
             <?php if (!empty($b['paid_at'])): ?><div><dt>Pago confirmado</dt><dd><?= h($b['paid_at']) ?></dd></div><?php endif; ?>
           </dl>
@@ -552,7 +591,7 @@ function render_login(): void
     <?php
 }
 
-function render_layout(string $title, string $body, array $kpi, bool $showKpi): void
+function render_layout(string $title, string $body, array $kpi, bool $showKpi, string $section = 'bookings'): void
 {
     $user = h($_SESSION['panel_user'] ?? '');
     ?><!doctype html>
@@ -562,6 +601,7 @@ function render_layout(string $title, string $body, array $kpi, bool $showKpi): 
     <title><?= h($title) ?> · Panel Aerodiverti</title>
     <?= panel_favicon() ?>
     <?= panel_css() ?>
+    <?= panel_pricing_css() ?>
     </head>
     <body>
       <header class="topbar">
@@ -572,6 +612,7 @@ function render_layout(string $title, string $body, array $kpi, bool $showKpi): 
         </div>
       </header>
       <main class="wrap">
+        <?php if ($section === 'bookings' && ($showKpi || $title === 'Reservas')): ?><?= panel_pricing_nav('bookings') ?><?php endif; ?>
         <?php if ($showKpi): ?>
           <div class="kpis">
             <div class="kpi"><span class="klabel">Reservas pagadas</span><span class="kval"><?= (int) $kpi['paid'] ?></span></div>

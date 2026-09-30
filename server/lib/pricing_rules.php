@@ -305,10 +305,10 @@ function pricing_validate_rule(array $r, array $known): array
     $start = (string) ($r['start_date'] ?? '');
     $end = (string) ($r['end_date'] ?? '');
     if (!pricing_valid_ymd($start)) {
-        $e['start_date'] = 'La fecha no es valida.';
+        $e['start_date'] = 'La fecha no es válida.';
     }
     if (!pricing_valid_ymd($end)) {
-        $e['end_date'] = 'La fecha no es valida.';
+        $e['end_date'] = 'La fecha no es válida.';
     }
     if (!isset($e['start_date']) && !isset($e['end_date']) && $end < $start) {
         $e['end_date'] = 'La fecha final no puede ser antes de la inicial.';
@@ -328,7 +328,7 @@ function pricing_validate_rule(array $r, array $known): array
             return is_int($d) && $d >= 0 && $d <= 6;
         });
         if (!$wd || count($valid) !== count($wd)) {
-            $e['weekdays'] = 'Elige al menos un dia.';
+            $e['weekdays'] = 'Elige al menos un día.';
         }
     }
     if ($type !== 'blocked' && $type !== '') {
