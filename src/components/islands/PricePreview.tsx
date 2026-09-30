@@ -20,7 +20,8 @@ export default function PricePreview() {
   if (disabled) {
     return (
       <p className="pv-msg">
-        Este paquete todavia no tiene anticipo configurado, asi que se cobra como antes y no hay calendario.
+        Este paquete todavia no tiene anticipo configurado, asi que se cobra como antes y no hay
+        calendario.
       </p>
     );
   }
@@ -38,7 +39,8 @@ export default function PricePreview() {
       {picked && (
         <p className="pv-sel">
           {picked.date}: {formatPesos(picked.quote.price, "es")} por persona, anticipo{" "}
-          {formatPesos(picked.quote.deposit, "es")}, saldo {formatPesos(picked.quote.balance, "es")}.
+          {formatPesos(picked.quote.deposit, "es")}, saldo {formatPesos(picked.quote.balance, "es")}
+          .
         </p>
       )}
     </div>

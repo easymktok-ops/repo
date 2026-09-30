@@ -92,9 +92,7 @@ const T = {
 };
 
 type Load =
-  | { status: "loading" }
-  | { status: "error" }
-  | { status: "ready"; prices: PricesEnabled };
+  { status: "loading" } | { status: "error" } | { status: "ready"; prices: PricesEnabled };
 
 const monthKey = (y: number, m: number) => y * 12 + m;
 
@@ -141,7 +139,9 @@ export default function PriceCalendar({
   // Datos del mes visible (dia 1 al ultimo). Cache en memoria en api.ts.
   useEffect(() => {
     const ctrl = new AbortController();
-    const cached = peekMonthPrices(endpoint, packageSlug, visible.year, visible.month, { preview: mode === "preview" });
+    const cached = peekMonthPrices(endpoint, packageSlug, visible.year, visible.month, {
+      preview: mode === "preview",
+    });
     if (cached) {
       if (cached.enabled) setLoad({ status: "ready", prices: cached });
       else disabledCb.current?.();
@@ -173,7 +173,10 @@ export default function PriceCalendar({
     rootRef.current?.querySelector<HTMLElement>(`[data-date="${focusDate}"]`)?.focus();
   });
 
-  const grid = useMemo(() => monthGrid(visible.year, visible.month, weekStart), [visible, weekStart]);
+  const grid = useMemo(
+    () => monthGrid(visible.year, visible.month, weekStart),
+    [visible, weekStart],
+  );
   const monthDates = useMemo(() => grid.flat().filter((d): d is Ymd => d !== null), [grid]);
   const prices = load.status === "ready" ? load.prices : null;
   const days: Record<Ymd, DayInfo> = prices?.days ?? {};
@@ -197,7 +200,8 @@ export default function PriceCalendar({
     if (prices) {
       const lo = monthOf(prices.minDate);
       const hi = monthOf(prices.maxDate);
-      if (target < monthRange(lo.year, lo.month).from || target > monthRange(hi.year, hi.month).to) return;
+      if (target < monthRange(lo.year, lo.month).from || target > monthRange(hi.year, hi.month).to)
+        return;
     }
     const m = monthOf(target);
     const n = monthKey(m.year, m.month) - vk;
@@ -300,7 +304,8 @@ export default function PriceCalendar({
           {grid.map((week, wi) => (
             <div className="pc-row" role="row" key={wi}>
               {week.map((d, di) => {
-                if (!d) return <span key={di} className="pc-pad" role="gridcell" aria-hidden="true" />;
+                if (!d)
+                  return <span key={di} className="pc-pad" role="gridcell" aria-hidden="true" />;
                 const info = days[d];
                 const avail = info?.status === "available" && typeof info.price === "number";
                 const blocked = info?.status === "blocked";
@@ -319,7 +324,9 @@ export default function PriceCalendar({
                     tabIndex={d === focusDate ? 0 : -1}
                     aria-disabled={!avail}
                     aria-selected={selected}
-                    aria-label={loading ? longDate(d, locale) : dayAriaLabel(d, info, tier, locale, selected)}
+                    aria-label={
+                      loading ? longDate(d, locale) : dayAriaLabel(d, info, tier, locale, selected)
+                    }
                     onClick={() => pick(d)}
                     onMouseEnter={() => setHover(d)}
                     onMouseLeave={() => setHover(null)}
@@ -377,7 +384,11 @@ export default function PriceCalendar({
           ))}
         </ul>
       </div>
-      {loading && <span className="pc-sr" role="status">{t.loading}</span>}
+      {loading && (
+        <span className="pc-sr" role="status">
+          {t.loading}
+        </span>
+      )}
     </div>
   );
 }
