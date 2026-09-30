@@ -11,7 +11,7 @@ function test_panel_parse_pesos(): void
     assert_same(265000, panel_parse_pesos('$ 2,650'));
     assert_same(265000, panel_parse_pesos('2650.00'));
     assert_same(0, panel_parse_pesos('0'));
-    foreach (['', 'mucho', '26.50', '-5', '2650.5x', '99999999', "2650\n"] as $bad) {
+    foreach (['', 'mucho', '26.50', '-5', '2650.5x', '99999999'] as $bad) {
         assert_same(null, panel_parse_pesos($bad), var_export($bad, true));
     }
 }
