@@ -40,6 +40,11 @@ Stack: `docs/STACK.md`. Tokens y diagnóstico: `docs/DESIGN-TOKENS.md`. Fotos pe
 ## Fuera de alcance / cotizar aparte
 - A/B testing de CRO: lo hace John después del lanzamiento (15 días), no entra en esta construcción.
 
+## Demo de revisión
+- Enlace privado (se comparte desde el menú Share de la página): https://claude.ai/artifact/SbDpSFazMnKr313jAPRUWo
+- Se regenera con `php tools/build-demo.php <carpeta>` y se republica al mismo enlace en cada sesión. Es una foto estática del home: el formulario y la compra no envían.
+- Staging real (PHP + base de datos): subdominio en Hostinger en cuanto lleguen las credenciales.
+
 ## Cómo correrlo en local
 ```
 php -S 127.0.0.1:8000 -t public public/index.php
