@@ -4,17 +4,16 @@ Rama `claude/aerodiverti-seasonal-pricing-d7z472`. Entorno: staging local (`php 
 SQLite local con datos de prueba, `dist/` compilado), Chromium (Playwright) y Lighthouse 12.
 Fecha: 2026-10-01.
 
-**Estado:** todo lo que no depende de Stripe está verificado. Los casos 1 a 3 quedan a medias: el monto y la
-metadata se verificaron con un arnés que sustituye solo la llamada a Stripe, porque este entorno bloquea
-`api.stripe.com`. Falta la evidencia en el dashboard de Stripe test (IDs de session) y el webhook.
+**Estado:** 13 de 15 casos verificados, incluidos los cobros reales en **Stripe test** (clave restringida
+`rk_test_`, `livemode: false`). Quedan a medias el 8 (falta un iPhone y un Android reales) y el 10 (CLS).
 
 Leyenda: ✅ verificado · 🟡 verificado sin Stripe real (falta evidencia en dashboard) · ⏳ pendiente.
 
 | # | Caso | Estado | Evidencia |
 |---|---|---|---|
-| 1 | Precio del calendario = cobrado (base, temporada, fin de semana, fecha especial) | 🟡 | Filas en `bookings`: 1 oct base $2,200; 24 dic temporada $2,650; 26 dic sábado $2,500 (gana a temporada); 31 dic especial $3,300 con 33 %. Mismos montos en la celda del calendario. `unit_amount` y metadata `fullPrice` capturados del arnés. |
-| 2 | Anticipo = % correcto y saldo registrado | 🟡 | 24 dic × 2 pax × 45 %: `amount_now_cents` 238500, `balance_cents` 291500, `deposit_percent` 45; metadata `deposit` 238500, `balance` 291500, `depositPercent` 45. |
-| 3 | La manipulación no altera el cobro | 🟡 | `curl` con `amount`, `unit_amount`, `price`, `pricePerPerson` inventados: se ignoran. `expectedUnitPrice` falso: 409 `price_changed`, sin fila nueva. |
+| 1 | Precio del calendario = cobrado (base, temporada, fin de semana, fecha especial) | ✅ | 4 sesiones reales en Stripe test, `amount_total` = calculado (tabla "Stripe test" abajo). Recorrido desde el widget: celda del 31 dic "3,300", botón "Ir a pagar · $1,089", Stripe Checkout "1089,00 MXN". |
+| 2 | Anticipo = % correcto y saldo registrado | ✅ | En Stripe: 24 dic × 2 × 45 % → `amount_total` 238500, `unit_amount` 119250, metadata `deposit` 238500, `balance` 291500, `depositPercent` 45; en `bookings` lo mismo. 31 dic con 33 % propio de la fecha especial → 108900. |
+| 3 | La manipulación no altera el cobro | ✅ | Body con `amount`, `unit_amount`, `price`, `pricePerPerson`, `amount_total` = 1 o 100: la sesión de Stripe se creó por 265000 (lo resuelto). `expectedUnitPrice` falso: 409 `price_changed` y **ninguna** sesión creada en Stripe (verificado listando las sesiones). |
 | 4 | Fecha bloqueada no reservable | ✅ | UI: celda `aria-disabled`, "Sin vuelo", el clic no selecciona. `curl` directo: 409 `date_blocked`, sin fila en `bookings`. |
 | 5 | Precio cambia entre ver y pagar | ✅ | Paso 3 → cambio de precio en el panel → "Ir a pagar": aviso "ahora es $2,900 por persona y pagas $2,610 hoy", sigue en el paso 3, sin fila nueva; el reintento envía 290000/130500 y la reserva queda con el precio nuevo. |
 | 6 | Cambio en el panel aparece sin acción extra | ✅ | El checkout lee las reglas en cada petición (caso 5). `/api/prices.php` responde `Cache-Control: public, max-age=60` (configurable, `0` = sin caché); los errores van con `no-store`. Pendiente en producción: ver si LiteSpeed respeta el header (`x-litespeed-cache`). |
@@ -95,13 +94,38 @@ calendario, para que no haya un segundo salto al aparecer), así que el mismo re
 Sigue en verde (< 0.1). Si se quiere bajar, hay que corregir el reacomodo previo del encabezado, que es
 anterior a este proyecto: queda propuesto, no hecho.
 
-## Pendiente con Stripe real (sesión nueva con `STRIPE_SECRET_KEY` y red a Stripe)
+## Stripe test (2026-10-01)
 
-1. Cuatro cobros en Stripe test (base, temporada, fin de semana, fecha especial), uno de ellos con anticipo.
-   Anotar el ID de cada session y comparar `amount_total` y la metadata en el dashboard.
-2. Pagar con la tarjeta 4242 en Checkout. Leer `checkout.session.completed` de la API y reenviarlo firmado al
-   `webhook.php` local: la reserva debe pasar a `paid`.
-3. Repetir el caso 3 contra Stripe (el monto de la session no cambia con el body manipulado).
+Sesiones reales creadas por el checkout local con la clave restringida de prueba. `vuelo-compartido` con 45 %:
+
+| Folio | Fecha | Tipo de día | Modo | Pax | Session | `amount_total` | `unit_amount` × qty | Metadata |
+|---|---|---|---|---|---|---|---|---|
+| AERO-1D1EC3D | 2 oct | base | anticipo | 2 | `cs_test_a1iZQGM26M…` | 198000 ✅ | 99000 × 2 | ruleId `base`, fullPrice 440000, deposit 198000, balance 242000, 45 % |
+| AERO-CBDB5BF | 24 dic | temporada | anticipo | 2 | `cs_test_a1fhAUMSk8…` | 238500 ✅ | 119250 × 2 | fullPrice 530000, deposit 238500, balance 291500, 45 % |
+| AERO-5EE44C1 | 26 dic | fin de semana | total | 3 | `cs_test_a1ZmTtUqRL…` | 750000 ✅ | 250000 × 3 | fullPrice 750000, balance 0 |
+| AERO-953A112 | 31 dic | fecha especial | anticipo | 1 | `cs_test_a1sTH9dxWH…` | 108900 ✅ | 108900 × 1 | 33 % de la fecha |
+
+Todas con `livemode: false`, `date`, `packageId`, `ruleId`, `unitPrice` y `pricingVersion` `6-88979cec`.
+La primera fecha vendible se respeta: el 1 de octubre (hoy) devolvió 422 `date_invalid`.
+
+**Pago y webhook:** la sesión AERO-CBDB5BF se pagó con la tarjeta 4242 en el Checkout real (Playwright) y
+regresó a `/reserva-confirmada`. Stripe: `status complete`, `payment_status paid`, `pi_3ULlEQE3mCkhkZXy0oY2NpWd`.
+El evento real `evt_1ULlESE3mCkhkZXyOBqnjQi6` se leyó de `/v1/events` y se reenvió al `webhook.php` local
+firmado con un `whsec` local (no hay endpoint público al que Stripe pueda llamar):
+
+- firma válida: 200, reserva `paid` con `payment_intent` y 2 notificaciones encoladas (cliente y admin);
+- mismo evento otra vez: 200 `already` (idempotente);
+- firma falsa: 400.
+
+**Webhook endurecido** (commit aparte, autorizado): ahora ignora `checkout.session.completed` si
+`payment_status` no es `paid`. Probado con eventos firmados: `unpaid` deja la reserva pendiente y `paid` la
+marca pagada. En Stripe live, OXXO y transferencias están deshabilitados, así que hoy no había riesgo real.
+
+**Observación (no es de este cambio):** la cuenta tiene activa la conversión de moneda de Stripe. Desde una IP
+de EE. UU., Checkout ofrece primero USD (62.38 US$ por 1,089 MXN). El monto en MXN de la sesión no cambia.
+
+**Falta en producción:** registrar el webhook real en Stripe (si no existe ya) y verificar un primer
+`checkout.session.completed` real tras la salida (sección 6 del plan).
 
 ## Cómo repetir la prueba con PHP 7.4 real (sin Docker)
 
