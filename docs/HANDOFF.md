@@ -1,5 +1,5 @@
 # HANDOFF · Tarifas por temporada
-Punto alcanzado: fin del Día 7 (antes del QA del Día 8)   ·   Rama: claude/aerodiverti-seasonal-pricing-d7z472   ·   Último commit: ver `git log -1`
+Punto alcanzado: Día 8 (QA) sin Stripe real; falta la parte de Stripe para cerrar P3   ·   Rama: claude/aerodiverti-seasonal-pricing-d7z472   ·   Último commit: ver `git log -1`
 
 ## Hecho
 - **Días 2-3 (P2):** `resolve_price`, tablas, `/api/prices.php`, checkout con recálculo, metadata, router local. Ver commits `Tarifas:` y `Checkout:`.
@@ -13,7 +13,7 @@ Punto alcanzado: fin del Día 7 (antes del QA del Día 8)   ·   Rama: claude/ae
 - Fecha bloqueada antes de pagar: vuelve al paso 1, limpia la fecha, el calendario ya la muestra cerrada.
 - Cambio de paquete con fecha elegida (recotiza / avisa / cae a fecha nativa si el paquete no tiene anticipo).
 - Bandera apagada y sondeo 500: fecha nativa, montos de siempre. 23:30 CDMX: `min` = mañana.
-- `npm run test:php` 39/39 · `npm test` 26/26 · `tsc --noEmit` OK · `npm run build` OK · `npm run lint:php74` OK.
+- `npm run test:php` 40/40 (PHP 7.4.33 y 8.4) · `npm test` 27/27 · `tsc --noEmit` OK · `npm run build` OK · `npm run lint:php74` OK.
 
 ## Decisiones tomadas y por qué
 - El widget **siempre** envía `expectedUnitPrice` / `expectedDeposit` (lo que la persona ve). Con la bandera apagada el servidor los ignora. Cierra el caso "sondeo caído + bandera encendida": antes se cobraba $2,650 mostrando $2,200; ahora responde 409 y avisa.
@@ -22,19 +22,42 @@ Punto alcanzado: fin del Día 7 (antes del QA del Día 8)   ·   Rama: claude/ae
 - `BookingWidget.tsx` ya incumplía prettier antes de estos cambios; no se reformateó para no ensuciar el diff.
 - Texto del sitio: `grep` en `src/content` y `src/pages` **no** encuentra el monto fijo de $1,000 (D8 no requiere cambios de contenido).
 
-## Siguiente paso inmediato (Día 8, QA, checkpoint P3)
-Recorrer `docs/qa-tarifas.md` con la tabla de la sección 5 del plan. Pendiente de evidencia real: cobros en **Stripe test** (IDs de session y metadata en el dashboard, webhook con `stripe listen`), Lighthouse antes/después de `/reservar` y `/en/reservar`, dispositivo iOS/Android real, PHP 7.4 real.
+## Día 8 (QA) hecho sin Stripe
+Ver `docs/qa-tarifas.md`: 15 casos; 11 ✅, 4 🟡. Hallazgos: (1) PHP 7.4 trae base de zonas 2022.1 con horario de
+verano en México: corregido con UTC-6 fijo; (2) OPcache retrasa unos segundos el cambio de la bandera;
+(3) CLS de `/reservar` sube de 0.012 a ~0.055 (sigue verde) por un reacomodo previo del encabezado.
+
+## Siguiente paso inmediato (sesión nueva con Stripe)
+El usuario está configurando en el entorno: variable `STRIPE_SECRET_KEY` (clave restringida `rk_test_`) y red a
+`api.stripe.com`, `checkout.stripe.com`, `js.stripe.com`, `m.stripe.network`, `m.stripe.com`, `r.stripe.com`,
+`q.stripe.com`, `b.stripecdn.com`. Con eso:
+1. `server/config.php` local ya lee `getenv('STRIPE_SECRET_KEY')`; reconstruir `dist/` (`npm ci && npm run build`)
+   y recrear el `config.php` local (no versionado; ver plantilla en este archivo, sección Staging).
+2. Cuatro cobros en Stripe test (base, temporada, fin de semana, fecha especial; uno con anticipo); anotar IDs.
+3. Pagar con 4242 en Checkout (Playwright), leer `checkout.session.completed` de `/v1/events`, reenviarlo firmado
+   al `webhook.php` local con un `whsec` local propio, comprobar `paid`.
+4. Caso 3 contra Stripe. Completar `docs/qa-tarifas.md`, commit `checkpoint: P3 — QA de tarifas`.
+Datos que el usuario va a dar: versión de PHP de Webempresa, extensiones (`pdo_sqlite`, `curl`, `mbstring`) y si
+OXXO/SPEI están activos en Stripe live (D5).
 
 ## Riesgos / bloqueos abiertos
-- Sin `sk_test_` en este entorno: falta el cobro de prueba real (caso QA 1-3).
-- Versión de PHP del hosting sin confirmar; la compatibilidad 7.4 se verificó con PHPCompatibility.
+- Sin llave de Stripe ni red a Stripe en esta sesión: falta el cobro de prueba real (casos QA 1-3).
+- Versión de PHP del hosting sin confirmar; suite 40/40 en PHP 7.4.33 real (WebAssembly) y 8.4.
 - `npm run check` no corre (falta `@astrojs/check`, ya faltaba antes).
 - Pendientes de negocio: D1 (Berenice aprueba los %), D2, D5, D10.
-- `/en/reservar` no se probó en navegador; comparte el widget (textos `en` incluidos).
 
 ## Cómo correr los tests
 npm run test:php · npm test · npx tsc --noEmit · npm run build · PHPCS=/ruta/phpcs npm run lint:php74
-Staging local: npm run build; php -S localhost:8000 server/dev/router.php (config local en `server/config.php`, no versionado)
+Staging local: npm run build; php -S localhost:8000 server/dev/router.php
+`server/config.php` local (no versionado):
+    <?php $c = require __DIR__ . '/config.example.php';
+    $c['site_url'] = 'http://localhost:8000';
+    $c['stripe_secret_key'] = getenv('STRIPE_SECRET_KEY') ?: 'sk_test_local_sin_llave';
+    $c['catalog_path'] = dirname(__DIR__) . '/dist/data/catalog.json';
+    $c['db']['path'] = '<scratchpad>/dev.sqlite';
+    $c['pricing']['rules_enabled'] = getenv('RULES') !== '0';
+    $c['panel']['password'] = 'dev';
+    return $c;
 
 ## Consumo
-`/usage` y `/cost` no disponibles en esta sesión en la nube. Fecha: 2026-09-30.
+`/usage` y `/cost` no disponibles en esta sesión en la nube. Fecha: 2026-10-01.

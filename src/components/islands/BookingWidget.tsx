@@ -469,10 +469,10 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
                       >
                         <span className="bk-pkg-title">{p.title}</span>
                         <span className="bk-pkg-price">
+                          {pricing === "on" && <span className="bk-pkg-from">{t.from}</span>}
                           {p.priceWas ? (
                             <s className="bk-pkg-was">{fmt(p.currency, locale, p.priceWas)}</s>
                           ) : null}
-                          {pricing === "on" && <span className="bk-pkg-from">{t.from}</span>}
                           <strong>{fmt(p.currency, locale, p.pricePerPerson)}</strong>
                           <span className="bk-pkg-unit">{t.perPerson}</span>
                         </span>

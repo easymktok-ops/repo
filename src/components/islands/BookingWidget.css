@@ -616,11 +616,10 @@
 .bk-pkg-from {
   color: var(--faint);
   font-size: var(--step--1);
-  margin-right: 0.3rem;
 }
 .bk-cal-skel {
   max-width: 34rem;
-  height: 22rem;
+  height: 34rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
   background: linear-gradient(90deg, var(--surface), var(--surface-raised), var(--surface));
