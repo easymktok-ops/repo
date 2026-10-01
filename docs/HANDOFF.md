@@ -37,7 +37,7 @@ El usuario está configurando en el entorno: variable `STRIPE_SECRET_KEY` (clave
 3. Pagar con 4242 en Checkout (Playwright), leer `checkout.session.completed` de `/v1/events`, reenviarlo firmado
    al `webhook.php` local con un `whsec` local propio, comprobar `paid`.
 4. Caso 3 contra Stripe. Completar `docs/qa-tarifas.md`, commit `checkpoint: P3 — QA de tarifas`.
-Pendiente del usuario: si OXXO / transferencia bancaria (SPEI) están activos en la configuración "Default · Tu cuenta" de Stripe live (D5). Nota: la cuenta de Stripe es compartida (configuraciones de WooCommerce y Bókun).
+D5 resuelto (captura del usuario, 2026-10-01, Stripe live, "Default · Tu cuenta"): **OXXO y Transferencias bancarias DESHABILITADOS**. Habilitados: Tarjetas, Apple Pay, Google Pay, Link, Cartes Bancaires, Bancontact, EPS, iDEAL (estos tres últimos son de euros y no aparecen en un cobro en MXN). Todos confirman el pago en el momento, así que hoy el webhook sin `payment_status` no marca como pagadas reservas sin pagar: riesgo teórico. Recomendación (no hecha, fuera de alcance): 3 líneas en `webhook.php` que ignoren el evento si `payment_status !== 'paid'`, por si algún día se activa OXXO o SPEI. Nota: la cuenta de Stripe es compartida (WooCommerce, Bókun).
 
 ## Riesgos / bloqueos abiertos
 - Sin llave de Stripe ni red a Stripe en esta sesión: falta el cobro de prueba real (casos QA 1-3).
