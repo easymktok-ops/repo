@@ -10,6 +10,9 @@ foreach ($events as $event) {
 $weekdays = [1 => 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábados', 'Domingos'];
 $wa = whatsapp_link((string) content('site.whatsapp_number'), (string) content('site.whatsapp_message'));
 $heroVideo = (string) content('hero.video_src');
+if ($heroVideo === '' && asset_exists('img/hero.mp4')) {
+    $heroVideo = asset('img/hero.mp4');
+}
 $sent = ($_GET['enviado'] ?? '') === '1';
 $formErrors = $_SESSION['form_errors'] ?? [];
 $formOld = $_SESSION['form_old'] ?? [];

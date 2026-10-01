@@ -26,7 +26,7 @@ Stack: `docs/STACK.md`. Tokens y diagnóstico: `docs/DESIGN-TOKENS.md`. Fotos pe
 - Texto de la política de tratamiento de datos (Ley 1581).
 
 ## Bloqueado
-- **Fotos y logo**: la descarga directa de Drive y el sitio original están bloqueados por la red de esta sesión. Se dejaron espacios con el nombre de archivo esperado (`docs/IMAGENES.md`). Para desbloquear: Norman sube los archivos a `public/assets/img/`, o se agregan `joyascolombianasdinnershow.com` y `drive.google.com` a los dominios permitidos del entorno.
+- **Fotos pendientes**: llegaron logo, hero (baja resolución), banda grupal y foto vertical del escenario (ya integradas). Faltan 4 espacios y el video; ver `docs/IMAGENES.md`. El sitio original sigue bloqueado por la red de esta sesión.
 - **Video del hero**: lo provee Norman.
 - **Copy SEO de John**: llega el 6 oct. Hoy hay contenido provisional migrado y `{{META_DESCRIPTION_HOME}}`.
 - **Pasarela**: Mercado Pago (confirmado en la reunión del 25 sept); validación de cobertura internacional el 13 oct.
