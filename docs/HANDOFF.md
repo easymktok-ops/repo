@@ -37,12 +37,11 @@ El usuario está configurando en el entorno: variable `STRIPE_SECRET_KEY` (clave
 3. Pagar con 4242 en Checkout (Playwright), leer `checkout.session.completed` de `/v1/events`, reenviarlo firmado
    al `webhook.php` local con un `whsec` local propio, comprobar `paid`.
 4. Caso 3 contra Stripe. Completar `docs/qa-tarifas.md`, commit `checkpoint: P3 — QA de tarifas`.
-Datos que el usuario va a dar: versión de PHP de Webempresa, extensiones (`pdo_sqlite`, `curl`, `mbstring`) y si
-OXXO/SPEI están activos en Stripe live (D5).
+Pendiente del usuario: si OXXO / transferencia bancaria (SPEI) están activos en la configuración "Default · Tu cuenta" de Stripe live (D5). Nota: la cuenta de Stripe es compartida (configuraciones de WooCommerce y Bókun).
 
 ## Riesgos / bloqueos abiertos
 - Sin llave de Stripe ni red a Stripe en esta sesión: falta el cobro de prueba real (casos QA 1-3).
-- Versión de PHP del hosting sin confirmar; suite 40/40 en PHP 7.4.33 real (WebAssembly) y 8.4.
+- PHP del hosting confirmado por el usuario (Webempresa, 2026-10-01): **8.3**, con `pdo_sqlite`, `mbstring` y `pdo` activos (cURL viene integrado y el checkout actual ya lo usa). Suite 40/40 en 7.4.33 y 8.4. Con 8.3 el desfase de una hora por horario de verano no aplica en producción (su base de zonas es posterior a 2022); el fix UTC-6 se queda como protección.
 - `npm run check` no corre (falta `@astrojs/check`, ya faltaba antes).
 - Pendientes de negocio: D1 (Berenice aprueba los %), D2, D5, D10.
 
