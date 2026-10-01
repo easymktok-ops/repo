@@ -10,7 +10,11 @@
 
 declare(strict_types=1);
 
-const PRICING_TZ = 'America/Mexico_City';
+// Hora de la Ciudad de Mexico como desfase FIJO: Mexico elimino el horario de
+// verano en 2022 y la base de zonas que trae PHP 7.4 (2022.1) aun aplica UTC-5
+// de abril a octubre, lo que adelantaria "hoy" una hora. Con '-06:00' el
+// resultado no depende de la base de zonas del hosting.
+const PRICING_TZ = '-06:00';
 const PRICING_TYPES = ['season', 'date', 'weekday', 'blocked'];
 // Precedencia entre tipos: menor gana.
 const PRICING_TYPE_RANK = ['blocked' => 0, 'date' => 1, 'weekday' => 2, 'season' => 3];

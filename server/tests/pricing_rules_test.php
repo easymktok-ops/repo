@@ -219,6 +219,21 @@ function test_hoy_en_hora_de_mexico(): void
     assert_same('2026-09-29', pricing_today_mx($now));
 }
 
+function test_hoy_no_depende_de_la_base_de_zonas_del_hosting(): void
+{
+    // PHP 7.4 trae la base de zonas 2022.1, que aun aplica horario de verano en
+    // Mexico: con 'America/Mexico_City' estas horas caerian en el dia siguiente.
+    $casos = [
+        '2026-07-15 05:30:00' => '2026-07-14', // 23:30 del 14 en CDMX (pleno verano)
+        '2026-07-15 06:00:00' => '2026-07-15', // medianoche exacta en CDMX
+        '2026-04-05 05:59:59' => '2026-04-04', // antiguo domingo de cambio de horario
+        '2027-01-01 05:59:59' => '2026-12-31', // fin de anio
+    ];
+    foreach ($casos as $utc => $esperado) {
+        assert_same($esperado, pricing_today_mx(new DateTimeImmutable($utc, new DateTimeZone('UTC'))), $utc);
+    }
+}
+
 function test_resolve_range_respeta_la_ventana(): void
 {
     $days = resolve_range('2026-09-28', '2026-10-02', t_pkg(), [], '2026-09-30', '2026-10-01');

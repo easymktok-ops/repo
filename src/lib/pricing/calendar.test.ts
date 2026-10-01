@@ -52,6 +52,12 @@ describe("fechas sin depender de la zona horaria", () => {
     expect(todayMx(new Date("2026-09-30T07:00:00Z"))).toBe("2026-09-30");
   });
 
+  it("hoy en pleno verano no se adelanta una hora (Mexico sin horario de verano)", () => {
+    expect(todayMx(new Date("2026-07-15T05:30:00Z"))).toBe("2026-07-14");
+    expect(todayMx(new Date("2026-07-15T06:00:00Z"))).toBe("2026-07-15");
+    expect(todayMx(new Date("2027-01-01T05:59:59Z"))).toBe("2026-12-31");
+  });
+
   it("no cambia con la zona horaria del proceso", () => {
     const prev = process.env.TZ;
     for (const tz of ["Pacific/Kiritimati", "America/Los_Angeles", "UTC"]) {

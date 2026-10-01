@@ -24,7 +24,6 @@ export interface DayInfo {
 
 export type Tier = "low" | "mid" | "high";
 
-const TZ = "America/Mexico_City";
 const YMD_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
 
 export function parseYmd(s: Ymd): { y: number; m: number; d: number } | null {
@@ -53,14 +52,14 @@ function utcMs(s: Ymd): number {
   return Date.UTC(p.y, p.m - 1, p.d);
 }
 
-/** Hoy en hora de Mexico (no en UTC ni en la zona del navegador). */
+/**
+ * Hoy en hora de la Ciudad de Mexico (UTC-6 fijo desde 2022, sin horario de
+ * verano). Desfase fijo a proposito: no depende de la base de zonas del
+ * dispositivo ni de la del hosting, asi navegador y servidor coinciden.
+ */
 export function todayMx(now: Date = new Date()): Ymd {
-  return new Intl.DateTimeFormat("en-CA", {
-    timeZone: TZ,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(now);
+  const t = new Date(now.getTime() - 6 * 3_600_000);
+  return toYmd(t.getUTCFullYear(), t.getUTCMonth() + 1, t.getUTCDate());
 }
 
 export function addDaysYmd(s: Ymd, days: number): Ymd {
