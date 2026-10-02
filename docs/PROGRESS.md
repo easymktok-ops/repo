@@ -2,6 +2,11 @@
 
 Stack: `docs/STACK.md`. Tokens y diagnóstico: `docs/DESIGN-TOKENS.md`. Fotos pendientes: `docs/IMAGENES.md`. Cronograma: 15 sesiones de 1h, 28 sept a 16 oct, lanzamiento 17 oct.
 
+## Estado al 2 oct (fin de la semana 1)
+- **Semana 1 del cronograma: cumplida** (estructura base y home). Pendiente solo lo que depende de otros: logo/fotos/video faltantes, accesos a Hostinger.
+- **Todavía NO existe** (no es un bug, está en la fase 3 del cronograma, pero conviene adelantarlo): página de compra `/comprar` (hoy es una página provisional), base de datos, motor de tickets `#JCD-1001`, panel `/admin` con login, door list, correo de confirmación y Mercado Pago.
+- **Propuesta:** construir el motor de compras ya (BD + tickets + checkout + admin) con una pasarela simulada, en paralelo a las landings, para que el 12 oct solo se enchufe Mercado Pago. Necesita: versión de PHP y MySQL de Hostinger, credenciales de prueba de Mercado Pago, método de correo.
+
 ## Hecho
 - **28 sept** — Auditoría del repo, decisión de plataforma: sin WordPress, PHP a medida + panel propio (sobre Grav). Stack documentado.
 - **30 sept** — Estructura base + home completo (sesiones "estructura base" y "maquetación" del cronograma):
