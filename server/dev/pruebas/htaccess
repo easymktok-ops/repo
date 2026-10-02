@@ -11,6 +11,11 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # La carpeta vive dentro de public_html: solo se atiende con el nombre del
+  # subdominio. Desde el dominio principal (aerodiverti.com.mx/carpeta) da 404.
+  RewriteCond %{HTTP_HOST} !^pruebas\.aerodiverti\.com\.mx$ [NC]
+  RewriteRule ^ - [R=404,L]
+
   # Nada interno del backend es visible desde el navegador: solo /api.
   RewriteRule ^server/(?!public/api/) - [F,L]
 

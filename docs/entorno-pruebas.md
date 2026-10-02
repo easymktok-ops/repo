@@ -24,8 +24,9 @@ Genera `dist-aerodiverti-pruebas.zip` (no se versiona). Plantillas en `server/de
 ## Montarlo en Webempresa (una sola vez)
 
 1. **Subdominio:** panel de Webempresa → Dominios → Subdominios → crear `pruebas` para `aerodiverti.com.mx`.
-   Carpeta raíz: de preferencia **fuera** de `public_html` (por ejemplo `pruebas.aerodiverti.com.mx`). El deploy de
-   producción no borra nada, pero así el sitio de pruebas no se puede abrir como `aerodiverti.com.mx/carpeta`.
+   Carpeta raíz: Webempresa la pone dentro de `public_html` (`public_html/pruebas.aerodiverti.com.mx`). El
+   `.htaccess` de pruebas solo responde al nombre del subdominio (desde `aerodiverti.com.mx/carpeta` da 404) y
+   el deploy de producción no borra nada. Sin cuenta FTP adicional.
    **No cambiar los nameservers del dominio** (ver `CLAUDE.md`, sección DNS).
 2. **PHP 8.3** para el subdominio (Seleccionar versión de PHP), con `pdo_sqlite` y `mbstring`.
 3. **SSL:** activar el certificado (Let's Encrypt / AutoSSL) del subdominio.

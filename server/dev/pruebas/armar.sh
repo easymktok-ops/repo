@@ -30,7 +30,9 @@ mkdir -p server/data server/lib server/public/api
 cp "$ROOT"/server/lib/*.php server/lib/
 cp "$ROOT"/server/public/api/{create-checkout-session,panel,prices,webhook}.php server/public/api/
 cp "$ROOT"/server/config.example.php server/
-cp "$ROOT"/server/dev/pruebas/htaccess .htaccess
+HOST="$(printf '%s' "$URL" | sed -E 's#^https?://##; s#/.*$##')"
+HOST_RE="$(printf '%s' "$HOST" | sed 's/\./\\\\./g')"
+sed "s#pruebas\\\\.aerodiverti\\\\.com\\\\.mx#$HOST_RE#" "$ROOT"/server/dev/pruebas/htaccess > .htaccess
 cp "$ROOT"/server/dev/pruebas/htaccess-denegar server/lib/.htaccess
 cp "$ROOT"/server/dev/pruebas/htaccess-denegar server/data/.htaccess
 if [ "$ACTUALIZAR" = 0 ]; then
