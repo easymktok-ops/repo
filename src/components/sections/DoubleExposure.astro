@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import Button from "@components/ui/Button.astro";
-import { whatsappUrl, type Locale } from "@config/site";
+import { localizedPath, type Locale } from "@config/site";
 import { img } from "@lib/media";
 
 /**
@@ -22,23 +22,19 @@ const t = {
   es: {
     heading: "Lo que se ve allá arriba",
     sub: "no cabe en una sola foto. Por eso te llevamos a verlo en persona.",
-    cta: "Reservar vuelo",
+    cta: "Elegir mi fecha",
     alt: "Globo de Aerodiverti sobre el mar de nubes al amanecer, vista aérea",
   },
   en: {
     heading: "What you see up there",
     sub: "does not fit in a single photo. So we take you to see it in person.",
-    cta: "Book a flight",
+    cta: "Choose my date",
     alt: "Aerodiverti balloon above a sea of clouds at sunrise, aerial view",
   },
 }[locale];
 
 const aerial = img("galeria-04.jpg");
-const bookHref = whatsappUrl(
-  locale === "es"
-    ? "Hola, quiero reservar un vuelo en globo en Teotihuacán. ¿Me ayudan?"
-    : "Hi, I'd like to book a balloon flight in Teotihuacán. Can you help?",
-);
+const bookHref = localizedPath("/reservar", locale);
 ---
 
 <section class="de">
@@ -46,9 +42,7 @@ const bookHref = whatsappUrl(
     <div class="de-copy">
       <h2 class="de-h">{t.heading}</h2>
       <p class="de-sub measure">{t.sub}</p>
-      <Button href={bookHref} size="lg" icon="arrow-up-right" target="_blank" rel="noopener">
-        {t.cta}
-      </Button>
+      <Button href={bookHref} size="lg" icon="arrow-up-right">{t.cta}</Button>
     </div>
 
     <div class="de-stage">

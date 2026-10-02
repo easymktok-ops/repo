@@ -131,14 +131,21 @@
 }
 .pc-num {
   font-size: var(--step-0);
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-.pc-price {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-weight: 500;
   font-variant-numeric: tabular-nums;
   color: var(--ink-soft);
+}
+/* El precio es lo que se compara entre dias: va mas grande y con tinta plena; el numero del dia baja un tono. */
+.pc-price {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.pc-day.is-selected .pc-num {
+  color: var(--accent-ink);
 }
 .pc-note {
   font-size: 0.62rem;
@@ -163,6 +170,10 @@
 }
 .pc-day[aria-disabled="true"]:not(.is-avail) {
   color: var(--faint);
+}
+.pc-day[aria-disabled="true"]:not(.is-avail) :is(.pc-num, .pc-price) {
+  color: inherit;
+  font-weight: 500;
 }
 .pc-day.is-blocked .pc-num {
   text-decoration: line-through;
@@ -322,7 +333,7 @@
     padding: var(--space-xs);
   }
   .pc-price {
-    font-size: 0.66rem;
+    font-size: 0.72rem;
   }
 }
 

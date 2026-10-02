@@ -403,7 +403,12 @@ function panel_pricing_btn(string $op, string $tab, string $id, string $label, s
 function panel_pricing_render(string $tab, array $ctx, array $state = []): string
 {
     $tab = panel_pricing_tab($tab);
-    $out = panel_pricing_nav('pricing') . '<h1 class="ptitle">Precios</h1>';
+    $out = panel_pricing_nav('pricing')
+        . '<div class="phead"><h1 class="ptitle">Precios</h1>'
+        . '<div class="prefs" role="group" aria-label="Preferencias del panel">'
+        . '<label class="sw"><input type="checkbox" data-pref="ayudas" checked /> <span>Ayudas</span></label>'
+        . '<label class="sw"><input type="checkbox" data-pref="anim" checked /> <span>Animaciones</span></label>'
+        . '</div></div>';
 
     if (!$ctx['enabled']) {
         $out .= '<p class="note"><strong>Las tarifas por fecha están apagadas.</strong> El sitio cobra como antes '
@@ -598,6 +603,7 @@ function panel_pricing_rule_form(array $v, array $errors, array $ctx, bool $bloc
       <label class="fld"><span><?= $blocked ? 'Motivo' : 'Nombre' ?></span>
         <input type="text" name="label" maxlength="80" value="<?= h($v['label']) ?>"
                placeholder="<?= $blocked ? 'Ej. Mantenimiento' : 'Ej. Temporada navideña' ?>" required />
+        <small class="help"><?= $blocked ? 'Solo lo ves tú. El cliente ve "Sin vuelo".' : 'Solo lo ves tú, en la lista y en el historial. El cliente ve el precio, no el nombre.' ?></small>
         <?= panel_field_err($errors, 'label') ?>
       </label>
 
@@ -606,6 +612,7 @@ function panel_pricing_rule_form(array $v, array $errors, array $ctx, bool $bloc
         <?php foreach (PANEL_TIPOS as $key => $name): ?>
           <label class="opt"><input type="radio" name="type" value="<?= h($key) ?>" <?= $v['type'] === $key ? 'checked' : '' ?> /> <?= h($name) ?></label>
         <?php endforeach; ?>
+        <small class="help">Temporada: un rango de fechas. Fecha especial: uno o pocos días, y gana sobre las demás. Días de la semana: por ejemplo, sábados y domingos.</small>
         <?= panel_field_err($errors, 'type') ?>
       </fieldset>
       <?php endif; ?>
@@ -620,6 +627,7 @@ function panel_pricing_rule_form(array $v, array $errors, array $ctx, bool $bloc
           <?= panel_field_err($errors, 'end_date') ?>
         </label>
       </div>
+      <small class="help help-row">Haz clic en la fecha para abrir el calendario. Los dos días cuentan.</small>
 
       <?php if (!$blocked): ?>
       <fieldset class="fld" id="weekdays-box"><legend>Días</legend>
@@ -638,6 +646,7 @@ function panel_pricing_rule_form(array $v, array $errors, array $ctx, bool $bloc
             <label class="opt"><input type="checkbox" name="packages[]" value="<?= h($slug) ?>" <?= in_array($slug, $v['packages'], true) ? 'checked' : '' ?> /> <?= h(panel_pkg_name($p)) ?></label>
           <?php endforeach; ?>
         </div>
+        <small class="help">Elige "Solo algunos" si este precio no aplica a todos los vuelos.</small>
         <?= panel_field_err($errors, 'package_ids') ?>
       </fieldset>
 
@@ -645,11 +654,12 @@ function panel_pricing_rule_form(array $v, array $errors, array $ctx, bool $bloc
       <div class="row2">
         <label class="fld"><span>Precio por persona (pesos)</span>
           <input type="text" inputmode="numeric" name="price" value="<?= h($v['price']) ?>" placeholder="2,650" />
+          <small class="help">Por persona, en pesos enteros. Puedes escribir 2650 o 2,650.</small>
           <?= panel_field_err($errors, 'price_cents') ?>
         </label>
         <label class="fld"><span>Anticipo % (opcional)</span>
           <input type="number" inputmode="numeric" min="1" max="100" name="deposit_percent" value="<?= h($v['deposit_percent']) ?>" />
-          <small class="muted">Si lo dejas vacío se usa el del paquete.</small>
+          <small class="help">Si lo dejas vacío se usa el del paquete.</small>
           <?= panel_field_err($errors, 'deposit_percent') ?>
         </label>
       </div>
@@ -927,9 +937,113 @@ function panel_pricing_css(): string
       .pvlist summary{cursor:pointer;color:var(--accent-strong);margin-bottom:.7rem}
       .blockedday td{color:var(--muted);background:color-mix(in srgb,var(--bad) 7%,transparent)}
       .ptable .actions{gap:.35rem;flex-wrap:wrap;max-width:190px}
+      .phead{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem}
+      .prefs{display:flex;gap:.9rem}
+      .sw{display:inline-flex;align-items:center;gap:.45rem;font-size:.84rem;color:var(--muted);cursor:pointer}
+      .sw input{appearance:none;width:2.1rem;height:1.2rem;border-radius:999px;background:var(--surface2);border:1px solid var(--line);
+        position:relative;cursor:pointer;margin:0;transition:background-color .16s cubic-bezier(.23,1,.32,1),border-color .16s cubic-bezier(.23,1,.32,1)}
+      .sw input::after{content:'';position:absolute;top:2px;left:2px;width:.85rem;height:.85rem;border-radius:50%;background:var(--muted);
+        transition:transform .16s cubic-bezier(.23,1,.32,1),background-color .16s cubic-bezier(.23,1,.32,1)}
+      .sw input:checked{background:color-mix(in srgb,var(--accent) 35%,var(--surface2));border-color:var(--accent)}
+      .sw input:checked::after{transform:translateX(.9rem);background:var(--accent-strong)}
+      .sw input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+      .help{display:block;font-size:.8rem;color:var(--muted);line-height:1.4}
+      .help-row{margin-top:-.5rem}
+      html[data-ayudas="off"] .help{display:none}
       .ptable td.dates{min-width:9.5rem}
       .ptable td.num{white-space:normal}
       @media(max-width:640px){.pct{width:4.2rem}}
     </style>
     CSS;
+}
+
+/**
+ * Preferencias del panel (ayudas / animaciones), selector de fecha al hacer clic y el globo que celebra un
+ * guardado o se revienta en un error. Va en todo el panel; las preferencias viven en localStorage del navegador.
+ */
+function panel_ux_head(): string
+{
+    return "<script>(function(){var d=document.documentElement;['ayudas','anim'].forEach(function(k){var v=null;"
+        . "try{v=localStorage.getItem('panel.'+k)}catch(e){}d.setAttribute('data-'+k,v==='off'?'off':'on')})})();</script>\n"
+        . <<<CSS
+    <style>
+      :root{color-scheme:dark}
+      .fld input[type=date],.filters input[type=date]{cursor:pointer}
+      .flash,.ferr{position:relative}
+      .gl-fx{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:6}
+      .gl-b{position:absolute;bottom:40%;width:26px;height:33px;will-change:transform,opacity}
+      .gl-b svg{display:block;width:100%;height:100%}
+      .gl-p{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--bad);will-change:transform,opacity}
+    </style>
+    CSS;
+}
+
+function panel_ux_foot(): string
+{
+    return <<<'HTML'
+    <script>
+    (function(){
+      var d=document.documentElement;
+      function save(k,v){try{localStorage.setItem('panel.'+k,v)}catch(e){}}
+      document.querySelectorAll('input[data-pref]').forEach(function(i){
+        var k=i.getAttribute('data-pref');
+        i.checked=d.getAttribute('data-'+k)!=='off';
+        i.addEventListener('change',function(){var v=i.checked?'on':'off';d.setAttribute('data-'+k,v);save(k,v)});
+      });
+      document.querySelectorAll('input[type=date]').forEach(function(i){
+        i.addEventListener('click',function(){try{i.showPicker&&i.showPicker()}catch(e){}});
+      });
+      var f=document.querySelector('.flash.ok,.flash.err')||document.querySelector('.ferr');
+      if(!f||!f.animate||d.getAttribute('data-anim')==='off')return;
+      if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+      var ok=f.classList.contains('ok');
+      var P='M16 3.4C10 3.4 5.8 7.9 5.8 13.1c0 4.6 3.3 7.8 7.3 9.3l1.1 1.8h3.6l1.1-1.8c4-1.5 7.3-4.7 7.3-9.3C26.2 7.9 22 3.4 16 3.4Z';
+      function balloon(c){
+        var b=document.createElement('span');b.className='gl-b';
+        b.innerHTML='<svg viewBox="0 0 32 32" aria-hidden="true"><path d="'+P+'" fill="'+c+'"/>'
+          +'<path d="M11.2 9.4c1-2.2 2.8-3.4 4.6-3.7" stroke="#fff" stroke-opacity=".45" stroke-width="1.6" fill="none" stroke-linecap="round"/>'
+          +'<path d="M13.4 22.6 14.4 24.4M18.6 22.6 17.6 24.4" stroke="'+c+'" stroke-width="1.3" stroke-linecap="round"/>'
+          +'<rect x="13.5" y="24.4" width="5" height="3.4" rx="1" fill="'+c+'"/></svg>';
+        return b;
+      }
+      var fx=document.createElement('span');fx.className='gl-fx';fx.setAttribute('aria-hidden','true');f.appendChild(fx);
+      var out='cubic-bezier(.23,1,.32,1)';
+      if(ok){
+        var cs=['#9cc2f5','#6f9de0','#ea83c1'];
+        [[12,1,0],[38,.8,110],[62,.68,210]].forEach(function(a,n){
+          var b=balloon(cs[n]);b.style.left=a[0]+'px';fx.appendChild(b);
+          var s=a[1],dx=n%2?6:-5;
+          b.animate([
+            {transform:'translate(0,10px) scale('+s*.92+')',opacity:0},
+            {transform:'translate('+dx*.3+'px,-18px) scale('+s+')',opacity:1,offset:.22},
+            {transform:'translate('+dx+'px,-96px) scale('+s+')',opacity:0}
+          ],{duration:1500,delay:a[2],easing:out,fill:'both'});
+        });
+        setTimeout(function(){fx.remove()},1900);
+      }else{
+        var c=getComputedStyle(f).color,b=balloon(c);b.style.left='14px';fx.appendChild(b);
+        var rise=b.animate([
+          {transform:'translateY(10px) scale(.92)',opacity:0},
+          {transform:'translateY(-30px) scale(1)',opacity:1}
+        ],{duration:560,easing:out,fill:'forwards'});
+        rise.onfinish=function(){
+          b.animate([
+            {transform:'translateY(-30px) scale(1)',opacity:1},
+            {transform:'translateY(-30px) scale(1.3)',opacity:0}
+          ],{duration:120,easing:'ease-out',fill:'forwards'});
+          for(var i=0;i<7;i++){
+            var p=document.createElement('span');p.className='gl-p';p.style.background=c;
+            p.style.left='25px';p.style.bottom='calc(40% + 48px)';fx.appendChild(p);
+            var a=i/7*Math.PI*2,r=16+(i%2)*6;
+            p.animate([
+              {transform:'translate(0,0) scale(1)',opacity:1},
+              {transform:'translate('+Math.cos(a)*r+'px,'+Math.sin(a)*r+'px) scale(.5)',opacity:0}
+            ],{duration:320,easing:out,fill:'forwards'});
+          }
+          setTimeout(function(){fx.remove()},500);
+        };
+      }
+    })();
+    </script>
+    HTML;
 }

@@ -602,6 +602,7 @@ function render_layout(string $title, string $body, array $kpi, bool $showKpi, s
     <?= panel_favicon() ?>
     <?= panel_css() ?>
     <?= panel_pricing_css() ?>
+    <?= panel_ux_head() ?>
     </head>
     <body>
       <header class="topbar">
@@ -624,6 +625,7 @@ function render_layout(string $title, string $body, array $kpi, bool $showKpi, s
         <?php if ($f = flash_take()): ?><p class="flash <?= $f['type'] === 'ok' ? 'ok' : 'err' ?>"><?= h($f['msg']) ?></p><?php endif; ?>
         <?= $body ?>
       </main>
+      <?= panel_ux_foot() ?>
     </body></html>
     <?php
 }

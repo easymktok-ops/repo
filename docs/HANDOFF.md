@@ -50,6 +50,18 @@ producción; en pruebas los captura quien pruebe.
   descarga, la base de reservas de producción está expuesta y hay que bloquearla ya (no se pudo comprobar desde
   aquí: la red de la sesión no llega al sitio).
 
+## Mejoras UX / CRO tras la prueba en pruebas (2026-10-02)
+Norman probó el entorno de pruebas completo (calendario, Stripe 4242, webhook → Pagado) y pidió:
+- **Panel:** clic en la fecha abre el selector nativo (`showPicker`), `color-scheme: dark`; interruptores
+  **Ayudas** / **Animaciones** (localStorage, aplican a todo el panel); globos al guardar (3 suben, 1.5 s) y
+  globo que se revienta en error (`.flash.err` o primer `.ferr`). Sin animación con `prefers-reduced-motion` o
+  con Animaciones apagado. Código: `panel_ux_head()` / `panel_ux_foot()` en `panel_pricing.php`.
+- **Calendario:** precio más visible (0.82rem, 600, tinta plena; móvil 0.72rem); número del día baja un tono.
+- **CRO:** "Reservar vuelo" del hero, DoubleExposure y Globopuerto ya no abre WhatsApp: va a `/reservar`.
+  Hero: "Reservar mi vuelo" + ancla "Desde $X por persona · Paga en línea o aparta con anticipo" (X = menor
+  `priceFrom` de paquetes reservables; sin paquetes con precio no se muestra). WhatsApp queda como canal de
+  ayuda (botón de chat, Contacto, paquetes "Consultar").
+
 ## Riesgos / bloqueos abiertos
 - PHP del hosting confirmado por el usuario (Webempresa, 2026-10-01): **8.3**, con `pdo_sqlite`, `mbstring` y `pdo` activos (cURL viene integrado y el checkout actual ya lo usa). Suite 40/40 en 7.4.33 y 8.4. Con 8.3 el desfase de una hora por horario de verano no aplica en producción (su base de zonas es posterior a 2022); el fix UTC-6 se queda como protección.
 - `npm run check` no corre (falta `@astrojs/check`, ya faltaba antes).

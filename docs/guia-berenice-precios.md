@@ -45,7 +45,8 @@ En la lista puedes **Editar**, **Duplicar** (la copia queda pausada), **Pausar /
 
 ![Días sin vuelo](guia-berenice/4-sin-vuelo.png)
 
-El formato de las fechas (día/mes/año) depende de tu navegador.
+El formato de las fechas (día/mes/año) depende de tu navegador. Haz clic en cualquier parte de la fecha y se abre
+el calendario para elegirla.
 
 ## 4. Revisar antes de que lo vean los clientes
 
@@ -55,6 +56,10 @@ cada día. Pasa el cursor sobre un día para ver qué precio se le aplica.
 ![Vista previa](guia-berenice/5-vista-previa.png)
 
 ## Bueno saber
+
+- **Ayudas y Animaciones:** arriba a la derecha de Precios hay dos interruptores. **Ayudas** muestra u oculta los
+  textos de ayuda bajo cada campo; **Animaciones** apaga los globitos que suben al guardar (o que se revientan si
+  algo falló). Tu elección se recuerda en esa computadora.
 
 - **Los precios por fecha se aplican al momento:** en cuanto guardas, el cobro ya usa el precio nuevo. El
   calendario del sitio puede tardar unos segundos en refrescarse.

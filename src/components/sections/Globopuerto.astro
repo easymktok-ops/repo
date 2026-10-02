@@ -18,6 +18,7 @@ const c = site.brand;
 const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
   "Aerodiverti Teotihuacán, San Martín de las Pirámides",
 )}`;
+const bookHref = localizedPath("/reservar", locale);
 const bookWa = whatsappUrl(
   locale === "es"
     ? "Hola, quiero reservar un vuelo en globo en Teotihuacán. ¿Me ayudan?"
@@ -110,7 +111,7 @@ const howto = [
       : "Our private site is in San Martín de las Pirámides, 2 km from the Teotihuacán archaeological zone. Takeoff happens here, not over the pyramids, and the flight crosses the valley at first light. We have private parking, a welcome café, AFAC ground crew and certified Pasha and Kubíček balloons."}
   </p>
   <div class="gp-cta">
-    <Button href={bookWa} size="lg" icon="arrow-up-right" target="_blank" rel="noopener">{t.book}</Button>
+    <Button href={bookHref} size="lg" icon="arrow-up-right">{t.book}</Button>
     <Button href={flightsHref} size="lg" variant="ghost">{t.seeFlights}</Button>
   </div>
 
