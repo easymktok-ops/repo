@@ -38,8 +38,11 @@ Decisión de Norman (2026-10-02): probar primero en un subdominio de pruebas, no
 D2 = sí (por persona), D3 = sí (se mantiene "Pagar todo"). D1 sin respuesta de Berenice: no se cargan % en
 producción; en pruebas los captura quien pruebe.
 - Paquete: `bash server/dev/pruebas/armar.sh` → `dist-aerodiverti-pruebas.zip` (pasos en `docs/entorno-pruebas.md`).
-- Norman monta `pruebas.aerodiverti.com.mx` en Webempresa (subdominio, PHP 8.3, SSL, ZIP, webhook de prueba en
-  Stripe, 3 valores en `config.php`) y avisa.
+- **Montado (2026-10-02):** `pruebas.aerodiverti.com.mx` en `public_html/pruebas.aerodiverti.com.mx`, PHP 8.3,
+  Let's Encrypt (vence 31-12-2026), ZIP extraído, `config.php` lleno. Verificado por Norman: `/reservar` abre
+  (fecha nativa: aún sin % cargado), `/server/config.php` → 403, panel con pestaña Precios.
+- Siguiente: cargar un % y una temporada en el panel de pruebas, pago 4242 y confirmar que el webhook la marca
+  pagada. Si se agrega `pruebas.aerodiverti.com.mx` a la red permitida del entorno, Claude puede probarlo directo.
 - Luego: verificar el entorno (403 en carpetas internas, panel, calendario, pago 4242) y sesión con Berenice con
   `docs/guia-berenice-precios.pdf`. Producción **no** se toca hasta que Norman lo apruebe por escrito.
 - También listo para producción cuando toque: `tarifas-backend.zip` (10 PHP) y la sección de tarifas de `DEPLOY.md`.
