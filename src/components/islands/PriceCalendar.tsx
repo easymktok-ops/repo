@@ -355,7 +355,9 @@ export default function PriceCalendar({
           {hover && previewInfo
             ? `${longDate(hover, locale)}: ${
                 previewInfo.status === "available" || previewInfo.status === "blocked"
-                  ? `${previewInfo.ruleLabel ?? t.types.base} · ${t.types[previewInfo.ruleType ?? "base"] ?? ""}`
+                  ? previewInfo.ruleLabel
+                    ? `${previewInfo.ruleLabel} · ${t.types[previewInfo.ruleType ?? "base"] ?? ""}`
+                    : t.types.base
                   : ""
               }`
             : ""}
