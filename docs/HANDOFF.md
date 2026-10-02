@@ -33,20 +33,24 @@ configurados. Para Playwright con Stripe: importar el CA del proxy al NSS del na
 (`certutil -A -d sql:/root/.pki/nssdb -n ccr-agent-proxy -t "C,," -i /root/.ccr/agent-proxy-ca.crt`, requiere
 `apt-get install libnss3-tools`) y lanzar Chromium con `proxy: { server: process.env.HTTPS_PROXY }`.
 
-## Siguiente paso inmediato (Día 9, prueba de Berenice)
-Necesita decisiones de Norman antes de tocar producción:
-- D4: entorno de la prueba (recomendado: "modo ensayo en producción" con `rules_enabled=false`).
-- **Aprobación escrita** para fusionar a `claude/aerodiverti-platform-xajbkz` (eso publica en el sitio real).
-- D1 (Berenice aprueba los %), D2 (por persona en todos los paquetes), D3 (se mantiene "Pagar todo"), D10 (fecha).
-Al publicar: respaldar `server/data/aerodiverti.sqlite`, subir los PHP nuevos (`lib/pricing_rules.php`,
-`lib/pricing_store.php`, `lib/panel_auth.php`, `lib/panel_pricing.php`, `public/api/prices.php` y los modificados),
-agregar el bloque `pricing` con `rules_enabled => false` al `config.php` de producción, y escribir la guía de
-Berenice (`docs/guia-berenice-precios.md`).
+## Siguiente paso inmediato (Día 9, ahora en ENTORNO DE PRUEBAS)
+Decisión de Norman (2026-10-02): probar primero en un subdominio de pruebas, no en producción (D4 = opción B).
+D2 = sí (por persona), D3 = sí (se mantiene "Pagar todo"). D1 sin respuesta de Berenice: no se cargan % en
+producción; en pruebas los captura quien pruebe.
+- Paquete: `bash server/dev/pruebas/armar.sh` → `dist-aerodiverti-pruebas.zip` (pasos en `docs/entorno-pruebas.md`).
+- Norman monta `pruebas.aerodiverti.com.mx` en Webempresa (subdominio, PHP 8.3, SSL, ZIP, webhook de prueba en
+  Stripe, 3 valores en `config.php`) y avisa.
+- Luego: verificar el entorno (403 en carpetas internas, panel, calendario, pago 4242) y sesión con Berenice con
+  `docs/guia-berenice-precios.pdf`. Producción **no** se toca hasta que Norman lo apruebe por escrito.
+- También listo para producción cuando toque: `tarifas-backend.zip` (10 PHP) y la sección de tarifas de `DEPLOY.md`.
+- Pendiente de Norman: abrir `https://aerodiverti.com.mx/server/data/aerodiverti.sqlite` en el navegador. Si se
+  descarga, la base de reservas de producción está expuesta y hay que bloquearla ya (no se pudo comprobar desde
+  aquí: la red de la sesión no llega al sitio).
 
 ## Riesgos / bloqueos abiertos
 - PHP del hosting confirmado por el usuario (Webempresa, 2026-10-01): **8.3**, con `pdo_sqlite`, `mbstring` y `pdo` activos (cURL viene integrado y el checkout actual ya lo usa). Suite 40/40 en 7.4.33 y 8.4. Con 8.3 el desfase de una hora por horario de verano no aplica en producción (su base de zonas es posterior a 2022); el fix UTC-6 se queda como protección.
 - `npm run check` no corre (falta `@astrojs/check`, ya faltaba antes).
-- Pendientes de negocio: D1 (Berenice aprueba los %), D2, D3, D4, D10. D5 resuelto.
+- Pendientes de negocio: D1 (Berenice aprueba los %), D10. D2, D3, D4 y D5 resueltos.
 
 ## Cómo correr los tests
 npm run test:php · npm test · npx tsc --noEmit · npm run build · PHPCS=/ruta/phpcs npm run lint:php74
@@ -62,4 +66,4 @@ Staging local: npm run build; php -S localhost:8000 server/dev/router.php
     return $c;
 
 ## Consumo
-`/usage` y `/cost` no disponibles en esta sesión en la nube. Fecha: 2026-10-01.
+`/usage` y `/cost` no disponibles en esta sesión en la nube. Fecha: 2026-10-02.
