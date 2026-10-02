@@ -74,6 +74,9 @@ Archivos de tarifas: `lib/pricing_rules.php`, `lib/pricing_store.php`, `lib/pane
 `lib/panel_pricing.php`, `public/api/prices.php`, más los modificados `lib/pricing.php`, `lib/schema.php`,
 `public/api/panel.php`, `public/api/create-checkout-session.php` y `public/api/webhook.php`.
 
+El panel carga el recorrido guiado desde el sitio (`/ui/tour.js`, sale en `dist/`): publicar el sitio junto con
+el backend. Si falta, el panel funciona igual, solo sin recorrido.
+
 **Bandera de reversa** en `server/config.php`:
 
 ```php

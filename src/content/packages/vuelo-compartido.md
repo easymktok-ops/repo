@@ -20,5 +20,6 @@ heroImageAlt:
   es: "Pasajeras en la canastilla del globo con la pirámide al fondo"
   en: "Passengers in the balloon basket with the pyramid behind"
 order: 3
+available: true
 featured: false
 ---

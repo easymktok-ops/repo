@@ -21,5 +21,6 @@ heroImageAlt:
   es: "Pasajera contemplando el amanecer desde la canastilla del globo"
   en: "Passenger watching the sunrise from the balloon basket"
 order: 6
+available: true
 featured: false
 ---

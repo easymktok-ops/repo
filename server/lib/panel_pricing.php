@@ -405,10 +405,7 @@ function panel_pricing_render(string $tab, array $ctx, array $state = []): strin
     $tab = panel_pricing_tab($tab);
     $out = panel_pricing_nav('pricing')
         . '<div class="phead"><h1 class="ptitle">Precios</h1>'
-        . '<div class="prefs" role="group" aria-label="Preferencias del panel">'
-        . '<label class="sw"><input type="checkbox" data-pref="ayudas" checked /> <span>Ayudas</span></label>'
-        . '<label class="sw"><input type="checkbox" data-pref="anim" checked /> <span>Animaciones</span></label>'
-        . '</div></div>';
+        . '</div>';
 
     if (!$ctx['enabled']) {
         $out .= '<p class="note"><strong>Las tarifas por fecha están apagadas.</strong> El sitio cobra como antes '
@@ -603,7 +600,6 @@ function panel_pricing_rule_form(array $v, array $errors, array $ctx, bool $bloc
       <label class="fld"><span><?= $blocked ? 'Motivo' : 'Nombre' ?></span>
         <input type="text" name="label" maxlength="80" value="<?= h($v['label']) ?>"
                placeholder="<?= $blocked ? 'Ej. Mantenimiento' : 'Ej. Temporada navideña' ?>" required />
-        <small class="help"><?= $blocked ? 'Solo lo ves tú. El cliente ve "Sin vuelo".' : 'Solo lo ves tú, en la lista y en el historial. El cliente ve el precio, no el nombre.' ?></small>
         <?= panel_field_err($errors, 'label') ?>
       </label>
 
@@ -612,7 +608,6 @@ function panel_pricing_rule_form(array $v, array $errors, array $ctx, bool $bloc
         <?php foreach (PANEL_TIPOS as $key => $name): ?>
           <label class="opt"><input type="radio" name="type" value="<?= h($key) ?>" <?= $v['type'] === $key ? 'checked' : '' ?> /> <?= h($name) ?></label>
         <?php endforeach; ?>
-        <small class="help">Temporada: un rango de fechas. Fecha especial: uno o pocos días, y gana sobre las demás. Días de la semana: por ejemplo, sábados y domingos.</small>
         <?= panel_field_err($errors, 'type') ?>
       </fieldset>
       <?php endif; ?>
@@ -627,7 +622,6 @@ function panel_pricing_rule_form(array $v, array $errors, array $ctx, bool $bloc
           <?= panel_field_err($errors, 'end_date') ?>
         </label>
       </div>
-      <small class="help help-row">Haz clic en la fecha para abrir el calendario. Los dos días cuentan.</small>
 
       <?php if (!$blocked): ?>
       <fieldset class="fld" id="weekdays-box"><legend>Días</legend>
@@ -646,20 +640,17 @@ function panel_pricing_rule_form(array $v, array $errors, array $ctx, bool $bloc
             <label class="opt"><input type="checkbox" name="packages[]" value="<?= h($slug) ?>" <?= in_array($slug, $v['packages'], true) ? 'checked' : '' ?> /> <?= h(panel_pkg_name($p)) ?></label>
           <?php endforeach; ?>
         </div>
-        <small class="help">Elige "Solo algunos" si este precio no aplica a todos los vuelos.</small>
         <?= panel_field_err($errors, 'package_ids') ?>
       </fieldset>
 
       <?php if (!$blocked): ?>
       <div class="row2">
         <label class="fld"><span>Precio por persona (pesos)</span>
-          <input type="text" inputmode="numeric" name="price" value="<?= h($v['price']) ?>" placeholder="2,650" />
-          <small class="help">Por persona, en pesos enteros. Puedes escribir 2650 o 2,650.</small>
+          <input type="text" inputmode="numeric" name="price" value="<?= h($v['price']) ?>" placeholder="Ej. 2,650" />
           <?= panel_field_err($errors, 'price_cents') ?>
         </label>
         <label class="fld"><span>Anticipo % (opcional)</span>
-          <input type="number" inputmode="numeric" min="1" max="100" name="deposit_percent" value="<?= h($v['deposit_percent']) ?>" />
-          <small class="help">Si lo dejas vacío se usa el del paquete.</small>
+          <input type="number" inputmode="numeric" min="1" max="100" name="deposit_percent" value="<?= h($v['deposit_percent']) ?>" placeholder="El del paquete" />
           <?= panel_field_err($errors, 'deposit_percent') ?>
         </label>
       </div>
@@ -938,18 +929,6 @@ function panel_pricing_css(): string
       .blockedday td{color:var(--muted);background:color-mix(in srgb,var(--bad) 7%,transparent)}
       .ptable .actions{gap:.35rem;flex-wrap:wrap;max-width:190px}
       .phead{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.6rem 1rem}
-      .prefs{display:flex;gap:.9rem}
-      .sw{display:inline-flex;align-items:center;gap:.45rem;font-size:.84rem;color:var(--muted);cursor:pointer}
-      .sw input{appearance:none;width:2.1rem;height:1.2rem;border-radius:999px;background:var(--surface2);border:1px solid var(--line);
-        position:relative;cursor:pointer;margin:0;transition:background-color .16s cubic-bezier(.23,1,.32,1),border-color .16s cubic-bezier(.23,1,.32,1)}
-      .sw input::after{content:'';position:absolute;top:2px;left:2px;width:.85rem;height:.85rem;border-radius:50%;background:var(--muted);
-        transition:transform .16s cubic-bezier(.23,1,.32,1),background-color .16s cubic-bezier(.23,1,.32,1)}
-      .sw input:checked{background:color-mix(in srgb,var(--accent) 35%,var(--surface2));border-color:var(--accent)}
-      .sw input:checked::after{transform:translateX(.9rem);background:var(--accent-strong)}
-      .sw input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-      .help{display:block;font-size:.8rem;color:var(--muted);line-height:1.4}
-      .help-row{margin-top:-.5rem}
-      html[data-ayudas="off"] .help{display:none}
       .ptable td.dates{min-width:9.5rem}
       .ptable td.num{white-space:normal}
       @media(max-width:640px){.pct{width:4.2rem}}
@@ -958,16 +937,18 @@ function panel_pricing_css(): string
 }
 
 /**
- * Preferencias del panel (ayudas / animaciones), selector de fecha al hacer clic y el globo que celebra un
- * guardado o se revienta en un error. Va en todo el panel; las preferencias viven en localStorage del navegador.
+ * Detalles de uso en todo el panel: selector de fecha al hacer clic, controles nativos en oscuro y el globo que
+ * celebra un guardado o se revienta en un error (sin animacion con prefers-reduced-motion).
  */
 function panel_ux_head(): string
 {
-    return "<script>(function(){var d=document.documentElement;['ayudas','anim'].forEach(function(k){var v=null;"
-        . "try{v=localStorage.getItem('panel.'+k)}catch(e){}d.setAttribute('data-'+k,v==='off'?'off':'on')})})();</script>\n"
-        . <<<CSS
+    return <<<CSS
     <style>
-      :root{color-scheme:dark}
+      :root{color-scheme:dark;--tour-bg:var(--surface);--tour-ink:var(--ink);--tour-soft:var(--ink-soft);
+        --tour-muted:var(--muted);--tour-line:var(--line);--tour-accent:var(--accent);--tour-accent-ink:var(--accent-ink);
+        --tour-font:var(--font)}
+      .tour-btn{white-space:nowrap}
+      @media(max-width:560px){.topright .muted.sm{display:none}}
       .fld input[type=date],.filters input[type=date]{cursor:pointer}
       .flash,.ferr{position:relative}
       .gl-fx{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:6}
@@ -983,18 +964,11 @@ function panel_ux_foot(): string
     return <<<'HTML'
     <script>
     (function(){
-      var d=document.documentElement;
-      function save(k,v){try{localStorage.setItem('panel.'+k,v)}catch(e){}}
-      document.querySelectorAll('input[data-pref]').forEach(function(i){
-        var k=i.getAttribute('data-pref');
-        i.checked=d.getAttribute('data-'+k)!=='off';
-        i.addEventListener('change',function(){var v=i.checked?'on':'off';d.setAttribute('data-'+k,v);save(k,v)});
-      });
       document.querySelectorAll('input[type=date]').forEach(function(i){
         i.addEventListener('click',function(){try{i.showPicker&&i.showPicker()}catch(e){}});
       });
       var f=document.querySelector('.flash.ok,.flash.err')||document.querySelector('.ferr');
-      if(!f||!f.animate||d.getAttribute('data-anim')==='off')return;
+      if(!f||!f.animate)return;
       if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;
       var ok=f.classList.contains('ok');
       var P='M16 3.4C10 3.4 5.8 7.9 5.8 13.1c0 4.6 3.3 7.8 7.3 9.3l1.1 1.8h3.6l1.1-1.8c4-1.5 7.3-4.7 7.3-9.3C26.2 7.9 22 3.4 16 3.4Z';
@@ -1044,6 +1018,106 @@ function panel_ux_foot(): string
         };
       }
     })();
+    </script>
+    HTML;
+}
+
+/** Boton "Ver recorrido": repite el tour de la pantalla actual (ver public/ui/tour.js). */
+function panel_tour_button(): string
+{
+    return '<button type="button" class="btn ghost sm tour-btn" data-tour-start>Ver recorrido</button>';
+}
+
+/**
+ * Recorridos guiados del panel. Cada pantalla tiene el suyo y se muestra solo la primera vez; "Ver recorrido"
+ * (arriba) lo repite. El motor vive en el sitio publico: /ui/tour.js. Si no carga, el panel funciona igual.
+ */
+function panel_tours_script(string $section): string
+{
+    $view = (string) ($_GET['view'] ?? '');
+    if ($section === 'pricing') {
+        $page = 'precios-' . panel_pricing_tab((string) ($_GET['tab'] ?? ($_POST['tab'] ?? '')));
+    } elseif ($view === 'booking') {
+        $page = 'reserva';
+    } else {
+        $page = 'reservas';
+    }
+    return '<script src="/ui/tour.js" defer></script>'
+        . '<script>window.PANEL_TOUR_PAGE=' . json_encode($page) . ';</script>'
+        . <<<'HTML'
+    <script>
+    window.addEventListener('DOMContentLoaded',function(){
+      if(!window.AeroTour)return;
+      var page=window.PANEL_TOUR_PAGE;
+      var hasForm=!!document.getElementById('rule-form');
+      var BTN={sel:'.tour-btn',title:'Repite el recorrido',body:'Si olvidas algo, aquí lo vuelves a ver. Cada pantalla del panel tiene su propio recorrido.'};
+      var T={
+        'reservas':[
+          {title:'Bienvenida al panel de ventas',body:'Aquí llega cada reserva que se hace en el sitio, con su pago. Te muestro en un minuto para qué sirve cada parte.'},
+          {sel:'nav.tabs',title:'Reservas y Precios',body:'Cambia entre la lista de reservas y la sección de <b>Precios</b>, donde manejas temporadas, anticipos y días sin vuelo.'},
+          {sel:'.kpis',title:'Resumen del negocio',body:'Reservas pagadas, lo cobrado en línea, el <b>saldo que falta cobrar en sitio</b> y cuántos vuelos vienen.'},
+          {sel:'.filters input[name=q]',title:'Buscar una reserva',body:'Escribe folio, nombre, correo o teléfono y presiona <b>Filtrar</b>.'},
+          {sel:'.filters select[name=status]',title:'Filtrar por estado',body:'Pagadas, con saldo por cobrar, pendientes de pago o canceladas. Útil para ver a quién cobrarle el saldo el día del vuelo.'},
+          {sel:'.filters label.date',title:'Rango de fechas',body:'<b>Desde</b> y <b>Hasta</b> filtran por el día en que se hizo la reserva. Haz clic en la fecha para abrir el calendario.'},
+          {sel:'.filters a[href*="do=export"]',title:'Exportar CSV',body:'Descarga la lista tal como la tienes filtrada, para abrirla en Excel o Google Sheets.'},
+          {sel:'.tablewrap',title:'Lista de reservas',body:'Haz clic en una fila para abrir la reserva: ahí cobras el saldo, marcas el vuelo como completado o la cancelas. El color del estado te dice en qué va.'},
+          BTN
+        ],
+        'reserva':[
+          {sel:'.dhead',title:'La reserva de un vistazo',body:'Folio, paquete y estado del pago. El folio es el mismo que recibe el cliente en su correo.'},
+          {sel:'dl.kv',title:'Datos del cliente',body:'Haz clic en el correo o el teléfono para escribirle o llamarle. Aquí también ves la fecha, los pasajeros y la tarifa que se le cobró.'},
+          {sel:'.ticket',title:'Cuentas',body:'Total del vuelo, lo pagado en línea y el <b>saldo a cobrar en sitio</b> si apartó con anticipo.'},
+          {sel:'.actions',title:'Acciones',body:'<b>Marcar saldo pagado</b> cuando el cliente liquide en sitio, <b>Marcar vuelo completado</b> después del vuelo y <b>Cancelar</b> si no se hará. Todo se puede deshacer.'},
+          {sel:'textarea[name=admin_notes]',title:'Notas internas',body:'Recordatorios o acuerdos con el cliente. Solo las ve el equipo, nunca el cliente.'},
+          {sel:'.ntf||.dcol .card:nth-child(2)',title:'Notificaciones',body:'Los avisos que se mandaron por esta reserva y si salieron bien.'},
+          {sel:'a.back',title:'Volver a la lista',body:'Regresa a todas las reservas.'}
+        ],
+        'precios-anticipos':[
+          {title:'Precios por fecha',body:'Aquí decides cuánto cuesta cada día y cuánto se cobra para apartar. Todo lo que guardas se aplica al momento.'},
+          {sel:'nav.subtabs',title:'Tus herramientas',body:'<b>Anticipo por paquete</b>: lo que se cobra al apartar. <b>Temporadas</b>: precios por rango, fecha o día de la semana. <b>Días sin vuelo</b>: cierra fechas. <b>Historial</b>: quién cambió qué. <b>Vista previa</b>: el calendario como lo ve el cliente.'},
+          {sel:'.ptable input.pct',title:'Anticipo %',body:'Porcentaje del precio de esa fecha que se cobra al apartar. A la derecha ves cuánto equivale por persona. Mientras un paquete diga <b>Falta el anticipo</b>, se cobra como antes ($1,000 fijos por pasajero).'},
+          {sel:'.ptable thead th:nth-child(2)',title:'Precio base',body:'Es el precio de los días sin temporada. No se cambia aquí sino en el administrador de contenido (<b>Paquetes de vuelo</b>).'},
+          {sel:'form button.primary[type=submit]',title:'Guardar anticipos',body:'Guarda todos los porcentajes de una vez. Si algo está mal, te marca el campo en rojo.'},
+          BTN
+        ],
+        'precios-temporadas':hasForm?[
+          {sel:'#rule-form label.fld:has(input[name=label])||#rule-form input[name=label]',title:'Nombre',body:'Para reconocerla en la lista y el historial, por ejemplo "Temporada navideña". El cliente ve el precio, no el nombre.'},
+          {sel:'#rule-form fieldset.fld:has(input[name=type])||#rule-form input[name=type]',title:'Tipo',body:'<b>Temporada</b>: un rango de fechas. <b>Fecha especial</b>: uno o pocos días, y le gana a las demás. <b>Días de la semana</b>: por ejemplo sábados y domingos dentro de un rango.'},
+          {sel:'#rule-form .row2',title:'Desde y Hasta',body:'Haz clic en la fecha para abrir el calendario. Los dos días cuentan.'},
+          {sel:'#weekdays-box',title:'Días',body:'Solo para el tipo <b>Días de la semana</b>: marca cuáles aplican.'},
+          {sel:'#rule-form fieldset.fld:has(input[name=packages_mode])||#pkgs-box',title:'Paquetes',body:'<b>Todos</b> o <b>Solo algunos</b>, si el precio no aplica a todos los vuelos.'},
+          {sel:'#rule-form .row2:has(input[name=price])||#rule-form input[name=price]',title:'Precio y anticipo',body:'Precio <b>por persona</b> en pesos (2650 o 2,650). El anticipo es opcional: vacío usa el del paquete.'},
+          {sel:'#rule-form .actions||#rule-form button[type=submit]',title:'Guardar',body:'Si se cruza con otra regla, el panel te avisa en amarillo cuál precio se cobrará.'}
+        ]:[
+          {sel:'a.btn.primary[href*="new"]||.subtabs + * a.btn.primary',title:'Nueva temporada o fecha',body:'Crea un precio para un rango de fechas, una fecha especial (14 de febrero) o ciertos días de la semana.'},
+          {sel:'.tablewrap',title:'Tus reglas de precio',body:'Cada fila dice fechas, paquetes y precio por persona. Si dos se cruzan el mismo día gana la fecha especial, luego días de la semana, luego temporada.'},
+          {sel:'.ptable .actions',title:'Botones de cada regla',body:'<b>Editar</b> la cambia. <b>Duplicar</b> hace una copia pausada para reutilizarla. <b>Pausar</b> la apaga sin borrarla. <b>Eliminar</b> la borra para siempre.'},
+          BTN
+        ],
+        'precios-sin-vuelo':[
+          {sel:'#rule-form',title:'Cerrar fechas',body:'Para mantenimiento, clima o eventos: esos días no se pueden reservar y el cliente los ve como <b>Sin vuelo</b>.'},
+          {sel:'#rule-form .row2',title:'Fechas',body:'<b>Desde</b> es el día a cerrar. <b>Hasta</b> es opcional, para cerrar varios días seguidos.'},
+          {sel:'#rule-form button[type=submit]',title:'Marcar sin vuelo',body:'Se aplica al momento en el calendario de reservas.'},
+          {sel:'.tablewrap',title:'Días cerrados',body:'Con <b>Volver a abrir</b> las fechas se pueden reservar de nuevo.'},
+          BTN
+        ],
+        'precios-historial':[
+          {sel:'.tablewrap',title:'Historial de cambios',body:'Cada cambio de precios queda aquí: quién lo hizo, cuándo y qué cambió. Sirve para revisar si algo no cuadra.'},
+          BTN
+        ],
+        'precios-vista-previa':[
+          {sel:'#pv-pkg',title:'Elige un paquete',body:'Cada paquete puede tener precios distintos por fecha.'},
+          {sel:'.pvframe',title:'Lo que verá el cliente',body:'El mismo calendario del sitio, con el precio de cada día. Pasa el cursor sobre un día para ver qué regla se aplica.'},
+          {sel:'.pvlist summary',title:'Lista de 60 días',body:'Ábrela para ver precio, anticipo y saldo de cada día en tabla.'},
+          BTN
+        ]
+      };
+      var key=page+(page==='precios-temporadas'&&hasForm?'-form':'');
+      var steps=T[page];
+      if(steps)AeroTour.define(key,steps,{version:1});
+      var b=document.querySelector('.tour-btn');
+      if(b){if(steps)b.setAttribute('data-tour-start',key);else b.hidden=true;}
+    });
     </script>
     HTML;
 }

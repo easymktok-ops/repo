@@ -57,9 +57,9 @@ cada día. Pasa el cursor sobre un día para ver qué precio se le aplica.
 
 ## Bueno saber
 
-- **Ayudas y Animaciones:** arriba a la derecha de Precios hay dos interruptores. **Ayudas** muestra u oculta los
-  textos de ayuda bajo cada campo; **Animaciones** apaga los globitos que suben al guardar (o que se revientan si
-  algo falló). Tu elección se recuerda en esa computadora.
+- **Recorrido guiado:** la primera vez que entras a cada pantalla del panel aparece un recorrido que explica
+  cada parte y cada botón. Para verlo otra vez: **Ver recorrido**, arriba a la derecha.
+- **Al guardar** suben unos globitos; si algo falla, un globo se revienta y el campo con problema queda en rojo.
 
 - **Los precios por fecha se aplican al momento:** en cuanto guardas, el cobro ya usa el precio nuevo. El
   calendario del sitio puede tardar unos segundos en refrescarse.

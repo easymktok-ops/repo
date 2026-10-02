@@ -20,5 +20,6 @@ heroImageAlt:
   es: "Globos de Aerodiverti listos para volar al amanecer"
   en: "Aerodiverti balloons ready to fly at sunrise"
 order: 5
+available: true
 featured: false
 ---

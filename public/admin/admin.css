@@ -1,0 +1,763 @@
+/*
+ * Tema del administrador de contenido (Decap CMS) para Aerodiverti.
+ * Misma paleta Obsidiana que el panel de ventas (server/public/api/panel.php) para que el back-office se
+ * sienta uno solo. Decap genera clases con etiqueta estable (css-<hash>-AppHeader...), por eso los
+ * selectores van por [class*="-Etiqueta"]. El prefijo `body` sube la especificidad sobre los estilos que
+ * Decap inyecta despues. Version de Decap fijada en index.html: si se actualiza, revisar este archivo.
+ */
+:root {
+  color-scheme: dark;
+  --bg: #14161b;
+  --bg2: #0f1116;
+  --surface: #1c1f27;
+  --surface2: #242833;
+  --ink: #ecedf1;
+  --soft: #d3d7df;
+  --muted: #a6abb5;
+  --faint: #878e9b;
+  --line: #333844;
+  --line-soft: #262b34;
+  --accent: #ea83c1;
+  --accent-strong: #f7a0d4;
+  --accent-ink: #17131a;
+  --accent-tint: rgba(234, 131, 193, 0.12);
+  --admin: #8fb8f2;
+  --ok: #57c98d;
+  --warn: #e6b450;
+  --bad: #ef6d6d;
+  --ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --tour-bg: var(--surface);
+  --tour-ink: var(--ink);
+  --tour-soft: var(--soft);
+  --tour-muted: var(--muted);
+  --tour-line: var(--line);
+  --tour-accent: var(--accent);
+  --tour-accent-ink: var(--accent-ink);
+  --tour-font: var(--font);
+}
+
+html,
+body {
+  background: var(--bg) !important;
+  color: var(--ink);
+}
+body,
+body button,
+body input,
+body textarea,
+body select {
+  font-family: var(--font);
+}
+body ::selection {
+  background: rgba(234, 131, 193, 0.35);
+}
+body :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+body a {
+  color: var(--accent-strong);
+}
+
+/* ---------- Entrada (login) ---------- */
+body [class*="-StyledAuthenticationPage"] {
+  background: radial-gradient(120% 80% at 50% 0%, #1d2230 0%, var(--bg) 60%) !important;
+}
+body [class*="-StyledAuthenticationPage"] > span:first-child svg {
+  display: none;
+}
+body [class*="-StyledAuthenticationPage"]::before {
+  content: "";
+  width: 72px;
+  height: 72px;
+  margin-bottom: 1rem;
+  background: url("/favicon-admin.svg") center / contain no-repeat;
+}
+body [class*="-StyledAuthenticationPage"]::after {
+  content: "Administración de contenido";
+  order: -1;
+  margin-bottom: 0.4rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+  color: var(--muted);
+}
+body [class*="-LoginButton"] {
+  background: var(--accent) !important;
+  color: var(--accent-ink) !important;
+  border-radius: 999px !important;
+  box-shadow: none !important;
+  font-weight: 650 !important;
+  transition:
+    transform 0.16s var(--ease),
+    background-color 0.16s ease;
+}
+body [class*="-LoginButton"]:active {
+  transform: scale(0.97);
+}
+body [class*="-LoginButton"] svg {
+  fill: currentColor;
+}
+
+/* ---------- Barra superior ---------- */
+body [class*="-AppHeader-css"],
+body [class*="-ToolbarContainer"] {
+  background: color-mix(in srgb, var(--bg2) 92%, transparent) !important;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line-soft) !important;
+  box-shadow: none !important;
+}
+body [class*="-AppHeaderContent"]::before {
+  content: "Aerodiverti";
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-left: 30px;
+  margin-right: 1.2rem;
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.01em;
+  color: var(--admin);
+  background: url("/favicon-admin.svg") left center / 22px 22px no-repeat;
+  white-space: nowrap;
+}
+body [class*="-AppHeaderButton"],
+body [class*="-AppHeaderNavLink"] {
+  color: var(--muted) !important;
+  border-radius: 999px;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+body [class*="-AppHeaderButton"] svg,
+body [class*="-AppHeaderNavLink"] svg {
+  color: inherit;
+  fill: currentColor;
+}
+body [class*="-AppHeaderButton"]:hover,
+body [class*="-AppHeaderNavLink"]:hover {
+  color: var(--ink) !important;
+}
+body .header-link-active,
+body [class*="-AppHeaderNavLink"].header-link-active {
+  color: var(--accent-strong) !important;
+}
+body [class*="-AppHeaderQuickNewButton"] {
+  background: var(--accent) !important;
+  color: var(--accent-ink) !important;
+  border-radius: 999px !important;
+  font-weight: 650 !important;
+  padding-left: 1rem !important;
+}
+body [class*="-AppHeaderQuickNewButton"]::after {
+  border-top-color: var(--accent-ink) !important;
+}
+body [class*="-AppHeaderSiteLink"] {
+  color: var(--muted) !important;
+}
+body [class*="-AppHeaderSiteLink"]:hover {
+  color: var(--ink) !important;
+}
+body [class*="-AvatarDropdownButton"] svg,
+body [class*="-AvatarPlaceholderIcon"] {
+  color: var(--muted);
+}
+body [class*="-AvatarPlaceholderIcon"] {
+  background: var(--surface2) !important;
+}
+
+/* ---------- Menus desplegables ---------- */
+body [class*="-DropdownList"] {
+  background: var(--surface2) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.6) !important;
+  overflow: hidden;
+}
+body [class*="-DropdownList"] [class*="-StyledMenuItem"],
+body [class*="-DropdownList"] [class*="-DropdownItem"],
+body [class*="-DropdownList"] [role="menuitem"] {
+  color: var(--soft) !important;
+  background: transparent !important;
+  border-bottom-color: var(--line-soft) !important;
+}
+body [class*="-DropdownList"] [role="menuitem"]:hover,
+body [class*="-DropdownList"] [role="menuitem"]:focus {
+  background: var(--accent-tint) !important;
+  color: var(--ink) !important;
+}
+
+/* ---------- Coleccion: barra lateral ---------- */
+body [class*="-SidebarContainer"],
+body [class*="-CollectionTopContainer"],
+body [class*="-ListCard-card"],
+body [class*="-GridCard"] {
+  background: var(--surface) !important;
+  border: 1px solid var(--line-soft) !important;
+  border-radius: 14px !important;
+  box-shadow: none !important;
+}
+body [class*="-SidebarHeading"],
+body [class*="-CollectionTopHeading"] {
+  color: var(--ink) !important;
+  letter-spacing: -0.01em;
+}
+body [class*="-SearchContainer"] [class*="-InputContainer"],
+body [class*="-InputContainer"] {
+  background: var(--bg2) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 10px !important;
+}
+body [class*="-SearchInput"] {
+  background: transparent !important;
+  color: var(--ink) !important;
+}
+body [class*="-SearchInput"]::placeholder {
+  color: var(--faint);
+}
+body [class*="-InputContainer"] svg {
+  color: var(--faint);
+}
+body [class*="-SidebarNavLink"] {
+  color: var(--muted) !important;
+  border-left: 0 !important;
+  border-radius: 10px;
+  margin: 2px 10px;
+  padding-left: 12px !important;
+  transition:
+    color 0.15s ease,
+    background-color 0.15s ease;
+}
+body [class*="-SidebarNavLink"]:hover {
+  color: var(--ink) !important;
+  background: var(--surface2) !important;
+}
+body [class*="-SidebarNavLink"].sidebar-active {
+  color: var(--accent-strong) !important;
+  background: var(--accent-tint) !important;
+}
+
+/* ---------- Coleccion: encabezado y lista ---------- */
+body [class*="-CollectionTopNewButton"] {
+  background: var(--accent) !important;
+  color: var(--accent-ink) !important;
+  border-radius: 999px !important;
+  font-weight: 650 !important;
+  box-shadow: none !important;
+  transition:
+    transform 0.16s var(--ease),
+    background-color 0.16s ease;
+}
+body [class*="-CollectionTopNewButton"]:hover {
+  background: var(--accent-strong) !important;
+}
+body [class*="-CollectionTopNewButton"]:active {
+  transform: scale(0.97);
+}
+body [class*="-CollectionTopDescription"] {
+  color: var(--muted) !important;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  max-width: 62ch;
+}
+body [class*="-ViewControlsButton"] {
+  color: var(--faint) !important;
+}
+body [class*="-ViewControlsButton"][class*="-buttonActive"],
+body [class*="-ViewControlsButton"]:hover {
+  color: var(--accent-strong) !important;
+}
+body [class*="-ControlButton"],
+body [class*="-ViewControlsText"],
+body [class*="-ViewControlsSection"] {
+  color: var(--muted) !important;
+}
+body [class*="-ControlButton"][class*="-buttonActive"] {
+  color: var(--accent-strong) !important;
+}
+body [class*="-ListCard-card"],
+body [class*="-GridCard"] {
+  transition:
+    border-color 0.15s ease,
+    transform 0.16s var(--ease);
+}
+body [class*="-ListCard-card"]:hover,
+body [class*="-GridCard"]:hover {
+  border-color: var(--line) !important;
+}
+body [class*="-ListCard-card"]:active,
+body [class*="-GridCard"]:active {
+  transform: scale(0.995);
+}
+body [class*="-ListCardTitle"],
+body [class*="-CardHeading"] {
+  color: var(--ink) !important;
+}
+body [class*="-CardBody"],
+body [class*="-CardImage"] {
+  background-color: var(--surface2) !important;
+}
+body [class*="-CardBody"]::before {
+  background: linear-gradient(transparent, var(--surface)) !important;
+}
+body [class*="-GroupHeading"] {
+  color: var(--muted) !important;
+}
+
+/* ---------- Editor ---------- */
+body [class*="-EditorContainer"],
+body [class*="-ControlPaneContainer"],
+body [class*="-StyledSplitPane"] {
+  background: var(--bg) !important;
+}
+body [class*="-BackArrow"],
+body [class*="-BackCollection"] {
+  color: var(--soft) !important;
+}
+body [class*="-ToolbarSectionBackLink"] {
+  border-right-color: var(--line-soft) !important;
+}
+body [class*="-ToolbarSectionBackLink"]:hover {
+  background: var(--surface) !important;
+}
+body [class*="-ToolbarSectionMeta"],
+body [class*="-ToolbarSectionMain"] {
+  border-color: var(--line-soft) !important;
+}
+body [class*="-ToolbarButton"],
+body [class*="-ToolbarDropdown"] button,
+body [class*="-PublishButton"],
+body [class*="-PublishedToolbarButton"],
+body [class*="-StatusButton"] {
+  border-radius: 999px !important;
+  font-weight: 600 !important;
+  transition:
+    transform 0.16s var(--ease),
+    background-color 0.15s ease;
+}
+body [class*="-ToolbarButton"]:active {
+  transform: scale(0.97);
+}
+body [class*="-DeleteButton"] {
+  background: rgba(239, 109, 109, 0.12) !important;
+  color: var(--bad) !important;
+}
+body [class*="-PublishedToolbarButton"],
+body [class*="-PublishedButton"] {
+  background: rgba(87, 201, 141, 0.14) !important;
+  color: var(--ok) !important;
+}
+body [class*="-PublishButton"] {
+  background: var(--accent) !important;
+  color: var(--accent-ink) !important;
+}
+body [class*="-PublishButton"]::after {
+  border-top-color: var(--accent-ink) !important;
+}
+body [class*="-PreviewLink"] {
+  color: var(--accent-strong) !important;
+}
+body [class*="-PreviewLink"] svg {
+  color: inherit;
+}
+
+/* Campos: etiqueta encima, sin pestaña gris; inputs oscuros y redondos. */
+body [class*="-ControlContainer"] {
+  margin-top: 1.1rem !important;
+}
+body [class*="-FieldLabel"] {
+  background: transparent !important;
+  color: var(--soft) !important;
+  border: 0 !important;
+  padding: 0 0 0.35rem !important;
+  margin: 0 !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  font-size: 0.86rem !important;
+  font-weight: 600 !important;
+}
+body [class*="-FieldLabel"]::before,
+body [class*="-FieldLabel"]::after {
+  display: none !important;
+}
+body [class*="-FieldLabel"][class*="-labelActive"] {
+  color: var(--accent-strong) !important;
+}
+body [class*="-FieldLabel"][class*="-labelError"] {
+  color: var(--bad) !important;
+}
+body
+  [class*="-ControlContainer"]
+  input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([id^="react-select"]):not(
+    [type="date"]
+  ):not([type="datetime-local"]):not([type="time"]),
+body [class*="-ControlContainer"] textarea,
+body [class*="-TextControl"],
+body [class*="-StringControl"],
+body [class*="-NumberControl"] {
+  background: var(--bg2) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+body [class*="-ControlContainer"] input:focus,
+body [class*="-ControlContainer"] textarea:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(234, 131, 193, 0.18) !important;
+  outline: none !important;
+}
+body [class*="-ControlContainer"] input::placeholder,
+body [class*="-ControlContainer"] textarea::placeholder {
+  color: var(--faint);
+}
+body [class*="-ControlHint"] {
+  color: var(--muted) !important;
+  font-size: 0.8rem !important;
+  margin-top: 0.3rem;
+}
+body [class*="-ControlErrorsList"] li,
+body [class*="-ControlErrorsList"] {
+  color: var(--bad) !important;
+}
+
+/* Objetos y listas (Titulo, Resumen...): bloque con encabezado suave. */
+body [class*="-ObjectControl"],
+body [class*="-ListControl"],
+body [class*="-ObjectWidgetTopBar"],
+body [class*="-ListItemTopBar"] {
+  border-color: var(--line-soft) !important;
+}
+body [class*="-TopBarContainer"],
+body [class*="-ListItemTopBar"] {
+  background: var(--surface) !important;
+  border: 1px solid var(--line-soft) !important;
+  border-radius: 12px 12px 0 0 !important;
+  color: var(--muted) !important;
+}
+body [class*="-ExpandButton"],
+body [class*="-ExpandButton"] svg {
+  color: var(--muted) !important;
+}
+body [class*="-ControlContainer"] > div:has(> [class*="-TopBarContainer"]),
+body [class*="-ControlContainer"] > div:has(> [class*="-ListItemTopBar"]) {
+  background: transparent !important;
+  border: 1px solid var(--line-soft) !important;
+  border-radius: 12px !important;
+  padding-bottom: 0.9rem;
+}
+body
+  [class*="-ControlContainer"]
+  > div:has(> [class*="-TopBarContainer"])
+  > [class*="-TopBarContainer"] {
+  border: 0 !important;
+  border-bottom: 1px solid var(--line-soft) !important;
+  border-radius: 11px 11px 0 0 !important;
+}
+body [class*="-ObjectControl"] > div:not([class*="-TopBar"]),
+body [class*="-ControlContainer"] [class*="-NestedObjectLabel"] {
+  background: var(--bg) !important;
+}
+body [class*="-ControlContainer"] [class*="-ControlContainer"] {
+  margin-top: 0.85rem !important;
+}
+body [class*="-AddButton"],
+body [class*="-FileWidgetButton"],
+body [class*="-ListAddButton"] {
+  background: var(--surface2) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 999px !important;
+}
+body [class*="-FileWidgetButtonRemove"] {
+  color: var(--bad) !important;
+}
+body [class*="-ImageWrapper"] {
+  background: var(--surface) !important;
+  border-color: var(--line) !important;
+  border-radius: 12px !important;
+}
+
+/* Contenedores de widgets (fecha, interruptor, select) que Decap pinta en blanco. */
+body [class*="-ControlContainer"] > div:has(> [class*="-ToggleContainer"]),
+body [class*="-ControlContainer"] > div:has(> [class*="-ImageWrapper"]),
+body
+  [class*="-ControlContainer"]
+  > div:has([class*="-FileWidgetButton"]):not(:has([class*="-FieldLabel"])),
+body [class*="-DateTimeControl"],
+body [class*="-ControlContainer"] > [class*="-container"] {
+  background: var(--bg2) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 10px !important;
+  box-shadow: none !important;
+}
+body [class*="-ControlContainer"] > [class*="-container"] [class*="-control"] {
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+body [class*="-DateTimeControl"] input {
+  background: var(--surface2) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 8px !important;
+  padding: 0.35rem 0.6rem !important;
+}
+body [id^="react-select"][id$="-input"] {
+  color: var(--ink) !important;
+}
+
+/* Interruptor (booleano) en el acento. */
+body [class*="-ToggleBackground"] {
+  background: var(--line) !important;
+}
+body [class*="-Toggle"][aria-checked="true"] [class*="-ToggleBackground"],
+body [aria-checked="true"] > [class*="-ToggleBackground"] {
+  background: var(--accent) !important;
+}
+body [class*="-ToggleHandle"] {
+  background: var(--ink) !important;
+  box-shadow: none !important;
+}
+
+/* react-select (selects y relaciones) */
+body [class*="-control"]:not([class*="-Control"]) {
+  background: var(--bg2) !important;
+  border-color: var(--line) !important;
+  border-radius: 10px !important;
+}
+body [class*="-menu"] {
+  background: var(--surface2) !important;
+  border: 1px solid var(--line);
+  border-radius: 10px !important;
+}
+body [class*="-option"] {
+  color: var(--soft) !important;
+  background: transparent !important;
+}
+body [class*="-option"]:hover,
+body [class*="-option"][aria-selected="true"] {
+  background: var(--accent-tint) !important;
+  color: var(--ink) !important;
+}
+body [class*="-singleValue"],
+body [class*="-multiValue"] div,
+body [class*="-input"] input {
+  color: var(--ink) !important;
+}
+body [class*="-multiValue"] {
+  background: var(--surface2) !important;
+}
+body [class*="-placeholder"] {
+  color: var(--faint) !important;
+}
+
+/* Fecha (react-datetime) */
+body .rdtPicker {
+  background: var(--surface2) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 12px;
+  color: var(--ink);
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.6) !important;
+}
+body .rdtPicker td.rdtDay:hover,
+body .rdtPicker td.rdtHour:hover,
+body .rdtPicker td.rdtMinute:hover,
+body .rdtPicker thead tr:first-of-type th:hover {
+  background: var(--surface) !important;
+}
+body .rdtPicker td.rdtActive,
+body .rdtPicker td.rdtActive:hover {
+  background: var(--accent) !important;
+  color: var(--accent-ink) !important;
+}
+body .rdtPicker td.rdtOld,
+body .rdtPicker td.rdtNew {
+  color: var(--faint) !important;
+}
+body [class*="-DateTimeControl"] button,
+body [class*="-Buttons"] button {
+  color: var(--accent-strong) !important;
+  background: transparent !important;
+}
+
+/* Vista previa (el iframe se estiliza con registerPreviewStyle en admin.js) */
+body [class*="-PreviewPaneContainer"] {
+  background: var(--bg2) !important;
+  border-left: 1px solid var(--line-soft);
+}
+body [class*="-PreviewPaneFrame"] {
+  background: var(--bg2) !important;
+}
+body [class*="-ButtonRound"] {
+  background: var(--surface2) !important;
+  color: var(--soft) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: none !important;
+}
+body [class*="-ButtonRound"] svg {
+  color: inherit;
+  fill: currentColor;
+}
+body .Resizer,
+body [class*="-StyledSplitPane"] .Resizer {
+  background: var(--line-soft) !important;
+}
+
+/* Biblioteca de medios (modal) */
+body .ReactModal__Overlay {
+  background: rgba(8, 9, 12, 0.72) !important;
+}
+body [class*="-StyledModal"],
+body .ReactModal__Content {
+  background: var(--surface) !important;
+  color: var(--ink);
+  border: 1px solid var(--line) !important;
+  border-radius: 16px !important;
+}
+body [class*="-LibraryTitle"],
+body [class*="-MediaLibraryHeader"] h1 {
+  color: var(--ink) !important;
+}
+body [class*="-CardText"],
+body [class*="-EmptyMessage"] {
+  color: var(--muted) !important;
+}
+body [class*="-UploadButton"],
+body [class*="-ActionButton"] {
+  border-radius: 999px !important;
+}
+body [class*="-UploadButton"] {
+  background: var(--accent) !important;
+  color: var(--accent-ink) !important;
+  font-weight: 650 !important;
+}
+body [class*="-ActionButton"] {
+  color: var(--soft) !important;
+  background: transparent !important;
+}
+body [class*="-StyledModal"] [class*="-DeleteButton"] {
+  background: transparent !important;
+}
+body [class*="-CloseButton"] {
+  background: var(--surface2) !important;
+  color: var(--soft) !important;
+  border: 1px solid var(--line) !important;
+  box-shadow: none !important;
+}
+body [class*="-CloseButton"] svg {
+  color: inherit;
+  fill: currentColor;
+}
+body
+  [class*="-StyledModal"]
+  [class*="-Card"]:not([class*="-CardGrid"]):not([class*="-CardImage"]):not(
+    [class*="-CardText"]
+  ):not([class*="-CardFileIcon"]) {
+  background: var(--surface2) !important;
+  border: 1px solid var(--line-soft) !important;
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+body [class*="-StyledModal"] [class*="-Card"]:focus-visible,
+body [class*="-StyledModal"] [class*="-Card"][class*="-cardSelected"] {
+  border-color: var(--accent) !important;
+}
+body [class*="-CardImageWrapper"] {
+  background-color: var(--bg2) !important;
+}
+body [class*="-StyledModal"] [class*="-SearchContainer"] {
+  background: var(--bg2) !important;
+  border: 1px solid var(--line) !important;
+  border-radius: 10px !important;
+}
+
+/* Avisos (toasts) */
+body .Toastify__toast {
+  background: var(--surface2) !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--line);
+  border-radius: 12px !important;
+  box-shadow: 0 16px 40px -12px rgba(0, 0, 0, 0.6) !important;
+}
+body .Toastify__toast--success {
+  border-color: rgba(87, 201, 141, 0.45);
+}
+body .Toastify__toast--error {
+  border-color: rgba(239, 109, 109, 0.5);
+}
+body .Toastify__close-button {
+  color: var(--muted) !important;
+}
+
+/* Boton "Ver recorrido" que agrega admin.js en la barra superior */
+.aero-tour-btn {
+  margin-right: 0.6rem;
+  padding: 0.38rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--soft);
+  font: 600 0.82rem/1 var(--font);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    transform 0.16s var(--ease),
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+.aero-tour-btn:hover {
+  color: var(--ink);
+  border-color: var(--muted);
+}
+.aero-tour-btn:active {
+  transform: scale(0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body *,
+  .aero-tour-btn {
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Iconos Phosphor por coleccion (generados desde @phosphor-icons/core; ver final del archivo). */
+body [class*="-SidebarNavLink"] [class*="-IconWrapper"] {
+  display: none;
+}
+body [class*="-SidebarNavLink"]::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  margin-right: 10px;
+  background: currentColor;
+  -webkit-mask: var(--ico) center / contain no-repeat;
+  mask: var(--ico) center / contain no-repeat;
+}
+
+/* --- generado --- */
+body [class*="-SidebarNavLink"] {
+  --ico: none;
+}
+body [class*="-SidebarNavLink"][href$="/collections/packages"] {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='currentColor'%3E%3Cpath d='M176,216a8,8,0,0,1-8,8H24a8,8,0,0,1,0-16H168A8,8,0,0,1,176,216ZM247.86,93.15a8,8,0,0,1-3.76,5.39l-147.41,88a40.18,40.18,0,0,1-20.26,5.52,39.78,39.78,0,0,1-27.28-10.87l-.12-.12L13,145.8a16,16,0,0,1,4.49-26.21l3-1.47a8,8,0,0,1,6.08-.4l28.26,9.54L75,115.06,53.17,93.87A16,16,0,0,1,57.7,67.4l.32-.13,7.15-2.71a8,8,0,0,1,5.59,0L124.7,84.38,176.27,53.6a39.82,39.82,0,0,1,51.28,9.12l.12.15,18.64,23.89A8,8,0,0,1,247.86,93.15Zm-19.74-3.7-13-16.67a23.88,23.88,0,0,0-30.68-5.42l-54.8,32.72a8.06,8.06,0,0,1-6.87.64L68,80.58l-4,1.53.21.2L93.57,110.8a8,8,0,0,1-1.43,12.58L59.93,142.87a8,8,0,0,1-6.7.73l-28.67-9.67-.19.1-.37.17a.71.71,0,0,1,.13.12l36,35.26a23.85,23.85,0,0,0,28.42,3.18Z'/%3E%3C/svg%3E");
+}
+body [class*="-SidebarNavLink"][href$="/collections/faq"] {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='currentColor'%3E%3Cpath d='M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180ZM128,72c-22.06,0-40,16.15-40,36v4a8,8,0,0,0,16,0v-4c0-11,10.77-20,24-20s24,9,24,20-10.77,20-24,20a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-.72c18.24-3.35,32-17.9,32-35.28C168,88.15,150.06,72,128,72Zm104,56A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z'/%3E%3C/svg%3E");
+}
+body [class*="-SidebarNavLink"][href$="/collections/testimonials"] {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='currentColor'%3E%3Cpath d='M239.18,97.26A16.38,16.38,0,0,0,224.92,86l-59-4.76L143.14,26.15a16.36,16.36,0,0,0-30.27,0L90.11,81.23,31.08,86a16.46,16.46,0,0,0-9.37,28.86l45,38.83L53,211.75a16.38,16.38,0,0,0,24.5,17.82L128,198.49l50.53,31.08A16.4,16.4,0,0,0,203,211.75l-13.76-58.07,45-38.83A16.43,16.43,0,0,0,239.18,97.26Zm-15.34,5.47-48.7,42a8,8,0,0,0-2.56,7.91l14.88,62.8a.37.37,0,0,1-.17.48c-.18.14-.23.11-.38,0l-54.72-33.65a8,8,0,0,0-8.38,0L69.09,215.94c-.15.09-.19.12-.38,0a.37.37,0,0,1-.17-.48l14.88-62.8a8,8,0,0,0-2.56-7.91l-48.7-42c-.12-.1-.23-.19-.13-.5s.18-.27.33-.29l63.92-5.16A8,8,0,0,0,103,91.86l24.62-59.61c.08-.17.11-.25.35-.25s.27.08.35.25L153,91.86a8,8,0,0,0,6.75,4.92l63.92,5.16c.15,0,.24,0,.33.29S224,102.63,223.84,102.73Z'/%3E%3C/svg%3E");
+}
+body [class*="-SidebarNavLink"][href$="/collections/promos"] {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='currentColor'%3E%3Cpath d='M232,104a8,8,0,0,0,8-8V64a16,16,0,0,0-16-16H32A16,16,0,0,0,16,64V96a8,8,0,0,0,8,8,24,24,0,0,1,0,48,8,8,0,0,0-8,8v32a16,16,0,0,0,16,16H224a16,16,0,0,0,16-16V160a8,8,0,0,0-8-8,24,24,0,0,1,0-48ZM32,167.2a40,40,0,0,0,0-78.4V64H88V192H32Zm192,0V192H104V64H224V88.8a40,40,0,0,0,0,78.4Z'/%3E%3C/svg%3E");
+}
+body [class*="-SidebarNavLink"][href$="/collections/occasions"] {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='currentColor'%3E%3Cpath d='M216,72H180.92c.39-.33.79-.65,1.17-1A29.53,29.53,0,0,0,192,49.57,32.62,32.62,0,0,0,158.44,16,29.53,29.53,0,0,0,137,25.91a54.94,54.94,0,0,0-9,14.48,54.94,54.94,0,0,0-9-14.48A29.53,29.53,0,0,0,97.56,16,32.62,32.62,0,0,0,64,49.57,29.53,29.53,0,0,0,73.91,71c.38.33.78.65,1.17,1H40A16,16,0,0,0,24,88v32a16,16,0,0,0,16,16v64a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V136a16,16,0,0,0,16-16V88A16,16,0,0,0,216,72ZM149,36.51a13.69,13.69,0,0,1,10-4.5h.49A16.62,16.62,0,0,1,176,49.08a13.69,13.69,0,0,1-4.5,10c-9.49,8.4-25.24,11.36-35,12.4C137.7,60.89,141,45.5,149,36.51Zm-64.09.36A16.63,16.63,0,0,1,96.59,32h.49a13.69,13.69,0,0,1,10,4.5c8.39,9.48,11.35,25.2,12.39,34.92-9.72-1-25.44-4-34.92-12.39a13.69,13.69,0,0,1-4.5-10A16.6,16.6,0,0,1,84.87,36.87ZM40,88h80v32H40Zm16,48h64v64H56Zm144,64H136V136h64Zm16-80H136V88h80v32Z'/%3E%3C/svg%3E");
+}
+body [class*="-SidebarNavLink"][href$="/collections/gallery"] {
+  --ico: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 256 256' fill='currentColor'%3E%3Cpath d='M216,40H72A16,16,0,0,0,56,56V72H40A16,16,0,0,0,24,88V200a16,16,0,0,0,16,16H184a16,16,0,0,0,16-16V184h16a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM72,56H216v62.75l-10.07-10.06a16,16,0,0,0-22.63,0l-20,20-44-44a16,16,0,0,0-22.62,0L72,109.37ZM184,200H40V88H56v80a16,16,0,0,0,16,16H184Zm32-32H72V132l36-36,49.66,49.66a8,8,0,0,0,11.31,0L194.63,120,216,141.38V168ZM160,84a12,12,0,1,1,12,12A12,12,0,0,1,160,84Z'/%3E%3C/svg%3E");
+}

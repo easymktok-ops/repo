@@ -27,5 +27,6 @@ heroImageAlt:
   es: "Festejo de cumpleaños con globos al amanecer"
   en: "Birthday celebration with balloons at sunrise"
 order: 4
+available: true
 featured: false
 ---

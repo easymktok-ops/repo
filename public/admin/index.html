@@ -6,6 +6,7 @@
     <meta name="robots" content="noindex" />
     <link rel="icon" type="image/svg+xml" href="/favicon-admin.svg" />
     <title>Aerodiverti · Administración de contenido</title>
+    <link rel="stylesheet" href="/admin/admin.css" />
   </head>
   <body>
     <!--
@@ -16,7 +17,13 @@
 
       Se carga desde CDN porque es una herramienta de back-office privada
       (noindex), no la web pública. La web de conversión no depende de esto.
+
+      Versión FIJA: admin.css estiliza la interfaz de Decap por sus nombres de
+      componente; una versión nueva podría cambiarlos. Al actualizar, revisar
+      /admin con admin.css (tema) y admin.js (vista previa y recorrido).
     -->
-    <script src="https://unpkg.com/decap-cms@^3.6.0/dist/decap-cms.js"></script>
+    <script src="https://unpkg.com/decap-cms@3.16.3/dist/decap-cms.js"></script>
+    <script src="/ui/tour.js"></script>
+    <script src="/admin/admin.js"></script>
   </body>
 </html>

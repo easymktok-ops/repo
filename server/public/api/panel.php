@@ -608,6 +608,7 @@ function render_layout(string $title, string $body, array $kpi, bool $showKpi, s
       <header class="topbar">
         <a class="brand" href="panel.php"><?= panel_brandmark() ?></a>
         <div class="topright">
+          <?= panel_tour_button() ?>
           <span class="muted sm">Sesion: <?= $user ?></span>
           <a class="btn ghost sm" href="<?= h(self_url(['do' => 'logout'])) ?>">Salir</a>
         </div>
@@ -626,6 +627,7 @@ function render_layout(string $title, string $body, array $kpi, bool $showKpi, s
         <?= $body ?>
       </main>
       <?= panel_ux_foot() ?>
+      <?= panel_tours_script($section) ?>
     </body></html>
     <?php
 }

@@ -20,5 +20,6 @@ heroImageAlt:
   es: "Globo sobre un mar de nubes al amanecer en el valle de Teotihuacán"
   en: "Balloon above a sea of clouds at sunrise over the Teotihuacán valley"
 order: 2
+available: true
 featured: false
 ---

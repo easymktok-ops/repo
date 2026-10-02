@@ -20,5 +20,6 @@ heroImageAlt:
   es: "Pareja en una pedida de mano junto al globo iluminado"
   en: "Couple during a proposal beside the lit balloon"
 order: 7
+available: true
 featured: false
 ---

@@ -62,6 +62,25 @@ Norman probó el entorno de pruebas completo (calendario, Stripe 4242, webhook �
   `priceFrom` de paquetes reservables; sin paquetes con precio no se muestra). WhatsApp queda como canal de
   ayuda (botón de chat, Contacto, paquetes "Consultar").
 
+## Recorridos guiados y /admin (2026-10-02, pedido de Norman)
+- Se quitaron los interruptores Ayudas/Animaciones y los textos de ayuda bajo los campos: en su lugar, un
+  **recorrido guiado** que aparece solo la primera vez por pantalla (localStorage `aero-tour:<pantalla>:v1`) y
+  se repite con **Ver recorrido** (barra superior). Los globos de guardado/error quedan siempre (salvo
+  `prefers-reduced-motion`).
+- Motor sin dependencias: `public/ui/tour.js` (se publica con el sitio). El panel lo carga de `/ui/tour.js`:
+  al publicar el panel en producción hay que publicar también el sitio (dist). Si no carga, el panel funciona igual.
+- Recorridos del panel: Reservas, detalle de reserva y cada pestaña de Precios (`panel_tours_script()` en
+  `panel_pricing.php`). Subir la versión (`version`) en el define si cambian los pasos y se quiere que
+  todos lo vuelvan a ver.
+- **/admin (Decap):** tema Obsidiana igual al panel (`public/admin/admin.css`), vista previa con el look del
+  sitio para paquetes, testimonios, preguntas y promociones, recorrido de lista y editor
+  (`public/admin/admin.js`), descripción por sección, resumen con precio base en la lista de paquetes,
+  filtros y orden (`config.yml`, solo UI del CMS; el schema no cambia). Decap quedó **fijo en 3.16.3**
+  (antes `^3.6.0` flotante): el tema depende de los nombres de componente.
+- `available: true` explícito en los 7 paquetes: sin el campo, Decap mostraba "Disponible" apagado aunque
+  el sitio los trata como disponibles (default del schema). No cambia nada en el sitio.
+- El entorno de pruebas no trae /admin (por diseño): esos cambios se ven al publicar en producción.
+
 ## Riesgos / bloqueos abiertos
 - PHP del hosting confirmado por el usuario (Webempresa, 2026-10-01): **8.3**, con `pdo_sqlite`, `mbstring` y `pdo` activos (cURL viene integrado y el checkout actual ya lo usa). Suite 40/40 en 7.4.33 y 8.4. Con 8.3 el desfase de una hora por horario de verano no aplica en producción (su base de zonas es posterior a 2022); el fix UTC-6 se queda como protección.
 - `npm run check` no corre (falta `@astrojs/check`, ya faltaba antes).
