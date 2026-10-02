@@ -27,6 +27,7 @@ Estado: `PEND` = pendiente · `LISTO` = aplicado · `DUDA` = requiere decisión/
 | VIS-13 | Homologar el nuevo logo en el flujo de reservas | **LISTO** (código; falta subir logo en Stripe) |
 | VIS-14 | Paneles backend responsive (sin scroll horizontal) | **LISTO** |
 | VIS-15 | Favicon administrativo (azul/gris) para paneles backend | **LISTO** |
+| VIS-16 | Auto-scroll al botón Continuar tras elegir fecha (reservas) | PEND |
 
 Todo el cambio de color es sistémico: sale de un solo token `--accent` en
 `src/styles/tokens.css`. No hay fucsia hardcodeado en componentes.
@@ -185,6 +186,26 @@ prueba. Son requisitos **antes de salir a producción**.
   `public/admin/index.html`) para el CMS de contenido, y una variante embebida
   (data-URI base64, para no romper el "un solo archivo") en el `<head>` del
   panel de ventas `panel.php`. El front sigue en fucsia.
+
+---
+
+## 8. Flujo de reservas (después de tarifas por temporada)
+
+Registrado el **2026-10-02**, tras probar el entorno de pruebas con el calendario de precios.
+
+- **VIS-16 · Auto-scroll al botón "Continuar" después de una selección** `PEND`
+  Hoy, al elegir la **fecha** en el calendario (paso 1 de `/reservar`), el botón **Continuar** queda fuera de
+  vista y hay que hacer scroll a mano; si el cliente no ve el botón, hay fricción y puede abandonar. Aplica
+  igual a otras selecciones que dejan el siguiente paso abajo (pasajeros, modo de pago).
+  Propuesta (mismo patrón que VIS-11, `pickFlight` en `BookingWidget.tsx`):
+  - Al elegir fecha (`PriceCalendar` → `onSelect`, y el input nativo en `onChange`), si el botón Continuar no
+    está completamente visible, `scrollIntoView({ block: "nearest" })` suave hacia él (o hacia el resumen +
+    botón); si ya se ve, no mover nada.
+  - Sin robar el foco (el teclado sigue en el calendario); solo scroll. No hacerlo al navegar meses ni al
+    cargar la página con fecha precargada.
+  - `prefers-reduced-motion`: salto instantáneo. Opcional: el mismo halo breve de VIS-11 sobre el botón.
+  - Probar en móvil 390 px (donde más pasa) y en escritorio; cuidar la barra/banner inferior (cookies) para
+    que no tape el botón al llegar.
 
 ---
 
