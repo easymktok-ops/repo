@@ -10,6 +10,7 @@ Stack: `docs/STACK.md`. Tokens y diagnóstico: `docs/DESIGN-TOKENS.md`. Fotos pe
   - Home full SEO: title, canonical, Open Graph, robots, schema.org (PerformingGroup + Event semanal con Offers 195.000 / 180.000 COP generados desde la programación), sitemap, robots.txt.
   - Secciones en el mismo orden del sitio actual: hero, frase + marco de video, experiencia, banda, ciudades + programación 2026, ¿Qué es un Dinner Show?, banda, contacto, footer.
   - Parallax por capas ligado al scroll (CSS, fuera del hilo principal) + profundidad por puntero en el hero (escritorio), todo desactivado con `prefers-reduced-motion`.
+  - Estrellas en dos capas fijas a la ventana (`.starfield`): el contenido y las tarjetas pasan por encima. La capa cercana deriva 800 px a lo largo de la página (`--star-drift` en `main.css`); las tarjetas de programación y el marco de la frase flotan ±2.25 rem (`--float`). Sin movimiento si el visitante lo pide.
   - Formulario con CSRF, honeypot, validación por campo y guardado en `storage/leads.csv` (fuera de la carpeta pública).
   - Iconos SVG propios, fuentes locales (Cinzel, Montserrat, Great Vibes de respaldo para el logo, todas OFL).
   - QA: sin errores de consola, sin desborde horizontal en 390px y 1440px, JSON-LD válido.

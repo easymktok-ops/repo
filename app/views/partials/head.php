@@ -34,4 +34,5 @@ $analytics = $GLOBALS['app_config']['analytics'] ?? [];
 <script type="module" src="<?= e(asset('js/main.js')) ?>"></script>
 </head>
 <body class="<?= e($bodyClass) ?>">
+<div class="starfield" aria-hidden="true"><i class="starfield__far"></i><i class="starfield__near"></i></div>
 <a class="skip-link" href="#contenido">Saltar al contenido</a>

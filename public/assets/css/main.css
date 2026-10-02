@@ -65,8 +65,6 @@ body {
   margin: 0;
   min-height: 100vh;
   background-color: var(--jc-black);
-  background-image: url("../img/stars-a.svg");
-  background-size: 320px 320px;
   color: var(--jc-ink);
   font-family: var(--font-body);
   font-size: 1.0625rem;
@@ -367,6 +365,28 @@ ul { margin: 0; padding: 0; list-style: none; }
 }
 .cover.media--placeholder { aspect-ratio: auto !important; }
 
+/* ---------- Estrellas fijas ---------- */
+
+/* Dos capas pegadas a la ventana: el contenido y las tarjetas se desplazan por encima,
+   así las estrellas quedan lejos y las tarjetas cerca. Las secciones oscuras son
+   transparentes para dejarlas ver; los paneles magenta y las fotos las tapan. */
+.starfield {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.starfield i {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+}
+.starfield__far { background-image: url("../img/stars-a.svg"); background-size: 320px 320px; }
+.starfield__near { background-image: url("../img/stars-b.svg"); background-size: 640px 640px; opacity: 0.9; --star-drift: -800px; }
+
+main, .site-footer { position: relative; z-index: var(--z-content); }
+
 /* ---------- Decoración de profundidad ---------- */
 
 .decor { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
@@ -399,7 +419,35 @@ ul { margin: 0; padding: 0; list-style: none; }
       animation-timeline: view();
       animation-range: entry 5% entry 55%;
     }
+
+    /* Las tarjetas se adelantan y se atrasan un poco respecto al scroll:
+       entran 2.25rem abajo, cruzan el centro en su sitio y salen 2.25rem arriba.
+       Usa la propiedad `translate`, que no choca con el `transform` de .reveal. */
+    .event-card.reveal, .statement__frame.reveal {
+      animation-name: reveal, card-float;
+      animation-timing-function: linear, linear;
+      animation-fill-mode: both, both;
+      animation-timeline: view(), view();
+      animation-range: entry 5% entry 55%, cover;
+    }
   }
+
+  @supports (animation-timeline: scroll()) {
+    .starfield__near {
+      animation: star-drift linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+}
+
+@keyframes star-drift {
+  from { background-position: 0 0; }
+  to { background-position: 0 var(--star-drift, -800px); }
+}
+
+@keyframes card-float {
+  from { translate: 0 var(--float, 2.25rem); }
+  to { translate: 0 calc(var(--float, 2.25rem) * -1); }
 }
 
 @keyframes depth {
@@ -407,9 +455,10 @@ ul { margin: 0; padding: 0; list-style: none; }
   to { transform: translate3d(0, calc(var(--d, 0.3) * 18vh), 0); }
 }
 
+/* Solo sube un poco: nunca oculta contenido, así una captura o un buscador ven la página completa. */
 @keyframes reveal {
-  from { opacity: 0; transform: translate3d(0, 2rem, 0); }
-  to { opacity: 1; transform: none; }
+  from { transform: translate3d(0, 1.5rem, 0); }
+  to { transform: none; }
 }
 
 /* ---------- Hero ---------- */
@@ -421,6 +470,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   min-height: 100svh;
   padding: 6rem var(--gutter) 5rem;
   overflow: hidden;
+  overflow: clip;
   isolation: isolate;
   text-align: center;
 }
@@ -513,17 +563,8 @@ ul { margin: 0; padding: 0; list-style: none; }
   position: relative;
   padding-block: var(--section-y);
   overflow: hidden;
+  overflow: clip;
   isolation: isolate;
-}
-
-.statement::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: var(--z-decor);
-  background: url("../img/stars-b.svg");
-  background-size: 640px 640px;
-  opacity: 0.8;
 }
 
 .statement__inner {
@@ -568,6 +609,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   padding: clamp(3rem, 2rem + 4vw, 6rem) var(--gutter);
   background: linear-gradient(145deg, var(--jc-magenta) 0%, #c2185b 45%, var(--jc-magenta-deep) 100%);
   overflow: hidden;
+  overflow: clip;
 }
 
 .experiencia__panel::after, .que-es__panel::after {
@@ -609,6 +651,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   position: relative;
   height: clamp(14rem, 42vw, 34rem);
   overflow: hidden;
+  overflow: clip;
   isolation: isolate;
 }
 .band__media { inset: -8% 0; }
@@ -630,6 +673,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   position: relative;
   padding-block: var(--section-y);
   overflow: hidden;
+  overflow: clip;
   isolation: isolate;
   text-align: center;
 }
@@ -772,6 +816,7 @@ ul { margin: 0; padding: 0; list-style: none; }
   background: linear-gradient(160deg, var(--jc-magenta) 0%, #c2185b 55%, var(--jc-magenta-deep) 100%);
   color: var(--jc-ink);
   overflow: hidden;
+  overflow: clip;
 }
 .site-footer::after {
   content: "";
