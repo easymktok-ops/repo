@@ -28,6 +28,11 @@ Estado: `PEND` = pendiente · `LISTO` = aplicado · `DUDA` = requiere decisión/
 | VIS-14 | Paneles backend responsive (sin scroll horizontal) | **LISTO** |
 | VIS-15 | Favicon administrativo (azul/gris) para paneles backend | **LISTO** |
 | VIS-16 | Auto-scroll al botón Continuar tras elegir fecha (reservas) | PEND |
+| BO-01 | Cupo por día (lugares, vendidos, libres) | PEND |
+| BO-02 | Abordaje del día (lista, QR, presentes, CSV) | PEND |
+| BO-03 | Laboratorio: embudo de abandono y ventas reales | PEND |
+| BO-04 | Editor de paquetes más digerible en /admin | PEND |
+| BO-05 | Experimentos A/B con lectura honesta | PEND |
 
 Todo el cambio de color es sistémico: sale de un solo token `--accent` en
 `src/styles/tokens.css`. No hay fucsia hardcodeado en componentes.
@@ -206,6 +211,63 @@ Registrado el **2026-10-02**, tras probar el entorno de pruebas con el calendari
   - `prefers-reduced-motion`: salto instantáneo. Opcional: el mismo halo breve de VIS-11 sobre el botón.
   - Probar en móvil 390 px (donde más pasa) y en escritorio; cuidar la barra/banner inferior (cookies) para
     que no tape el botón al llegar.
+
+---
+
+## 9. Back-office: ideas del sistema anterior (aerodiverti.mx)
+
+Registrado el **2026-10-05**. Norman compartió capturas del panel del desarrollo anterior (Reservaciones,
+Disponibilidad, Abordaje, Contenido, Laboratorio). **No se desarrolla todavía**: se retoma cuando salgamos de
+pruebas y hagamos cambios en el proyecto principal. Idea general: replicar lo útil con versiones más sólidas y
+con el look del panel actual (Obsidiana, sin emojis como iconos, Phosphor), no el estilo "hecho con IA" de
+esas pantallas. La parte de contenido de ese sistema **no** se copia (nosotros editamos con GitHub/Decap), solo
+su forma de presentar los campos (BO-04).
+
+Orden sugerido por impacto: BO-01 y BO-02 (operación del día a día y evitar sobreventa), luego BO-03, BO-04, BO-05.
+
+- **BO-01 · Cupo por día** `PEND`
+  Lo que tenían: lista de días con "N reservados · M libres de 40", campo para cambiar el cupo de ese día y
+  botón **Cerrar**. Nosotros ya tenemos días sin vuelo y precios por fecha, pero **no** límite de lugares: hoy
+  se podría vender de más un día lleno.
+  Versión mejorada: cupo por defecto + cupo por fecha en la pestaña Precios (o una nueva "Disponibilidad"),
+  contado contra reservas pagadas y en proceso de pago; el servidor rechaza el cobro si ya no hay lugares
+  (mismo patrón que `409 date_blocked`); el calendario público muestra "Pocos lugares" y "Agotado". Vista
+  de mes (no una lista de 60 filas). El número de lugares lo define el negocio (no inventarlo).
+
+- **BO-02 · Abordaje del día** `PEND`
+  Lo que tenían: pestañas por fecha con conteo, "0 de 1 reservas abordadas / 0 de 3 personas presentes",
+  **Escanear QR**, búsqueda por nombre/teléfono/folio, tocar un nombre para marcarlo presente, dirección de
+  recogida (transporte CDMX), **CSV del día** y **de la semana**, confirmación antes de deshacer o de marcar un
+  pase de otra fecha.
+  Versión mejorada: pantalla pensada para celular en el globopuerto; QR en el correo de confirmación y en
+  `/reserva-confirmada`; marcar presente queda en el historial (quién y a qué hora); lista de recogidas por
+  ruta para el transporte; aviso claro si el pase es de otro día o ya se usó; funciona con mala señal
+  (reintenta al volver la red).
+
+- **BO-03 · Laboratorio: dónde abandonan y cuánto se vende** `PEND`
+  Lo que tenían: embudo "abrieron la reserva → vieron el catálogo → fecha → datos y pago → eligieron método →
+  pagaron" con la mayor fuga marcada; ventas reales (total, desde el rediseño, últimos 7 días); ventas por
+  dispositivo, canal, paquete y proveedor; ventas recientes; embudo por paquete; alerta si la conversión cae.
+  Versión mejorada: eventos propios y anónimos (sin datos personales, respetando el aviso de cookies) en la
+  base del panel, más las ventas reales de `bookings`; gráficas sobrias del sistema del panel; definiciones
+  claras de cada métrica. Ojo: en sus capturas aparece una conversión de **126.7%**, imposible: hay que
+  validar que nada pase de 100% y no mezclar sesiones con clics.
+
+- **BO-04 · Editor de paquetes más digerible en /admin** `PEND`
+  Lo que le gustó a Norman: cada paquete en una tarjeta con pocos campos claros (precio, precio tachado,
+  duración, lugares, orden, "popular"), con una nota corta bajo cada uno, y una bitácora de cambios al final.
+  El nuestro (Decap) se siente "enroscado": objetos anidados Español/English, slug, alt, etc.
+  Versión mejorada (sin dejar Decap/GitHub): primero lo esencial (nombre, precio, precio tachado, disponible,
+  foto) y lo demás plegado en "Avanzado" (slug, orden, alt, inglés); tal vez una vista "Precios de todos los
+  paquetes" en una sola pantalla; historial legible de cambios a partir de los commits.
+  Campos que ellos tenían y nosotros no (precio por menor, hora para presentarse, recogida en CDMX): solo si
+  el negocio los confirma, y cambiando `content.config.ts` y `config.yml` juntos.
+
+- **BO-05 · Experimentos A/B** `PEND`
+  Lo que tenían: pruebas de orden del catálogo, tema claro vs oscuro, nuevo layout de escritorio y pago
+  embebido vs redirección, con aviso de "no concluyente" cuando la muestra es chica.
+  Versión mejorada: una prueba a la vez, con tamaño de muestra mínimo y fecha de corte definidos antes de
+  empezar; resultado en lenguaje simple ("todavía no se sabe" / "B vende más"). Depende de BO-03.
 
 ---
 
