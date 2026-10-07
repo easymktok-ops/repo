@@ -140,7 +140,79 @@ function initFloatingWhatsApp() {
   }, { rootMargin: '0px 0px -40% 0px' }).observe(footer);
 }
 
+// Compra: totales en vivo, botones + y -, y evento begin_checkout la primera vez que hay entradas.
+function initCheckout() {
+  const form = document.querySelector('[data-checkout]');
+  if (!form) return;
+
+  const rows = [...form.querySelectorAll('.qty-row')];
+  const money = new Intl.NumberFormat('es-CO');
+  const linesEl = form.querySelector('[data-summary-lines]');
+  let started = false;
+
+  const update = () => {
+    let total = 0;
+    let count = 0;
+    const lines = [];
+    for (const row of rows) {
+      const input = row.querySelector('input');
+      const n = Math.max(0, Math.min(Number(input.max) || 10, parseInt(input.value, 10) || 0));
+      const price = Number(row.dataset.price);
+      total += n * price;
+      count += n;
+      if (n > 0) lines.push({ sku: row.dataset.sku, label: row.dataset.label, n, price });
+    }
+
+    form.querySelector('[data-summary-qty]').textContent = String(count);
+    form.querySelector('[data-summary-total]').textContent = '$' + money.format(total) + ' COP';
+    linesEl.replaceChildren(...lines.map((l) => {
+      const li = document.createElement('li');
+      const left = document.createElement('span');
+      const right = document.createElement('span');
+      left.textContent = l.n + ' x ' + l.label;
+      right.textContent = '$' + money.format(l.n * l.price);
+      li.append(left, right);
+      return li;
+    }));
+
+    const chosen = form.querySelector('input[name="funcion"]:checked');
+    const label = chosen?.nextElementSibling?.textContent;
+    if (label) form.querySelector('[data-summary-date]').textContent = label;
+
+    if (count > 0 && !started) {
+      started = true;
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: 'begin_checkout',
+        ecommerce: {
+          currency: 'COP',
+          value: total,
+          items: lines.map((l) => ({ item_id: l.sku, item_name: l.label, price: l.price, quantity: l.n })),
+        },
+      });
+    }
+  };
+
+  form.addEventListener('click', (event) => {
+    const btn = event.target.closest('[data-step]');
+    if (!btn) return;
+    const input = btn.closest('.stepper').querySelector('input');
+    const next = (parseInt(input.value, 10) || 0) + Number(btn.dataset.step);
+    input.value = String(Math.max(0, Math.min(Number(input.max) || 10, next)));
+    update();
+  });
+  form.addEventListener('input', update);
+  form.addEventListener('change', update);
+  update();
+}
+
+function initPrint() {
+  document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
+}
+
 initHeader();
+initCheckout();
+initPrint();
 initMenu();
 initHeroVideo();
 initPointerDepth();

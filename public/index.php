@@ -17,7 +17,6 @@ $path = '/' . trim($path, '/');
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 $stubs = [
-    '/comprar'           => 'Compra de entradas',
     '/medellin'          => 'Medellín',
     '/bogota'            => 'Bogotá',
     '/cartagena'         => 'Cartagena',
@@ -31,6 +30,30 @@ switch (true) {
 
     case $path === '/contacto' && $method === 'POST':
         require APP_DIR . '/actions/contacto.php';
+        break;
+
+    case $path === '/comprar':
+        require APP_DIR . '/actions/checkout.php';
+        break;
+
+    case $path === '/pago-simulado':
+        require APP_DIR . '/actions/pay-simulated.php';
+        break;
+
+    case preg_match('#^/pago/([a-f0-9]{32})$#', $path, $m) === 1:
+        $publicId = $m[1];
+        require APP_DIR . '/actions/order-status.php';
+        break;
+
+    case preg_match('#^/pago/([a-f0-9]{32})/estado$#', $path, $m) === 1:
+        $publicId = $m[1];
+        $statusOnly = true;
+        require APP_DIR . '/actions/order-status.php';
+        break;
+
+    case $method === 'POST' && preg_match('#^/webhook/([a-z]{3,24})$#', $path, $m) === 1:
+        $provider = $m[1];
+        require APP_DIR . '/actions/webhook.php';
         break;
 
     case $path === '/sitemap.xml':

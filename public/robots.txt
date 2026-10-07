@@ -1,5 +1,8 @@
 User-agent: *
 Disallow: /admin/
 Disallow: /comprar/
+Disallow: /pago/
+Disallow: /pago-simulado/
+Disallow: /webhook/
 
 Sitemap: https://joyascolombianasdinnershow.com/sitemap.xml

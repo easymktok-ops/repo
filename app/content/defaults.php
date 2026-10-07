@@ -61,8 +61,8 @@ return [
                 'dress_code' => 'Formal',
                 'buyable'    => true,
                 'prices'     => [
-                    ['label' => 'Menú completo', 'amount' => 195000],
-                    ['label' => 'Tapeo', 'amount' => 180000],
+                    ['sku' => 'menu', 'label' => 'Menú completo', 'amount' => 195000],
+                    ['sku' => 'tapeo', 'label' => 'Tapeo', 'amount' => 180000],
                 ],
                 'cta_label'  => 'Compra de entradas aquí',
                 'cta_url'    => '/comprar/?funcion=medellin',

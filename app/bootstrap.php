@@ -27,7 +27,7 @@ if (APP_ENV === 'production') {
 
 date_default_timezone_set('America/Bogota');
 
-if (session_status() === PHP_SESSION_NONE) {
+if (PHP_SAPI !== 'cli' && session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params([
         'lifetime' => 0,
         'path'     => '/',
@@ -42,5 +42,13 @@ if (session_status() === PHP_SESSION_NONE) {
 require APP_DIR . '/helpers.php';
 require APP_DIR . '/content.php';
 require APP_DIR . '/seo.php';
+require APP_DIR . '/db.php';
+require APP_DIR . '/orders.php';
+require APP_DIR . '/tickets.php';
+require APP_DIR . '/payments/PaymentGateway.php';
+require APP_DIR . '/payments/SimulatedGateway.php';
+require APP_DIR . '/payments/MercadoPagoGateway.php';
+require APP_DIR . '/payments/Payments.php';
+require APP_DIR . '/webhooks.php';
 
 $GLOBALS['app_config'] = $config;

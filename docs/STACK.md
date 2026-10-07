@@ -51,3 +51,8 @@ Confirmado con Norman (2026-09-28): sin WordPress, sitio a medida. Este archivo 
 - Grav CMS u otro CMS de terceros.
 - Cualquier framework JS de frontend (React/Vue/etc.) o framework PHP pesado (Laravel/Symfony).
 - Servidor Node en producción.
+
+## Cómo está armado el motor de compras
+- `app/payments/PaymentGateway.php`: contrato único de cualquier pasarela. `SimulatedGateway` (solo desarrollo) y `MercadoPagoGateway` (pendiente) lo implementan.
+- `app/orders.php`, `app/tickets.php`, `app/webhooks.php`: reglas de negocio, independientes de la pasarela.
+- `database/`: esquemas; `tools/migrate.php` los aplica; `tests/run.php` los prueba.

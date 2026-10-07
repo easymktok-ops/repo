@@ -2,6 +2,13 @@
 
 Stack: `docs/STACK.md`. Tokens y diagnóstico: `docs/DESIGN-TOKENS.md`. Fotos pendientes: `docs/IMAGENES.md`. Cronograma: 15 sesiones de 1h, 28 sept a 16 oct, lanzamiento 17 oct.
 
+## Motor de compras construido (7 oct), con pasarela simulada
+- **Qué hay:** página `/comprar/` (función, entradas, datos de facturación), estado del pedido `/pago/<id>/` con el ticket numerado (`#JCD-1001…`), endpoint de avisos `/webhook/<pasarela>`, base de datos (`database/schema.mysql.sql` para Hostinger y `schema.sqlite.sql` para pruebas), pasarela simulada solo fuera de producción (`/pago-simulado/`).
+- **Reglas que cumple:** precios siempre del servidor; ticket solo tras aviso de pago verificado; firma verificada; aviso repetido se ignora; si el procesamiento falla a medias el reintento sí se procesa; monto distinto al de la orden no emite ticket; un rechazo tardío no revierte una orden aprobada; `purchase` se dispara solo con pago aprobado, una vez.
+- **Pruebas:** `php tests/run.php` (30 pruebas, incluida numeración continua con 14 procesos simultáneos). Corren en SQLite; **el esquema MySQL no se ha ejecutado todavía**: probarlo en el staging de Hostinger con `php tools/migrate.php`.
+- **Mercado Pago:** `app/payments/MercadoPagoGateway.php` está vacío a propósito (no acepta avisos) hasta tener la documentación oficial de la API de Orders. Es lo único que cambia al integrarlo.
+- **Pendiente:** correo de confirmación, panel `/admin` (login, contenido, door list, reporte contable), política de tratamiento de datos, staging con PHP y MySQL, driver real de Mercado Pago.
+
 ## Estado al 2 oct (fin de la semana 1)
 - **Semana 1 del cronograma: cumplida** (estructura base y home). Pendiente solo lo que depende de otros: logo/fotos/video faltantes, accesos a Hostinger.
 - **Todavía NO existe** (no es un bug, está en la fase 3 del cronograma, pero conviene adelantarlo): página de compra `/comprar` (hoy es una página provisional), base de datos, motor de tickets `#JCD-1001`, panel `/admin` con login, door list, correo de confirmación y Mercado Pago.

@@ -19,9 +19,10 @@ Fases y tareas. Detalle de avance en `docs/PROGRESS.md`; stack en `docs/STACK.md
 - [ ] Revisión cruzada de contenido y enlaces internos
 
 ## Fase 3 — 12 a 16 oct: pagos, ticket, correo, door list, QA, producción
-- [ ] Esquema MySQL: funciones, órdenes, tickets, door list
+- [x] Esquema de base de datos: órdenes, entradas, tickets, avisos (MySQL y SQLite) — probado en SQLite; falta probar MySQL en staging
 - [ ] Mercado Pago detrás de un adaptador (prep 12 oct, validación de cobertura internacional 13 oct, integración 14 oct)
-- [ ] Webhook idempotente con firma verificada → ticket `#JCD-1001…` atómico
+- [x] Aviso de pago idempotente con firma verificada → ticket `#JCD-1001…` atómico (probado con pasarela simulada)
+- [x] Página de compra, estado del pedido y ticket digital
 - [ ] Correo transaccional con ticket
 - [ ] Door List exportable Excel/CSV
 - [ ] Eventos `begin_checkout` y `purchase` (solo pago aprobado, en URL propia)
