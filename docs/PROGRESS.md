@@ -9,6 +9,12 @@ Stack: `docs/STACK.md`. Tokens y diagnóstico: `docs/DESIGN-TOKENS.md`. Fotos pe
 - **Mercado Pago:** `app/payments/MercadoPagoGateway.php` está vacío a propósito (no acepta avisos) hasta tener la documentación oficial de la API de Orders. Es lo único que cambia al integrarlo.
 - **Pendiente:** correo de confirmación, panel `/admin` (login, contenido, door list, reporte contable), política de tratamiento de datos, staging con PHP y MySQL, driver real de Mercado Pago.
 
+## Propuesta pendiente: reservas de Cartagena (7 oct)
+La clienta quiere vender en Cartagena una **reserva** (no un ticket): cóctel de cortesía, ubicación preferencial y cupo asegurado. Ella solo se queda con el valor de la reserva (unos $5); el consumo lo paga el cliente en el restaurante. Cambia el alcance original (Cartagena era solo marca, sin checkout), así que requiere aprobación.
+- **Diseño:** misma base de compras, con producto de tipo "reserva": numeración propia (`#CTG-1001`), cupos por fecha, lista de reservas por fecha para el restaurante, y textos que dejan claro que el consumo se paga en el restaurante.
+- **Por decidir con la clienta:** moneda y valor (en COP, la comisión de Mercado Pago pesa mucho en montos tan pequeños), si es por persona o por reserva, si se devuelve o se abona, días, horarios y cupos del restaurante, acuerdo por escrito de que honran los beneficios, y cómo se factura.
+- **Plan de bajo riesgo:** lanzar la landing con solicitud de reserva sin pago y activar el cobro cuando Mercado Pago esté validado.
+
 ## Estado al 2 oct (fin de la semana 1)
 - **Semana 1 del cronograma: cumplida** (estructura base y home). Pendiente solo lo que depende de otros: logo/fotos/video faltantes, accesos a Hostinger.
 - **Todavía NO existe** (no es un bug, está en la fase 3 del cronograma, pero conviene adelantarlo): página de compra `/comprar` (hoy es una página provisional), base de datos, motor de tickets `#JCD-1001`, panel `/admin` con login, door list, correo de confirmación y Mercado Pago.
