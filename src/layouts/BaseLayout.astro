@@ -60,7 +60,10 @@ const fullTitle = title === site.name ? title : `${title} · ${site.name}`;
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <!-- hreflang es/en + x-default (no en paginas noindex: no hay version que indexar) -->
-    {!noindex && alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)}
+    {
+      !noindex &&
+        alternates.map((a) => <link rel="alternate" hreflang={a.hreflang} href={a.href} />)
+    }
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
