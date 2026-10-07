@@ -33,6 +33,8 @@ Estado: `PEND` = pendiente · `LISTO` = aplicado · `DUDA` = requiere decisión/
 | BO-03 | Laboratorio: embudo de abandono y ventas reales | PEND |
 | BO-04 | Editor de paquetes más digerible en /admin | PEND |
 | BO-05 | Experimentos A/B con lectura honesta | PEND |
+| CON-01 | Brisa como WhatsApp principal y primera asesora | PEND |
+| SEO-01 | Search Console: páginas "No se ha encontrado (404)" | PEND (falta lista de URLs) |
 
 Todo el cambio de color es sistémico: sale de un solo token `--accent` en
 `src/styles/tokens.css`. No hay fucsia hardcodeado en componentes.
@@ -268,6 +270,40 @@ Orden sugerido por impacto: BO-01 y BO-02 (operación del día a día y evitar s
   embebido vs redirección, con aviso de "no concluyente" cuando la muestra es chica.
   Versión mejorada: una prueba a la vez, con tamaño de muestra mínimo y fecha de corte definidos antes de
   empezar; resultado en lenguaje simple ("todavía no se sabe" / "B vende más"). Depende de BO-03.
+
+---
+
+## 10. Contacto y SEO
+
+Registrado el **2026-10-07**.
+
+- **CON-01 · Brisa como WhatsApp principal** `PEND`
+  Pedido de Norman: el número de **Brisa** (55 9199 4645) pasa a ser el WhatsApp principal de la sección de
+  contacto, y Brisa aparece **antes** que Rubí en todo el sitio.
+  Dónde se cambia (todo en `src/config/site.ts`, nada hardcodeado en componentes):
+  - `brand.whatsapp` → `5215591994645` (alimenta `whatsappUrl()`: Contacto, botón de chat, menú, paquetes
+    "Consultar", reserva).
+  - `brand.whatsappDisplay` → `+52 55 9199 4645`. **Ojo:** se puede sobrescribir con la variable
+    `PUBLIC_WHATSAPP_DISPLAY_NUMBER`; si existe en el build de producción (GitHub Actions / hosting), cambiarla
+    también o quitarla, o el sitio mostrará el número viejo con el enlace nuevo.
+  - `brand.advisors`: Brisa primero, Rubí después (orden de los botones en `/reservar`). Actualizar el
+    comentario "el primero es el número principal".
+  - Revisar el JSON-LD (schema) y la página de contacto en es/en después del build.
+
+- **SEO-01 · Search Console: "No se ha encontrado (404)"** `PEND (falta lista de URLs)`
+  Alerta del 2026-10-07. Revisión hecha en el repo: el sitio nuevo **no tiene enlaces internos rotos** y
+  todas las URLs del sitemap existen (verificado sobre `dist/`). Lo más probable es que Google esté
+  visitando **direcciones del sitio anterior** en este dominio que ya no existen.
+  Qué falta: la lista de ejemplos de Search Console (Indexación › Páginas › "No se ha encontrado (404)" ›
+  exportar). Con ella:
+  1. URLs viejas con equivalente nuevo (paquetes, contacto, reservas…) → **redirección 301** en
+     `public_html/.htaccess` (plantilla `deploy-htaccess-public_html.txt`).
+  2. URLs sin equivalente → se dejan en 404 (es normal y Google las va soltando) o 410 si se quiere acelerar.
+  3. Agregar una **página 404 propia** (`src/pages/404.astro` + `ErrorDocument 404 /404.html`): hoy Apache
+     muestra su página genérica; la nueva lleva a Vuelos, Reservar y WhatsApp, con `noindex`.
+  4. Si alguna URL empieza con `pruebas.aerodiverti.com.mx`, es el entorno de pruebas (no indexable a
+     propósito) y se ignora.
+  5. Al terminar: "Validar corrección" en Search Console.
 
 ---
 
