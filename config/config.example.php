@@ -12,9 +12,16 @@ return [
     ],
 
     'payments' => [
-        'provider'     => 'mercadopago',
-        'access_token' => getenv('MP_ACCESS_TOKEN') ?: '',
-        'webhook_secret' => getenv('MP_WEBHOOK_SECRET') ?: '',
+        // 'simulated' solo funciona fuera de producción; en producción usar 'mercadopago'.
+        'provider'         => getenv('PAYMENT_PROVIDER') ?: 'simulated',
+        'access_token'     => getenv('MP_ACCESS_TOKEN') ?: '',
+        'webhook_secret'   => getenv('MP_WEBHOOK_SECRET') ?: '',
+        'simulated_secret' => getenv('SIM_WEBHOOK_SECRET') ?: 'dev-secret-no-usar-en-produccion',
+    ],
+
+    'checkout' => [
+        'max_tickets_per_order' => 10,
+        'dates_offered'         => 8,
     ],
 
     'analytics' => [
