@@ -304,6 +304,15 @@ Registrado el **2026-10-07**.
   4. Si alguna URL empieza con `pruebas.aerodiverti.com.mx`, es el entorno de pruebas (no indexable a
      propósito) y se ignora.
   5. Al terminar: "Validar corrección" en Search Console.
+  **Actualización 2026-10-07:** el 2026-10-05 se activó la redirección 301 de **aerodiverti.mx** (dominio
+  del sitio anterior) a aerodiverti.com.mx, y la curva de 404 sube justo desde ahí (14 páginas). Hipótesis
+  principal: la redirección conserva la ruta (`aerodiverti.mx/tours/x` → `aerodiverti.com.mx/tours/x`) y
+  esas rutas no existen en el sitio nuevo. Arreglo: mapa de redirecciones ruta vieja → página nueva (en el
+  .mx o en el `.htaccess` del .com.mx) y lo que no tenga equivalente a la portada o a /vuelos.
+  **Antes de tocar el DNS o el reenvío del .mx: revisar nameservers (CLAUDE.md, sección DNS).**
+  Resto del informe, sin acción: "Página con redirección" (16, esperado por el 301), "noindex" (14:
+  favoritos, reserva-confirmada y vista previa del panel, a propósito), "canónica adecuada" (14, URLs con
+  parámetros o variantes), robots.txt (2, /admin). Revisar el "otro 4xx" (1) cuando llegue la lista.
 
 ---
 
