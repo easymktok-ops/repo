@@ -34,7 +34,7 @@ Estado: `PEND` = pendiente · `LISTO` = aplicado · `DUDA` = requiere decisión/
 | BO-04 | Editor de paquetes más digerible en /admin | PEND |
 | BO-05 | Experimentos A/B con lectura honesta | PEND |
 | CON-01 | Brisa como WhatsApp principal y primera asesora | PEND |
-| SEO-01 | Search Console: páginas "No se ha encontrado (404)" | **LISTO** en código (falta publicar) |
+| SEO-01 | Search Console: páginas "No se ha encontrado (404)" | **LISTO** (.htaccess en producción; 404 propia con el próximo deploy) |
 
 Todo el cambio de color es sistémico: sale de un solo token `--accent` en
 `src/styles/tokens.css`. No hay fucsia hardcodeado en componentes.
@@ -300,7 +300,10 @@ Registrado el **2026-10-07**.
     Probado en Apache local con el build: las 14 responden 301/410 como se espera.
   - `src/pages/404.astro` (noindex, enlaces a Vuelos, Reservar y WhatsApp) y `id={slug}` en cada tarjeta del
     catálogo. Páginas noindex ya no emiten hreflang.
-  Publicar: subir el `.htaccess` (respaldando el actual) y publicar el sitio; luego "Validar corrección".
+  **2026-10-07: `.htaccess` subido a producción por Norman** (con `ErrorDocument` comentado) y verificado
+  con httpstatus.io: 301/410 correctos, sitio y reserva funcionando. Pendiente: al publicar el sitio nuevo
+  (trae `/404.html` y los `id` de las tarjetas), quitar el `#` de `ErrorDocument 404 /404.html`.
+  "Validar corrección" en Search Console.
   Historial del diagnóstico:
   Alerta del 2026-10-07. Revisión hecha en el repo: el sitio nuevo **no tiene enlaces internos rotos** y
   todas las URLs del sitemap existen (verificado sobre `dist/`). Lo más probable es que Google esté
