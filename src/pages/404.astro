@@ -1,0 +1,99 @@
+---
+import PageShell from "@layouts/PageShell.astro";
+import Button from "@components/ui/Button.astro";
+import Icon from "@components/ui/Icon.astro";
+import { localizedPath, whatsappUrl } from "@config/site";
+
+/**
+ * 404 propia. Apache la sirve con `ErrorDocument 404 /404.html` (ver deploy-htaccess-public_html.txt),
+ * asi que puede aparecer en cualquier ruta: todos los enlaces y assets son absolutos. noindex; Astro la
+ * deja fuera del sitemap. Las URLs viejas con equivalente ya redirigen (301) antes de llegar aqui.
+ */
+const locale = "es" as const;
+const wa = whatsappUrl("Hola, busco información sobre los vuelos en globo. ¿Me ayudan?");
+---
+
+<PageShell
+  title="Página no encontrada"
+  description="Esta dirección ya no existe. Explora los vuelos en globo sobre Teotihuacán o reserva el tuyo."
+  logicalPath="/404"
+  noindex
+>
+  <section class="nf container">
+    <div class="nf-card">
+      <span class="nf-ico"><Icon name="map-pin" /></span>
+      <h1>Esta página ya no está aquí</h1>
+      <p class="measure">
+        Quizá viene de nuestro sitio anterior. Los vuelos, precios y reservas están ahora en un solo lugar.
+      </p>
+      <div class="nf-cta">
+        <Button href={localizedPath("/vuelos", locale)} icon="arrow-up-right">Ver vuelos y precios</Button>
+        <Button href={localizedPath("/reservar", locale)} variant="ghost">Reservar mi vuelo</Button>
+      </div>
+      <a class="nf-wa" href={wa} target="_blank" rel="noopener">
+        <Icon name="chat-circle" /> ¿Buscabas algo en particular? Escríbenos por WhatsApp
+      </a>
+      <p class="nf-en" lang="en">
+        This page no longer exists. <a href={localizedPath("/vuelos", "en")}>See flights in English</a>.
+      </p>
+    </div>
+  </section>
+</PageShell>
+
+<style>
+  .nf {
+    padding-block: var(--space-2xl) var(--space-3xl);
+  }
+  .nf-card {
+    display: grid;
+    justify-items: center;
+    text-align: center;
+    gap: var(--space-sm);
+    max-width: 600px;
+    margin-inline: auto;
+    padding: var(--space-2xl) var(--space-lg);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+  }
+  .nf-ico {
+    display: grid;
+    place-items: center;
+    width: 64px;
+    height: 64px;
+    border-radius: var(--radius-pill);
+    background: var(--accent-wash);
+    color: var(--accent);
+    font-size: 1.8rem;
+    margin-bottom: var(--space-2xs);
+  }
+  .nf-card h1 {
+    font-size: var(--step-3);
+    text-wrap: balance;
+  }
+  .nf-card p {
+    color: var(--muted);
+  }
+  .nf-cta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-xs);
+    margin-top: var(--space-xs);
+  }
+  .nf-wa {
+    display: inline-block;
+    max-width: 34ch;
+    text-wrap: balance;
+    margin-top: var(--space-xs);
+    color: var(--ink-soft);
+    font-size: var(--step--1);
+  }
+  .nf-wa :global(.icon) {
+    vertical-align: -0.15em;
+    margin-right: 0.3em;
+  }
+  .nf-en {
+    font-size: var(--step--1);
+  }
+</style>

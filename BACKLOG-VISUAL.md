@@ -34,7 +34,7 @@ Estado: `PEND` = pendiente · `LISTO` = aplicado · `DUDA` = requiere decisión/
 | BO-04 | Editor de paquetes más digerible en /admin | PEND |
 | BO-05 | Experimentos A/B con lectura honesta | PEND |
 | CON-01 | Brisa como WhatsApp principal y primera asesora | PEND |
-| SEO-01 | Search Console: páginas "No se ha encontrado (404)" | PEND (falta lista de URLs) |
+| SEO-01 | Search Console: páginas "No se ha encontrado (404)" | **LISTO** en código (falta publicar) |
 
 Todo el cambio de color es sistémico: sale de un solo token `--accent` en
 `src/styles/tokens.css`. No hay fucsia hardcodeado en componentes.
@@ -290,7 +290,18 @@ Registrado el **2026-10-07**.
     comentario "el primero es el número principal".
   - Revisar el JSON-LD (schema) y la página de contacto en es/en después del build.
 
-- **SEO-01 · Search Console: "No se ha encontrado (404)"** `PEND (falta lista de URLs)`
+- **SEO-01 · Search Console: "No se ha encontrado (404)"** `LISTO en código, falta publicar`
+  **Resuelto 2026-10-07.** Las 14 URLs de Search Console eran del WordPress anterior en el **mismo dominio**
+  aerodiverti.com.mx (no del reenvío del .mx en GoDaddy, que no hubo que tocar). Hecho:
+  - `deploy-htaccess-public_html.txt`: 301 de cada `/tipo-de-vuelo/...` a su tarjeta en `/vuelos/#slug`
+    (básico → Esencial y cumpleaños → Celebración son supuestos: confirmar con el negocio), cualquier otro
+    `/tipo-de-vuelo/` → `/vuelos/`, `/globopuerto-teotihuacan-contacto/` → `/contacto/`, `/promociones/` →
+    `/vuelos/`; `wp-content`, `wp-admin`, `wp-login.php`... → 410; `ErrorDocument 404 /404.html`.
+    Probado en Apache local con el build: las 14 responden 301/410 como se espera.
+  - `src/pages/404.astro` (noindex, enlaces a Vuelos, Reservar y WhatsApp) y `id={slug}` en cada tarjeta del
+    catálogo. Páginas noindex ya no emiten hreflang.
+  Publicar: subir el `.htaccess` (respaldando el actual) y publicar el sitio; luego "Validar corrección".
+  Historial del diagnóstico:
   Alerta del 2026-10-07. Revisión hecha en el repo: el sitio nuevo **no tiene enlaces internos rotos** y
   todas las URLs del sitemap existen (verificado sobre `dist/`). Lo más probable es que Google esté
   visitando **direcciones del sitio anterior** en este dominio que ya no existen.

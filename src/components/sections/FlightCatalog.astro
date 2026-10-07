@@ -119,7 +119,7 @@ const flightsHref = localizedPath("/vuelos", locale);
         const bookable = d.priceFrom != null;
         const bookHref = bookable ? `${localizedPath("/reservar", locale)}?pkg=${d.slug}` : wa;
         return (
-          <li class="card" data-slug={d.slug}>
+          <li class="card" id={d.slug} data-slug={d.slug}>
             <button
               class="fav-btn"
               type="button"
@@ -268,6 +268,8 @@ const flightsHref = localizedPath("/vuelos", locale);
 
   .card {
     position: relative;
+    /* Llegadas a /vuelos/#slug (redirecciones de URLs viejas): la tarjeta no queda bajo la barra. */
+    scroll-margin-top: 6rem;
     display: flex;
     flex-direction: column;
     background: var(--surface);
