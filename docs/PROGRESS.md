@@ -43,6 +43,13 @@ Stack: `docs/STACK.md`. Tokens y diagnóstico: `docs/DESIGN-TOKENS.md`. Fotos pe
 2. Landings de campaña (semana 2): Cartagena (marca, sin checkout), Medellín y Bogotá. **Enfoque 100% conversión UX/UI, noindex, sin prioridad SEO.** El home sí queda full SEO.
 3. Esquema MySQL: funciones, órdenes, tickets (`#JCD-1001…`), door list.
 
+## Requisito nuevo (7 oct): datos para contabilidad
+La clienta factura cada venta y su contadora necesita los datos. Se construye junto al checkout:
+- **Datos de facturación en la compra:** tipo y número de documento (CC, CE, NIT, pasaporte), nombre o razón social, correo, teléfono, ciudad. Campos exactos por confirmar con la contadora.
+- **Reporte contable en el admin (CSV/Excel, por rango de fechas):** fecha, N° de ticket, ID de pago de Mercado Pago, estado, comprador, documento, correo, función, producto, cantidad, valor, comisión de Mercado Pago, neto recibido, medio de pago. La comisión y el neto vienen del aviso de pago de Mercado Pago.
+- **Por confirmar con la contadora:** software de facturación, impuesto aplicable y si ya va incluido en el precio, una factura por boleta o por compra, frecuencia del reporte.
+- **Datos personales:** guardar documentos exige la política de tratamiento de datos publicada (Ley 1581).
+
 ## Fuera de alcance / cotizar aparte
 - A/B testing de CRO: lo hace John después del lanzamiento (15 días), no entra en esta construcción.
 
