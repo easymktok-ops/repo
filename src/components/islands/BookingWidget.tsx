@@ -36,7 +36,8 @@ const T = {
     dateHint: "Sujeta a confirmación según clima y disponibilidad.",
     errDate: "Elige la fecha de tu vuelo.",
     availNote: "¿Dudas de disponibilidad? Escríbele a un asesor:",
-    weightNote: "El precio aplica hasta 99 kg por pasajero. Cada kilo extra cuesta 50 pesos, que cobra el equipo el día del vuelo.",
+    weightNote:
+      "El precio aplica hasta 99 kg por pasajero. Cada kilo extra cuesta 50 pesos, que cobra el equipo el día del vuelo.",
     optional: "opcional",
     perPerson: "por persona",
     fillData: "Completa tus datos para continuar.",
@@ -69,6 +70,9 @@ const T = {
     was: "antes",
     minMax: (min: number, max: number) => `De ${min} a ${max} personas`,
     from: "Desde",
+    priceByDate:
+      "El precio puede variar según la fecha (temporada alta, fines de semana o días festivos). Lo ves en el calendario antes de pagar y nunca es menor al indicado aquí.",
+    pickDateForPrice: "Elige tu fecha para ver el precio final.",
     loadingDates: "Cargando fechas y precios...",
     pickedDate: (d: string, price: string) => `${d} · ${price} por persona`,
     depositForDate: (amt: string) => `Anticipo de tu fecha: ${amt} por pasajero.`,
@@ -86,7 +90,8 @@ const T = {
     dateHint: "Subject to confirmation based on weather and availability.",
     errDate: "Choose your flight date.",
     availNote: "Questions about availability? Message an advisor:",
-    weightNote: "Price applies up to 99 kg per passenger. Each extra kilo is 50 pesos, collected by the crew on the day of the flight.",
+    weightNote:
+      "Price applies up to 99 kg per passenger. Each extra kilo is 50 pesos, collected by the crew on the day of the flight.",
     optional: "optional",
     perPerson: "per person",
     fillData: "Fill in your details to continue.",
@@ -119,6 +124,9 @@ const T = {
     was: "was",
     minMax: (min: number, max: number) => `From ${min} to ${max} people`,
     from: "From",
+    priceByDate:
+      "Prices may vary by date (high season, weekends or holidays). You see the final price in the calendar before paying, and it is never lower than shown here.",
+    pickDateForPrice: "Choose your date to see the final price.",
     loadingDates: "Loading dates and prices...",
     pickedDate: (d: string, price: string) => `${d} · ${price} per person`,
     depositForDate: (amt: string) => `Deposit for your date: ${amt} per passenger.`,
@@ -278,7 +286,12 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
         if (!date) return;
         const day = r.days[date];
         if (day && day.status === "available" && typeof day.price === "number") {
-          setQuote({ price: day.price, deposit: day.deposit ?? 0, balance: day.balance ?? 0, ruleLabel: day.ruleLabel });
+          setQuote({
+            price: day.price,
+            deposit: day.deposit ?? 0,
+            balance: day.balance ?? 0,
+            ruleLabel: day.ruleLabel,
+          });
         } else {
           setFlightDate("");
           setQuote(null);
@@ -326,7 +339,11 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
   const useQuote = pricing === "on" && quote !== null && !!flightDate;
   const perC = useQuote ? quote.price : selected.pricePerPerson * 100;
   const depC = useQuote ? quote.deposit : booking.depositPerPassenger * 100;
-  const { total: totalFullC, now: nowC, balance: balanceC } = chargeCents(mode, perC, depC, passengers);
+  const {
+    total: totalFullC,
+    now: nowC,
+    balance: balanceC,
+  } = chargeCents(mode, perC, depC, passengers);
 
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   const phoneOk = phone.replace(/\D+/g, "").length >= 8;
@@ -409,12 +426,17 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
         const c = chargeCents(mode, cur.price, cur.deposit, passengers);
         setQuote({ price: cur.price, deposit: cur.deposit, balance: cur.balance });
         setPricing("on");
-        setError(t.errChanged(fmtC(currency, locale, cur.price), fmtC(currency, locale, c.now), t.goPay));
+        setError(
+          t.errChanged(fmtC(currency, locale, cur.price), fmtC(currency, locale, c.now), t.goPay),
+        );
         setSubmitting(false);
         return;
       }
       // La fecha ya no se puede reservar: de vuelta al paso 1 para elegir otra.
-      if ((res.status === 409 && data?.code === "date_blocked") || (res.status === 422 && data?.code === "date_invalid")) {
+      if (
+        (res.status === 409 && data?.code === "date_blocked") ||
+        (res.status === 422 && data?.code === "date_invalid")
+      ) {
         clearPriceCache();
         setCalKey((k) => k + 1);
         setFlightDate("");
@@ -441,7 +463,10 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
       const msg = e instanceof Error ? e.message : "";
       // Nunca mostramos errores crudos del navegador/red al cliente.
       const isBrowserNoise =
-        !msg || /expected pattern|JSON|Unexpected|Load failed|Failed to fetch|NetworkError|fetch/i.test(msg);
+        !msg ||
+        /expected pattern|JSON|Unexpected|Load failed|Failed to fetch|NetworkError|fetch/i.test(
+          msg,
+        );
       setError(isBrowserNoise ? t.errGeneric : msg);
       setSubmitting(false);
     }
@@ -488,10 +513,10 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
                       >
                         <span className="bk-pkg-title">{p.title}</span>
                         <span className="bk-pkg-price">
-                          {pricing === "on" && <span className="bk-pkg-from">{t.from}</span>}
                           {p.priceWas ? (
                             <s className="bk-pkg-was">{fmt(p.currency, locale, p.priceWas)}</s>
                           ) : null}
+                          {pricing === "on" && <span className="bk-pkg-from">{t.from}</span>}
                           <strong>{fmt(p.currency, locale, p.pricePerPerson)}</strong>
                           <span className="bk-pkg-unit">{t.perPerson}</span>
                         </span>
@@ -499,6 +524,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
                     );
                   })}
                 </div>
+                {pricing === "on" && <p className="bk-hint bk-pkgs-hint">{t.priceByDate}</p>}
               </fieldset>
 
               <div className="bk-row" ref={detailsRef}>
@@ -567,7 +593,9 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
               )}
 
               {pricing === "on" && (
-                <div className={`bk-field bk-datefield${touched && !flightDate ? " is-invalid" : ""}`}>
+                <div
+                  className={`bk-field bk-datefield${touched && !flightDate ? " is-invalid" : ""}`}
+                >
                   <span className="bk-label" id="lbl-date">
                     {t.dateLabel}{" "}
                     <span className="bk-req" aria-hidden="true">
@@ -593,7 +621,10 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
                   </div>
                   {flightDate && quote && (
                     <p className="bk-picked">
-                      {t.pickedDate(longDate(flightDate, locale), fmtC(currency, locale, quote.price))}
+                      {t.pickedDate(
+                        longDate(flightDate, locale),
+                        fmtC(currency, locale, quote.price),
+                      )}
                     </p>
                   )}
                   <p className="bk-hint">{t.dateHint}</p>
@@ -610,13 +641,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
                 <span className="bk-advisors-note">{t.availNote}</span>
                 <div className="bk-advisors-row">
                   {advisors.map((a) => (
-                    <a
-                      key={a.name}
-                      className="bk-wa"
-                      href={a.href}
-                      target="_blank"
-                      rel="noopener"
-                    >
+                    <a key={a.name} className="bk-wa" href={a.href} target="_blank" rel="noopener">
                       <WhatsappLogo size={22} weight="fill" aria-hidden="true" />
                       <span className="bk-wa-text">
                         <span className="bk-wa-name">{a.name}</span>
@@ -732,7 +757,9 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
                   >
                     <span className="bk-mode-head">
                       <span className="bk-mode-title">{t.payDeposit}</span>
-                      <span className="bk-mode-amt">{fmtC(currency, locale, depC * passengers)}</span>
+                      <span className="bk-mode-amt">
+                        {fmtC(currency, locale, depC * passengers)}
+                      </span>
                     </span>
                     <span className="bk-mode-sub">
                       {t.payDepositSub}
@@ -797,7 +824,10 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
             <dl className="bk-ticket-lines">
               <div className="bk-line">
                 <dt>{t.total}</dt>
-                <dd>{fmtC(currency, locale, totalFullC)}</dd>
+                <dd>
+                  {pricing === "on" && !useQuote && <span className="bk-pkg-from">{t.from} </span>}
+                  {fmtC(currency, locale, totalFullC)}
+                </dd>
               </div>
               {mode === "deposit" && (
                 <div className="bk-line bk-line-muted">
@@ -807,9 +837,15 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
               )}
               <div className="bk-line bk-line-total">
                 <dt>{t.payNow}</dt>
-                <dd>{fmtC(currency, locale, nowC)}</dd>
+                <dd>
+                  {pricing === "on" && !useQuote && <span className="bk-pkg-from">{t.from} </span>}
+                  {fmtC(currency, locale, nowC)}
+                </dd>
               </div>
             </dl>
+            {pricing === "on" && !useQuote && (
+              <p className="bk-hint bk-ticket-hint">{t.pickDateForPrice}</p>
+            )}
           </div>
         </aside>
       </div>

@@ -85,9 +85,9 @@ try {
     if (!ensure_pricing_schema($pdo)) {
         prices_ok(['enabled' => false], $preview, $pricingCfg);
     }
-    $pkg = pricing_load_package_pricing($pdo, $catalog)[$slug];
-    if ($pkg['default_deposit_percent'] === null) {
-        // Paquete sin % de anticipo: se cobra con el flujo anterior.
+    $pkg = pricing_load_package_pricing($pdo, $catalog, pricing_fixed_deposit_cents($config))[$slug];
+    if ($pkg['default_deposit_percent'] === null && $pkg['deposit_fixed_cents'] === null) {
+        // Sin % de anticipo ni anticipo fijo: se cobra con el flujo anterior.
         prices_ok(['enabled' => false, 'reason' => 'unconfigured'], $preview, $pricingCfg);
     }
     $rules = pricing_load_rules($pdo);

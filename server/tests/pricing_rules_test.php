@@ -99,6 +99,7 @@ function test_sin_reglas_usa_precio_base_y_porcentaje_del_paquete(): void
         'balance'         => 121000,
         'rule_id'         => null,
         'deposit_percent' => 45,
+        'deposit_fixed'   => false,
     ], $r);
 }
 
@@ -300,4 +301,56 @@ function test_validacion_de_reglas(): void
     assert_same(['package_ids'], array_keys($e));
     $e = pricing_validate_rule(['start_date' => '2026-02-30', 'label' => str_repeat('a', 81)] + $ok, $known);
     assert_same(['label', 'start_date'], array_keys($e));
+}
+
+function test_sin_porcentaje_usa_el_anticipo_fijo(): void
+{
+    $pkg = t_pkg(['default_deposit_percent' => null, 'deposit_fixed_cents' => 100000]);
+    $r = resolve_price('2026-11-03', $pkg, []);
+    assert_same('available', $r['status']);
+    assert_same(220000, $r['price']);
+    assert_same(100000, $r['deposit']);
+    assert_same(120000, $r['balance']);
+    assert_same(null, $r['deposit_percent']);
+    assert_same(true, $r['deposit_fixed']);
+
+    // El % de una regla gana al anticipo fijo.
+    $r = resolve_price('2026-12-20', $pkg, [t_rule(['start_date' => '2026-12-15', 'end_date' => '2027-01-06', 'price_cents' => 260000, 'deposit_percent' => 50])]);
+    assert_same(130000, $r['deposit']);
+    assert_same(false, $r['deposit_fixed']);
+
+    // El anticipo fijo nunca supera el precio.
+    $r = resolve_price('2026-11-03', t_pkg(['default_deposit_percent' => null, 'deposit_fixed_cents' => 999900]), []);
+    assert_same(220000, $r['deposit']);
+    assert_same(0, $r['balance']);
+}
+
+function test_el_precio_de_lista_es_el_minimo(): void
+{
+    // Una tarifa por debajo del precio de lista (p. ej. porque el precio de lista subio) cobra el de lista.
+    $r = resolve_price('2026-12-20', t_pkg(), [t_rule(['start_date' => '2026-12-15', 'end_date' => '2027-01-06', 'price_cents' => 180000])]);
+    assert_same(220000, $r['price']);
+    assert_same(99000, $r['deposit']);
+}
+
+function test_validacion_no_permite_tarifas_bajo_el_precio_de_lista(): void
+{
+    $known = ['vuelo-compartido', 'vuelo-privado'];
+    $bases = ['vuelo-compartido' => 220000, 'vuelo-privado' => 390000];
+    $ok = [
+        'label' => 'Navidad', 'type' => 'season', 'package_ids' => ['vuelo-compartido'],
+        'start_date' => '2026-12-15', 'end_date' => '2027-01-06', 'price_cents' => 265000,
+    ];
+    assert_same([], pricing_validate_rule($ok, $known, $bases));
+    assert_same([], pricing_validate_rule(['price_cents' => 220000] + $ok, $known, $bases));
+    $e = pricing_validate_rule(['price_cents' => 219900] + $ok, $known, $bases);
+    assert_same(['price_cents'], array_keys($e));
+    assert_true(strpos($e['price_cents'], '$2,200') !== false, $e['price_cents']);
+    // "Todos" usa el precio de lista mas alto de los paquetes.
+    $e = pricing_validate_rule(['package_ids' => 'all'] + $ok, $known, $bases);
+    assert_true(strpos($e['price_cents'], '$3,900') !== false, $e['price_cents']);
+    // Dias sin vuelo no tienen precio: no aplica.
+    assert_same([], pricing_validate_rule(['type' => 'blocked', 'label' => 'Mantenimiento', 'price_cents' => null] + $ok, $known, $bases));
+    // Sin precios de lista (compatibilidad) no se valida el minimo.
+    assert_same([], pricing_validate_rule(['price_cents' => 100000] + $ok, $known));
 }

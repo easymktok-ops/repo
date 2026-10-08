@@ -165,10 +165,17 @@ function pricing_winning_rule(string $date, string $slug, array $rules): ?array
 }
 
 /**
- * @param array $pkg ['slug'=>string,'base_price_cents'=>int,'default_deposit_percent'=>?int]
+ * @param array $pkg ['slug'=>string,'base_price_cents'=>int,'default_deposit_percent'=>?int,
+ *                    'deposit_fixed_cents'=>?int]
  * @param array $rules filas normalizadas (pricing_normalize_rule)
- * @return array status 'available' (price, deposit, balance, rule_id, deposit_percent),
+ * @return array status 'available' (price, deposit, balance, rule_id, deposit_percent, deposit_fixed),
  *               'blocked' (rule_id) o 'unconfigured'
+ *
+ * Reglas de negocio:
+ * - El precio de lista (base) es el PISO: una regla nunca cobra menos, asi el "Desde" del sitio
+ *   siempre es cierto aunque el precio de lista suba despues de crear la regla.
+ * - Sin % de anticipo (ni en la regla ni en el paquete) se usa el anticipo fijo por persona
+ *   (deposit_fixed_cents, el de siempre); sin ninguno de los dos queda 'unconfigured'.
  */
 function resolve_price(string $date, array $pkg, array $rules): array
 {
@@ -178,26 +185,28 @@ function resolve_price(string $date, array $pkg, array $rules): array
         return ['status' => 'blocked', 'rule_id' => $rule['id']];
     }
 
+    $base = (int) $pkg['base_price_cents'];
     $price = $rule !== null && $rule['price_cents'] !== null
-        ? (int) $rule['price_cents']
-        : (int) $pkg['base_price_cents'];
+        ? max((int) $rule['price_cents'], $base)
+        : $base;
 
     $pct = $rule !== null && $rule['deposit_percent'] !== null
         ? (int) $rule['deposit_percent']
         : ($pkg['default_deposit_percent'] ?? null);
-    if ($pct === null) {
+    $fixed = isset($pkg['deposit_fixed_cents']) ? (int) $pkg['deposit_fixed_cents'] : 0;
+    if ($pct === null && $fixed <= 0) {
         return ['status' => 'unconfigured'];
     }
-    $pct = (int) $pct;
 
-    $deposit = pricing_deposit_cents($price, $pct);
+    $deposit = $pct !== null ? pricing_deposit_cents($price, (int) $pct) : min($fixed, $price);
     return [
         'status'          => 'available',
         'price'           => $price,
         'deposit'         => $deposit,
         'balance'         => $price - $deposit,
         'rule_id'         => $rule !== null ? $rule['id'] : null,
-        'deposit_percent' => $pct,
+        'deposit_percent' => $pct !== null ? (int) $pct : null,
+        'deposit_fixed'   => $pct === null,
     ];
 }
 
@@ -293,7 +302,12 @@ function pricing_rules_share_package(array $a, array $b): bool
  * Valida una regla antes de guardarla. Devuelve errores por campo, en espanol
  * llano (vacio = valida). $known = slugs de paquetes existentes.
  */
-function pricing_validate_rule(array $r, array $known): array
+/**
+ * @param array $basePrices slug => precio de lista en centavos. Si se pasa, el precio de la
+ *                          regla no puede quedar por debajo del precio de lista de ningun
+ *                          paquete al que aplica (el "Desde" del sitio debe ser cierto).
+ */
+function pricing_validate_rule(array $r, array $known, array $basePrices = []): array
 {
     $e = [];
     $label = trim((string) ($r['label'] ?? ''));
@@ -339,6 +353,16 @@ function pricing_validate_rule(array $r, array $known): array
         $price = $r['price_cents'] ?? null;
         if (!is_int($price) || $price <= 0) {
             $e['price_cents'] = 'El precio debe ser mayor a 0.';
+        } elseif ($basePrices && !isset($e['package_ids'])) {
+            $slugs = $pk === 'all' ? array_keys($basePrices) : $pk;
+            $floor = 0;
+            foreach ($slugs as $s) {
+                $floor = max($floor, (int) ($basePrices[$s] ?? 0));
+            }
+            if ($price < $floor) {
+                $e['price_cents'] = 'No puede ser menor al precio de lista ($' . number_format(intdiv($floor, 100))
+                    . ' por persona en los paquetes elegidos). Para una oferta, baja el precio en Contenido › Paquetes.';
+            }
         }
     }
     $pct = $r['deposit_percent'] ?? null;

@@ -141,7 +141,7 @@ function compute_charge_resolved(array $pkg, string $mode, int $passengers, arra
         'unit_price_cents'     => $price,
         'deposit_unit_cents'   => $deposit,
         'deposit_total_cents'  => $deposit * $passengers,
-        'deposit_percent'      => (int) $resolved['deposit_percent'],
+        'deposit_percent'      => isset($resolved['deposit_percent']) ? (int) $resolved['deposit_percent'] : null,
         'rule_id'              => $resolved['rule_id'] ?? null,
     ];
 }
