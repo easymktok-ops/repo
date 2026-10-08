@@ -27,13 +27,13 @@ Estado: `PEND` = pendiente · `LISTO` = aplicado · `DUDA` = requiere decisión/
 | VIS-13 | Homologar el nuevo logo en el flujo de reservas | **LISTO** (código; falta subir logo en Stripe) |
 | VIS-14 | Paneles backend responsive (sin scroll horizontal) | **LISTO** |
 | VIS-15 | Favicon administrativo (azul/gris) para paneles backend | **LISTO** |
-| VIS-16 | Auto-scroll al botón Continuar tras elegir fecha (reservas) | PEND |
+| VIS-16 | Auto-scroll al botón Continuar tras elegir fecha (reservas) | **LISTO** |
 | BO-01 | Cupo por día (lugares, vendidos, libres) | PEND |
 | BO-02 | Abordaje del día (lista, QR, presentes, CSV) | PEND |
 | BO-03 | Laboratorio: embudo de abandono y ventas reales | PEND |
 | BO-04 | Editor de paquetes más digerible en /admin | PEND |
 | BO-05 | Experimentos A/B con lectura honesta | PEND |
-| CON-01 | Brisa como WhatsApp principal y primera asesora | PEND |
+| CON-01 | Brisa como WhatsApp principal y primera asesora | **LISTO** |
 | SEO-01 | Search Console: páginas "No se ha encontrado (404)" | **LISTO** (.htaccess en producción; 404 propia con el próximo deploy) |
 
 Todo el cambio de color es sistémico: sale de un solo token `--accent` en
@@ -200,7 +200,7 @@ prueba. Son requisitos **antes de salir a producción**.
 
 Registrado el **2026-10-02**, tras probar el entorno de pruebas con el calendario de precios.
 
-- **VIS-16 · Auto-scroll al botón "Continuar" después de una selección** `PEND`
+- **VIS-16 · Auto-scroll al botón "Continuar" después de una selección** `LISTO` (2026-10-08: `revealContinue()` en `BookingWidget.tsx`, calendario y fecha nativa; descuenta el aviso de cookies)
   Hoy, al elegir la **fecha** en el calendario (paso 1 de `/reservar`), el botón **Continuar** queda fuera de
   vista y hay que hacer scroll a mano; si el cliente no ve el botón, hay fricción y puede abandonar. Aplica
   igual a otras selecciones que dejan el siguiente paso abajo (pasajeros, modo de pago).
@@ -277,7 +277,7 @@ Orden sugerido por impacto: BO-01 y BO-02 (operación del día a día y evitar s
 
 Registrado el **2026-10-07**.
 
-- **CON-01 · Brisa como WhatsApp principal** `PEND`
+- **CON-01 · Brisa como WhatsApp principal** `LISTO` (2026-10-08; la variable `PUBLIC_WHATSAPP_DISPLAY_NUMBER` no se usa en el build de CI, así que no hay número viejo escondido)
   Pedido de Norman: el número de **Brisa** (55 9199 4645) pasa a ser el WhatsApp principal de la sección de
   contacto, y Brisa aparece **antes** que Rubí en todo el sitio.
   Dónde se cambia (todo en `src/config/site.ts`, nada hardcodeado en componentes):

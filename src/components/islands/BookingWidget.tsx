@@ -179,6 +179,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
   const [touched, setTouched] = useState(false);
   const detailsRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
+  const continueRef = useRef<HTMLDivElement>(null);
   // Precios por fecha: "probing" = consultando al servidor; "on" = calendario con
   // precio por dia; "off" = fecha nativa y montos de siempre (bandera apagada,
   // paquete sin anticipo o el sondeo fallo: la reserva nunca se bloquea).
@@ -230,6 +231,24 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
       void el.offsetWidth;
       el.classList.add("bk-cue");
     }
+  }
+
+  // Al elegir fecha, el boton Continuar suele quedar fuera de vista (sobre todo en
+  // movil). Si no se ve completo, bajamos lo justo para mostrarlo, sin mover el
+  // foco y descontando el aviso de cookies si esta abierto. Solo tras una eleccion
+  // del usuario, nunca al cargar con fecha precargada.
+  function revealContinue() {
+    requestAnimationFrame(() => {
+      const el = continueRef.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const banner = document.getElementById("cookie-banner");
+      const covered = banner && !banner.hidden ? banner.getBoundingClientRect().height + 16 : 0;
+      const limit = window.innerHeight - covered - 24;
+      if (r.top < 0 || r.bottom <= limit) return;
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      window.scrollBy({ top: r.bottom - limit, behavior: reduce ? "auto" : "smooth" });
+    });
   }
 
   // "Manana" en hora de Mexico (no en UTC) como minimo de la fecha nativa. Se fija
@@ -527,8 +546,10 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
                       min={minDate || undefined}
                       value={flightDate}
                       onChange={(e) => {
-                        setFlightDate((e.target as HTMLInputElement).value);
+                        const v = (e.target as HTMLInputElement).value;
+                        setFlightDate(v);
                         setNotice(null);
+                        if (v) revealContinue();
                       }}
                     />
                     <p className="bk-hint">{t.dateHint}</p>
@@ -566,6 +587,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
                         setQuote(q);
                         setNotice(null);
                         setError(null);
+                        revealContinue();
                       }}
                     />
                   </div>
@@ -607,7 +629,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
 
               <p className="bk-note">{t.weightNote}</p>
 
-              <div className="bk-actions">
+              <div className="bk-actions" ref={continueRef}>
                 <button type="button" className="bk-btn bk-primary" onClick={goStep2}>
                   {t.next}
                 </button>

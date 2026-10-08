@@ -23,13 +23,14 @@ export const site = {
       en: "Sunrise hot-air balloon flights over the Teotihuacán valley.",
     },
     // WhatsApp real del negocio (digitos para wa.me). El display es editable por env.
-    whatsapp: "5215535780223",
-    whatsappDisplay: import.meta.env.PUBLIC_WHATSAPP_DISPLAY_NUMBER ?? "+52 55 3578 0223",
+    // Principal: Brisa (pedido del negocio, 2026-10). Debe coincidir con advisors[0].
+    whatsapp: "5215591994645",
+    whatsappDisplay: import.meta.env.PUBLIC_WHATSAPP_DISPLAY_NUMBER ?? "+52 55 9199 4645",
     // Asesores de ventas por WhatsApp. El cliente elige a quien escribir en el
     // flujo de reserva. El primero es el numero principal del sitio (arriba).
     advisors: [
-      { name: "Rubi", phone: "5215535780223", display: "55 3578 0223" },
       { name: "Brisa", phone: "5215591994645", display: "55 9199 4645" },
+      { name: "Rubi", phone: "5215535780223", display: "55 3578 0223" },
     ],
     // Reseñas verificadas (Google). Cifra real del negocio.
     reviews: { rating: 4.9, count: 2040, source: "Google" as const },
@@ -50,7 +51,7 @@ export const site = {
   },
 
   // IDs de analitica: publicos (viven en el cliente). Default a los del negocio,
-  // overridable por env. Se cargan SOLO tras consentimiento (ver Analytics.astro).
+  // overridable por env. Consent Mode v2 avanzado: ver Analytics.astro.
   analytics: {
     // GTM es el gestor unico de etiquetas. Cuando gtmId esta puesto, GA4,
     // Google Ads y Meta se configuran DENTRO de GTM (no directo) para no medir
