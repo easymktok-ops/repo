@@ -289,6 +289,20 @@ body [class*="-ListCard-card"]:active,
 body [class*="-GridCard"]:active {
   transform: scale(0.995);
 }
+/* Decap pinta el enlace de la fila en blanco al pasar el cursor: lo llevamos al tono del tema. */
+body [class*="-ListCardLink"],
+body [class*="-GridCardLink"],
+body [class*="-ListCard-card"] a,
+body [class*="-GridCard"] a {
+  background: transparent !important;
+  color: inherit !important;
+}
+body [class*="-ListCardLink"]:hover,
+body [class*="-ListCardLink"]:focus-visible,
+body [class*="-ListCard-card"] a:hover {
+  background: var(--surface2) !important;
+  border-radius: 14px;
+}
 body [class*="-ListCardTitle"],
 body [class*="-CardHeading"] {
   color: var(--ink) !important;
@@ -297,8 +311,12 @@ body [class*="-CardBody"],
 body [class*="-CardImage"] {
   background-color: var(--surface2) !important;
 }
-body [class*="-CardBody"]::before {
-  background: linear-gradient(transparent, var(--surface)) !important;
+body [class*="-CardBody"]::before,
+body [class*="-CardBody"]::after {
+  display: none !important;
+}
+body [class*="-CardBody"] {
+  background: var(--surface) !important;
 }
 body [class*="-GroupHeading"] {
   color: var(--muted) !important;
