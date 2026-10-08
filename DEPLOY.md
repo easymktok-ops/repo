@@ -63,3 +63,34 @@ Configuración de una sola vez:
 
 > Para probar en **staging** primero, usa la URL del staging en el paso 2 (callback),
 > en el paso 4 (base_url) y en `PUBLIC_SITE_URL`.
+
+## Tarifas por fecha (backend PHP: se sube a mano)
+
+El pipeline solo publica `dist/` (la parte estática). **El backend PHP no se despliega solo**: los archivos de
+`server/` se suben por el Administrador de archivos o FTP a `public_html/server/`. Nunca subir `server/dev/`
+ni `server/tests/`, ni sobrescribir `server/config.php` ni `server/data/`.
+
+Archivos de tarifas: `lib/pricing_rules.php`, `lib/pricing_store.php`, `lib/panel_auth.php`,
+`lib/panel_pricing.php`, `public/api/prices.php`, más los modificados `lib/pricing.php`, `lib/schema.php`,
+`public/api/panel.php`, `public/api/create-checkout-session.php` y `public/api/webhook.php`.
+
+El panel carga el recorrido guiado desde el sitio (`/ui/tour.js`, sale en `dist/`): publicar el sitio junto con
+el backend. Si falta, el panel funciona igual, solo sin recorrido.
+
+**Bandera de reversa** en `server/config.php`:
+
+```php
+'pricing' => [
+    'rules_enabled'    => false, // true = precios por fecha; false = cobro de siempre
+    'max_advance_days' => 365,
+    'cache_seconds'    => 60,
+],
+```
+
+- Se cambia editando `config.php`, sin redeploy. Sin el bloque, cuenta como `false`.
+- **OPcache:** PHP puede seguir usando el `config.php` anterior unos segundos o minutos. Después de cambiar
+  la bandera, espera y comprueba:
+  `curl "https://aerodiverti.com.mx/api/prices.php?packageId=vuelo-compartido&from=AAAA-MM-DD&to=AAAA-MM-DD"`
+  (`{"enabled":false}` = apagada). La respuesta pública se cachea `cache_seconds` (60 s).
+- Un paquete sin % de anticipo (panel → Precios) se cobra como siempre aunque la bandera esté encendida.
+- Antes de subir cambios del backend: respaldar `server/data/aerodiverti.sqlite`.

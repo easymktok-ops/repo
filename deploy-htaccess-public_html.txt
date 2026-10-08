@@ -9,7 +9,13 @@
 #  1) IMPRESCINDIBLE: enruta /api/* al backend PHP (pagos, panel, CMS). Sin esta
 #     regla, /api/create-checkout-session.php no existe y la reserva truena.
 #  2) Canonico: www -> sin www.
+#  3) URLs del sitio anterior (WordPress) -> paginas nuevas (301), para no
+#     perder el posicionamiento ni dejar 404 en Google (Search Console, oct 2026).
+#  4) Restos de WordPress (wp-content, wp-admin...) -> 410: ya no existen.
+#  5) Pagina 404 propia del sitio (sale del build como /404.html).
 # ============================================================================
+
+ErrorDocument 404 /404.html
 
 <IfModule mod_rewrite.c>
   RewriteEngine On
@@ -26,4 +32,22 @@
   # 2) www -> sin www (301).
   RewriteCond %{HTTP_HOST} ^www\.aerodiverti\.com\.mx$ [NC]
   RewriteRule ^(.*)$ https://aerodiverti.com.mx/$1 [R=301,L]
+
+  # 3) Sitio anterior -> paginas nuevas (301). Cada paquete cae en su tarjeta
+  #    de /vuelos/ (#slug). NE = no escapar el "#".
+  RewriteRule ^tipo-de-vuelo/(vuelo-en-globo-teotihuacan-basico|vuelo-basico)/?$ /vuelos/#vuelo-esencial [R=301,NE,L]
+  RewriteRule ^tipo-de-vuelo/paseo-en-globo-teotihuacan-vuelo-compartido/?$ /vuelos/#vuelo-compartido [R=301,NE,L]
+  RewriteRule ^tipo-de-vuelo/vuelo-globo-privado-teotihuacan/?$ /vuelos/#vuelo-privado [R=301,NE,L]
+  RewriteRule ^tipo-de-vuelo/globos-aerostaticos-cdmx-vive-teotihuacan-completo/?$ /vuelos/#vive-teotihuacan-completo [R=301,NE,L]
+  RewriteRule ^tipo-de-vuelo/vuelo-con-transporte-teotihuacan/?$ /vuelos/#vuelo-con-transporte-cdmx [R=301,NE,L]
+  RewriteRule ^tipo-de-vuelo/propuesta-matrimonio-globo-aerostatico/?$ /vuelos/#vuelo-entrega-de-anillo [R=301,NE,L]
+  RewriteRule ^tipo-de-vuelo/vuelo-cumpleanos/?$ /vuelos/#vuelo-celebracion [R=301,NE,L]
+  # Cualquier otro tipo de vuelo viejo -> catalogo.
+  RewriteRule ^tipo-de-vuelo(/.*)?$ /vuelos/ [R=301,L]
+  RewriteRule ^globopuerto-teotihuacan-contacto/?$ /contacto/ [R=301,L]
+  RewriteRule ^promociones/?$ /vuelos/ [R=301,L]
+
+  # 4) Restos de WordPress -> 410 Gone.
+  RewriteRule ^(wp-content|wp-includes|wp-admin|wp-json)(/|$) - [G,L]
+  RewriteRule ^(wp-login|xmlrpc)\.php$ - [G,L]
 </IfModule>

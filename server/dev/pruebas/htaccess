@@ -1,0 +1,25 @@
+# =============================================================================
+# .htaccess del ENTORNO DE PRUEBAS (pruebas.aerodiverti.com.mx).
+# No usar en produccion. Stripe en modo prueba: aqui no se cobra dinero real.
+# =============================================================================
+
+# Que Google no indexe el sitio de pruebas.
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow"
+</IfModule>
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # La carpeta vive dentro de public_html: solo se atiende con el nombre del
+  # subdominio. Desde el dominio principal (aerodiverti.com.mx/carpeta) da 404.
+  RewriteCond %{HTTP_HOST} !^pruebas\.aerodiverti\.com\.mx$ [NC]
+  RewriteRule ^ - [R=404,L]
+
+  # Nada interno del backend es visible desde el navegador: solo /api.
+  RewriteRule ^server/(?!public/api/) - [F,L]
+
+  # /api/* -> backend PHP (igual que produccion).
+  RewriteCond %{REQUEST_URI} ^/api/
+  RewriteRule ^api/(.*)$ server/public/api/$1 [L]
+</IfModule>

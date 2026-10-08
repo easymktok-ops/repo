@@ -20,5 +20,6 @@ heroImageAlt:
   es: "Globo de Aerodiverti sobre la Pirámide del Sol en Teotihuacán"
   en: "Aerodiverti balloon over the Pyramid of the Sun in Teotihuacán"
 order: 1
+available: true
 featured: true
 ---

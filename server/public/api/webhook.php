@@ -42,6 +42,16 @@ if ($type !== 'checkout.session.completed') {
 
 $session = $event['data']['object'] ?? [];
 
+// Solo un pago confirmado marca la reserva como pagada. Con metodos diferidos
+// (OXXO, transferencia) la sesion se completa con payment_status 'unpaid' y el
+// cobro llega despues; hoy estan deshabilitados, esto evita marcarla por error
+// si algun dia se activan.
+$paymentStatus = (string) ($session['payment_status'] ?? '');
+if ($paymentStatus !== 'paid') {
+    log_line('webhook', 'sesion completada sin pago confirmado', ['session' => $session['id'] ?? '', 'payment_status' => $paymentStatus]);
+    json_response(200, ['ignored' => 'payment_status', 'payment_status' => $paymentStatus]);
+}
+
 // Cuentas de Stripe compartidas por varios sitios: Stripe entrega el evento a
 // TODOS los endpoints. Si la sesion trae 'origin_site' y NO es el nuestro, es
 // una venta de otro sitio: respondemos 200 y salimos (no la procesamos ni

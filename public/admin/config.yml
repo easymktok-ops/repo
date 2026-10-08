@@ -48,9 +48,14 @@ collections:
     label: "Paquetes de vuelo"
     label_singular: "Paquete"
     folder: "src/content/packages"
+    description: "Los vuelos que se venden en el sitio. El precio de aquí es el precio base por persona; las temporadas y fechas especiales se manejan en el panel de ventas, pestaña Precios. Si dejas el precio vacío, el paquete muestra Consultar y se atiende por WhatsApp."
     create: true
     slug: "{{fields.slug}}"
-    summary: "{{title.es}}"
+    summary: "{{title.es}}  ·  Precio base: {{priceFrom | default('Consultar')}}{{draft | ternary('  ·  Borrador', '')}}"
+    sortable_fields: ["order", "title.es", "priceFrom"]
+    view_filters:
+      - { label: "No disponibles", field: available, pattern: false }
+      - { label: "Borradores", field: draft, pattern: true }
     fields:
       - {
           label: "Título",
@@ -138,8 +143,14 @@ collections:
     label: "Preguntas frecuentes"
     label_singular: "Pregunta"
     folder: "src/content/faq"
+    description: "Preguntas que aparecen en el sitio. Una respuesta clara y completa por pregunta: evita mensajes repetidos por WhatsApp."
     create: true
-    summary: "{{question.es}}"
+    summary: "{{question.es}}  ·  {{category}}{{draft | ternary('  ·  Borrador', '')}}"
+    sortable_fields: ["order", "question.es", "category"]
+    view_groups:
+      - { label: "Categoría", field: category }
+    view_filters:
+      - { label: "Borradores", field: draft, pattern: true }
     fields:
       - {
           label: "Pregunta",
@@ -177,8 +188,12 @@ collections:
     label: "Testimonios"
     label_singular: "Testimonio"
     folder: "src/content/testimonials"
+    description: "Reseñas reales de clientes. Copia el texto tal como lo escribió la persona e indica de dónde viene (Google, TripAdvisor o directo)."
     create: true
-    summary: "{{author}}"
+    summary: "{{author}}  ·  {{rating}} estrellas  ·  {{source}}{{draft | ternary('  ·  Borrador', '')}}"
+    sortable_fields: ["order", "author", "rating"]
+    view_filters:
+      - { label: "Borradores", field: draft, pattern: true }
     fields:
       - { label: "Autor", name: "author", widget: "string" }
       - { label: "Ubicación / etiqueta", name: "location", widget: "string", required: false, hint: "Ej. Costa Rica, Cliente verificado." }
@@ -203,8 +218,11 @@ collections:
     label: "Promociones"
     label_singular: "Promoción"
     folder: "src/content/promos"
+    description: "Avisos de promoción. Solo se muestran las marcadas como Activa y dentro de sus fechas de inicio y fin."
     create: true
-    summary: "{{title.es}}"
+    summary: "{{title.es}}{{active | ternary('  ·  Activa', '  ·  Inactiva')}}"
+    view_filters:
+      - { label: "Activas", field: active, pattern: true }
     fields:
       - {
           label: "Título",
@@ -235,9 +253,10 @@ collections:
     label: "Ocasiones"
     label_singular: "Ocasión"
     folder: "src/content/occasions"
+    description: "Ocasiones especiales que se celebran con un vuelo y los paquetes que se sugieren para cada una."
     create: true
     slug: "{{fields.slug}}"
-    summary: "{{title.es}}"
+    summary: "{{title.es}}{{draft | ternary('  ·  Borrador', '')}}"
     fields:
       - {
           label: "Título",
@@ -297,6 +316,7 @@ collections:
     label: "Galería"
     label_singular: "Foto"
     folder: "src/content/gallery"
+    description: "Fotos de la galería. Describe cada foto en el texto alterno: ayuda a quien usa lector de pantalla y a Google."
     create: true
     summary: "{{alt.es}}"
     fields:

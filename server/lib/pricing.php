@@ -35,6 +35,10 @@ function find_bookable_package(array $catalog, string $slug): ?array
 /**
  * Calcula el cobro de AHORA para una reserva, en el idioma del servidor.
  *
+ * $resolved (opcional) es el resultado 'available' de resolve_price() para la
+ * fecha elegida (tarifas por fecha, centavos por persona). Sin el, el calculo
+ * es el de siempre: priceFrom del catalogo y anticipo fijo por pasajero.
+ *
  * @return array{
  *   currency:string, mode:string, passengers:int, unit_label:string,
  *   unit_amount_cents:int, quantity:int, amount_now_cents:int,
@@ -42,7 +46,7 @@ function find_bookable_package(array $catalog, string $slug): ?array
  * }
  * @throws InvalidArgumentException si los datos no son validos.
  */
-function compute_charge(array $config, array $pkg, string $mode, int $passengers): array
+function compute_charge(array $config, array $pkg, string $mode, int $passengers, ?array $resolved = null): array
 {
     if ($passengers < 1) {
         throw new InvalidArgumentException('Numero de pasajeros invalido.');
@@ -54,6 +58,10 @@ function compute_charge(array $config, array $pkg, string $mode, int $passengers
         throw new InvalidArgumentException(
             "Este paquete admite de {$min} a {$max} pasajeros."
         );
+    }
+
+    if ($resolved !== null) {
+        return compute_charge_resolved($pkg, $mode, $passengers, $resolved);
     }
 
     $pricePerPerson = (int) $pkg['pricePerPerson'];
@@ -91,5 +99,49 @@ function compute_charge(array $config, array $pkg, string $mode, int $passengers
         'total_full_cents'  => $totalFull * 100,
         'balance_cents'     => ($totalFull - $amountNow) * 100,
         'title'             => $pkg['title'] ?? ['es' => $pkg['slug']],
+    ];
+}
+
+/** Cobro con el precio y anticipo de la fecha (todo en centavos por persona). */
+function compute_charge_resolved(array $pkg, string $mode, int $passengers, array $resolved): array
+{
+    if (($resolved['status'] ?? '') !== 'available') {
+        throw new InvalidArgumentException('Esta fecha no esta disponible.');
+    }
+    $price = (int) $resolved['price'];
+    $deposit = (int) $resolved['deposit'];
+    if ($price <= 0) {
+        throw new InvalidArgumentException('Paquete sin precio para reservar en linea.');
+    }
+
+    if ($mode === 'deposit') {
+        $unit = $deposit;
+        $unitLabel = 'Anticipo por pasajero';
+    } elseif ($mode === 'full') {
+        $unit = $price;
+        $unitLabel = 'Precio por pasajero';
+    } else {
+        throw new InvalidArgumentException('Modo de pago invalido.');
+    }
+    $totalFull = $price * $passengers;
+    $amountNow = $unit * $passengers;
+
+    return [
+        'currency'             => strtoupper($pkg['currency'] ?? 'MXN'),
+        'mode'                 => $mode,
+        'passengers'           => $passengers,
+        'unit_label'           => $unitLabel,
+        'unit_amount_cents'    => $unit,
+        'quantity'             => $passengers,
+        'amount_now_cents'     => $amountNow,
+        'price_per_person'     => intdiv($price, 100),
+        'total_full_cents'     => $totalFull,
+        'balance_cents'        => $totalFull - $amountNow,
+        'title'                => $pkg['title'] ?? ['es' => $pkg['slug']],
+        'unit_price_cents'     => $price,
+        'deposit_unit_cents'   => $deposit,
+        'deposit_total_cents'  => $deposit * $passengers,
+        'deposit_percent'      => (int) $resolved['deposit_percent'],
+        'rule_id'              => $resolved['rule_id'] ?? null,
     ];
 }

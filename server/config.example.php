@@ -36,6 +36,16 @@ return [
     // src/config/booking.ts. Fuente de verdad de negocio.
     'deposit_per_passenger' => 1000,
 
+    // --- Tarifas por fecha (temporadas, fechas especiales, dias sin vuelo) --
+    // rules_enabled es la BANDERA DE REVERSA: en false el sitio cobra EXACTAMENTE
+    // como antes (deposit_per_passenger fijo, sin calendario de precios). Se
+    // cambia aqui, sin redeploy. Las reglas se gestionan en /api/panel.php.
+    'pricing' => [
+        'rules_enabled'    => false,
+        'max_advance_days' => 365, // hasta cuantos dias hacia adelante se vende
+        'cache_seconds'    => 60,  // cache publica de /api/prices.php (0 = sin cache)
+    ],
+
     // --- Publicacion rapida (deploy por ZIP) ------------------------------
     // Token secreto que autoriza /api/deploy-extract.php a descomprimir el
     // site-deploy.zip que sube GitHub Actions. DEBE ser largo y aleatorio, y

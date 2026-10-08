@@ -2,12 +2,16 @@
 import { site, localizedPath, type Locale } from "@config/site";
 
 /**
- * Analitica con Google Consent Mode v2 + banner de cookies.
- * - Por defecto todo el consentimiento va DENEGADO (no se carga nada de tracking).
- * - GA4, Google Ads y Meta Pixel se cargan SOLO cuando el usuario acepta.
- * - La elección se guarda en localStorage; si ya decidió, no se vuelve a mostrar.
- * - No afecta Core Web Vitals: nada de terceros hasta el consentimiento.
- * IDs desde config/env (públicos por diseño).
+ * Analitica con Google Consent Mode v2 (modo AVANZADO) + banner de cookies.
+ * - Consentimiento DENEGADO por defecto, declarado ANTES de cargar cualquier etiqueta.
+ * - GTM (o gtag) se carga siempre, despues de window.load (no compite con el LCP). Con el consentimiento
+ *   denegado, las etiquetas de Google usan sus comprobaciones integradas: solo envian pings sin cookies,
+ *   que Google usa para modelar conversiones (recomendacion de Google Ads: no perder conversiones).
+ * - Al aceptar: consent "update" a granted + evento `consent_granted` en dataLayer.
+ * - Meta Pixel directo (sin GTM) solo carga tras aceptar. Dentro de GTM, la etiqueta de Meta debe pedir
+ *   consentimiento adicional (ad_storage) o dispararse con el evento `consent_granted`.
+ * - La eleccion se guarda en localStorage; si ya decidio, no se vuelve a mostrar.
+ * IDs desde config/env (publicos por diseno).
  */
 interface Props {
   locale: Locale;
@@ -63,7 +67,7 @@ const t = {
             dataLayer.push(arguments);
           }
           window.gtag = gtag;
-          // Consent Mode v2: todo denegado por defecto.
+          // Consent Mode v2: todo denegado por defecto (antes de cualquier etiqueta).
           gtag("consent", "default", {
             ad_storage: "denied",
             analytics_storage: "denied",
@@ -71,9 +75,13 @@ const t = {
             ad_personalization: "denied",
             wait_for_update: 500,
           });
+          // Sin consentimiento: no mandar datos de clic de anuncios en cookies, pero conservarlos en la URL.
+          gtag("set", "ads_data_redaction", true);
+          gtag("set", "url_passthrough", true);
 
           var KEY = "aero:consent";
-          var loaded = false;
+          var granted = false;
+          var pixelLoaded = false;
           function getConsent() {
             try {
               return localStorage.getItem(KEY);
@@ -92,17 +100,8 @@ const t = {
             s.src = src;
             document.head.appendChild(s);
           }
-          function loadAll() {
-            if (loaded) return;
-            loaded = true;
-            gtag("consent", "update", {
-              ad_storage: "granted",
-              analytics_storage: "granted",
-              ad_user_data: "granted",
-              ad_personalization: "granted",
-            });
-            // GTM: gestor unico. Si esta configurado, carga SOLO GTM (GA4,
-            // Google Ads y Meta se configuran dentro de GTM) para no medir doble.
+          // Etiquetas de Google: siempre (modo avanzado). Respetan el consentimiento por si mismas.
+          function loadGoogle() {
             if (gtmId) {
               window.dataLayer.push({ "gtm.start": new Date().getTime(), event: "gtm.js" });
               inject("https://www.googletagmanager.com/gtm.js?id=" + gtmId);
@@ -114,32 +113,51 @@ const t = {
               if (gaId) gtag("config", gaId);
               if (adsId) gtag("config", adsId, { allow_enhanced_conversions: true });
             }
-            if (pixelId) {
-              !(function (f, b, e, v, n, t, s) {
-                if (f.fbq) return;
-                n = f.fbq = function () {
-                  n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
-                };
-                if (!f._fbq) f._fbq = n;
-                n.push = n;
-                n.loaded = !0;
-                n.version = "2.0";
-                n.queue = [];
-                t = b.createElement(e);
-                t.async = !0;
-                t.src = v;
-                s = b.getElementsByTagName(e)[0];
-                s.parentNode.insertBefore(t, s);
-              })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
-              fbq("init", pixelId);
-              fbq("track", "PageView");
-            }
+          }
+          // Meta no tiene modo de consentimiento como Google: el pixel directo solo carga tras aceptar.
+          function loadPixel() {
+            if (pixelLoaded || gtmId || !pixelId) return;
+            pixelLoaded = true;
+            !(function (f, b, e, v, n, t, s) {
+              if (f.fbq) return;
+              n = f.fbq = function () {
+                n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+              };
+              if (!f._fbq) f._fbq = n;
+              n.push = n;
+              n.loaded = !0;
+              n.version = "2.0";
+              n.queue = [];
+              t = b.createElement(e);
+              t.async = !0;
+              t.src = v;
+              s = b.getElementsByTagName(e)[0];
+              s.parentNode.insertBefore(t, s);
+            })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+            fbq("init", pixelId);
+            fbq("track", "PageView");
+          }
+          function grant() {
+            if (granted) return;
+            granted = true;
+            gtag("consent", "update", {
+              ad_storage: "granted",
+              analytics_storage: "granted",
+              ad_user_data: "granted",
+              ad_personalization: "granted",
+            });
+            window.dataLayer.push({ event: "consent_granted" });
+            loadPixel();
           }
 
-          var banner = document.getElementById("cookie-banner");
+          // Quien ya acepto antes: el update va antes de que carguen las etiquetas.
           var stored = getConsent();
-          if (stored === "granted") loadAll();
-          else if (stored !== "denied" && banner) banner.hidden = false;
+          if (stored === "granted") grant();
+          if (document.readyState === "complete") loadGoogle();
+          else window.addEventListener("load", loadGoogle, { once: true });
+
+          var banner = document.getElementById("cookie-banner");
+          if (stored !== "granted" && stored !== "denied" && banner) banner.hidden = false;
 
           var acc = document.getElementById("ck-accept");
           var rej = document.getElementById("ck-reject");
@@ -147,7 +165,7 @@ const t = {
             acc.addEventListener("click", function () {
               setConsent("granted");
               if (banner) banner.hidden = true;
-              loadAll();
+              grant();
             });
           if (rej)
             rej.addEventListener("click", function () {

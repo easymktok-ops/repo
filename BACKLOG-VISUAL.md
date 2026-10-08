@@ -27,6 +27,14 @@ Estado: `PEND` = pendiente · `LISTO` = aplicado · `DUDA` = requiere decisión/
 | VIS-13 | Homologar el nuevo logo en el flujo de reservas | **LISTO** (código; falta subir logo en Stripe) |
 | VIS-14 | Paneles backend responsive (sin scroll horizontal) | **LISTO** |
 | VIS-15 | Favicon administrativo (azul/gris) para paneles backend | **LISTO** |
+| VIS-16 | Auto-scroll al botón Continuar tras elegir fecha (reservas) | **LISTO** |
+| BO-01 | Cupo por día (lugares, vendidos, libres) | PEND |
+| BO-02 | Abordaje del día (lista, QR, presentes, CSV) | PEND |
+| BO-03 | Laboratorio: embudo de abandono y ventas reales | PEND |
+| BO-04 | Editor de paquetes más digerible en /admin | PEND |
+| BO-05 | Experimentos A/B con lectura honesta | PEND |
+| CON-01 | Brisa como WhatsApp principal y primera asesora | **LISTO** |
+| SEO-01 | Search Console: páginas "No se ha encontrado (404)" | **LISTO** (.htaccess en producción; 404 propia con el próximo deploy) |
 
 Todo el cambio de color es sistémico: sale de un solo token `--accent` en
 `src/styles/tokens.css`. No hay fucsia hardcodeado en componentes.
@@ -185,6 +193,140 @@ prueba. Son requisitos **antes de salir a producción**.
   `public/admin/index.html`) para el CMS de contenido, y una variante embebida
   (data-URI base64, para no romper el "un solo archivo") en el `<head>` del
   panel de ventas `panel.php`. El front sigue en fucsia.
+
+---
+
+## 8. Flujo de reservas (después de tarifas por temporada)
+
+Registrado el **2026-10-02**, tras probar el entorno de pruebas con el calendario de precios.
+
+- **VIS-16 · Auto-scroll al botón "Continuar" después de una selección** `LISTO` (2026-10-08: `revealContinue()` en `BookingWidget.tsx`, calendario y fecha nativa; descuenta el aviso de cookies)
+  Hoy, al elegir la **fecha** en el calendario (paso 1 de `/reservar`), el botón **Continuar** queda fuera de
+  vista y hay que hacer scroll a mano; si el cliente no ve el botón, hay fricción y puede abandonar. Aplica
+  igual a otras selecciones que dejan el siguiente paso abajo (pasajeros, modo de pago).
+  Propuesta (mismo patrón que VIS-11, `pickFlight` en `BookingWidget.tsx`):
+  - Al elegir fecha (`PriceCalendar` → `onSelect`, y el input nativo en `onChange`), si el botón Continuar no
+    está completamente visible, `scrollIntoView({ block: "nearest" })` suave hacia él (o hacia el resumen +
+    botón); si ya se ve, no mover nada.
+  - Sin robar el foco (el teclado sigue en el calendario); solo scroll. No hacerlo al navegar meses ni al
+    cargar la página con fecha precargada.
+  - `prefers-reduced-motion`: salto instantáneo. Opcional: el mismo halo breve de VIS-11 sobre el botón.
+  - Probar en móvil 390 px (donde más pasa) y en escritorio; cuidar la barra/banner inferior (cookies) para
+    que no tape el botón al llegar.
+
+---
+
+## 9. Back-office: ideas del sistema anterior (aerodiverti.mx)
+
+Registrado el **2026-10-05**. Norman compartió capturas del panel del desarrollo anterior (Reservaciones,
+Disponibilidad, Abordaje, Contenido, Laboratorio). **No se desarrolla todavía**: se retoma cuando salgamos de
+pruebas y hagamos cambios en el proyecto principal. Idea general: replicar lo útil con versiones más sólidas y
+con el look del panel actual (Obsidiana, sin emojis como iconos, Phosphor), no el estilo "hecho con IA" de
+esas pantallas. La parte de contenido de ese sistema **no** se copia (nosotros editamos con GitHub/Decap), solo
+su forma de presentar los campos (BO-04).
+
+Orden sugerido por impacto: BO-01 y BO-02 (operación del día a día y evitar sobreventa), luego BO-03, BO-04, BO-05.
+
+- **BO-01 · Cupo por día** `PEND`
+  Lo que tenían: lista de días con "N reservados · M libres de 40", campo para cambiar el cupo de ese día y
+  botón **Cerrar**. Nosotros ya tenemos días sin vuelo y precios por fecha, pero **no** límite de lugares: hoy
+  se podría vender de más un día lleno.
+  Versión mejorada: cupo por defecto + cupo por fecha en la pestaña Precios (o una nueva "Disponibilidad"),
+  contado contra reservas pagadas y en proceso de pago; el servidor rechaza el cobro si ya no hay lugares
+  (mismo patrón que `409 date_blocked`); el calendario público muestra "Pocos lugares" y "Agotado". Vista
+  de mes (no una lista de 60 filas). El número de lugares lo define el negocio (no inventarlo).
+
+- **BO-02 · Abordaje del día** `PEND`
+  Lo que tenían: pestañas por fecha con conteo, "0 de 1 reservas abordadas / 0 de 3 personas presentes",
+  **Escanear QR**, búsqueda por nombre/teléfono/folio, tocar un nombre para marcarlo presente, dirección de
+  recogida (transporte CDMX), **CSV del día** y **de la semana**, confirmación antes de deshacer o de marcar un
+  pase de otra fecha.
+  Versión mejorada: pantalla pensada para celular en el globopuerto; QR en el correo de confirmación y en
+  `/reserva-confirmada`; marcar presente queda en el historial (quién y a qué hora); lista de recogidas por
+  ruta para el transporte; aviso claro si el pase es de otro día o ya se usó; funciona con mala señal
+  (reintenta al volver la red).
+
+- **BO-03 · Laboratorio: dónde abandonan y cuánto se vende** `PEND`
+  Lo que tenían: embudo "abrieron la reserva → vieron el catálogo → fecha → datos y pago → eligieron método →
+  pagaron" con la mayor fuga marcada; ventas reales (total, desde el rediseño, últimos 7 días); ventas por
+  dispositivo, canal, paquete y proveedor; ventas recientes; embudo por paquete; alerta si la conversión cae.
+  Versión mejorada: eventos propios y anónimos (sin datos personales, respetando el aviso de cookies) en la
+  base del panel, más las ventas reales de `bookings`; gráficas sobrias del sistema del panel; definiciones
+  claras de cada métrica. Ojo: en sus capturas aparece una conversión de **126.7%**, imposible: hay que
+  validar que nada pase de 100% y no mezclar sesiones con clics.
+
+- **BO-04 · Editor de paquetes más digerible en /admin** `PEND`
+  Lo que le gustó a Norman: cada paquete en una tarjeta con pocos campos claros (precio, precio tachado,
+  duración, lugares, orden, "popular"), con una nota corta bajo cada uno, y una bitácora de cambios al final.
+  El nuestro (Decap) se siente "enroscado": objetos anidados Español/English, slug, alt, etc.
+  Versión mejorada (sin dejar Decap/GitHub): primero lo esencial (nombre, precio, precio tachado, disponible,
+  foto) y lo demás plegado en "Avanzado" (slug, orden, alt, inglés); tal vez una vista "Precios de todos los
+  paquetes" en una sola pantalla; historial legible de cambios a partir de los commits.
+  Campos que ellos tenían y nosotros no (precio por menor, hora para presentarse, recogida en CDMX): solo si
+  el negocio los confirma, y cambiando `content.config.ts` y `config.yml` juntos.
+
+- **BO-05 · Experimentos A/B** `PEND`
+  Lo que tenían: pruebas de orden del catálogo, tema claro vs oscuro, nuevo layout de escritorio y pago
+  embebido vs redirección, con aviso de "no concluyente" cuando la muestra es chica.
+  Versión mejorada: una prueba a la vez, con tamaño de muestra mínimo y fecha de corte definidos antes de
+  empezar; resultado en lenguaje simple ("todavía no se sabe" / "B vende más"). Depende de BO-03.
+
+---
+
+## 10. Contacto y SEO
+
+Registrado el **2026-10-07**.
+
+- **CON-01 · Brisa como WhatsApp principal** `LISTO` (2026-10-08; la variable `PUBLIC_WHATSAPP_DISPLAY_NUMBER` no se usa en el build de CI, así que no hay número viejo escondido)
+  Pedido de Norman: el número de **Brisa** (55 9199 4645) pasa a ser el WhatsApp principal de la sección de
+  contacto, y Brisa aparece **antes** que Rubí en todo el sitio.
+  Dónde se cambia (todo en `src/config/site.ts`, nada hardcodeado en componentes):
+  - `brand.whatsapp` → `5215591994645` (alimenta `whatsappUrl()`: Contacto, botón de chat, menú, paquetes
+    "Consultar", reserva).
+  - `brand.whatsappDisplay` → `+52 55 9199 4645`. **Ojo:** se puede sobrescribir con la variable
+    `PUBLIC_WHATSAPP_DISPLAY_NUMBER`; si existe en el build de producción (GitHub Actions / hosting), cambiarla
+    también o quitarla, o el sitio mostrará el número viejo con el enlace nuevo.
+  - `brand.advisors`: Brisa primero, Rubí después (orden de los botones en `/reservar`). Actualizar el
+    comentario "el primero es el número principal".
+  - Revisar el JSON-LD (schema) y la página de contacto en es/en después del build.
+
+- **SEO-01 · Search Console: "No se ha encontrado (404)"** `LISTO en código, falta publicar`
+  **Resuelto 2026-10-07.** Las 14 URLs de Search Console eran del WordPress anterior en el **mismo dominio**
+  aerodiverti.com.mx (no del reenvío del .mx en GoDaddy, que no hubo que tocar). Hecho:
+  - `deploy-htaccess-public_html.txt`: 301 de cada `/tipo-de-vuelo/...` a su tarjeta en `/vuelos/#slug`
+    (básico → Esencial y cumpleaños → Celebración son supuestos: confirmar con el negocio), cualquier otro
+    `/tipo-de-vuelo/` → `/vuelos/`, `/globopuerto-teotihuacan-contacto/` → `/contacto/`, `/promociones/` →
+    `/vuelos/`; `wp-content`, `wp-admin`, `wp-login.php`... → 410; `ErrorDocument 404 /404.html`.
+    Probado en Apache local con el build: las 14 responden 301/410 como se espera.
+  - `src/pages/404.astro` (noindex, enlaces a Vuelos, Reservar y WhatsApp) y `id={slug}` en cada tarjeta del
+    catálogo. Páginas noindex ya no emiten hreflang.
+  **2026-10-07: `.htaccess` subido a producción por Norman** (con `ErrorDocument` comentado) y verificado
+  con httpstatus.io: 301/410 correctos, sitio y reserva funcionando. Pendiente: al publicar el sitio nuevo
+  (trae `/404.html` y los `id` de las tarjetas), quitar el `#` de `ErrorDocument 404 /404.html`.
+  "Validar corrección" en Search Console.
+  Historial del diagnóstico:
+  Alerta del 2026-10-07. Revisión hecha en el repo: el sitio nuevo **no tiene enlaces internos rotos** y
+  todas las URLs del sitemap existen (verificado sobre `dist/`). Lo más probable es que Google esté
+  visitando **direcciones del sitio anterior** en este dominio que ya no existen.
+  Qué falta: la lista de ejemplos de Search Console (Indexación › Páginas › "No se ha encontrado (404)" ›
+  exportar). Con ella:
+  1. URLs viejas con equivalente nuevo (paquetes, contacto, reservas…) → **redirección 301** en
+     `public_html/.htaccess` (plantilla `deploy-htaccess-public_html.txt`).
+  2. URLs sin equivalente → se dejan en 404 (es normal y Google las va soltando) o 410 si se quiere acelerar.
+  3. Agregar una **página 404 propia** (`src/pages/404.astro` + `ErrorDocument 404 /404.html`): hoy Apache
+     muestra su página genérica; la nueva lleva a Vuelos, Reservar y WhatsApp, con `noindex`.
+  4. Si alguna URL empieza con `pruebas.aerodiverti.com.mx`, es el entorno de pruebas (no indexable a
+     propósito) y se ignora.
+  5. Al terminar: "Validar corrección" en Search Console.
+  **Actualización 2026-10-07:** el 2026-10-05 se activó la redirección 301 de **aerodiverti.mx** (dominio
+  del sitio anterior) a aerodiverti.com.mx, y la curva de 404 sube justo desde ahí (14 páginas). Hipótesis
+  principal: la redirección conserva la ruta (`aerodiverti.mx/tours/x` → `aerodiverti.com.mx/tours/x`) y
+  esas rutas no existen en el sitio nuevo. Arreglo: mapa de redirecciones ruta vieja → página nueva (en el
+  .mx o en el `.htaccess` del .com.mx) y lo que no tenga equivalente a la portada o a /vuelos.
+  **Antes de tocar el DNS o el reenvío del .mx: revisar nameservers (CLAUDE.md, sección DNS).**
+  Resto del informe, sin acción: "Página con redirección" (16, esperado por el 301), "noindex" (14:
+  favoritos, reserva-confirmada y vista previa del panel, a propósito), "canónica adecuada" (14, URLs con
+  parámetros o variantes), robots.txt (2, /admin). Revisar el "otro 4xx" (1) cuando llegue la lista.
 
 ---
 

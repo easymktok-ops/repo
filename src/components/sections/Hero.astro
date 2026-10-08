@@ -1,7 +1,8 @@
 ---
 import { Image } from "astro:assets";
 import Button from "@components/ui/Button.astro";
-import { localizedPath, whatsappUrl, type Locale } from "@config/site";
+import { getCollection } from "astro:content";
+import { localizedPath, type Locale } from "@config/site";
 import { img } from "@lib/media";
 
 /**
@@ -23,23 +24,38 @@ const copy = {
     title: "Un amanecer que solo se vive volando",
     subtitle:
       "Vuelos en globo sobre el valle de Teotihuacán. Pilotos certificados AFAC y reprogramación sin costo.",
-    primary: "Reservar vuelo",
+    primary: "Reservar mi vuelo",
     secondary: "Ver vuelos",
+    from: "Desde",
+    perPerson: "por persona",
+    terms: "Paga en línea o aparta con anticipo",
   },
   en: {
     title: "A sunrise you only live by flying",
     subtitle:
       "Hot-air balloon flights over the Teotihuacán valley. AFAC-certified pilots and free rescheduling.",
-    primary: "Book a flight",
+    primary: "Book my flight",
     secondary: "See flights",
+    from: "From",
+    perPerson: "per person",
+    terms: "Pay online or hold your seats with a deposit",
   },
 }[locale];
 
-const bookHref = whatsappUrl(
-  locale === "es"
-    ? "Hola, quiero reservar un vuelo en globo en Teotihuacán. ¿Me ayudan?"
-    : "Hi, I'd like to book a balloon flight in Teotihuacán. Can you help?",
+// CTA principal = motor de reservas (venta directa), no WhatsApp. El ancla de precio sale del catalogo:
+// el menor precio base por persona entre los paquetes reservables. Sin paquetes con precio, no se muestra.
+const bookHref = localizedPath("/reservar", locale);
+const bookable = await getCollection(
+  "packages",
+  ({ data }) => !data.draft && data.available && data.priceFrom != null,
 );
+const minPrice = bookable.length
+  ? Math.min(...bookable.map((p) => p.data.priceFrom as number))
+  : null;
+const priceLabel =
+  minPrice != null
+    ? `$${new Intl.NumberFormat(locale === "es" ? "es-MX" : "en-US", { maximumFractionDigits: 0 }).format(minPrice)}`
+    : null;
 const flightsHref = localizedPath("/vuelos", locale);
 const poster = img("galeria-03.jpg");
 const posterAlt =
@@ -70,11 +86,18 @@ const posterAlt =
     <h1 class="hero-title">{copy.title}</h1>
     <p class="hero-sub">{copy.subtitle}</p>
     <div class="hero-cta">
-      <Button href={bookHref} size="lg" icon="arrow-up-right" target="_blank" rel="noopener">
-        {copy.primary}
-      </Button>
+      <Button href={bookHref} size="lg" icon="arrow-up-right">{copy.primary}</Button>
       <Button href={flightsHref} size="lg" variant="ghost">{copy.secondary}</Button>
     </div>
+    {
+      priceLabel && (
+        <p class="hero-anchor">
+          {copy.from} <b>{priceLabel}</b> {copy.perPerson}
+          <span class="hero-anchor-sep" aria-hidden="true">·</span>
+          {copy.terms}
+        </p>
+      )
+    }
   </div>
 </section>
 
@@ -211,6 +234,21 @@ const posterAlt =
     gap: var(--space-sm);
     animation: rise var(--dur-hero) var(--ease-out) 0.16s both;
   }
+  .hero-anchor {
+    margin-top: var(--space-sm);
+    font-size: var(--step--1);
+    color: var(--ink-soft);
+    animation: rise var(--dur-hero) var(--ease-out) 0.22s both;
+  }
+  .hero-anchor b {
+    font-weight: 600;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .hero-anchor-sep {
+    margin-inline: 0.45em;
+    color: var(--faint);
+  }
 
   @keyframes rise {
     from {
@@ -226,7 +264,8 @@ const posterAlt =
   @media (prefers-reduced-motion: reduce) {
     .hero-title,
     .hero-sub,
-    .hero-cta {
+    .hero-cta,
+    .hero-anchor {
       animation: none;
     }
     .hero-video {

@@ -69,6 +69,13 @@
   --brush-rosa: oklch(0.799 0.109 344);
   --brush-cian: oklch(0.898 0.081 193);
 
+  /* --- WHATSAPP (marca de tercero): SOLO la burbuja flotante de WhatsApp ---- */
+  /* Verde de WhatsApp para que se reconozca al instante. Icono en tinta oscura
+     (blanco sobre este verde no pasa 3:1). No es color de UI del sitio. */
+  --wa: oklch(0.77 0.19 150);
+  --wa-strong: oklch(0.82 0.18 150);
+  --wa-ink: oklch(0.2 0.04 150);
+
   /* --- ESTADOS SEMANTICOS (derivados, no compiten con el acento) ---------- */
   --ok: oklch(0.78 0.13 155);
   --warn: oklch(0.82 0.13 85);

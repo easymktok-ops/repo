@@ -66,6 +66,79 @@ function ensure_schema(PDO $pdo): void
     ensure_admin_columns($pdo);
 }
 
+/**
+ * Tablas de tarifas por fecha. NO se llama desde ensure_schema: solo desde el
+ * panel, /api/prices.php y el checkout con la bandera encendida, para que con
+ * pricing.rules_enabled=false nada nuevo se ejecute. Nunca lanza: si falla,
+ * deja traza y devuelve false, y el llamador sigue con el flujo anterior.
+ * En MySQL las tablas se crean con server/sql/schema.sql.
+ */
+function ensure_pricing_schema(PDO $pdo): bool
+{
+    try {
+        if ($pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === 'sqlite') {
+            $pdo->exec(
+                "CREATE TABLE IF NOT EXISTS pricing_rules (
+                    id              TEXT PRIMARY KEY,
+                    label           TEXT NOT NULL,
+                    type            TEXT NOT NULL,
+                    package_ids     TEXT NOT NULL,
+                    start_date      TEXT NOT NULL,
+                    end_date        TEXT NOT NULL,
+                    weekdays        TEXT,
+                    price_cents     INTEGER,
+                    deposit_percent INTEGER,
+                    active          INTEGER NOT NULL DEFAULT 1,
+                    updated_at      TEXT NOT NULL,
+                    updated_by      TEXT NOT NULL
+                )"
+            );
+            $pdo->exec('CREATE INDEX IF NOT EXISTS idx_rules_range ON pricing_rules (active, start_date, end_date)');
+            $pdo->exec(
+                "CREATE TABLE IF NOT EXISTS package_pricing (
+                    package_slug            TEXT PRIMARY KEY,
+                    default_deposit_percent INTEGER NOT NULL,
+                    updated_at              TEXT NOT NULL,
+                    updated_by              TEXT NOT NULL
+                )"
+            );
+            $pdo->exec(
+                "CREATE TABLE IF NOT EXISTS pricing_audit (
+                    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+                    at          TEXT NOT NULL,
+                    user        TEXT NOT NULL,
+                    action      TEXT NOT NULL,
+                    entity      TEXT NOT NULL,
+                    entity_id   TEXT NOT NULL,
+                    before_json TEXT,
+                    after_json  TEXT
+                )"
+            );
+            $pdo->exec('CREATE TABLE IF NOT EXISTS pricing_meta (k TEXT PRIMARY KEY, v TEXT NOT NULL)');
+
+            $have = [];
+            foreach ($pdo->query('PRAGMA table_info(bookings)')->fetchAll() as $col) {
+                $have[$col['name']] = true;
+            }
+            $wanted = [
+                'unit_price_cents' => 'ALTER TABLE bookings ADD COLUMN unit_price_cents INTEGER',
+                'deposit_percent'  => 'ALTER TABLE bookings ADD COLUMN deposit_percent INTEGER',
+                'rule_id'          => 'ALTER TABLE bookings ADD COLUMN rule_id TEXT',
+                'pricing_version'  => 'ALTER TABLE bookings ADD COLUMN pricing_version TEXT',
+            ];
+            foreach ($wanted as $name => $sql) {
+                if (!isset($have[$name])) {
+                    $pdo->exec($sql);
+                }
+            }
+        }
+        return true;
+    } catch (Throwable $e) {
+        log_line('pricing', 'no se pudo preparar el esquema de tarifas', ['msg' => $e->getMessage()]);
+        return false;
+    }
+}
+
 /** Agrega (si faltan) las columnas que usa el panel para gestionar reservas. */
 function ensure_admin_columns(PDO $pdo): void
 {

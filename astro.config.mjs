@@ -41,6 +41,8 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap({
+      // La vista previa del panel de precios no es una pagina publica.
+      filter: (page) => !page.includes("/panel-vista-previa"),
       i18n: {
         defaultLocale: "es",
         locales: { es: "es-MX", en: "en" },
@@ -50,6 +52,13 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    // Solo `npm run dev`: reenvia /api al PHP local (server/dev/router.php).
+    // No afecta al build estatico.
+    server: {
+      proxy: {
+        "/api": process.env.PHP_DEV_URL || "http://localhost:8000",
+      },
+    },
   },
 
   image: {

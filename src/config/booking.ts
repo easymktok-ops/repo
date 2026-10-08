@@ -23,17 +23,12 @@ export const booking = {
    */
   checkoutEndpoint:
     import.meta.env.PUBLIC_CHECKOUT_ENDPOINT ?? "/api/create-checkout-session.php",
+  /**
+   * Endpoint de precios por fecha (calendario). Relativo => mismo origen. Si el
+   * servidor responde enabled:false o falla, el formulario usa la fecha nativa.
+   */
+  pricesEndpoint: import.meta.env.PUBLIC_PRICES_ENDPOINT ?? "/api/prices.php",
   minPassengers: 1,
 } as const;
 
 export type BookingMode = "full" | "deposit";
-
-/** Calcula el monto (en pesos, no centavos) que se cobra AHORA para una reserva. */
-export function amountDueNow(
-  mode: BookingMode,
-  pricePerPerson: number,
-  passengers: number,
-): number {
-  if (mode === "deposit") return booking.depositPerPassenger * passengers;
-  return pricePerPerson * passengers;
-}
