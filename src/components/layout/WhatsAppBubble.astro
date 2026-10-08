@@ -1,0 +1,126 @@
+---
+import Icon from "@components/ui/Icon.astro";
+import { whatsappUrl, type Locale } from "@config/site";
+
+/**
+ * Burbuja flotante de WhatsApp (respaldo de contacto). La venta va por /reservar;
+ * esto es para quien tiene una duda antes de comprar. Numero principal del sitio
+ * (site.brand.whatsapp). No aparece en el flujo de reserva, que ya trae sus
+ * asesores (PageShell -> whatsapp={false}).
+ * - Movil: circulo de 56px; escritorio: pastilla con texto.
+ * - Queda debajo del aviso de cookies (z-sticky < z-toast).
+ * - Clic -> dataLayer `whatsapp_click` (para medirlo en GTM).
+ */
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = {
+  es: {
+    msg: "Hola, estoy viendo los vuelos en globo en su sitio y tengo una pregunta.",
+    label: "¿Dudas? Escríbenos",
+    aria: "Escribir por WhatsApp a Aerodiverti",
+  },
+  en: {
+    msg: "Hi, I'm looking at your balloon flights and have a question.",
+    label: "Questions? Chat with us",
+    aria: "Message Aerodiverti on WhatsApp",
+  },
+}[locale];
+---
+
+<a
+  class="wab"
+  href={whatsappUrl(t.msg)}
+  target="_blank"
+  rel="noopener"
+  aria-label={t.aria}
+  data-wa-bubble
+>
+  <Icon name="whatsapp-logo" weight="fill" class="wab-ico" />
+  <span class="wab-label">{t.label}</span>
+</a>
+
+<script>
+  document.querySelector("[data-wa-bubble]")?.addEventListener("click", () => {
+    const w = window as unknown as { dataLayer?: unknown[] };
+    if (Array.isArray(w.dataLayer)) {
+      w.dataLayer.push({ event: "whatsapp_click", placement: "bubble", page: location.pathname });
+    }
+  });
+</script>
+
+<style>
+  .wab {
+    position: fixed;
+    right: max(var(--space-sm), env(safe-area-inset-right));
+    bottom: calc(var(--space-sm) + env(safe-area-inset-bottom));
+    z-index: var(--z-sticky);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    height: 56px;
+    min-width: 56px;
+    padding: 0 16px;
+    border-radius: var(--radius-pill);
+    background: var(--wa);
+    color: var(--wa-ink);
+    font-weight: 650;
+    font-size: var(--step--1);
+    text-decoration: none;
+    box-shadow: var(--shadow-lg);
+    animation: wab-in 320ms var(--ease-out) 1.2s both;
+    transition:
+      background-color var(--dur-pop) var(--ease-out),
+      transform var(--dur-press) var(--ease-out);
+  }
+  .wab:active {
+    transform: scale(0.97);
+  }
+  .wab:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+  .wab :global(.wab-ico) {
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .wab-label {
+    white-space: nowrap;
+  }
+  @media (hover: hover) {
+    .wab:hover {
+      background: var(--wa-strong);
+    }
+  }
+  /* Movil: solo el icono (circulo). */
+  @media (max-width: 767px) {
+    .wab {
+      width: 56px;
+      padding: 0;
+      justify-content: center;
+    }
+    .wab-label {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+    }
+  }
+  @keyframes wab-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wab {
+      animation: none;
+    }
+  }
+</style>
