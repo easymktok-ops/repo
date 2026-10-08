@@ -211,7 +211,7 @@ if ($resolved !== null) {
         'deposit'        => (string) $charge['deposit_total_cents'],
         'balance'        => (string) $charge['balance_cents'],
         'unitPrice'      => (string) $charge['unit_price_cents'],
-        'depositPercent' => (string) $charge['deposit_percent'],
+        'depositPercent' => $charge['deposit_percent'] === null ? 'fijo' : (string) $charge['deposit_percent'],
         'pricingVersion' => (string) $resolved['pricing_version'],
     ];
     $params['metadata'] += $pricingMeta;
@@ -250,7 +250,7 @@ function checkout_int_or_null($v): ?int
 /**
  * Tarifas por fecha. Devuelve el resultado 'available' de resolve_price() mas
  * 'pricing_version', o null para seguir con el flujo anterior (esquema no
- * disponible o paquete sin % de anticipo). Responde directamente 422 si la
+ * disponible o paquete sin % de anticipo ni anticipo fijo). Responde directamente 422 si la
  * fecha no es vendible, 409 si no hay vuelo ese dia o si el precio cambio.
  */
 function checkout_price_for_date(array $config, array $catalog, string $slug, string $flightDate, ?int $expectedUnit, ?int $expectedDeposit): ?array
@@ -261,8 +261,8 @@ function checkout_price_for_date(array $config, array $catalog, string $slug, st
     if (!ensure_pricing_schema($pdo)) {
         return null;
     }
-    $pkg = pricing_load_package_pricing($pdo, $catalog)[$slug] ?? null;
-    if ($pkg === null || $pkg['default_deposit_percent'] === null) {
+    $pkg = pricing_load_package_pricing($pdo, $catalog, pricing_fixed_deposit_cents($config))[$slug] ?? null;
+    if ($pkg === null || ($pkg['default_deposit_percent'] === null && $pkg['deposit_fixed_cents'] === null)) {
         return null;
     }
 

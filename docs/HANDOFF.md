@@ -17,7 +17,8 @@ Punto alcanzado: P3 (QA del Día 8 cerrado)   ·   Rama: claude/aerodiverti-seas
 
 ## Decisiones tomadas y por qué
 - El widget **siempre** envía `expectedUnitPrice` / `expectedDeposit` (lo que la persona ve). Con la bandera apagada el servidor los ignora. Cierra el caso "sondeo caído + bandera encendida": antes se cobraba $2,650 mostrando $2,200; ahora responde 409 y avisa.
-- Paquete sin % de anticipo se cobra como hoy, incluidos días sin vuelo (calendario y cobro no divergen).
+- Paquete sin % de anticipo usa el anticipo fijo (`deposit_per_passenger`) y SÍ muestra el calendario con su precio por fecha.
+- El precio de lista (`base_price_cents`, del CMS) es el piso: el panel rechaza tarifas por debajo y `resolve_price` ajusta cualquier regla vieja a ese mínimo, así el "Desde" del sitio siempre es cierto.
 - `amountDueNow` se reemplazó por `chargeCents` (centavos, sin flotantes); el anticipo de una fecha puede traer centavos.
 - `BookingWidget.tsx` ya incumplía prettier antes de estos cambios; no se reformateó para no ensuciar el diff.
 - Texto del sitio: `grep` en `src/content` y `src/pages` **no** encuentra el monto fijo de $1,000 (D8 no requiere cambios de contenido).

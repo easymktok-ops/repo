@@ -29,11 +29,12 @@ function pricing_find_rule(PDO $pdo, string $id): ?array
 }
 
 /**
- * Paquetes reservables del catalogo con su precio base (centavos) y su % de
- * anticipo (null = falta configurarlo).
- * @return array<string,array> slug => ['slug','title','currency','base_price_cents','default_deposit_percent']
+ * Paquetes reservables del catalogo con su precio base (centavos), su % de
+ * anticipo (null = sin %, se usa el anticipo fijo) y el anticipo fijo por persona.
+ * @return array<string,array> slug => ['slug','title','currency','base_price_cents','default_deposit_percent',
+ *                                      'deposit_fixed_cents']
  */
-function pricing_load_package_pricing(PDO $pdo, array $catalog): array
+function pricing_load_package_pricing(PDO $pdo, array $catalog, int $fixedDepositCents = 0): array
 {
     $pcts = [];
     foreach ($pdo->query('SELECT package_slug, default_deposit_percent FROM package_pricing')->fetchAll(PDO::FETCH_ASSOC) as $r) {
@@ -51,9 +52,16 @@ function pricing_load_package_pricing(PDO $pdo, array $catalog): array
             'currency'                => strtoupper((string) ($p['currency'] ?? 'MXN')),
             'base_price_cents'        => (int) $p['pricePerPerson'] * 100,
             'default_deposit_percent' => $pcts[$slug] ?? null,
+            'deposit_fixed_cents'     => $fixedDepositCents > 0 ? $fixedDepositCents : null,
         ];
     }
     return $out;
+}
+
+/** Anticipo fijo por persona en centavos (config deposit_per_passenger, en pesos); 0 = sin anticipo fijo. */
+function pricing_fixed_deposit_cents(array $config): int
+{
+    return max(0, (int) ($config['deposit_per_passenger'] ?? 0)) * 100;
 }
 
 /** "{version}-{sha1 de los precios base, 8 caracteres}". */
@@ -130,9 +138,9 @@ function pricing_write(PDO $pdo, string $user, string $action, string $entity, s
  * @return string id de la regla
  * @throws InvalidArgumentException con los errores por campo en getMessage() (JSON)
  */
-function pricing_save_rule(PDO $pdo, array $rule, string $user, array $knownSlugs, string $action = ''): string
+function pricing_save_rule(PDO $pdo, array $rule, string $user, array $knownSlugs, string $action = '', array $basePrices = []): string
 {
-    $errors = pricing_validate_rule($rule, $knownSlugs);
+    $errors = pricing_validate_rule($rule, $knownSlugs, $basePrices);
     if ($errors) {
         throw new InvalidArgumentException((string) json_encode($errors, JSON_UNESCAPED_UNICODE));
     }

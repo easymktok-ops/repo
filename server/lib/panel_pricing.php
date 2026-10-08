@@ -125,6 +125,27 @@ function panel_overlap_notes(array $rule, array $rules): array
     return $notes;
 }
 
+/**
+ * Paquetes donde la tarifa quedo por debajo del precio de lista (p. ej. si el precio de lista subio despues):
+ * ahi se cobra el precio de lista, porque es el minimo.
+ */
+function panel_floor_notes(array $rule, array $ctx): array
+{
+    if ($rule['type'] === 'blocked' || $rule['price_cents'] === null) {
+        return [];
+    }
+    $slugs = $rule['package_ids'] === 'all' ? array_keys($ctx['packages']) : (array) $rule['package_ids'];
+    $out = [];
+    foreach ($slugs as $slug) {
+        $p = $ctx['packages'][$slug] ?? null;
+        if ($p !== null && (int) $p['base_price_cents'] > (int) $rule['price_cents']) {
+            $out[] = 'En ' . panel_pkg_name($p) . ' el precio de lista (' . panel_pesos((int) $p['base_price_cents'])
+                . ') es mayor que esta tarifa: ahí se cobra el precio de lista.';
+        }
+    }
+    return $out;
+}
+
 function panel_notes_html(array $notes): string
 {
     if (!$notes) {
@@ -168,7 +189,7 @@ function panel_pricing_context(array $config, PDO $pdo): array
         $ctx['error'] = 'No se pudo leer la lista de paquetes. Avisa a soporte.';
         return $ctx;
     }
-    $ctx['packages'] = pricing_load_package_pricing($pdo, $catalog);
+    $ctx['packages'] = pricing_load_package_pricing($pdo, $catalog, pricing_fixed_deposit_cents($config));
     $ctx['known'] = array_keys($ctx['packages']);
     $ctx['rules'] = pricing_load_rules($pdo);
     $ctx['version'] = pricing_version($pdo, $catalog);
@@ -209,7 +230,10 @@ function panel_pricing_post(PDO $pdo, array $ctx, string $user): array
                 $rule = panel_pricing_form_to_rule($values, $blocked);
                 $errors = [];
                 try {
-                    pricing_save_rule($pdo, $rule, $user, $known);
+                    $bases = array_map(function (array $p): int {
+                        return (int) $p['base_price_cents'];
+                    }, $ctx['packages']);
+                    pricing_save_rule($pdo, $rule, $user, $known, '', $bases);
                 } catch (InvalidArgumentException $e) {
                     $errors = json_decode($e->getMessage(), true) ?: ['label' => $e->getMessage()];
                 }
@@ -458,14 +482,15 @@ function panel_pricing_render_deposits(array $ctx, array $state): string
           <tr>
             <td>
               <span class="strong"><?= h(panel_pkg_name($p)) ?></span>
-              <?php if ($cur === null): ?><span class="badge warn">Falta el anticipo</span><?php endif; ?>
+              <?php if ($cur === null): ?><span class="badge">Anticipo fijo</span><?php endif; ?>
             </td>
             <td class="num"><?= h(panel_pesos($p['base_price_cents'])) ?></td>
             <td>
               <label class="sr" for="dep-<?= h($slug) ?>">Anticipo de <?= h(panel_pkg_name($p)) ?></label>
               <input id="dep-<?= h($slug) ?>" class="pct" type="number" inputmode="numeric" min="1" max="100" step="1"
                      name="deposit[<?= h($slug) ?>]" value="<?= h($val) ?>" data-price="<?= (int) $p['base_price_cents'] ?>"
-                     data-eq="eq-<?= h($slug) ?>" /> %
+                     data-eq="eq-<?= h($slug) ?>" data-fixed="<?= (int) ($p['deposit_fixed_cents'] ?? 0) ?>"
+                     placeholder="Fijo" /> %
               <?= panel_field_err($errors, $slug) ?>
             </td>
             <td class="hide-sm muted" id="eq-<?= h($slug) ?>" aria-live="polite"></td>
@@ -473,8 +498,8 @@ function panel_pricing_render_deposits(array $ctx, array $state): string
         <?php endforeach; ?>
         </tbody>
       </table></div>
-      <p class="muted sm">El precio base se cambia en <a href="/admin/">Contenido › Paquetes</a>. Mientras a un paquete le falte el anticipo,
-        se cobra como hoy.</p>
+      <p class="muted sm">El precio base se cambia en <a href="/admin/">Contenido › Paquetes</a> y es el precio mínimo: ninguna
+        temporada puede cobrar menos. Si un paquete no tiene %, se cobra el anticipo fijo por persona de siempre.</p>
       <p><button class="btn primary" type="submit">Guardar anticipos</button></p>
     </form>
     <script>
@@ -484,7 +509,9 @@ function panel_pricing_render_deposits(array $ctx, array $state): string
           var out = document.getElementById(i.getAttribute('data-eq'));
           function upd() {
             var p = parseInt(i.value, 10);
-            out.textContent = p >= 1 && p <= 100 ? fmt(Math.floor((parseInt(i.getAttribute('data-price'), 10) * p + 50) / 100)) + ' por persona' : '';
+            var fx = parseInt(i.getAttribute('data-fixed'), 10) || 0;
+            out.textContent = p >= 1 && p <= 100 ? fmt(Math.floor((parseInt(i.getAttribute('data-price'), 10) * p + 50) / 100)) + ' por persona'
+              : (fx > 0 ? 'Fijo: ' + fmt(fx) + ' por persona' : '');
           }
           i.addEventListener('input', upd); upd();
         });
@@ -575,7 +602,7 @@ function panel_pricing_render_seasons(array $ctx, array $state): string
             . panel_pricing_btn('rule_delete', 'temporadas', $r['id'], 'Eliminar', 'danger',
                 "¿Eliminar '" . $r['label'] . "'? Esta acción no se puede deshacer")
             . '</div></td></tr>';
-        $notes = panel_overlap_notes($r, $ctx['rules']);
+        $notes = array_merge(panel_overlap_notes($r, $ctx['rules']), panel_floor_notes($r, $ctx));
         if ($notes) {
             $out .= '<tr class="notes"><td colspan="8">' . panel_notes_html($notes) . '</td></tr>';
         }
@@ -848,7 +875,7 @@ function panel_pricing_render_preview(array $ctx): string
         return $out . '<p class="empty">No hay paquetes reservables.</p>';
     }
     $pkg = $ctx['packages'][$slug];
-    if ($pkg['default_deposit_percent'] === null) {
+    if ($pkg['default_deposit_percent'] === null && $pkg['deposit_fixed_cents'] === null) {
         return $out . '<p class="note">A este paquete le falta el anticipo. Mientras tanto se cobra como hoy. Captúralo en \'Anticipo por paquete\'.</p>';
     }
 
@@ -1075,8 +1102,8 @@ function panel_tours_script(string $section): string
         'precios-anticipos':[
           {title:'Precios por fecha',body:'Aquí decides cuánto cuesta cada día y cuánto se cobra para apartar. Todo lo que guardas se aplica al momento.'},
           {sel:'nav.subtabs',title:'Tus herramientas',body:'<b>Anticipo por paquete</b>: lo que se cobra al apartar. <b>Temporadas</b>: precios por rango, fecha o día de la semana. <b>Días sin vuelo</b>: cierra fechas. <b>Historial</b>: quién cambió qué. <b>Vista previa</b>: el calendario como lo ve el cliente.'},
-          {sel:'.ptable input.pct',title:'Anticipo %',body:'Porcentaje del precio de esa fecha que se cobra al apartar. A la derecha ves cuánto equivale por persona. Mientras un paquete diga <b>Falta el anticipo</b>, se cobra como antes ($1,000 fijos por pasajero).'},
-          {sel:'.ptable thead th:nth-child(2)',title:'Precio base',body:'Es el precio de los días sin temporada. No se cambia aquí sino en el administrador de contenido (<b>Paquetes de vuelo</b>).'},
+          {sel:'.ptable input.pct',title:'Anticipo %',body:'Porcentaje del precio de esa fecha que se cobra al apartar. A la derecha ves cuánto equivale por persona. Si lo dejas vacío, el paquete usa el <b>anticipo fijo</b> por persona de siempre.'},
+          {sel:'.ptable thead th:nth-child(2)',title:'Precio base',body:'Es el precio de los días sin temporada y el <b>precio mínimo</b>: ninguna temporada puede cobrar menos, así el "Desde" del sitio siempre es cierto. Se cambia en el administrador de contenido (<b>Paquetes de vuelo</b>).'},
           {sel:'form button.primary[type=submit]',title:'Guardar anticipos',body:'Guarda todos los porcentajes de una vez. Si algo está mal, te marca el campo en rojo.'},
           BTN
         ],
@@ -1086,7 +1113,7 @@ function panel_tours_script(string $section): string
           {sel:'#rule-form .row2',title:'Desde y Hasta',body:'Haz clic en la fecha para abrir el calendario. Los dos días cuentan.'},
           {sel:'#weekdays-box',title:'Días',body:'Solo para el tipo <b>Días de la semana</b>: marca cuáles aplican.'},
           {sel:'#rule-form fieldset.fld:has(input[name=packages_mode])||#pkgs-box',title:'Paquetes',body:'<b>Todos</b> o <b>Solo algunos</b>, si el precio no aplica a todos los vuelos.'},
-          {sel:'#rule-form .row2:has(input[name=price])||#rule-form input[name=price]',title:'Precio y anticipo',body:'Precio <b>por persona</b> en pesos (2650 o 2,650). El anticipo es opcional: vacío usa el del paquete.'},
+          {sel:'#rule-form .row2:has(input[name=price])||#rule-form input[name=price]',title:'Precio y anticipo',body:'Precio <b>por persona</b> en pesos (2650 o 2,650). No puede ser menor al precio de lista del paquete. El anticipo es opcional: vacío usa el del paquete.'},
           {sel:'#rule-form .actions||#rule-form button[type=submit]',title:'Guardar',body:'Si se cruza con otra regla, el panel te avisa en amarillo cuál precio se cobrará.'}
         ]:[
           {sel:'a.btn.primary[href*="new"]||.subtabs + * a.btn.primary',title:'Nueva temporada o fecha',body:'Crea un precio para un rango de fechas, una fecha especial (14 de febrero) o ciertos días de la semana.'},

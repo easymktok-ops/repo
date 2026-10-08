@@ -11,7 +11,7 @@ Es cuánto se cobra al apartar, como porcentaje del precio de esa fecha. El rest
 2. Escribe el % de cada paquete. A la derecha ves cuánto equivale por persona.
 3. **Guardar anticipos**.
 
-Mientras un paquete diga **"Falta el anticipo"**, ese paquete se cobra como hoy ($1,000 fijos por pasajero).
+Mientras un paquete diga **"Anticipo fijo"**, ese paquete cobra $1,000 por pasajero de anticipo. El precio de lista de cada paquete es el mínimo: ninguna temporada puede cobrar menos. Para una oferta, baja el precio de lista en Contenido › Paquetes.
 El precio base de cada paquete no se cambia aquí, sino en **Contenido › Paquetes**.
 
 ![Anticipo por paquete](guia-berenice/1-anticipos.png)

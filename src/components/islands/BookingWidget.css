@@ -616,6 +616,14 @@
 .bk-pkg-from {
   color: var(--faint);
   font-size: var(--step--1);
+  font-weight: 400;
+}
+.bk-pkgs-hint {
+  margin-top: var(--space-2xs);
+  max-width: 60ch;
+}
+.bk-ticket-hint {
+  padding: 0 var(--space-md) var(--space-md);
 }
 .bk-cal-skel {
   max-width: 34rem;
