@@ -1216,3 +1216,15 @@ main, .site-footer { position: relative; z-index: var(--z-content); }
 .qty-row__menu dd { margin: 0; opacity: 0.85; }
 .checkout__summary-img img { display: block; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-radius: 0.75rem; margin-bottom: 0.8rem; }
 .checkout__summary-venue { margin: 0 0 0.8rem; opacity: 0.8; font-size: 0.9rem; }
+
+/* Menús */
+.menus { width: min(var(--container), 100% - var(--gutter) * 2); margin-inline: auto; padding-block: clamp(2.5rem, 2rem + 3vw, 4.5rem); }
+.menus h2 { margin-bottom: 0.75rem; }
+.menus__lead { margin: 0 0 1.75rem; opacity: 0.85; }
+.menus__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(17rem, 100%), 1fr)); gap: 1rem; }
+.menu-card { padding: 1.4rem; border: 1px solid rgb(216 27 96 / 0.55); border-radius: var(--radius-sm); background: rgb(0 0 0 / 0.4); }
+.menu-card h3 { margin: 0; font-family: var(--font-display, inherit); text-transform: uppercase; letter-spacing: 0.06em; font-size: 1.05rem; }
+.menu-card__price { margin: 0.25rem 0 1rem; color: var(--jc-rose-soft); font-variant-numeric: tabular-nums; }
+.menu-card dl { margin: 0; }
+.menu-card dt { margin-top: 0.8rem; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; }
+.menu-card dd { margin: 0.15rem 0 0; opacity: 0.88; font-size: 0.95rem; }

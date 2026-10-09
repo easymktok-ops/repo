@@ -88,6 +88,8 @@ partial('header');
     </div>
   </section>
 
+  <?php $buyEv = array_values(array_filter(content('programacion.events', []), static fn($e) => !empty($e['buyable'])))[0] ?? null; if ($buyEv) partial('menus', ['prices' => $buyEv['prices'], 'id' => 'menus']); ?>
+
   <div class="band" aria-hidden="true">
     <div class="band__flowers"><?php partial('decor-flowers', ['id' => 'band', 'flowers' => [
         ['x' => 80, 'y' => 120, 's' => 1.4, 'r' => -20],

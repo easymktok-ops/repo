@@ -94,6 +94,8 @@ partial('head', ['page' => [
     </div>
   </section>
 
+  <?php if ($buy) partial('menus', ['prices' => $prices, 'id' => 'lp-menus']); ?>
+
   <?php if ($buy && $dates): ?>
   <section class="lp-dates" aria-labelledby="lp-dates-title">
     <h2 id="lp-dates-title" class="display display--sm">Próximas funciones</h2>

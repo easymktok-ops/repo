@@ -76,3 +76,8 @@ La clienta factura cada venta y su contadora necesita los datos. Se construye ju
 php -S 127.0.0.1:8000 -t public public/index.php
 ```
 En Hostinger: el contenido de `public/` va a `public_html/`; `app/`, `config/` y `storage/` quedan un nivel arriba (fuera de la carpeta pública). `config/config.php` se crea en el servidor a partir de `config/config.example.php`.
+
+## 9 oct (tarde): compra estilo WeTravel y menús
+- `/comprar/`: calendario de sábados por mes, 3 menús con detalle desplegable, resumen con imagen.
+- Sección "Los menús" (partial `menus`) en la home y en la landing de Medellín, con los menús vigentes.
+- Pendiente de confirmar: precio del vegetariano (asumido 195.000), moneda USD/COP, código de descuento (fuera de alcance).
