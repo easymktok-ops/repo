@@ -27,6 +27,10 @@ if (APP_ENV === 'production') {
 
 date_default_timezone_set('America/Bogota');
 
+if (APP_ENV !== 'production' && PHP_SAPI !== 'cli') {
+    header('X-Robots-Tag: noindex, nofollow');
+}
+
 if (PHP_SAPI !== 'cli' && session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params([
         'lifetime' => 0,
@@ -49,6 +53,7 @@ require APP_DIR . '/payments/PaymentGateway.php';
 require APP_DIR . '/payments/SimulatedGateway.php';
 require APP_DIR . '/payments/MercadoPagoGateway.php';
 require APP_DIR . '/payments/Payments.php';
+require APP_DIR . '/mail.php';
 require APP_DIR . '/webhooks.php';
 require APP_DIR . '/admin.php';
 

@@ -63,6 +63,12 @@ final class Webhooks
 
         if ($payment['status'] === 'approved') {
             $ticket = Tickets::issue((int) $order['id']);
+            // El correo nunca puede tumbar la confirmación del pago: si falla, queda pendiente de reenvío.
+            try {
+                Mail::sendConfirmation((int) $order['id']);
+            } catch (Throwable $e) {
+                error_log('Correo de la orden ' . $order['public_id'] . ': ' . $e->getMessage());
+            }
             return ['ok' => true, 'result' => 'approved', 'ticket' => $ticket['code']];
         }
         return ['ok' => true, 'result' => $payment['status']];

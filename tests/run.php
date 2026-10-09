@@ -35,6 +35,7 @@ function throwsOrder(callable $fn): ?OrderException
     return null;
 }
 
+$GLOBALS['app_config']['mail'] = ['driver' => 'log', 'from_email' => 'tickets@example.com', 'from_name' => 'Joyas Colombianas®'];
 passthru('php ' . escapeshellarg(dirname(__DIR__) . '/tools/migrate.php'), $rc);
 check('migración aplicada', $rc === 0);
 
@@ -188,6 +189,38 @@ $pp = Admin::pricePatch(['price_medellin_menu' => '$ 200.000', 'price_medellin_v
 check('precios válidos generan el cambio', !$pp['errors'] && $pp['patch']['programacion']['events'][0]['prices'][0]['amount'] === 200000 && $pp['patch']['reservas'][0]['prices'][0]['usd'] === 6 && $pp['patch']['ajustes']['usd_cop_rate'] === 4100, json_encode($pp['errors']));
 $bad = Admin::pricePatch(['price_medellin_menu' => '5', 'usd_cartagena' => '', 'fx' => '99999']);
 check('precios fuera de rango o vacíos se rechazan', isset($bad['errors']['price_medellin_menu']) && isset($bad['errors']['usd_cartagena']) && isset($bad['errors']['fx']));
+
+echo "Correo\n";
+$GLOBALS['app_config']['mail'] = ['driver' => 'log', 'from_email' => 'tickets@example.com', 'from_name' => 'Joyas Colombianas®', 'copy_to' => ''];
+array_map('unlink', glob(STORAGE_DIR . '/mail/*.eml') ?: []);
+$rvOrder = Orders::byPublicId($r1['public_id']);
+$msg = Mail::confirmation($rvOrder);
+check('correo de voucher trae los campos de facturación', str_contains($msg['text'], 'Apellido: Smith') && str_contains($msg['text'], 'Pasaporte X1234567') && str_contains($msg['text'], 'Cantidad de personas: 4') && str_contains($msg['text'], 'Precio total recibido: $80.000 COP'));
+check('el correo del show habla de ticket', str_contains(Mail::confirmation(Orders::byPublicId($order3['public_id']))['subject'], '#JCD-'));
+check('el aviso de pago ya envió el correo y no se repite', $rvOrder['email_sent_at'] !== null && Mail::sendConfirmation((int) $rvOrder['id']) === false);
+check('el reenvío manual sí envía', Mail::sendConfirmation((int) $rvOrder['id'], true) === true);
+check('queda registrado el envío', Orders::byPublicId($r1['public_id'])['email_sent_at'] !== null);
+check('el modo log guarda el .eml', count(glob(STORAGE_DIR . '/mail/*.eml') ?: []) === 1);
+$mime = Mail::build("a@b.com\r\nBcc: evil@x.com", "Hola\r\nBcc: evil@x.com", 'x', '<p>x</p>');
+check('sin inyección de cabeceras', !preg_match('/^Bcc:/mi', $mime));
+check('asunto con tildes va codificado', str_contains(Mail::build('a@b.com', 'Tu reserva ñ', 'x', 'y'), 'Subject: =?UTF-8?B?'));
+array_map('unlink', glob(STORAGE_DIR . '/mail/*.eml') ?: []);
+
+// SMTP real contra un servidor falso local (ssl:// no aplica: se prueba el flujo AUTH/DATA por TLS desactivado con encryption=none).
+$smtpOut = sys_get_temp_dir() . '/jcd-smtp-' . getmypid() . '.txt';
+$port = 20000 + getmypid() % 20000;
+$proc = proc_open(['python3', __DIR__ . '/fake-smtp.py', (string) $port, $smtpOut], [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']], $pipes);
+usleep(600000);
+$GLOBALS['app_config']['mail'] = ['driver' => 'smtp', 'host' => '127.0.0.1', 'port' => $port, 'encryption' => 'none', 'user' => 'u@x.com', 'pass' => 'p4ss', 'from_email' => 'tickets@example.com', 'from_name' => 'Joyas'];
+Db::run('UPDATE orders SET email_sent_at = NULL WHERE id = ?', [(int) $rvOrder['id']]);
+Mail::send('buyer@example.com', 'Asunto', "Línea\n.punto al inicio\nfin", '<p>hola</p>', ['staff@example.com']);
+usleep(300000);
+$got = is_file($smtpOut) ? (string) file_get_contents($smtpOut) : '';
+check('SMTP: autenticación y remitente', str_contains($got, 'AUTH u@x.com:p4ss') && str_contains($got, 'MAIL FROM:<tickets@example.com>'));
+check('SMTP: destinatario y copia oculta', str_contains($got, 'RCPT TO:<buyer@example.com>') && str_contains($got, 'RCPT TO:<staff@example.com>'));
+check('SMTP: cuerpo completo recibido', str_contains($got, 'Content-Type: multipart/alternative') && str_contains($got, base64_encode("Línea\n.punto al inicio\nfin")));
+proc_terminate($proc);
+@unlink($smtpOut);
 
 @unlink($dbFile);
 @unlink($dbFile . '-wal');

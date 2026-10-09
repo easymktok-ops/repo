@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS orders (
   net_amount     INT          NULL,
   created_at     DATETIME     NOT NULL,
   paid_at        DATETIME     NULL,
+  email_sent_at  DATETIME     NULL,
   updated_at     DATETIME     NOT NULL,
   UNIQUE KEY uq_orders_public (public_id),
   KEY idx_orders_status (status),

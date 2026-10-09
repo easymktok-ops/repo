@@ -26,6 +26,22 @@ return [
         'usd_cop_rate'          => 4000,
     ],
 
+    'mail' => [
+        // 'log' guarda los correos en storage/mail/ (pruebas); 'smtp' los envía de verdad.
+        'driver'     => getenv('MAIL_DRIVER') ?: 'log',
+        // Hostinger: buzón creado en hPanel > Correos. Confirmar servidor y puerto en esa misma pantalla.
+        'host'       => getenv('MAIL_HOST') ?: 'smtp.hostinger.com',
+        'port'       => (int) (getenv('MAIL_PORT') ?: 465),
+        'encryption' => getenv('MAIL_ENCRYPTION') ?: 'ssl', // ssl (465) o tls (587)
+        'user'       => getenv('MAIL_USER') ?: '',
+        'pass'       => getenv('MAIL_PASS') ?: '',
+        'from_email' => getenv('MAIL_FROM') ?: '',
+        'from_name'  => 'Joyas Colombianas® Dinner & Show',
+        'reply_to'   => getenv('MAIL_REPLY_TO') ?: '',
+        // Copia oculta de cada confirmación para el equipo (opcional, separados por coma).
+        'copy_to'    => getenv('MAIL_COPY_TO') ?: '',
+    ],
+
     'admin' => [
         'user'          => getenv('ADMIN_USER') ?: 'admin',
         // Generar con: php -r "echo password_hash('tu-clave', PASSWORD_DEFAULT);"

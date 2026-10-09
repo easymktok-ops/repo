@@ -65,8 +65,20 @@ if (preg_match('#^/admin/exportar/(puerta|contador|reservas)$#', $adminPath, $m)
          'Total cobrado (COP)', 'Comisión pasarela', 'Neto recibido', 'USD', 'TRM de referencia', 'Medio de pago', 'ID de pago'], $rows);
 }
 
+if ($adminPath === '/admin/reenviar' && $method === 'POST' && csrf_valid($_POST['_csrf'] ?? null)) {
+    $id = (int) ($_POST['id'] ?? 0);
+    try {
+        $msg = Mail::sendConfirmation($id, true) ? 'enviado' : 'sin-pago';
+    } catch (Throwable $e) {
+        error_log('Reenvío de correo: ' . $e->getMessage());
+        $msg = 'error';
+    }
+    header('Location: /admin/pedidos/?correo=' . $msg, true, 303);
+    return;
+}
+
 if ($adminPath === '/admin/pedidos') {
-    $sql = 'SELECT o.id, o.public_id, o.status, o.event_id, o.function_date, o.buyer_name, o.email, o.total_amount, o.created_at, o.kind, t.number AS ticket_number
+    $sql = 'SELECT o.id, o.email_sent_at, o.public_id, o.status, o.event_id, o.function_date, o.buyer_name, o.email, o.total_amount, o.created_at, o.kind, t.number AS ticket_number
             FROM orders o LEFT JOIN tickets t ON t.order_id = o.id WHERE 1=1';
     $p = [];
     $status = (string) ($_GET['estado'] ?? '');
@@ -76,7 +88,7 @@ if ($adminPath === '/admin/pedidos') {
     $q = trim((string) ($_GET['q'] ?? ''));
     if ($q !== '') { $sql .= ' AND (o.buyer_name LIKE ? OR o.email LIKE ? OR o.doc_number LIKE ?)'; $like = '%' . str_replace(['%', '_'], ['\\%', '\\_'], $q) . '%'; array_push($p, $like, $like, $like); }
     $sql .= ' ORDER BY o.id DESC LIMIT 300';
-    view('admin/pedidos', ['orders' => Db::all($sql, $p), 'filters' => ['estado' => $status, 'evento' => $eventId, 'fecha' => $ymd($_GET['fecha'] ?? null), 'q' => $q]]);
+    view('admin/pedidos', ['orders' => Db::all($sql, $p), 'mailMsg' => (string) ($_GET['correo'] ?? ''), 'filters' => ['estado' => $status, 'evento' => $eventId, 'fecha' => $ymd($_GET['fecha'] ?? null), 'q' => $q]]);
     return;
 }
 

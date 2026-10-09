@@ -14,7 +14,9 @@ final class Admin
     {
         $cfg = $GLOBALS['app_config']['admin'] ?? [];
         $hash = (string) ($cfg['password_hash'] ?? '');
-        if ($hash === '' && APP_ENV !== 'production') {
+        // Clave de práctica solo en la máquina de desarrollo (nunca en staging ni producción).
+        $local = PHP_SAPI === 'cli' || in_array($_SERVER['REMOTE_ADDR'] ?? '', ['127.0.0.1', '::1'], true);
+        if ($hash === '' && APP_ENV === 'development' && $local) {
             return password_hash('admin-dev', PASSWORD_DEFAULT);
         }
         return $hash;
