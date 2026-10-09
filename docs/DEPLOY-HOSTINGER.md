@@ -14,7 +14,7 @@ Objetivo: tener `https://pruebas.TUDOMINIO.com` con el desarrollo real (compras 
 - Si el dominio tiene otros proveedores de correo (Google Workspace), avísame: cambia dónde crear el buzón y los registros SPF/DKIM.
 
 ## 3. Subir el código
-Estructura (la carpeta `pruebas-app` va FUERA de `public_html`, al lado de él; solo el contenido de `public/` va dentro de `public_html/pruebas`):
+Estructura más simple (zip "plano", `tools/build-zip.py SALIDA.zip --plano`): todo va en `public_html/pruebas`; las carpetas internas se protegen con su `.htaccess`. La estructura con `pruebas-app` fuera de `public_html` sigue soportada y es la más segura para producción:
 ```
 /home/uXXXX/pruebas-app/        ← app/, config/, database/, storage/, tools/
 /home/uXXXX/pruebas-app/public/ ← carpeta pública del subdominio

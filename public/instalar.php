@@ -6,7 +6,7 @@ declare(strict_types=1);
 define('PUBLIC_DIR', __DIR__);
 // app/ puede estar un nivel arriba de public/, o en la carpeta pruebas-app (hosting compartido).
 $root = null;
-foreach ([dirname(__DIR__), dirname(__DIR__) . '/pruebas-app', dirname(__DIR__, 2) . '/pruebas-app'] as $candidate) {
+foreach ([__DIR__, dirname(__DIR__), dirname(__DIR__) . '/pruebas-app', dirname(__DIR__, 2) . '/pruebas-app'] as $candidate) {
     if (is_file($candidate . '/app/bootstrap.php')) {
         $root = $candidate;
         break;
