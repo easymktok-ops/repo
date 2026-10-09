@@ -26,6 +26,13 @@ return [
         'usd_cop_rate'          => 4000,
     ],
 
+    'admin' => [
+        'user'          => getenv('ADMIN_USER') ?: 'admin',
+        // Generar con: php -r "echo password_hash('tu-clave', PASSWORD_DEFAULT);"
+        // Sin hash, el panel solo funciona fuera de producción (clave de práctica: admin-dev).
+        'password_hash' => getenv('ADMIN_PASSWORD_HASH') ?: '',
+    ],
+
     'analytics' => [
         'ga4_id'        => getenv('GA4_ID') ?: '',
         'meta_pixel_id' => getenv('META_PIXEL_ID') ?: '',

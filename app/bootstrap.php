@@ -50,5 +50,6 @@ require APP_DIR . '/payments/SimulatedGateway.php';
 require APP_DIR . '/payments/MercadoPagoGateway.php';
 require APP_DIR . '/payments/Payments.php';
 require APP_DIR . '/webhooks.php';
+require APP_DIR . '/admin.php';
 
 $GLOBALS['app_config'] = $config;

@@ -24,7 +24,7 @@ Después del lanzamiento: versión en inglés, guías de apoyo (qué hacer en Me
 - [x] Estructura base PHP (rutas, contenido editable, SEO, formulario)
 - [x] Home full SEO con parallax por capas, contenido migrado
 - [ ] Logo, fotos y video reales en `public/assets/img/` (`docs/IMAGENES.md`)
-- [ ] Panel de administración mínimo (contenido, programación, precios, WhatsApp)
+- [x] Panel de administración mínimo: ingreso, resumen de cupos, pedidos, contenido básico (WhatsApp, redes, reseña) — falta editar precios y programación desde el panel
 
 ## Fase 2 — 5 a 9 oct: landings de campaña + contenido de John
 - [ ] Landing Cartagena (marca, "Tesoros del Pacífico", sin checkout, noindex)
@@ -38,7 +38,7 @@ Después del lanzamiento: versión en inglés, guías de apoyo (qué hacer en Me
 - [x] Aviso de pago idempotente con firma verificada → ticket `#JCD-1001…` atómico (probado con pasarela simulada)
 - [x] Página de compra, estado del pedido y ticket digital
 - [ ] Correo transaccional con ticket
-- [ ] Door List exportable Excel/CSV
+- [x] Lista de la puerta, lista de reservas de Cartagena y reporte para la contadora en CSV (Excel)
 - [ ] Eventos `begin_checkout` y `purchase` (solo pago aprobado, en URL propia)
 - [ ] Google My Business (15 oct)
 - [ ] QA de punta a punta en staging y pase a producción (16 oct, con aprobación de Norman)

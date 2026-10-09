@@ -29,6 +29,11 @@ switch (true) {
         require APP_DIR . '/actions/contacto.php';
         break;
 
+    case $path === '/admin' || str_starts_with($path, '/admin/'):
+        $adminPath = $path;
+        require APP_DIR . '/actions/admin.php';
+        break;
+
     case $path === '/reservar/cartagena':
         $checkoutEvent = 'cartagena';
         require APP_DIR . '/actions/checkout.php';

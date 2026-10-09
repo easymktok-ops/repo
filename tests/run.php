@@ -178,6 +178,12 @@ $rv = Orders::byPublicId($r1['public_id']);
 check('voucher con código #CTG-', $rv['ticket'] !== null && str_starts_with($rv['ticket'], '#CTG-5'), (string) $rv['ticket']);
 check('la numeración de entradas del show no se mezcla', (int) Db::one("SELECT value FROM counters WHERE name = 'ticket'")['value'] >= 1000 && (int) Db::one("SELECT value FROM counters WHERE name = 'ticket'")['value'] < 5000);
 
+echo "Panel\n";
+check('CSV neutraliza fórmulas', Admin::cell('=HYPERLINK("x")') === "'=HYPERLINK(\"x\")" && Admin::cell('Ana') === 'Ana' && Admin::cell('-5') === '-5');
+$paid = Admin::paidOrders('cartagena');
+check('órdenes pagadas con código y concepto', count($paid) === 1 && $paid[0]['code'] === $rv['ticket'] && $paid[0]['qty'] === 4, json_encode(array_column($paid, 'code')));
+check('no entran órdenes sin pagar', count(Admin::paidOrders('medellin', null)) >= 0 && count(array_filter(Admin::paidOrders(), fn($o) => $o['status'] !== 'approved')) === 0);
+
 @unlink($dbFile);
 @unlink($dbFile . '-wal');
 @unlink($dbFile . '-shm');

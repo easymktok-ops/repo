@@ -90,3 +90,9 @@ En Hostinger: el contenido de `public/` va a `public_html/`; `app/`, `config/` y
 - Casilla obligatoria: el cover no se devuelve. Se guarda `kind`, `usd_total` y `fx_rate` por orden para el reporte de la contadora.
 - Pruebas: 42 correctas (cupos, mesa de 6, fechas, documento, numeración separada).
 - Falta: hora/dirección, correo de la lista de reservas, exportación CSV de reservas (va con el panel), correo transaccional con el voucher, revisión legal de los términos.
+
+## 9 oct (noche): panel de administración
+- `/admin/`: ingreso con usuario y clave (hash en `config.php`; en producción no funciona sin `ADMIN_PASSWORD_HASH`; en desarrollo la clave de práctica es `admin-dev`). Bloqueo tras 5 intentos fallidos en 15 minutos, token CSRF, sesión regenerada, `noindex`.
+- Resumen por fecha (pedidos, personas, cupos libres, recaudo), listado de pedidos con filtros, edición de WhatsApp/redes/reseña.
+- CSV con BOM y `;` (abre directo en Excel): lista de la puerta, lista de reservas de Cartagena (campos de facturación), reporte de la contadora (cobrado, comisión, neto, USD y TRM). Texto protegido contra fórmulas.
+- Pruebas: 45 correctas.

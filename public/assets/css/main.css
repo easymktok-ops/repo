@@ -1231,3 +1231,20 @@ main, .site-footer { position: relative; z-index: var(--z-content); }
 
 .cal__day--full { opacity: 0.35; cursor: not-allowed; text-decoration: line-through; }
 .cal__day--full input { cursor: not-allowed; }
+
+/* Panel */
+.adm-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 1.5rem; padding: 0.9rem var(--gutter); border-bottom: 1px solid var(--jc-line-soft); background: rgb(0 0 0 / 0.6); position: relative; z-index: 2; }
+.adm-bar__brand { font-family: var(--font-display, inherit); letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.9rem; }
+.adm-bar__nav { display: flex; flex-wrap: wrap; align-items: center; gap: 1.25rem; font-size: 0.9rem; }
+.adm-bar__nav form { margin: 0; }
+.adm-link { background: none; border: 0; color: inherit; font: inherit; cursor: pointer; text-decoration: underline; padding: 0; }
+.adm { position: relative; z-index: 1; width: min(76rem, 100% - var(--gutter) * 2); margin-inline: auto; padding-block: 2rem 4rem; }
+.adm--narrow { max-width: 34rem; }
+.adm-h2 { margin: 2.5rem 0 1rem; font-size: 1.1rem; }
+.adm-filters { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 0.75rem 1rem; margin: 1rem 0 1.25rem; }
+.adm-filters label { display: grid; gap: 0.3rem; font-size: 0.8rem; }
+.adm-filters input, .adm-filters select { padding: 0.55rem 0.7rem; border-radius: 0.6rem; border: 1px solid var(--jc-line-soft); background: rgb(0 0 0 / 0.5); color: inherit; font: inherit; }
+.adm-table-wrap { overflow-x: auto; }
+.adm-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.adm-table th, .adm-table td { text-align: left; padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--jc-line-soft); white-space: nowrap; }
+.adm-table th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; opacity: 0.8; }
