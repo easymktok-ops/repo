@@ -26,6 +26,10 @@ require $root . '/app/bootstrap.php';
 
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $path = '/' . trim($path, '/');
+// Algunos servidores entregan la raíz como /index.php.
+if ($path === '/index.php') {
+    $path = '/';
+}
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 $stubs = [
