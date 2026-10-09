@@ -10,7 +10,9 @@ if (PHP_SAPI === 'cli-server') {
 }
 
 define('PUBLIC_DIR', __DIR__);
-require dirname(__DIR__) . '/app/bootstrap.php';
+// Normal: app/ está un nivel arriba de public/. Alternativa en hosting compartido: carpeta hermana "pruebas-app".
+$root = is_file(dirname(__DIR__) . '/app/bootstrap.php') ? dirname(__DIR__) : dirname(__DIR__) . '/pruebas-app';
+require $root . '/app/bootstrap.php';
 
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $path = '/' . trim($path, '/');

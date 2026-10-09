@@ -27,7 +27,7 @@ Cómo subir: **Administrador de archivos** (arrastrar un .zip del repo) o **Git*
 ## 4. Configuración
 1. Copia `config/config.staging.example.php` a `config/config.php` y completa dominio, base de datos, buzón y clave de admin.
 2. Hash de la clave del panel: en el **Terminal/SSH** de hPanel ⚠ (o en tu computador con PHP): `php -r "echo password_hash('clave-larga', PASSWORD_DEFAULT);"`.
-3. Crear las tablas, una vez: `php tools/migrate.php` (SSH). Sin SSH: dime y dejo un script de instalación de un solo uso protegido por clave.
+3. Crear las tablas, una vez: con SSH `php tools/migrate.php`; sin SSH, abrir `https://pruebas.TUDOMINIO.com/instalar.php?token=TU_TOKEN` (el token es `install_token` de config.php) y después BORRAR `public/instalar.php`.
 4. Permisos de escritura en `storage/` (755 o 775).
 
 ## 5. Protección del entorno de pruebas

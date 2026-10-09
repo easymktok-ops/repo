@@ -43,5 +43,8 @@ return [
         'password_hash' => 'PEGAR_HASH',                  // php -r "echo password_hash('clave-larga', PASSWORD_DEFAULT);"
     ],
 
+    // Instalador de un solo uso (sin SSH): abrir /instalar.php?token=ESTE_TEXTO. Borrar el archivo y vaciar este valor al terminar.
+    'install_token' => 'CAMBIAR-por-un-texto-largo-al-azar',
+
     'analytics' => ['ga4_id' => '', 'meta_pixel_id' => ''],
 ];
