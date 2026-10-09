@@ -10,8 +10,18 @@ if (PHP_SAPI === 'cli-server') {
 }
 
 define('PUBLIC_DIR', __DIR__);
-// Normal: app/ está un nivel arriba de public/. Alternativa en hosting compartido: carpeta hermana "pruebas-app".
-$root = is_file(dirname(__DIR__) . '/app/bootstrap.php') ? dirname(__DIR__) : dirname(__DIR__) . '/pruebas-app';
+// app/ puede estar un nivel arriba de public/, o en la carpeta pruebas-app (hosting compartido).
+$root = null;
+foreach ([dirname(__DIR__), dirname(__DIR__) . '/pruebas-app', dirname(__DIR__, 2) . '/pruebas-app'] as $candidate) {
+    if (is_file($candidate . '/app/bootstrap.php')) {
+        $root = $candidate;
+        break;
+    }
+}
+if ($root === null) {
+    http_response_code(500);
+    exit('No se encontró la carpeta de la aplicación (pruebas-app).');
+}
 require $root . '/app/bootstrap.php';
 
 $path = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';

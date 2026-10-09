@@ -14,7 +14,7 @@ Objetivo: tener `https://pruebas.TUDOMINIO.com` con el desarrollo real (compras 
 - Si el dominio tiene otros proveedores de correo (Google Workspace), avísame: cambia dónde crear el buzón y los registros SPF/DKIM.
 
 ## 3. Subir el código
-Estructura recomendada (solo `public/` queda visible en internet):
+Estructura (la carpeta `pruebas-app` va FUERA de `public_html`, al lado de él; solo el contenido de `public/` va dentro de `public_html/pruebas`):
 ```
 /home/uXXXX/pruebas-app/        ← app/, config/, database/, storage/, tools/
 /home/uXXXX/pruebas-app/public/ ← carpeta pública del subdominio

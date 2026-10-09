@@ -4,7 +4,18 @@ declare(strict_types=1);
 // Instalador de un solo uso para hosting sin SSH: crea las tablas. Requiere 'install_token' en config/config.php.
 // Cuando termine, BORRAR este archivo del servidor.
 define('PUBLIC_DIR', __DIR__);
-$root = is_file(dirname(__DIR__) . '/app/bootstrap.php') ? dirname(__DIR__) : dirname(__DIR__) . '/pruebas-app';
+// app/ puede estar un nivel arriba de public/, o en la carpeta pruebas-app (hosting compartido).
+$root = null;
+foreach ([dirname(__DIR__), dirname(__DIR__) . '/pruebas-app', dirname(__DIR__, 2) . '/pruebas-app'] as $candidate) {
+    if (is_file($candidate . '/app/bootstrap.php')) {
+        $root = $candidate;
+        break;
+    }
+}
+if ($root === null) {
+    http_response_code(500);
+    exit('No se encontró la carpeta de la aplicación (pruebas-app).');
+}
 require $root . '/app/bootstrap.php';
 
 header('Content-Type: text/plain; charset=utf-8');

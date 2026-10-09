@@ -2,8 +2,8 @@
 import os, sys, zipfile
 root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 out = sys.argv[1]
-include = ['app', 'config', 'database', 'tools', 'public']
-skip_names = {'config.php', 'dev.sqlite', '.DS_Store'}
+include = ['app', 'config', 'database', 'tools', 'public', 'storage']
+skip_names = {'config.php', 'joyas-pruebas.zip', 'admin-attempts.json', 'content.json', 'dev.sqlite', '.DS_Store'}
 with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:
     for d in include:
         for base, dirs, files in os.walk(os.path.join(root, d)):
@@ -13,5 +13,5 @@ with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:
                     continue
                 full = os.path.join(base, f)
                 z.write(full, os.path.relpath(full, root))
-    z.writestr('storage/.gitkeep', '')
+    pass
 print('Listo:', out, round(os.path.getsize(out) / 1e6, 1), 'MB')
