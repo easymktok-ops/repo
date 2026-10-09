@@ -2,6 +2,20 @@
 
 Fases y tareas. Detalle de avance en `docs/PROGRESS.md`; stack en `docs/STACK.md`.
 
+## Plan reformulado (9 oct): los textos los escribimos nosotros
+John no entrega los textos. Se escriben a partir de `docs/FICHA-DE-HECHOS.md` (solo hechos confirmados) y `docs/SEO-BRIEF.md`. Lanzamiento: sábado 17 oct. Mínimo para lanzar: home SEO, landing de Medellín, compra con pago, ticket, política de datos y términos.
+
+| Día | Entrega |
+|---|---|
+| Vie 9 | Landings de campaña (Medellín y Bogotá), ficha de hechos, brief SEO. Norman manda a la clienta las preguntas pendientes |
+| Lun 12 | Borrador completo del texto de la home (~2.500 palabras) con preguntas frecuentes y marcado de datos estructurados |
+| Mar 13 | Revisión de hechos con la clienta; textos finales. Páginas legales (datos personales, términos, cancelaciones) para su revisión. Validación de pagos internacionales |
+| Mié 14 | Mercado Pago, si ya hay credenciales y documentación; correo de confirmación |
+| Jue 15 | Panel mínimo y lista de asistentes; redirecciones del sitio viejo; Google My Business; pruebas en el servidor de pruebas |
+| Vie 16 | Revisión de punta a punta y pase a producción, con aprobación de Norman |
+
+Después del lanzamiento: versión en inglés, guías de apoyo (qué hacer en Medellín de noche, danzas por región, qué es un dinner show), Cartagena y pruebas de conversión.
+
 ## Fase 1 — 28 sept a 2 oct: accesos, auditoría, tokens, estructura base y home
 - [ ] Acceso a Hostinger (credenciales, staging, versión de PHP)
 - [x] Pantallazo del sitio actual (Norman)
@@ -14,8 +28,8 @@ Fases y tareas. Detalle de avance en `docs/PROGRESS.md`; stack en `docs/STACK.md
 
 ## Fase 2 — 5 a 9 oct: landings de campaña + contenido de John
 - [ ] Landing Cartagena (marca, "Tesoros del Pacífico", sin checkout, noindex)
-- [ ] Landings Medellín y Bogotá: conversión 100% UX/UI, noindex, fuera del sitemap, visibles en el sitio
-- [ ] Conversión de .docx de John → `content/`, inyección en el home (SEO) y landings (6 oct)
+- [x] Landings Medellín y Bogotá: conversión 100% UX/UI, noindex, fuera del sitemap (construidas, con datos verificados)
+- [ ] Textos de la home y páginas legales redactados por nosotros (ya no dependen de John)
 - [ ] Revisión cruzada de contenido y enlaces internos
 
 ## Fase 3 — 12 a 16 oct: pagos, ticket, correo, door list, QA, producción

@@ -92,6 +92,29 @@ return [
         ],
     ],
 
+    // Landings de campaña: sencillas, sin indexar, con un solo objetivo. Los datos (lugar, hora, precios)
+    // salen de programacion.events; aquí solo van los textos propios de cada landing.
+    'landings' => [
+        'medellin' => [
+            'event'       => 'medellin',
+            'mode'        => 'buy',
+            'meta_title'  => 'Entradas Joyas Colombianas® Dinner & Show en Medellín',
+            'h1'          => 'Joyas Colombianas® Dinner & Show en Medellín',
+            'lead'        => 'Una explosión de ritmos y sabores para descubrir los tesoros de Colombia',
+            'cta_label'   => 'Comprar entradas',
+            'wa_message'  => 'Hola, quiero información sobre las entradas para Joyas Colombianas® Dinner & Show en Medellín',
+        ],
+        'bogota' => [
+            'event'       => 'bogota',
+            'mode'        => 'quote',
+            'meta_title'  => 'Dinner & Show para empresas y eventos privados en Bogotá | Joyas Colombianas®',
+            'h1'          => 'Joyas Colombianas® Dinner & Show para empresas y eventos privados en Bogotá',
+            'lead'        => 'Una explosión de ritmos y sabores para descubrir los tesoros de Colombia',
+            'cta_label'   => 'Cotizar mi evento',
+            'wa_message'  => 'Hola, quiero cotizar un Dinner & Show privado de Joyas Colombianas® en Bogotá',
+        ],
+    ],
+
     'contacto' => [
         'title'        => 'Comunícate con nosotros',
         'submit_label' => 'Enviar solicitud',

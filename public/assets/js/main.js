@@ -210,7 +210,19 @@ function initPrint() {
   document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
 }
 
+// Landing de campañas: la barra de compra fija aparece solo cuando el botón principal ya no se ve.
+function initLanding() {
+  const bar = document.querySelector('.lp-sticky');
+  const hero = document.querySelector('[data-lp-cta="hero"]');
+  if (!bar || !hero) return;
+  bar.classList.add('is-armed');
+  new IntersectionObserver(([entry]) => {
+    bar.setAttribute('data-visible', entry.isIntersecting ? 'false' : 'true');
+  }).observe(hero);
+}
+
 initHeader();
+initLanding();
 initCheckout();
 initPrint();
 initMenu();

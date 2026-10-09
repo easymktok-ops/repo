@@ -17,8 +17,6 @@ $path = '/' . trim($path, '/');
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 $stubs = [
-    '/medellin'          => 'Medellín',
-    '/bogota'            => 'Bogotá',
     '/cartagena'         => 'Cartagena',
     '/politica-de-datos' => 'Política de tratamiento de datos',
 ];
@@ -30,6 +28,10 @@ switch (true) {
 
     case $path === '/contacto' && $method === 'POST':
         require APP_DIR . '/actions/contacto.php';
+        break;
+
+    case $path === '/medellin' || $path === '/bogota':
+        view('landing', ['landingKey' => ltrim($path, '/')]);
         break;
 
     case $path === '/comprar':

@@ -6,7 +6,11 @@
 /** @var array $dates */
 $wa = whatsapp_link((string) content('site.whatsapp_number'), 'Hola, quiero comprar entradas para Joyas Colombianas® Dinner & Show');
 $max = (int) ($GLOBALS['app_config']['checkout']['max_tickets_per_order'] ?? 10);
-$selectedDate = (string) ($old['funcion'] ?? ($dates[0]['value'] ?? ''));
+$selectedDate = (string) ($old['funcion'] ?? '');
+if ($selectedDate === '') {
+    $wanted = (string) ($_GET['fecha'] ?? '');
+    $selectedDate = in_array($wanted, array_column($dates, 'value'), true) ? $wanted : (string) ($dates[0]['value'] ?? '');
+}
 $err = static fn(string $k): ?string => $errors[$k] ?? null;
 
 partial('head', ['page' => [
