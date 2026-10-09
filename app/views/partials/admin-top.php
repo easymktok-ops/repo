@@ -7,6 +7,7 @@ partial('head', ['page' => ['title' => $title . ' | Panel', 'path' => '/admin/',
   <nav class="adm-bar__nav" aria-label="Panel">
     <a href="/admin/">Resumen</a>
     <a href="/admin/pedidos/">Pedidos</a>
+    <a href="/admin/precios/">Precios y cupos</a>
     <a href="/admin/contenido/">Contenido</a>
     <form method="post" action="/admin/salir/"><?= csrf_field() ?><button class="adm-link" type="submit">Salir</button></form>
   </nav>

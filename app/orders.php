@@ -66,7 +66,7 @@ final class Orders
 
     public static function fxRate(): int
     {
-        return max(1, (int) ($GLOBALS['app_config']['checkout']['usd_cop_rate'] ?? 4000));
+        return max(1, (int) (content('ajustes.usd_cop_rate') ?: ($GLOBALS['app_config']['checkout']['usd_cop_rate'] ?? 4000)));
     }
 
     /** Personas ya reservadas o en pago (30 min) para una fecha. */

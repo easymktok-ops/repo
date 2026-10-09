@@ -80,6 +80,23 @@ if ($adminPath === '/admin/pedidos') {
     return;
 }
 
+if ($adminPath === '/admin/precios') {
+    $errors = [];
+    $old = [];
+    if ($method === 'POST' && csrf_valid($_POST['_csrf'] ?? null)) {
+        $old = $_POST;
+        $result = Admin::pricePatch($_POST);
+        $errors = $result['errors'];
+        if (!$errors) {
+            Admin::saveContent($result['patch']);
+            header('Location: /admin/precios/?guardado=1', true, 303);
+            return;
+        }
+    }
+    view('admin/precios', ['errors' => $errors, 'old' => $old, 'saved' => isset($_GET['guardado'])]);
+    return;
+}
+
 if ($adminPath === '/admin/contenido') {
     $saved = false;
     $keys = [

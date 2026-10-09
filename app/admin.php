@@ -136,4 +136,46 @@ final class Admin
         $merged = array_replace_recursive($current, $patch);
         file_put_contents($file, json_encode($merged, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT), LOCK_EX);
     }
+
+    /**
+     * Valida el formulario de precios y arma el cambio a guardar en content.json.
+     * Las posiciones salen de los valores por defecto, buscando cada producto por su sku.
+     * @return array{patch:array,errors:array<string,string>}
+     */
+    public static function pricePatch(array $in): array
+    {
+        $errors = [];
+        $int = static function (string $key, int $min, int $max, string $label) use ($in, &$errors): ?int {
+            $raw = preg_replace('/[^\d]/', '', (string) ($in[$key] ?? '')) ?? '';
+            $n = $raw === '' ? null : (int) $raw;
+            if ($n === null || $n < $min || $n > $max) {
+                $errors[$key] = "$label: escribe un número entre $min y $max.";
+                return null;
+            }
+            return $n;
+        };
+
+        $defaults = require APP_DIR . '/content/defaults.php';
+        $patch = [];
+
+        foreach ($defaults['programacion']['events'] as $ei => $ev) {
+            foreach ($ev['prices'] as $pi => $price) {
+                if (!isset($price['amount'])) { continue; }
+                $n = $int('price_' . $ev['id'] . '_' . $price['sku'], 10000, 2000000, $price['label']);
+                if ($n !== null) { $patch['programacion']['events'][$ei]['prices'][$pi]['amount'] = $n; }
+            }
+        }
+        foreach ($defaults['reservas'] as $ri => $ev) {
+            $usd = $int('usd_' . $ev['id'], 1, 100, 'Cover en USD');
+            $cap = $int('capacity_' . $ev['id'], 1, 500, 'Cupos por día');
+            $max = $int('maxparty_' . $ev['id'], 1, 20, 'Personas por mesa');
+            if ($usd !== null) { $patch['reservas'][$ri]['prices'][0]['usd'] = $usd; }
+            if ($cap !== null) { $patch['reservas'][$ri]['capacity'] = $cap; }
+            if ($max !== null) { $patch['reservas'][$ri]['max_party'] = $max; }
+        }
+        $fx = $int('fx', 1000, 10000, 'Tasa USD→COP');
+        if ($fx !== null) { $patch['ajustes']['usd_cop_rate'] = $fx; }
+
+        return ['patch' => $patch, 'errors' => $errors];
+    }
 }

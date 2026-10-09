@@ -184,6 +184,11 @@ $paid = Admin::paidOrders('cartagena');
 check('órdenes pagadas con código y concepto', count($paid) === 1 && $paid[0]['code'] === $rv['ticket'] && $paid[0]['qty'] === 4, json_encode(array_column($paid, 'code')));
 check('no entran órdenes sin pagar', count(Admin::paidOrders('medellin', null)) >= 0 && count(array_filter(Admin::paidOrders(), fn($o) => $o['status'] !== 'approved')) === 0);
 
+$pp = Admin::pricePatch(['price_medellin_menu' => '$ 200.000', 'price_medellin_vegetariano' => '200000', 'price_medellin_tapeo' => '185000', 'usd_cartagena' => '6', 'capacity_cartagena' => '40', 'maxparty_cartagena' => '6', 'fx' => '4100']);
+check('precios válidos generan el cambio', !$pp['errors'] && $pp['patch']['programacion']['events'][0]['prices'][0]['amount'] === 200000 && $pp['patch']['reservas'][0]['prices'][0]['usd'] === 6 && $pp['patch']['ajustes']['usd_cop_rate'] === 4100, json_encode($pp['errors']));
+$bad = Admin::pricePatch(['price_medellin_menu' => '5', 'usd_cartagena' => '', 'fx' => '99999']);
+check('precios fuera de rango o vacíos se rechazan', isset($bad['errors']['price_medellin_menu']) && isset($bad['errors']['usd_cartagena']) && isset($bad['errors']['fx']));
+
 @unlink($dbFile);
 @unlink($dbFile . '-wal');
 @unlink($dbFile . '-shm');
