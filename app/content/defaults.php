@@ -61,8 +61,31 @@ return [
                 'dress_code' => 'Formal',
                 'buyable'    => true,
                 'prices'     => [
-                    ['sku' => 'menu', 'label' => 'Menú completo', 'amount' => 195000],
-                    ['sku' => 'tapeo', 'label' => 'Tapeo', 'amount' => 180000],
+                    [
+                        'sku' => 'menu', 'label' => 'Menú completo', 'tag' => '3 tiempos', 'amount' => 195000,
+                        'courses' => [
+                            'Entrada' => 'Ceviche cartagenero de camarón, aguacate y crocante de plátano',
+                            'Plato' => 'Posta negra cartagenera, acompañada de puré de papa criolla y vegetales salteados',
+                            'Postre' => 'Tres leches del famoso Café Colombiano',
+                            'Bebida' => '1 copa de vino o 1 cerveza nacional',
+                        ],
+                    ],
+                    [
+                        'sku' => 'vegetariano', 'label' => 'Menú vegetariano', 'tag' => '3 tiempos', 'amount' => 195000,
+                        'courses' => [
+                            'Entrada' => 'Ceviche de mango y champiñones confitados, leche de tigre de chontaduro y crocante de plátano',
+                            'Plato vegetariano' => 'Croqueta de lentejas sobre arroz cremoso de maíz',
+                            'Postre' => 'Panna cotta de gulupa',
+                            'Bebida' => '1 copa de vino o 1 cerveza nacional',
+                        ],
+                    ],
+                    [
+                        'sku' => 'tapeo', 'label' => 'Para picar / Tapeo', 'tag' => 'Tapeo', 'amount' => 180000,
+                        'courses' => [
+                            'Entradas, con guacamole y suero costeño' => 'Pork belly en reducción de panela sobre arepa de maíz dulce y queso costeño; aborrajados con relleno de carne estofada y queso; papa rellena, maíz dulce, chorizo campesino y sofrito colombiano',
+                            'Bebida' => '1 copa de vino o 1 cerveza nacional',
+                        ],
+                    ],
                 ],
                 'cta_label'  => 'Compra de entradas aquí',
                 'cta_url'    => '/comprar/?funcion=medellin',

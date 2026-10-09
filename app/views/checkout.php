@@ -55,33 +55,58 @@ partial('header');
 
       <div class="checkout__main">
         <fieldset class="checkout__step">
-          <legend>1. Elige la función</legend>
-          <div class="choice-grid" role="radiogroup" aria-describedby="<?= $err('funcion') ? 'err-funcion' : '' ?>">
-            <?php foreach ($dates as $i => $d): ?>
-            <label class="choice">
-              <input type="radio" name="funcion" value="<?= e($d['value']) ?>"<?= $d['value'] === $selectedDate ? ' checked' : '' ?>>
-              <span class="choice__body"><?= e($d['label']) ?></span>
-            </label>
+          <legend>1. Elige el sábado</legend>
+          <?php
+          $months = [];
+          foreach ($dates as $d) { $months[substr($d['value'], 0, 7)][] = $d; }
+          $monthNames = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+          ?>
+          <div class="cal" role="radiogroup" aria-describedby="<?= $err('funcion') ? 'err-funcion' : '' ?>">
+            <?php foreach ($months as $ym => $list): ?>
+            <div class="cal__month">
+              <h3 class="cal__title"><?= e($monthNames[(int) substr($ym, 5, 2) - 1]) ?> <?= e(substr($ym, 0, 4)) ?></h3>
+              <div class="cal__days">
+                <?php foreach ($list as $d): ?>
+                <label class="cal__day">
+                  <input type="radio" name="funcion" value="<?= e($d['value']) ?>" data-label="<?= e($d['label']) ?>"<?= $d['value'] === $selectedDate ? ' checked' : '' ?>>
+                  <span class="cal__num"><?= (int) substr($d['value'], 8, 2) ?></span>
+                  <span class="cal__dow">sáb</span>
+                </label>
+                <?php endforeach; ?>
+              </div>
+            </div>
             <?php endforeach; ?>
           </div>
           <?php if ($err('funcion')): ?><p class="field__error" id="err-funcion"><?= e($err('funcion')) ?></p><?php endif; ?>
         </fieldset>
 
         <fieldset class="checkout__step">
-          <legend>2. Elige tus entradas</legend>
+          <legend>2. Elige tu menú y cantidad</legend>
           <ul class="qty-list">
             <?php foreach ($event['prices'] as $price):
                 $q = (int) ($old['qty'][$price['sku']] ?? 0); ?>
             <li class="qty-row" data-sku="<?= e($price['sku']) ?>" data-price="<?= (int) $price['amount'] ?>" data-label="<?= e($price['label']) ?>">
-              <div class="qty-row__info">
-                <label for="qty-<?= e($price['sku']) ?>"><?= e($price['label']) ?></label>
-                <span class="qty-row__price"><?= e(format_cop((int) $price['amount'])) ?></span>
+              <div class="qty-row__top">
+                <div class="qty-row__info">
+                  <label for="qty-<?= e($price['sku']) ?>"><?= e($price['label']) ?></label>
+                  <span class="qty-row__price"><?= e(format_cop((int) $price['amount'])) ?></span>
+                </div>
+                <div class="stepper">
+                  <button class="stepper__btn" type="button" data-step="-1" aria-label="Quitar una entrada de <?= e($price['label']) ?>">&minus;</button>
+                  <input id="qty-<?= e($price['sku']) ?>" name="qty[<?= e($price['sku']) ?>]" type="number" inputmode="numeric" min="0" max="<?= $max ?>" value="<?= $q ?>">
+                  <button class="stepper__btn" type="button" data-step="1" aria-label="Agregar una entrada de <?= e($price['label']) ?>">+</button>
+                </div>
               </div>
-              <div class="stepper">
-                <button class="stepper__btn" type="button" data-step="-1" aria-label="Quitar una entrada de <?= e($price['label']) ?>">&minus;</button>
-                <input id="qty-<?= e($price['sku']) ?>" name="qty[<?= e($price['sku']) ?>]" type="number" inputmode="numeric" min="0" max="<?= $max ?>" value="<?= $q ?>">
-                <button class="stepper__btn" type="button" data-step="1" aria-label="Agregar una entrada de <?= e($price['label']) ?>">+</button>
-              </div>
+              <?php if (!empty($price['courses'])): ?>
+              <details class="qty-row__menu">
+                <summary>Ver menú</summary>
+                <dl>
+                  <?php foreach ($price['courses'] as $course => $text): ?>
+                  <dt><?= e($course) ?></dt><dd><?= e($text) ?></dd>
+                  <?php endforeach; ?>
+                </dl>
+              </details>
+              <?php endif; ?>
             </li>
             <?php endforeach; ?>
           </ul>
@@ -130,7 +155,9 @@ partial('header');
       </div>
 
       <aside class="checkout__summary" aria-labelledby="resumen-title">
-        <h2 id="resumen-title" class="checkout__summary-title">Resumen</h2>
+        <picture class="checkout__summary-img"><img src="/assets/img/hero-poster.jpg" alt="" width="640" height="360" loading="lazy" decoding="async"></picture>
+        <h2 id="resumen-title" class="checkout__summary-title">Joyas Colombianas® Dinner &amp; Show</h2>
+        <p class="checkout__summary-venue"><?= e($event['venue']) ?>, <?= e($event['city']) ?></p>
         <dl class="summary">
           <div><dt>Función</dt><dd data-summary-date><?= e(Orders::dateLabel($selectedDate)) ?></dd></div>
           <div><dt>Entradas</dt><dd data-summary-qty>0</dd></div>

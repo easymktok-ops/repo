@@ -11,6 +11,10 @@
 | Medellín: funciones regulares todos los sábados, 8:00 PM, Hotel Marriott Medellín | Sitio actual (30 sept) y artículo externo de Vivir en El Poblado |
 | Puertas 7:45 PM; dress code formal | Brief del proyecto |
 | Precios: 195.000 COP menú completo, 180.000 COP tapeo | Brief del proyecto |
+| Menú completo (3 tiempos): ceviche cartagenero de camarón; posta negra cartagenera con puré de papa criolla; tres leches de Café Colombiano; 1 copa de vino o 1 cerveza nacional | Menús vigentes entregados por Norman (9 oct) |
+| Menú vegetariano (3 tiempos): ceviche de mango y champiñones; croqueta de lentejas sobre arroz cremoso de maíz; panna cotta de gulupa; 1 copa de vino o 1 cerveza nacional. **Precio asumido igual al completo (195.000): confirmar** | ídem |
+| Tapeo: pork belly en reducción de panela sobre arepa; aborrajados; papa rellena, con guacamole y suero costeño; 1 copa de vino o 1 cerveza nacional | ídem |
+| La reserva actual se hace en un widget de WeTravel (calendario de sábados, 3 paquetes, cantidad, datos del comprador) | Captura de Norman (9 oct) |
 | Pausa durante la función con videos sobre Colombia, cuando va con cena | Reseña oficial |
 | Existe versión privada con reserva previa (eventos empresariales, celebraciones, grupos) | Reseña oficial |
 | Bogotá: eventos corporativos y dinner shows en el Hotel Tequendama | Notas de la reunión del 25 sept |
@@ -27,7 +31,7 @@
 ## Por confirmar (necesario para los textos)
 
 - Dirección exacta del Hotel Marriott Medellín y cómo llegar.
-- Qué incluye el **menú completo** y qué incluye el **tapeo**: platos, bebidas, postre, bebida de bienvenida.
+- Precio del menú vegetariano; moneda (WeTravel muestra USD $55/$50 con conversión; nuestro cobro es en COP).
 - Duración total de la noche y de la función.
 - Cuántos artistas hay, qué regiones y danzas se presentan.
 - Participación del público (el baile final que mencionan las reseñas).
@@ -36,7 +40,7 @@
 - Accesibilidad, parqueadero y transporte.
 - Cambios de fecha, cancelaciones y reembolsos.
 - **Aforo mínimo:** las notas mencionan que abrir fechas depende de un mínimo de asistentes. ¿Qué pasa con quien compró si no se alcanza?
-- Menú para vegetarianos, alergias y restricciones.
+- Alergias y restricciones además del menú vegetariano.
 - Fotos y videos durante la función: permitidos o no.
 - Grupos: ¿hay descuento o un contacto distinto?
 - Número de WhatsApp oficial y correo de contacto.

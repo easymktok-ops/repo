@@ -1194,3 +1194,25 @@ main, .site-footer { position: relative; z-index: var(--z-content); }
 .lp-foot { position: relative; z-index: var(--z-content); display: grid; gap: 0.35rem; padding: 2rem var(--gutter) calc(6.5rem + env(safe-area-inset-bottom)); text-align: center; font-size: 0.8125rem; color: var(--jc-ink-muted); }
 .lp-foot p { margin: 0; }
 @media (min-width: 48rem) { .lp-foot { padding-bottom: 2rem; } }
+
+/* Calendario de sábados (compra) */
+.cal { display: grid; gap: 1.25rem; }
+.cal__title { font-family: var(--font-display, inherit); text-transform: capitalize; font-size: 1.05rem; margin: 0 0 0.6rem; color: var(--jc-rose-soft); }
+.cal__days { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.cal__day { position: relative; cursor: pointer; }
+.cal__day input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.cal__num, .cal__dow { display: block; text-align: center; }
+.cal__day { display: grid; place-items: center; width: 4.25rem; padding: 0.55rem 0; border: 1px solid rgb(216 27 96 / 0.55); border-radius: 0.9rem; background: rgb(0 0 0 / 0.35); }
+.cal__num { font-size: 1.4rem; font-weight: 700; line-height: 1.1; }
+.cal__dow { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; opacity: 0.75; }
+.cal__day:has(input:checked) { background: var(--jc-rose); border-color: var(--jc-rose); }
+.cal__day:has(input:focus-visible) { outline: 2px solid var(--jc-gold); outline-offset: 3px; }
+.qty-row { flex-wrap: wrap; }
+.qty-row__top { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 1rem; }
+.qty-row__menu { width: 100%; margin-top: 0.6rem; font-size: 0.9rem; }
+.qty-row__menu summary { cursor: pointer; color: var(--jc-rose-soft); }
+.qty-row__menu dl { margin: 0.6rem 0 0; display: grid; gap: 0.15rem; }
+.qty-row__menu dt { font-weight: 600; margin-top: 0.5rem; }
+.qty-row__menu dd { margin: 0; opacity: 0.85; }
+.checkout__summary-img img { display: block; width: 100%; height: auto; aspect-ratio: 16/9; object-fit: cover; border-radius: 0.75rem; margin-bottom: 0.8rem; }
+.checkout__summary-venue { margin: 0 0 0.8rem; opacity: 0.8; font-size: 0.9rem; }

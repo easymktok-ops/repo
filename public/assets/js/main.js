@@ -176,7 +176,7 @@ function initCheckout() {
     }));
 
     const chosen = form.querySelector('input[name="funcion"]:checked');
-    const label = chosen?.nextElementSibling?.textContent;
+    const label = chosen?.dataset.label;
     if (label) form.querySelector('[data-summary-date]').textContent = label;
 
     if (count > 0 && !started) {

@@ -44,11 +44,11 @@ $buyer = ['buyer_name' => 'Ana Pérez', 'doc_type' => 'CC', 'doc_number' => '123
 $gw = new SimulatedGateway('dev-secret-no-usar-en-produccion');
 
 echo "Pedidos\n";
-$order = Orders::create('medellin', $date, $buyer, ['menu' => 2, 'tapeo' => 1], 'simulated');
-check('total = 2 x 195.000 + 1 x 180.000', $order['total_amount'] === 570000, (string) $order['total_amount']);
+$order = Orders::create('medellin', $date, $buyer, ['menu' => 2, 'tapeo' => 1, 'vegetariano' => 1], 'simulated');
+check('total = 3 x 195.000 + 1 x 180.000 (765000)', $order['total_amount'] === 765000, (string) $order['total_amount']);
 check('orden nueva en estado created', $order['status'] === 'created');
 check('id público de 32 caracteres', strlen($order['public_id']) === 32);
-check('cantidad 3', $order['quantity'] === 3);
+check('cantidad 4', $order['quantity'] === 4);
 
 $e = throwsOrder(fn() => Orders::create('medellin', $date, $buyer, ['menu' => 0, 'tapeo' => 0], 'simulated'));
 check('rechaza compra sin entradas', $e !== null && isset($e->fieldErrors['cantidad']));
