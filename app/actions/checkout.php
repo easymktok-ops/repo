@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-$event = Orders::buyableEvent();
+$event = Orders::eventById($checkoutEvent ?? 'medellin');
 if ($event === null) {
     http_response_code(404);
     view('404');
@@ -23,13 +23,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $ready) {
         header('Location: /', true, 303);
         return;
     } else {
+        $reservation = Orders::isReservation($event);
         $accepted = ($_POST['acepta'] ?? '') === '1';
+        $acceptedCover = !$reservation || ($_POST['acepta_cover'] ?? '') === '1';
         $qty = [];
         foreach ($event['prices'] as $price) {
             $qty[$price['sku']] = (int) ($_POST['qty'][$price['sku']] ?? 0);
         }
+        if ($reservation) {
+            $qty = ['cover' => (int) ($_POST['personas'] ?? 0)];
+        }
         $buyer = [
             'buyer_name' => $_POST['buyer_name'] ?? '',
+            'first_name' => $_POST['first_name'] ?? '',
+            'last_name'  => $_POST['last_name'] ?? '',
             'doc_type'   => $_POST['doc_type'] ?? '',
             'doc_number' => $_POST['doc_number'] ?? '',
             'email'      => $_POST['email'] ?? '',
@@ -39,10 +46,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $ready) {
 
         try {
             // Sin la casilla de términos solo se valida, para mostrar todos los errores de una vez.
-            $order = Orders::create($event['id'], (string) ($_POST['funcion'] ?? ''), $buyer, $qty, $gateway->name(), !$accepted);
+            $order = Orders::create($event['id'], (string) ($_POST['funcion'] ?? ''), $buyer, $qty, $gateway->name(), !($accepted && $acceptedCover));
         } catch (OrderException $e) {
             $errors = $e->fieldErrors ?: ['_form' => $e->getMessage()];
             $order = null;
+        }
+        if (!$acceptedCover) {
+            $errors['acepta_cover'] = 'Debes aceptar los términos de la reserva para continuar.';
         }
         if (!$accepted) {
             $errors['acepta'] = 'Debes aceptar la política de tratamiento de datos para continuar.';
@@ -64,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $ready) {
     }
 }
 
-view('checkout', [
+view(Orders::isReservation($event) ? 'reserva' : 'checkout', [
     'event'  => $event,
     'ready'  => $ready,
     'errors' => $errors,

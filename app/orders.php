@@ -19,6 +19,13 @@ final class Orders
         'PA' => 'Pasaporte',
     ];
 
+    /** Reservas: el voucher debe aclarar si el documento es pasaporte o cédula. */
+    public const RESERVATION_DOC_TYPES = [
+        'PA' => 'Pasaporte',
+        'CC' => 'Cédula de ciudadanía',
+        'CE' => 'Cédula de extranjería',
+    ];
+
     private const DAYS = ['', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
     private const MONTHS = ['', 'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
 
@@ -32,6 +39,53 @@ final class Orders
         return null;
     }
 
+    /** Busca en la programación y en las reservas (Cartagena). */
+    public static function eventById(string $id): ?array
+    {
+        foreach ([...content('programacion.events', []), ...content('reservas', [])] as $event) {
+            if (!empty($event['buyable']) && $event['id'] === $id) {
+                return $event;
+            }
+        }
+        return null;
+    }
+
+    public static function isReservation(array $event): bool
+    {
+        return ($event['kind'] ?? 'ticket') === 'reservation';
+    }
+
+    /** Precio unitario en COP. Los productos en USD se cobran en COP con la TRM de referencia de la configuración. */
+    public static function unitAmount(array $price): int
+    {
+        if (isset($price['usd'])) {
+            return (int) (ceil($price['usd'] * self::fxRate() / 100) * 100);
+        }
+        return (int) $price['amount'];
+    }
+
+    public static function fxRate(): int
+    {
+        return max(1, (int) ($GLOBALS['app_config']['checkout']['usd_cop_rate'] ?? 4000));
+    }
+
+    /** Personas ya reservadas o en pago (30 min) para una fecha. */
+    public static function seatsTaken(string $eventId, string $date): int
+    {
+        $row = Db::one(
+            "SELECT COALESCE(SUM(i.qty), 0) AS n FROM orders o JOIN order_items i ON i.order_id = o.id
+             WHERE o.event_id = ? AND o.function_date = ?
+               AND (o.status IN ('approved', 'in_process') OR (o.status IN ('created', 'pending') AND o.created_at > ?))",
+            [$eventId, $date, date('Y-m-d H:i:s', time() - 1800)]
+        );
+        return (int) ($row['n'] ?? 0);
+    }
+
+    public static function seatsLeft(array $event, string $date): ?int
+    {
+        return isset($event['capacity']) ? max(0, (int) $event['capacity'] - self::seatsTaken($event['id'], $date)) : null;
+    }
+
     public static function dateLabel(string $isoDate): string
     {
         $d = new DateTimeImmutable($isoDate);
@@ -41,8 +95,20 @@ final class Orders
     /** Próximas funciones semanales ofrecidas: [['value' => '2026-10-10', 'label' => 'Sábado 10 de octubre'], ...] */
     public static function functionOptions(array $event): array
     {
-        $count = (int) ($GLOBALS['app_config']['checkout']['dates_offered'] ?? 8);
         $options = [];
+        if (self::isReservation($event)) {
+            $count = (int) ($event['dates_offered'] ?? 12);
+            $day = (new DateTimeImmutable('today'))->modify('+' . (int) ($event['lead_days'] ?? 1) . ' days');
+            while (count($options) < $count) {
+                if (in_array((int) $day->format('N'), $event['weekdays'], true)) {
+                    $value = $day->format('Y-m-d');
+                    $options[] = ['value' => $value, 'label' => self::dateLabel($value)];
+                }
+                $day = $day->modify('+1 day');
+            }
+            return $options;
+        }
+        $count = (int) ($GLOBALS['app_config']['checkout']['dates_offered'] ?? 8);
         $date = next_weekly_date((int) $event['weekday'], (string) $event['time']);
         for ($i = 0; $i < $count; $i++) {
             $value = $date->format('Y-m-d');
@@ -60,8 +126,9 @@ final class Orders
      */
     public static function create(string $eventId, string $functionDate, array $buyer, array $qty, string $gateway, bool $dryRun = false): array
     {
-        $event = self::buyableEvent($eventId);
+        $event = self::eventById($eventId);
         $errors = [];
+        $reservation = $event !== null && self::isReservation($event);
         if ($event === null) {
             throw new OrderException('La función seleccionada no está a la venta.');
         }
@@ -76,9 +143,10 @@ final class Orders
         foreach ($event['prices'] as $price) {
             $prices[$price['sku']] = $price;
         }
-        $max = (int) ($GLOBALS['app_config']['checkout']['max_tickets_per_order'] ?? 10);
+        $max = $reservation ? (int) $event['max_party'] : (int) ($GLOBALS['app_config']['checkout']['max_tickets_per_order'] ?? 10);
         $lines = [];
         $total = 0;
+        $usd = 0;
         $count = 0;
         foreach ($qty as $sku => $n) {
             $n = (int) $n;
@@ -88,17 +156,23 @@ final class Orders
             if (!isset($prices[$sku]) || $n < 0) {
                 throw new OrderException('Producto no válido.');
             }
-            $lines[] = ['sku' => $sku, 'label' => $prices[$sku]['label'], 'unit_price' => (int) $prices[$sku]['amount'], 'qty' => $n];
-            $total += (int) $prices[$sku]['amount'] * $n;
+            $unit = self::unitAmount($prices[$sku]);
+            $lines[] = ['sku' => $sku, 'label' => $prices[$sku]['label'], 'unit_price' => $unit, 'qty' => $n];
+            $total += $unit * $n;
+            $usd += (int) ($prices[$sku]['usd'] ?? 0) * $n;
             $count += $n;
         }
         if ($count === 0) {
-            $errors['cantidad'] = 'Elige al menos una entrada.';
+            $errors['cantidad'] = $reservation ? 'Elige cuántas personas van a asistir.' : 'Elige al menos una entrada.';
         } elseif ($count > $max) {
-            $errors['cantidad'] = "Máximo $max entradas por compra. Para grupos, escríbenos por WhatsApp.";
+            $errors['cantidad'] = $reservation
+                ? "Cada reserva es una mesa de máximo $max personas."
+                : "Máximo $max entradas por compra. Para grupos, escríbenos por WhatsApp.";
+        } elseif (isset($errors['funcion']) === false && ($left = self::seatsLeft($event, $functionDate)) !== null && $count > $left) {
+            $errors['cantidad'] = $left === 0 ? 'Esa fecha ya no tiene cupos. Elige otra.' : "Solo quedan $left cupos para esa fecha.";
         }
 
-        $buyer = self::cleanBuyer($buyer, $errors);
+        $buyer = self::cleanBuyer($buyer, $errors, $reservation);
         if ($errors) {
             throw new OrderException('Revisa los campos marcados.', $errors);
         }
@@ -108,14 +182,22 @@ final class Orders
 
         $now = Db::now();
         $publicId = bin2hex(random_bytes(16));
+        $kind = $reservation ? 'reservation' : 'ticket';
 
-        return Db::transaction(function (PDO $pdo) use ($publicId, $eventId, $functionDate, $buyer, $lines, $total, $gateway, $now) {
+        return Db::transaction(function (PDO $pdo) use ($publicId, $eventId, $functionDate, $buyer, $lines, $total, $usd, $kind, $event, $count, $gateway, $now) {
+            // Un solo turno para crear órdenes: así dos compras a la vez no se pasan del cupo del día.
+            Db::one("SELECT value FROM counters WHERE name = 'ticket'" . (Db::isMysql() ? ' FOR UPDATE' : ''));
+            $left = self::seatsLeft($event, $functionDate);
+            if ($left !== null && $count > $left) {
+                throw new OrderException('Esa fecha se acaba de llenar.', ['cantidad' => $left === 0 ? 'Esa fecha ya no tiene cupos. Elige otra.' : "Solo quedan $left cupos para esa fecha."]);
+            }
             Db::run(
-                'INSERT INTO orders (public_id, status, event_id, function_date, buyer_name, doc_type, doc_number, email, phone, city,
-                                     total_amount, currency, gateway, created_at, updated_at)
-                 VALUES (?, \'created\', ?, ?, ?, ?, ?, ?, ?, ?, ?, \'COP\', ?, ?, ?)',
-                [$publicId, $eventId, $functionDate, $buyer['buyer_name'], $buyer['doc_type'], $buyer['doc_number'],
-                 $buyer['email'], $buyer['phone'], $buyer['city'], $total, $gateway, $now, $now]
+                'INSERT INTO orders (public_id, status, event_id, function_date, kind, buyer_name, first_name, last_name, doc_type, doc_number, email, phone, city,
+                                     total_amount, currency, usd_total, fx_rate, gateway, created_at, updated_at)
+                 VALUES (?, \'created\', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, \'COP\', ?, ?, ?, ?, ?)',
+                [$publicId, $eventId, $functionDate, $kind, $buyer['buyer_name'], $buyer['first_name'], $buyer['last_name'],
+                 $buyer['doc_type'], $buyer['doc_number'], $buyer['email'], $buyer['phone'], $buyer['city'], $total,
+                 $usd > 0 ? $usd : null, $usd > 0 ? self::fxRate() : null, $gateway, $now, $now]
             );
             $orderId = (int) $pdo->lastInsertId();
             foreach ($lines as $line) {
@@ -129,12 +211,14 @@ final class Orders
     }
 
     /** @param array<string,string> $errors se completa por referencia */
-    private static function cleanBuyer(array $in, array &$errors): array
+    private static function cleanBuyer(array $in, array &$errors, bool $reservation = false): array
     {
         $clean = static fn(string $k, int $max): string => mb_substr(trim(strip_tags((string) ($in[$k] ?? ''))), 0, $max);
 
         $buyer = [
             'buyer_name' => $clean('buyer_name', 160),
+            'first_name' => $clean('first_name', 80),
+            'last_name'  => $clean('last_name', 80),
             'doc_type'   => strtoupper($clean('doc_type', 8)),
             'doc_number' => preg_replace('/[^A-Za-z0-9\-]/', '', $clean('doc_number', 32)) ?? '',
             'email'      => mb_strtolower($clean('email', 160)),
@@ -142,10 +226,19 @@ final class Orders
             'city'       => $clean('city', 80),
         ];
 
-        if (mb_strlen($buyer['buyer_name']) < 3) {
+        if ($reservation) {
+            if (mb_strlen($buyer['first_name']) < 2) {
+                $errors['first_name'] = 'Escribe tu nombre.';
+            }
+            if (mb_strlen($buyer['last_name']) < 2) {
+                $errors['last_name'] = 'Escribe tu apellido.';
+            }
+            $buyer['buyer_name'] = trim($buyer['first_name'] . ' ' . $buyer['last_name']);
+        } elseif (mb_strlen($buyer['buyer_name']) < 3) {
             $errors['buyer_name'] = 'Escribe tu nombre completo o la razón social.';
         }
-        if (!isset(self::DOC_TYPES[$buyer['doc_type']])) {
+        $docTypes = $reservation ? self::RESERVATION_DOC_TYPES : self::DOC_TYPES;
+        if (!isset($docTypes[$buyer['doc_type']])) {
             $errors['doc_type'] = 'Elige el tipo de documento.';
         }
         if (strlen($buyer['doc_number']) < 5) {
@@ -157,7 +250,7 @@ final class Orders
         if (!preg_match('/^\+?[\d\s\-()]{7,20}$/', $buyer['phone'])) {
             $errors['phone'] = 'Escribe un teléfono válido, con indicativo si estás fuera de Colombia.';
         }
-        if ($buyer['city'] === '') {
+        if (!$reservation && $buyer['city'] === '') {
             $errors['city'] = 'Escribe tu ciudad.';
         }
         return $buyer;
@@ -184,7 +277,7 @@ final class Orders
         $order['items'] = Db::all('SELECT sku, label, unit_price, qty FROM order_items WHERE order_id = ? ORDER BY id', [(int) $order['id']]);
         $order['quantity'] = array_sum(array_column($order['items'], 'qty'));
         $ticket = Db::one('SELECT number FROM tickets WHERE order_id = ?', [(int) $order['id']]);
-        $order['ticket'] = $ticket ? Tickets::code((int) $ticket['number']) : null;
+        $order['ticket'] = $ticket ? Tickets::code((int) $ticket['number'], (string) $order['kind']) : null;
         return $order;
     }
 

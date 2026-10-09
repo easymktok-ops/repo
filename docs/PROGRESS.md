@@ -81,3 +81,12 @@ En Hostinger: el contenido de `public/` va a `public_html/`; `app/`, `config/` y
 - `/comprar/`: calendario de sábados por mes, 3 menús con detalle desplegable, resumen con imagen.
 - Sección "Los menús" (partial `menus`) en la home y en la landing de Medellín, con los menús vigentes.
 - Pendiente de confirmar: precio del vegetariano (asumido 195.000), moneda USD/COP, código de descuento (fuera de alcance).
+
+## 9 oct (noche): reservas de Cartagena construidas
+- Producto aparte del show: `/reservar/cartagena/` (formulario), `/cartagena/` (landing de campaña, noindex), `/terminos-reservas/` (texto provisional).
+- Reglas: jueves, viernes y sábado; 50 cupos por día (se bloquea el día lleno, también ante compras simultáneas); mesa de máximo 6; cover USD 5 por persona.
+- Moneda: se publica en USD y se cobra en COP con la TRM de referencia `checkout.usd_cop_rate` (PROVISIONAL en 4.000; Mercado Pago Colombia cobra en COP). El voucher muestra COP cobrado, USD y la tasa.
+- Voucher `#CTG-5001…` (contador propio, no mezcla con `#JCD-`) con los campos que pidió la clienta para facturar: nombre, apellido, identificación con tipo (pasaporte/cédula/extranjería), email, fecha, personas, precio total recibido.
+- Casilla obligatoria: el cover no se devuelve. Se guarda `kind`, `usd_total` y `fx_rate` por orden para el reporte de la contadora.
+- Pruebas: 42 correctas (cupos, mesa de 6, fechas, documento, numeración separada).
+- Falta: hora/dirección, correo de la lista de reservas, exportación CSV de reservas (va con el panel), correo transaccional con el voucher, revisión legal de los términos.

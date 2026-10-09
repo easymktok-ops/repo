@@ -1,13 +1,14 @@
 <?php
 /** @var array $order */
-$event = Orders::buyableEvent($order['event_id']) ?? [];
+$event = Orders::eventById($order['event_id']) ?? [];
+$isRes = $order['kind'] === 'reservation';
 $status = $order['status'];
 $approved = $status === 'approved' && $order['ticket'] !== null;
 $waiting = in_array($status, ['created', 'pending', 'in_process'], true) || ($status === 'approved' && $order['ticket'] === null);
 $wa = whatsapp_link((string) content('site.whatsapp_number'), 'Hola, necesito ayuda con mi compra ' . ($order['ticket'] ?? ''));
 
 partial('head', ['page' => [
-    'title'      => ($approved ? 'Tu ticket' : 'Estado de tu compra') . ' | ' . content('site.name'),
+    'title'      => ($approved ? ($isRes ? 'Tu reserva' : 'Tu ticket') : 'Estado de tu compra') . ' | ' . content('site.name'),
     'path'       => '/pago/' . $order['public_id'] . '/',
     'indexable'  => false,
     'body_class' => 'page-order',
@@ -18,8 +19,26 @@ partial('header');
   <div class="container order__inner">
 
   <?php if ($approved): ?>
-    <p class="form-status form-status--ok" role="status">Pago aprobado. Esta es tu entrada.</p>
+    <p class="form-status form-status--ok" role="status"><?= $isRes ? 'Pago aprobado. Esta es tu reserva.' : 'Pago aprobado. Esta es tu entrada.' ?></p>
 
+    <?php if ($isRes): ?>
+    <article class="ticket" aria-labelledby="ticket-code">
+      <header class="ticket__head">
+        <p class="ticket__brand">Voucher de reserva · <?= e((string) ($event['venue'] ?? '')) ?>, <?= e((string) ($event['city'] ?? '')) ?></p>
+        <h1 id="ticket-code" class="ticket__code"><?= e($order['ticket']) ?></h1>
+      </header>
+      <dl class="ticket__data">
+        <div><dt>Nombre</dt><dd><?= e($order['first_name']) ?></dd></div>
+        <div><dt>Apellido</dt><dd><?= e($order['last_name']) ?></dd></div>
+        <div><dt># Identificación</dt><dd><?= e(Orders::RESERVATION_DOC_TYPES[$order['doc_type']] ?? $order['doc_type']) ?>: <?= e($order['doc_number']) ?></dd></div>
+        <div><dt>Email</dt><dd><?= e($order['email']) ?></dd></div>
+        <div><dt>Fecha de la reserva</dt><dd><?= e(Orders::dateLabel($order['function_date'])) ?></dd></div>
+        <div><dt>Cantidad de personas</dt><dd><?= (int) $order['quantity'] ?></dd></div>
+        <div><dt>Precio total recibido</dt><dd><?= e(format_cop((int) $order['total_amount'])) ?><?= $order['usd_total'] ? ' (USD ' . (int) $order['usd_total'] . ' a $' . number_format((int) $order['fx_rate'], 0, ',', '.') . ' por dólar)' : '' ?></dd></div>
+      </dl>
+      <p class="ticket__note">Presenta este voucher en el restaurante con tu documento. El cover no es reembolsable.</p>
+    </article>
+    <?php else: ?>
     <article class="ticket" aria-labelledby="ticket-code">
       <header class="ticket__head">
         <p class="ticket__brand"><?= e(content('site.name')) ?></p>
@@ -36,12 +55,13 @@ partial('header');
       </dl>
       <p class="ticket__note">Presenta este número en la puerta con tu documento.</p>
     </article>
+    <?php endif; ?>
 
     <div class="order__actions">
-      <button class="btn btn--primary" type="button" data-print><?= icon('ticket') ?>Guardar o imprimir ticket</button>
+      <button class="btn btn--primary" type="button" data-print><?= icon('ticket') ?>Guardar o imprimir <?= $isRes ? 'voucher' : 'ticket' ?></button>
       <a class="btn btn--ghost" href="<?= e($wa) ?>" target="_blank" rel="noopener"><?= icon('whatsapp') ?>Necesito ayuda</a>
     </div>
-    <p class="checkout__hint">Guarda esta dirección: es la única forma de volver a ver tu ticket.</p>
+    <p class="checkout__hint">Guarda esta dirección: es la única forma de volver a ver tu <?= $isRes ? 'voucher' : 'ticket' ?>.</p>
 
     <script>
       (function () {
@@ -58,7 +78,7 @@ partial('header');
 
   <?php elseif ($waiting): ?>
     <h1 class="display display--sm">Estamos confirmando tu pago</h1>
-    <p>No cierres esta página. En cuanto el pago se confirme, aquí aparece tu ticket numerado.</p>
+    <p>No cierres esta página. En cuanto el pago se confirme, aquí aparece tu <?= $isRes ? 'voucher' : 'ticket numerado' ?>.</p>
     <p class="checkout__hint" role="status" data-waiting>Esto puede tardar unos segundos.</p>
     <script>
       (function () {
@@ -79,7 +99,7 @@ partial('header');
     <h1 class="display display--sm">El pago no se aprobó</h1>
     <p>No se hizo ningún cobro por esta compra. Puedes intentarlo de nuevo con el mismo u otro medio de pago.</p>
     <p class="order__actions">
-      <a class="btn btn--primary" href="/comprar/"><?= icon('ticket') ?>Intentar de nuevo</a>
+      <a class="btn btn--primary" href="<?= $isRes ? '/reservar/cartagena/' : '/comprar/' ?>"><?= icon('ticket') ?>Intentar de nuevo</a>
       <a class="btn btn--ghost" href="<?= e($wa) ?>" target="_blank" rel="noopener"><?= icon('whatsapp') ?>Necesito ayuda</a>
     </p>
   <?php endif; ?>

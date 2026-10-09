@@ -206,6 +206,43 @@ function initCheckout() {
   update();
 }
 
+// Reserva (Cartagena): personas, total en USD y COP en vivo.
+function initReservation() {
+  const form = document.querySelector('[data-reserva]');
+  if (!form) return;
+  const unitCop = Number(form.dataset.unitCop);
+  const unitUsd = Number(form.dataset.unitUsd);
+  const money = new Intl.NumberFormat('es-CO');
+  const input = form.querySelector('#personas');
+  let started = false;
+
+  const update = () => {
+    const max = Math.min(Number(input.max) || 6, form.querySelector('input[name="funcion"]:checked')?.dataset.left ? Number(form.querySelector('input[name="funcion"]:checked').dataset.left) : 99);
+    const n = Math.max(0, Math.min(max, parseInt(input.value, 10) || 0));
+    form.querySelector('[data-summary-people]').textContent = String(n);
+    form.querySelector('[data-summary-usd]').textContent = 'USD ' + n * unitUsd;
+    form.querySelector('[data-summary-total]').textContent = '$' + money.format(n * unitCop) + ' COP';
+    const chosen = form.querySelector('input[name="funcion"]:checked');
+    form.querySelector('[data-summary-date]').textContent = chosen?.dataset.label || 'Elige un día';
+    if (n > 0 && chosen && !started) {
+      started = true;
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'begin_checkout', ecommerce: { currency: 'COP', value: n * unitCop, items: [{ item_id: 'cover', item_name: 'Cover de reserva Cartagena', price: unitCop, quantity: n }] } });
+    }
+  };
+
+  form.addEventListener('click', (event) => {
+    const btn = event.target.closest('[data-step]');
+    if (!btn) return;
+    const next = (parseInt(input.value, 10) || 0) + Number(btn.dataset.step);
+    input.value = String(Math.max(1, Math.min(Number(input.max) || 6, next)));
+    update();
+  });
+  form.addEventListener('input', update);
+  form.addEventListener('change', update);
+  update();
+}
+
 function initPrint() {
   document.querySelector('[data-print]')?.addEventListener('click', () => window.print());
 }
@@ -224,6 +261,7 @@ function initLanding() {
 initHeader();
 initLanding();
 initCheckout();
+initReservation();
 initPrint();
 initMenu();
 initHeroVideo();

@@ -148,6 +148,36 @@ check('los 14 procesos emitieron ticket', count($numbers) === 14, $errors);
 check('sin números repetidos', count(array_unique($numbers)) === 14);
 check('numeración continua, sin saltos', $numbers === range($before + 1, $before + 14), implode(',', $numbers));
 
+echo "Reservas Cartagena\n";
+$ctg = Orders::eventById('cartagena');
+$ctgDates = Orders::functionOptions($ctg);
+$ctgDate = $ctgDates[0]['value'];
+check('fechas solo jueves, viernes y sábado', count(array_filter($ctgDates, fn($d) => in_array((int) (new DateTimeImmutable($d['value']))->format('N'), [4, 5, 6], true))) === count($ctgDates));
+$guest = ['first_name' => 'John', 'last_name' => 'Smith', 'doc_type' => 'PA', 'doc_number' => 'X1234567', 'email' => 'john@example.com', 'phone' => '+1 555 123 4567'];
+$r1 = Orders::create('cartagena', $ctgDate, $guest, ['cover' => 4], 'simulated');
+check('cover USD 5 por persona cobrado en COP', $r1['total_amount'] === 4 * Orders::unitAmount($ctg['prices'][0]) && $r1['usd_total'] === 20 && $r1['kind'] === 'reservation');
+check('nombre completo armado desde nombre y apellido', $r1['buyer_name'] === 'John Smith');
+$e = throwsOrder(fn() => Orders::create('cartagena', $ctgDate, $guest, ['cover' => 7], 'simulated'));
+check('rechaza mesa de más de 6', $e !== null && isset($e->fieldErrors['cantidad']));
+$e = throwsOrder(fn() => Orders::create('cartagena', '2020-01-04', $guest, ['cover' => 2], 'simulated'));
+check('rechaza fecha fuera de la oferta', $e !== null && isset($e->fieldErrors['funcion']));
+$e = throwsOrder(fn() => Orders::create('cartagena', $ctgDate, ['first_name' => '', 'last_name' => ''] + $guest, ['cover' => 2], 'simulated'));
+check('exige nombre y apellido', $e !== null && isset($e->fieldErrors['first_name']) && isset($e->fieldErrors['last_name']));
+$e = throwsOrder(fn() => Orders::create('cartagena', $ctgDate, ['doc_type' => 'NIT'] + $guest, ['cover' => 2], 'simulated'));
+check('el documento debe ser pasaporte, cédula o extranjería', $e !== null && isset($e->fieldErrors['doc_type']));
+// Cupo de 50 por día: 1 reserva de 4 ya existe; se llena con mesas de 6 y la que sobra se rechaza.
+for ($i = 0; $i < 7; $i++) { Orders::create('cartagena', $ctgDate, $guest, ['cover' => 6], 'simulated'); }
+check('quedan 4 cupos (50 - 4 - 42)', Orders::seatsLeft($ctg, $ctgDate) === 4, (string) Orders::seatsLeft($ctg, $ctgDate));
+$e = throwsOrder(fn() => Orders::create('cartagena', $ctgDate, $guest, ['cover' => 5], 'simulated'));
+check('rechaza lo que pasa el cupo del día', $e !== null && isset($e->fieldErrors['cantidad']));
+Orders::create('cartagena', $ctgDate, $guest, ['cover' => 4], 'simulated');
+check('día lleno', Orders::seatsLeft($ctg, $ctgDate) === 0);
+$n = $gw->buildNotification($r1['public_id'], 'approved', $r1['total_amount']);
+Webhooks::handle('simulated', $n['headers'], $n['body']);
+$rv = Orders::byPublicId($r1['public_id']);
+check('voucher con código #CTG-', $rv['ticket'] !== null && str_starts_with($rv['ticket'], '#CTG-5'), (string) $rv['ticket']);
+check('la numeración de entradas del show no se mezcla', (int) Db::one("SELECT value FROM counters WHERE name = 'ticket'")['value'] >= 1000 && (int) Db::one("SELECT value FROM counters WHERE name = 'ticket'")['value'] < 5000);
+
 @unlink($dbFile);
 @unlink($dbFile . '-wal');
 @unlink($dbFile . '-shm');

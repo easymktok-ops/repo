@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 final class Tickets
 {
-    public static function code(int $number): string
+    public static function code(int $number, string $kind = 'ticket'): string
     {
-        return '#JCD-' . $number;
+        return ($kind === 'reservation' ? '#CTG-' : '#JCD-') . $number;
     }
 
     /**
@@ -20,25 +20,26 @@ final class Tickets
         try {
             return Db::transaction(static function (PDO $pdo) use ($orderId): array {
                 // Bloquea la orden para que dos avisos simultáneos de la misma compra se turnen.
-                Db::one('SELECT id FROM orders WHERE id = ?' . (Db::isMysql() ? ' FOR UPDATE' : ''), [$orderId]);
+                $kind = (string) (Db::one('SELECT kind FROM orders WHERE id = ?' . (Db::isMysql() ? ' FOR UPDATE' : ''), [$orderId])['kind'] ?? 'ticket');
+                $counter = $kind === 'reservation' ? 'reservation' : 'ticket';
 
                 $existing = Db::one('SELECT number FROM tickets WHERE order_id = ?', [$orderId]);
                 if ($existing !== null) {
-                    return ['number' => (int) $existing['number'], 'code' => self::code((int) $existing['number']), 'created' => false];
+                    return ['number' => (int) $existing['number'], 'code' => self::code((int) $existing['number'], $kind), 'created' => false];
                 }
 
-                Db::run("UPDATE counters SET value = value + 1 WHERE name = 'ticket'");
-                $number = (int) Db::one("SELECT value FROM counters WHERE name = 'ticket'")['value'];
+                Db::run('UPDATE counters SET value = value + 1 WHERE name = ?', [$counter]);
+                $number = (int) Db::one('SELECT value FROM counters WHERE name = ?', [$counter])['value'];
                 Db::run('INSERT INTO tickets (number, order_id, created_at) VALUES (?, ?, ?)', [$number, $orderId, Db::now()]);
 
-                return ['number' => $number, 'code' => self::code($number), 'created' => true];
+                return ['number' => $number, 'code' => self::code($number, $kind), 'created' => true];
             });
         } catch (PDOException $e) {
             // Carrera improbable: otro proceso emitió el ticket de esta orden justo antes. Se devuelve ese.
             if (Db::isUniqueViolation($e)) {
                 $existing = Db::one('SELECT number FROM tickets WHERE order_id = ?', [$orderId]);
                 if ($existing !== null) {
-                    return ['number' => (int) $existing['number'], 'code' => self::code((int) $existing['number']), 'created' => false];
+                    return ['number' => (int) $existing['number'], 'code' => self::code((int) $existing['number'], (string) (Db::one('SELECT kind FROM orders WHERE id = ?', [$orderId])['kind'] ?? 'ticket')), 'created' => false];
                 }
             }
             throw $e;

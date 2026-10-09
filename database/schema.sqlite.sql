@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS counters (
 );
 
 INSERT OR IGNORE INTO counters (name, value) VALUES ('ticket', 1000);
+INSERT OR IGNORE INTO counters (name, value) VALUES ('reservation', 5000);
 
 CREATE TABLE IF NOT EXISTS orders (
   id             INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -11,7 +12,10 @@ CREATE TABLE IF NOT EXISTS orders (
   status         TEXT NOT NULL DEFAULT 'created',
   event_id       TEXT NOT NULL,
   function_date  TEXT NOT NULL,
+  kind           TEXT NOT NULL DEFAULT 'ticket',
   buyer_name     TEXT NOT NULL,
+  first_name     TEXT NOT NULL DEFAULT '',
+  last_name      TEXT NOT NULL DEFAULT '',
   doc_type       TEXT NOT NULL,
   doc_number     TEXT NOT NULL,
   email          TEXT NOT NULL,
@@ -19,6 +23,8 @@ CREATE TABLE IF NOT EXISTS orders (
   city           TEXT NOT NULL DEFAULT '',
   total_amount   INTEGER NOT NULL,
   currency       TEXT NOT NULL DEFAULT 'COP',
+  usd_total      INTEGER NULL,
+  fx_rate        INTEGER NULL,
   gateway        TEXT NOT NULL,
   gateway_ref    TEXT NULL,
   payment_id     TEXT NULL,

@@ -17,7 +17,6 @@ $path = '/' . trim($path, '/');
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 
 $stubs = [
-    '/cartagena'         => 'Cartagena',
     '/politica-de-datos' => 'Política de tratamiento de datos',
 ];
 
@@ -30,6 +29,16 @@ switch (true) {
         require APP_DIR . '/actions/contacto.php';
         break;
 
+    case $path === '/reservar/cartagena':
+        $checkoutEvent = 'cartagena';
+        require APP_DIR . '/actions/checkout.php';
+        break;
+
+    case $path === '/terminos-reservas':
+        view('terminos-reservas');
+        break;
+
+    case $path === '/cartagena':
     case $path === '/medellin' || $path === '/bogota':
         view('landing', ['landingKey' => ltrim($path, '/')]);
         break;

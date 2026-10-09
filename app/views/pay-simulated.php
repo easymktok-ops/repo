@@ -12,7 +12,7 @@ partial('header');
   <div class="container order__inner">
     <p class="form-status form-status--error" role="note">Pasarela de práctica. Solo existe en pruebas: no cobra nada ni existe en producción.</p>
     <h1 class="display display--sm">Pagar <?= e(format_cop((int) $order['total_amount'])) ?></h1>
-    <p><?= (int) $order['quantity'] ?> entradas para el <?= e(Orders::dateLabel($order['function_date'])) ?>, a nombre de <?= e($order['buyer_name']) ?>.</p>
+    <p><?= (int) $order['quantity'] ?> <?= $order['kind'] === 'reservation' ? 'personas' : 'entradas' ?> para el <?= e(Orders::dateLabel($order['function_date'])) ?>, a nombre de <?= e($order['buyer_name']) ?>.</p>
     <p>Elige qué respuesta debe dar la pasarela:</p>
     <form class="order__actions" method="post" action="/pago-simulado/">
       <?= csrf_field() ?>

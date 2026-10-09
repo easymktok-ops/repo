@@ -22,6 +22,8 @@ return [
     'checkout' => [
         'max_tickets_per_order' => 10,
         'dates_offered'         => 8,
+        // Referencia para cobrar en COP lo que se publica en USD (reservas de Cartagena). PROVISIONAL: definir con la clienta.
+        'usd_cop_rate'          => 4000,
     ],
 
     'analytics' => [

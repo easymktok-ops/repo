@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS counters (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT IGNORE INTO counters (name, value) VALUES ('ticket', 1000);
+INSERT IGNORE INTO counters (name, value) VALUES ('reservation', 5000);
 
 CREATE TABLE IF NOT EXISTS orders (
   id             INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -11,7 +12,10 @@ CREATE TABLE IF NOT EXISTS orders (
   status         VARCHAR(16)  NOT NULL DEFAULT 'created',
   event_id       VARCHAR(32)  NOT NULL,
   function_date  DATE         NOT NULL,
+  kind           VARCHAR(16)  NOT NULL DEFAULT 'ticket',
   buyer_name     VARCHAR(160) NOT NULL,
+  first_name     VARCHAR(80)  NOT NULL DEFAULT '',
+  last_name      VARCHAR(80)  NOT NULL DEFAULT '',
   doc_type       VARCHAR(8)   NOT NULL,
   doc_number     VARCHAR(32)  NOT NULL,
   email          VARCHAR(160) NOT NULL,
@@ -19,6 +23,8 @@ CREATE TABLE IF NOT EXISTS orders (
   city           VARCHAR(80)  NOT NULL DEFAULT '',
   total_amount   INT          NOT NULL,
   currency       CHAR(3)      NOT NULL DEFAULT 'COP',
+  usd_total      INT          NULL,
+  fx_rate        INT          NULL,
   gateway        VARCHAR(24)  NOT NULL,
   gateway_ref    VARCHAR(96)  NULL,
   payment_id     VARCHAR(96)  NULL,

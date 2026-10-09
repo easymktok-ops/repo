@@ -2,7 +2,7 @@
 /** @var string $landingKey  medellin | bogota */
 $lp = content('landings.' . $landingKey);
 $event = null;
-foreach (content('programacion.events', []) as $candidate) {
+foreach ([...content('programacion.events', []), ...content('reservas', [])] as $candidate) {
     if ($candidate['id'] === ($lp['event'] ?? '')) {
         $event = $candidate;
     }
@@ -13,15 +13,16 @@ if ($lp === null || $event === null) {
     return;
 }
 
+$reserve = ($lp['mode'] ?? 'buy') === 'reserve';
 $buy = ($lp['mode'] ?? 'buy') === 'buy';
 $weekdays = [1 => 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábados', 'Domingos'];
 $waNumber = (string) content('site.whatsapp_number');
 $wa = whatsapp_link($waNumber, (string) ($lp['wa_message'] ?? ''));
-$ctaHref = $buy ? '/comprar/' : $wa;
-$ctaExternal = !$buy;
-$prices = $event['prices'] ?? [];
+$ctaHref = $reserve ? '/reservar/cartagena/' : ($buy ? '/comprar/' : $wa);
+$ctaExternal = !$buy && !$reserve;
+$prices = $buy ? ($event['prices'] ?? []) : [];
 $minPrice = $prices ? min(array_column($prices, 'amount')) : null;
-$dates = $buy ? array_slice(Orders::functionOptions($event), 0, 4) : [];
+$dates = ($buy || $reserve) ? array_slice(Orders::functionOptions($event), 0, 4) : [];
 
 partial('head', ['page' => [
     'title'         => $lp['meta_title'],
@@ -52,7 +53,9 @@ partial('head', ['page' => [
         </div>
         <div class="lp-fact">
           <dt><?= icon('calendar') ?>Cuándo</dt>
-          <?php if ($buy): ?>
+          <?php if ($reserve): ?>
+          <dd>Jueves, viernes<br>y sábados</dd>
+          <?php elseif ($buy): ?>
           <dd><?= e($weekdays[$event['weekday']] ?? '') ?>, función <?= e(format_time_12h($event['time'])) ?><br>Puertas <?= e(format_time_12h($event['doors'])) ?></dd>
           <?php else: ?>
           <dd>Funciones privadas<br>Fecha a convenir</dd>
@@ -60,7 +63,9 @@ partial('head', ['page' => [
         </div>
         <div class="lp-fact">
           <dt><?= icon('ticket') ?>Cuánto</dt>
-          <?php if ($buy && $minPrice): ?>
+          <?php if ($reserve): ?>
+          <dd>Cover de USD <?= (int) $event['prices'][0]['usd'] ?><br>por persona</dd>
+          <?php elseif ($buy && $minPrice): ?>
           <dd>Desde <?= e(format_cop((int) $minPrice)) ?><br>por persona</dd>
           <?php else: ?>
           <dd>Cotización según<br>tu evento</dd>
@@ -68,7 +73,11 @@ partial('head', ['page' => [
         </div>
         <div class="lp-fact">
           <dt><?= icon('hanger') ?>Cómo</dt>
+          <?php if ($reserve): ?>
+          <dd>Mesas de hasta <?= (int) $event['max_party'] ?><br>Voucher al pagar</dd>
+          <?php else: ?>
           <dd>Dress code <?= e(mb_strtolower($event['dress_code'])) ?><br><?= $buy ? 'Entrada con ticket numerado' : 'Reserva previa' ?></dd>
+          <?php endif; ?>
         </div>
       </dl>
 
@@ -85,9 +94,9 @@ partial('head', ['page' => [
 
       <div class="lp-hero__actions">
         <a class="btn btn--primary btn--lg" href="<?= e($ctaHref) ?>"<?= $ctaExternal ? ' target="_blank" rel="noopener"' : '' ?> data-lp-cta="hero">
-          <?= icon($buy ? 'ticket' : 'whatsapp') ?><?= e($lp['cta_label']) ?>
+          <?= icon($buy || $reserve ? 'ticket' : 'whatsapp') ?><?= e($lp['cta_label']) ?>
         </a>
-        <?php if ($buy): ?>
+        <?php if ($buy || $reserve): ?>
         <a class="btn btn--outline btn--lg" href="<?= e($wa) ?>" target="_blank" rel="noopener"><?= icon('whatsapp') ?><?= e(content('hero.whatsapp_label')) ?></a>
         <?php endif; ?>
       </div>
@@ -96,17 +105,18 @@ partial('head', ['page' => [
 
   <?php if ($buy) partial('menus', ['prices' => $prices, 'id' => 'lp-menus']); ?>
 
-  <?php if ($buy && $dates): ?>
+  <?php if (($buy || $reserve) && $dates): ?>
   <section class="lp-dates" aria-labelledby="lp-dates-title">
-    <h2 id="lp-dates-title" class="display display--sm">Próximas funciones</h2>
+    <h2 id="lp-dates-title" class="display display--sm"><?= $reserve ? 'Próximos días' : 'Próximas funciones' ?></h2>
     <ul class="lp-dates__list">
       <?php foreach ($dates as $d): ?>
-      <li><a class="lp-date" href="/comprar/?fecha=<?= e($d['value']) ?>" data-lp-cta="fecha"><span><?= e($d['label']) ?></span><?= icon('arrow') ?></a></li>
+      <li><a class="lp-date" href="<?= $reserve ? '/reservar/cartagena/' : '/comprar/' ?>?fecha=<?= e($d['value']) ?>" data-lp-cta="fecha"><span><?= e($d['label']) ?></span><?= icon('arrow') ?></a></li>
       <?php endforeach; ?>
     </ul>
   </section>
   <?php endif; ?>
 
+  <?php if (!$reserve): ?>
   <section class="lp-about" aria-labelledby="lp-about-title">
     <div class="lp-about__text">
       <h2 id="lp-about-title" class="display display--sm"><?= e(content('experiencia.title')) ?></h2>
@@ -114,12 +124,19 @@ partial('head', ['page' => [
     </div>
     <div class="lp-about__media"><?= media('contacto.jpg', 'Escenario de Joyas Colombianas® con bailarines en traje típico', 1000, 1250, 'cover') ?></div>
   </section>
+  <?php endif; ?>
 
   <section class="lp-faq" aria-labelledby="lp-faq-title">
     <h2 id="lp-faq-title" class="display display--sm">Antes de ir</h2>
     <dl class="lp-faq__list">
+      <?php if ($reserve): ?>
+      <div><dt>¿Cuánto cuesta reservar?</dt><dd>USD <?= (int) $event['prices'][0]['usd'] ?> por persona, como un cover. Se cobra en pesos colombianos.</dd></div>
+      <div><dt>¿Cuántas personas por reserva?</dt><dd>Cada reserva es una mesa de máximo <?= (int) $event['max_party'] ?> personas. Reserva solo a quienes van a asistir.</dd></div>
+      <div><dt>¿Si cancelo me devuelven el cover?</dt><dd>No. Al reservar se deja de vender una mesa para darte prioridad. Lee los <a href="/terminos-reservas/">términos de la reserva</a>.</dd></div>
+      <?php else: ?>
       <div><dt>¿A qué hora abren las puertas?</dt><dd><?= $buy ? 'Las puertas abren a las ' . e(format_time_12h($event['doors'])) . ' y la función empieza a las ' . e(format_time_12h($event['time'])) . '.' : 'Se define con tu evento al cotizar.' ?></dd></div>
       <div><dt>¿Qué debo ponerme?</dt><dd>El dress code es <?= e(mb_strtolower($event['dress_code'])) ?>.</dd></div>
+      <?php endif; ?>
       <?php if ($buy): ?>
       <div><dt>¿Cómo recibo mi entrada?</dt><dd>Al confirmarse el pago, aparece tu ticket numerado en pantalla. Preséntalo en la puerta con tu documento.</dd></div>
       <div><dt>¿Dónde compro?</dt><dd>Solo en esta página oficial. Para grupos grandes, escríbenos por WhatsApp.</dd></div>
@@ -132,7 +149,7 @@ partial('head', ['page' => [
 
 <div class="lp-sticky">
   <a class="btn btn--primary btn--block btn--lg" href="<?= e($ctaHref) ?>"<?= $ctaExternal ? ' target="_blank" rel="noopener"' : '' ?> data-lp-cta="sticky">
-    <?= icon($buy ? 'ticket' : 'whatsapp') ?><?= e($lp['cta_label']) ?><?= $buy && $minPrice ? ' desde ' . e(format_cop((int) $minPrice)) : '' ?>
+    <?= icon($buy || $reserve ? 'ticket' : 'whatsapp') ?><?= e($lp['cta_label']) ?><?= $buy && $minPrice ? ' desde ' . e(format_cop((int) $minPrice)) : '' ?>
   </a>
 </div>
 

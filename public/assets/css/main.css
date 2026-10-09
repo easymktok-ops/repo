@@ -1228,3 +1228,6 @@ main, .site-footer { position: relative; z-index: var(--z-content); }
 .menu-card dl { margin: 0; }
 .menu-card dt { margin-top: 0.8rem; font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; }
 .menu-card dd { margin: 0.15rem 0 0; opacity: 0.88; font-size: 0.95rem; }
+
+.cal__day--full { opacity: 0.35; cursor: not-allowed; text-decoration: line-through; }
+.cal__day--full input { cursor: not-allowed; }

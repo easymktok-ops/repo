@@ -127,6 +127,15 @@ return [
             'cta_label'   => 'Comprar entradas',
             'wa_message'  => 'Hola, quiero información sobre las entradas para Joyas Colombianas® Dinner & Show en Medellín',
         ],
+        'cartagena' => [
+            'event'       => 'cartagena',
+            'mode'        => 'reserve',
+            'meta_title'  => 'Reserva tu mesa en La Oveja, Cartagena | Joyas Colombianas®',
+            'h1'          => 'Reserva tu mesa en La Oveja, Cartagena',
+            'lead'        => 'Asegura tu mesa con un cover de USD 5 por persona',
+            'cta_label'   => 'Reservar mesa',
+            'wa_message'  => 'Hola, quiero información sobre reservas en La Oveja, Cartagena',
+        ],
         'bogota' => [
             'event'       => 'bogota',
             'mode'        => 'quote',
@@ -135,6 +144,29 @@ return [
             'lead'        => 'Una explosión de ritmos y sabores para descubrir los tesoros de Colombia',
             'cta_label'   => 'Cotizar mi evento',
             'wa_message'  => 'Hola, quiero cotizar un Dinner & Show privado de Joyas Colombianas® en Bogotá',
+        ],
+    ],
+
+    // Reservas con cover (no son función propia del show): no aparecen en la programación de la home.
+    'reservas' => [
+        [
+            'id'           => 'cartagena',
+            'kind'         => 'reservation',
+            'city'         => 'Cartagena',
+            'venue'        => 'La Oveja',
+            'summary'      => 'Reserva de mesa con cover de USD 5 por persona',
+            'weekdays'     => [4, 5, 6],
+            'time'         => '',
+            'doors'        => '',
+            'dress_code'   => '',
+            'capacity'     => 50,
+            'max_party'    => 6,
+            'lead_days'    => 1,
+            'dates_offered' => 12,
+            'buyable'      => true,
+            'prices'       => [
+                ['sku' => 'cover', 'label' => 'Cover de reserva, por persona', 'usd' => 5],
+            ],
         ],
     ],
 

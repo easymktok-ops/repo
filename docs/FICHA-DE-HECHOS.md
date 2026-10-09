@@ -22,6 +22,18 @@
 | Hay reseñas positivas en Tripadvisor (comentan bailarines, trajes, comida y baile final con el público) | Notas de la reunión y página de Tripadvisor |
 | El formato dinner show existe en el mundo (Moulin Rouge, Tropicana, Xcaret, etc.) | Reseña oficial |
 
+## Cartagena: reservas (respuestas de la clienta, 9 oct)
+
+| Dato | Valor |
+|---|---|
+| Restaurante | La Oveja, Cartagena |
+| Días | Jueves, viernes y sábado; 50 cupos por día |
+| Cover | USD 5 por persona (como un cover); el resto del consumo se paga en el restaurante |
+| Mesa | Máximo 6 personas por reserva |
+| Cancelación | El cover no se devuelve: al reservar se deja de vender una mesa para dar prioridad. Pide reservar solo las personas que realmente van |
+| Lista de reservas | La clienta la recibirá por correo (dirección por indicar) |
+| Facturación | Una factura por reserva (mesa). El voucher debe traer: nombre, apellido, identificación (aclarando pasaporte o cédula), email, fecha de la reserva, cantidad de personas y precio total recibido |
+
 ## Contradicciones por resolver
 
 1. **Duración:** la reseña dice "una hora de espectáculo en dos intervalos de unos 45 minutos". No cuadra. No se publica hasta confirmar.
@@ -31,6 +43,7 @@
 ## Por confirmar (necesario para los textos)
 
 - Dirección exacta del Hotel Marriott Medellín y cómo llegar.
+- Cartagena: hora de la reserva/llegada, dirección de La Oveja, correo donde se envía la lista, tasa USD→COP de referencia (hoy provisional 4.000), qué incluye el cover, canal de ayuda.
 - Precio del menú vegetariano; moneda (WeTravel muestra USD $55/$50 con conversión; nuestro cobro es en COP).
 - Duración total de la noche y de la función.
 - Cuántos artistas hay, qué regiones y danzas se presentan.
