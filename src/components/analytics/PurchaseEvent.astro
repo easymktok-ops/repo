@@ -1,0 +1,96 @@
+---
+import { booking } from "@config/booking";
+import type { Locale } from "@config/site";
+
+/**
+ * Conversion de compra en /reserva-confirmada (es/en). Empuja UN solo evento `purchase` al
+ * dataLayer por reserva pagada:
+ *  - Solo si confirm-purchase.php confirma el pago (reserva + session_id de Stripe + pago 'paid').
+ *    Sin ref/session_id, o sin pago confirmado, no se mide nada.
+ *  - transaction_id = folio de la reserva; value = monto cobrado (de la base, no de la URL).
+ *  - Dedupe: el folio enviado se guarda en localStorage (o sessionStorage); recargar la pagina
+ *    no vuelve a mandarlo.
+ * GTM dispara con este evento GA4 purchase y la conversion "Compra" de Google Ads.
+ */
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const refText = {
+  es: "Tu número de reserva es {ref}. En breve te llega el correo de confirmación.",
+  en: "Your booking number is {ref}. Your confirmation email is on its way.",
+}[locale];
+---
+
+<script is:inline define:vars={{ endpoint: booking.confirmEndpoint, refText }}>
+  (function () {
+    var p = new URLSearchParams(location.search);
+    var ref = p.get("ref");
+    var sid = p.get("session_id");
+    if (ref) {
+      var el = document.querySelector("[data-ref]");
+      if (el) el.textContent = refText.replace("{ref}", ref);
+    }
+    if (!ref || !sid) return;
+
+    var KEY = "aero:purchase:" + ref;
+    function store() {
+      try {
+        return window.localStorage;
+      } catch (e) {}
+      try {
+        return window.sessionStorage;
+      } catch (e) {}
+      return null;
+    }
+    var st = store();
+    function sent() {
+      try {
+        return !!(st && st.getItem(KEY));
+      } catch (e) {
+        return false;
+      }
+    }
+    if (sent()) return;
+
+    var url =
+      endpoint + "?ref=" + encodeURIComponent(ref) + "&session_id=" + encodeURIComponent(sid);
+    var tries = 0;
+    function check() {
+      tries++;
+      fetch(url, { headers: { Accept: "application/json" }, cache: "no-store" })
+        .then(function (r) {
+          return r.ok ? r.json() : { paid: false, final: r.status === 400 || r.status === 404 };
+        })
+        .then(function (d) {
+          if (d && d.paid) return push(d);
+          if (!(d && d.final) && tries < 4) setTimeout(check, 2500);
+        })
+        .catch(function () {
+          if (tries < 4) setTimeout(check, 2500);
+        });
+    }
+    function push(d) {
+      if (sent()) return;
+      try {
+        if (st) st.setItem(KEY, String(Date.now()));
+      } catch (e) {}
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ ecommerce: null }); // limpia ecommerce previo
+      window.dataLayer.push({
+        event: "purchase",
+        transaction_id: d.transaction_id,
+        value: d.value,
+        currency: d.currency,
+        payment_type: d.payment_type,
+        ecommerce: {
+          transaction_id: d.transaction_id,
+          value: d.value,
+          currency: d.currency,
+          items: d.items,
+        },
+      });
+    }
+    check();
+  })();
+</script>

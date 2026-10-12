@@ -152,6 +152,10 @@ function ensure_admin_columns(PDO $pdo): void
         'completed_at'    => 'ALTER TABLE bookings ADD COLUMN completed_at TEXT',
         'cancelled_at'    => 'ALTER TABLE bookings ADD COLUMN cancelled_at TEXT',
         'updated_at'      => 'ALTER TABLE bookings ADD COLUMN updated_at TEXT',
+        // Identificadores de clic de Google Ads (atribucion / importacion offline).
+        'gclid'           => 'ALTER TABLE bookings ADD COLUMN gclid TEXT',
+        'gbraid'          => 'ALTER TABLE bookings ADD COLUMN gbraid TEXT',
+        'wbraid'          => 'ALTER TABLE bookings ADD COLUMN wbraid TEXT',
     ];
     foreach ($wanted as $name => $sql) {
         if (!isset($have[$name])) {

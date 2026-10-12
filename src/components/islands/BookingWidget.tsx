@@ -5,6 +5,7 @@ import { booking, type BookingMode } from "@config/booking";
 import { clearPriceCache, getMonthPrices } from "@lib/pricing/api";
 import { addDaysYmd, longDate, monthOf, todayMx } from "@lib/pricing/calendar";
 import { chargeCents } from "@lib/pricing/charge";
+import { readClickIds } from "@lib/clickIds";
 import PriceCalendar, { type DayQuote } from "./PriceCalendar";
 import "./BookingWidget.css";
 
@@ -399,6 +400,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
           phone: phone.trim(),
           notes: notes.trim(),
           locale,
+          ...readClickIds(),
         }),
       });
 
@@ -637,7 +639,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
                 </p>
               )}
 
-              <div className="bk-advisors">
+              <div className="bk-advisors" data-wa-placement="booking_advisors">
                 <span className="bk-advisors-note">{t.availNote}</span>
                 <div className="bk-advisors-row">
                   {advisors.map((a) => (

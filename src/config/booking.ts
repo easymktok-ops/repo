@@ -28,6 +28,11 @@ export const booking = {
    * servidor responde enabled:false o falla, el formulario usa la fecha nativa.
    */
   pricesEndpoint: import.meta.env.PUBLIC_PRICES_ENDPOINT ?? "/api/prices.php",
+  /**
+   * Endpoint que confirma el pago en /reserva-confirmada antes de medir la conversion
+   * (evento purchase). Relativo => mismo origen.
+   */
+  confirmEndpoint: import.meta.env.PUBLIC_CONFIRM_ENDPOINT ?? "/api/confirm-purchase.php",
   minPassengers: 1,
 } as const;
 
