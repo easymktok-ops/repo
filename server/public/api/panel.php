@@ -241,6 +241,7 @@ if ($do === 'export') {
         'Folio', 'Creada', 'Estado', 'Cliente', 'Correo', 'Telefono', 'Vuelo',
         'Pasajeros', 'Fecha vuelo', 'Modo', 'Pagado ahora', 'Total vuelo',
         'Saldo en sitio', 'Saldo pagado', 'Completado', 'Cancelada', 'Notas',
+        'gclid', 'gbraid', 'wbraid',
     ]);
     while ($r = $stmt->fetch()) {
         fputcsv($out, [
@@ -261,6 +262,9 @@ if ($do === 'export') {
             $r['completed_at'] ?? '',
             $r['cancelled_at'] ?? '',
             str_replace(["\r", "\n"], ' ', (string) ($r['admin_notes'] ?? '')),
+            $r['gclid'] ?? '',
+            $r['gbraid'] ?? '',
+            $r['wbraid'] ?? '',
         ]);
     }
     fclose($out);

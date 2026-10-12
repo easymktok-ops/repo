@@ -9,7 +9,7 @@ import { whatsappUrl, type Locale } from "@config/site";
  * asesores (PageShell -> whatsapp={false}).
  * - Movil: circulo de 56px; escritorio: pastilla con texto.
  * - Queda debajo del aviso de cookies (z-sticky < z-toast).
- * - Clic -> dataLayer `whatsapp_click` (para medirlo en GTM).
+ * - Clic -> dataLayer `whatsapp_click` (placement "bubble"): lo empuja el listener global de Analytics.astro.
  */
 interface Props {
   locale: Locale;
@@ -35,20 +35,12 @@ const t = {
   target="_blank"
   rel="noopener"
   aria-label={t.aria}
-  data-wa-bubble
+  data-wa-placement="bubble"
 >
   <Icon name="whatsapp-logo" weight="fill" class="wab-ico" />
   <span class="wab-label">{t.label}</span>
 </a>
 
-<script>
-  document.querySelector("[data-wa-bubble]")?.addEventListener("click", () => {
-    const w = window as unknown as { dataLayer?: unknown[] };
-    if (Array.isArray(w.dataLayer)) {
-      w.dataLayer.push({ event: "whatsapp_click", placement: "bubble", page: location.pathname });
-    }
-  });
-</script>
 
 <style>
   .wab {

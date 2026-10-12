@@ -159,6 +159,45 @@ const t = {
           var banner = document.getElementById("cookie-banner");
           if (stored !== "granted" && stored !== "denied" && banner) banner.hidden = false;
 
+          // Clics a WhatsApp en TODO el sitio (cualquier enlace a wa.me / api.whatsapp.com):
+          // un solo evento `whatsapp_click` para la etiqueta "Clic WhatsApp" de GTM.
+          var WA = /^(https?:)?\/\/(wa\.me|api\.whatsapp\.com|web\.whatsapp\.com)\//i;
+          function onWaClick(e) {
+            if (e.type === "auxclick" && e.button !== 1) return;
+            var a = e.target && e.target.closest ? e.target.closest("a[href]") : null;
+            if (!a || !WA.test(a.getAttribute("href") || "")) return;
+            var place = a.closest("[data-wa-placement]");
+            window.dataLayer.push({
+              event: "whatsapp_click",
+              placement: place ? place.getAttribute("data-wa-placement") : "link",
+              link_url: a.href.split("?")[0],
+              page_path: location.pathname,
+            });
+          }
+          document.addEventListener("click", onWaClick, true);
+          document.addEventListener("auxclick", onWaClick, true);
+
+          // gclid / gbraid / wbraid del anuncio: se guardan al llegar (cualquier pagina) para
+          // adjuntarlos a la reserva. Sesion siempre; 90 dias solo con consentimiento.
+          try {
+            var qs = new URLSearchParams(location.search);
+            var ids = {};
+            var any = false;
+            ["gclid", "gbraid", "wbraid"].forEach(function (k) {
+              var v = qs.get(k);
+              if (v) {
+                ids[k] = v;
+                any = true;
+              }
+            });
+            if (any) {
+              ids.ts = Date.now();
+              var raw = JSON.stringify(ids);
+              sessionStorage.setItem("aero:clickids", raw);
+              if (getConsent() === "granted") localStorage.setItem("aero:clickids", raw);
+            }
+          } catch (e) {}
+
           var acc = document.getElementById("ck-accept");
           var rej = document.getElementById("ck-reject");
           if (acc)

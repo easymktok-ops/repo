@@ -213,6 +213,13 @@ const peopleOptions = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11 - 
           ];
       const text = parts.filter(Boolean).join(" ");
       const wa = `https://wa.me/${form.dataset.wa}?text=${encodeURIComponent(text)}`;
+      const w = window as unknown as { dataLayer?: unknown[] };
+      w.dataLayer?.push({
+        event: "whatsapp_click",
+        placement: "contact_form",
+        link_url: wa.split("?")[0],
+        page_path: location.pathname,
+      });
       window.open(wa, "_blank", "noopener");
       sent?.removeAttribute("hidden");
     });

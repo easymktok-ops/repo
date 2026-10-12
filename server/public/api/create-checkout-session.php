@@ -63,6 +63,12 @@ $flightDate = trim((string) ($body['flightDate'] ?? ''));
 $notes = mb_substr(trim((string) ($body['notes'] ?? '')), 0, 500);
 $expectedUnit = checkout_int_or_null($body['expectedUnitPrice'] ?? null);
 $expectedDeposit = checkout_int_or_null($body['expectedDeposit'] ?? null);
+// Identificadores de clic de Google Ads (opcionales). Solo caracteres seguros.
+$clickIds = [];
+foreach (['gclid', 'gbraid', 'wbraid'] as $k) {
+    $v = trim((string) ($body[$k] ?? ''));
+    $clickIds[$k] = preg_match('/^[A-Za-z0-9_\-.]{4,255}$/', $v) ? $v : null;
+}
 
 $errors = [];
 if ($slug === '') {
@@ -129,10 +135,11 @@ try {
             (reference, status, locale, package_slug, package_title, passengers,
              flight_date, mode, currency, price_per_person, amount_now_cents,
              total_full_cents, balance_cents, customer_name, customer_email,
-             customer_phone, notes, created_at' . $pricingCols . ')
+             customer_phone, notes, created_at, gclid, gbraid, wbraid' . $pricingCols . ')
          VALUES
             (:ref, \'pending\', :locale, :slug, :title, :pax, :fdate, :mode, :cur,
-             :ppp, :now, :full, :bal, :name, :email, :phone, :notes, :created_at' . $pricingVals . ')'
+             :ppp, :now, :full, :bal, :name, :email, :phone, :notes, :created_at,
+             :gclid, :gbraid, :wbraid' . $pricingVals . ')'
     );
     $stmt->execute([
         ':ref' => $reference,
@@ -152,6 +159,9 @@ try {
         ':phone' => $phone,
         ':notes' => $notes !== '' ? $notes : null,
         ':created_at' => date('Y-m-d H:i:s'),
+        ':gclid' => $clickIds['gclid'],
+        ':gbraid' => $clickIds['gbraid'],
+        ':wbraid' => $clickIds['wbraid'],
     ] + $pricingParams);
     $bookingId = (int) $pdo->lastInsertId();
 } catch (Throwable $e) {
@@ -172,9 +182,8 @@ $params = [
     'locale' => $locale,
     'customer_email' => $email,
     'client_reference_id' => $reference,
+    // El monto NO viaja en la URL: /reserva-confirmada lo pide a confirm-purchase.php.
     'success_url' => $siteOrigin . $successPath . '?ref=' . $reference
-        . '&amt=' . ($charge['amount_now_cents'] / 100)
-        . '&cur=' . $charge['currency']
         . '&session_id={CHECKOUT_SESSION_ID}',
     'cancel_url' => $siteOrigin . $cancelPath . '?canceled=1&ref=' . $reference,
     'line_items' => [[

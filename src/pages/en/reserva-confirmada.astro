@@ -4,6 +4,7 @@ import Icon from "@components/ui/Icon.astro";
 import { Image } from "astro:assets";
 import wordmark from "@/assets/brand/aerodiverti-wordmark-dark.png";
 import { whatsappUrl, site } from "@config/site";
+import PurchaseEvent from "@components/analytics/PurchaseEvent.astro";
 
 const locale = "en" as const;
 const wa = whatsappUrl("Hi, I just booked my flight. I'd like to confirm the details.");
@@ -38,37 +39,7 @@ const wa = whatsappUrl("Hi, I just booked my flight. I'd like to confirm the det
   </section>
 </PageShell>
 
-<script is:inline>
-  (function () {
-    var p = new URLSearchParams(location.search);
-    var ref = p.get("ref");
-    var amt = parseFloat(p.get("amt") || "0");
-    var cur = (p.get("cur") || "MXN").toUpperCase();
-    if (ref) {
-      var el = document.querySelector("[data-ref]");
-      if (el) {
-        el.textContent = "Your booking number is " + ref + ". Your confirmation email is on its way.";
-      }
-    }
-    // Purchase event -> dataLayer. GTM fires GA4 purchase, Google Ads
-    // conversion and Meta Purchase from it. No direct gtag/fbq here (managed in
-    // GTM to avoid double counting). Without consent, GTM never loads.
-    try {
-      window.dataLayer = window.dataLayer || [];
-      if (ref) {
-        window.dataLayer.push({ ecommerce: null });
-        window.dataLayer.push({
-          event: "purchase",
-          ecommerce: {
-            transaction_id: ref,
-            currency: cur,
-            value: isNaN(amt) ? undefined : amt,
-          },
-        });
-      }
-    } catch (e) {}
-  })();
-</script>
+<PurchaseEvent locale={locale} />
 
 <style>
   .confirm {
