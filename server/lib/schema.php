@@ -94,6 +94,14 @@ function ensure_pricing_schema(PDO $pdo): bool
                 )"
             );
             $pdo->exec('CREATE INDEX IF NOT EXISTS idx_rules_range ON pricing_rules (active, start_date, end_date)');
+            // Reglas en % sobre el precio de lista (columna nueva, NULL en las reglas existentes).
+            $ruleCols = [];
+            foreach ($pdo->query('PRAGMA table_info(pricing_rules)')->fetchAll() as $col) {
+                $ruleCols[$col['name']] = true;
+            }
+            if (!isset($ruleCols['adjust_percent'])) {
+                $pdo->exec('ALTER TABLE pricing_rules ADD COLUMN adjust_percent INTEGER');
+            }
             $pdo->exec(
                 "CREATE TABLE IF NOT EXISTS package_pricing (
                     package_slug            TEXT PRIMARY KEY,

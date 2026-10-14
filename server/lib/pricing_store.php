@@ -90,7 +90,8 @@ function pricing_rule_to_row(array $r): array
         ':start_date'      => $r['start_date'],
         ':end_date'        => $r['end_date'],
         ':weekdays'        => $r['type'] === 'weekday' ? json_encode(array_values(array_unique($r['weekdays']))) : null,
-        ':price_cents'     => $r['type'] === 'blocked' ? null : $r['price_cents'],
+        ':price_cents'     => $r['type'] === 'blocked' || ($r['adjust_percent'] ?? null) !== null ? null : $r['price_cents'],
+        ':adjust_percent'  => $r['type'] === 'blocked' ? null : ($r['adjust_percent'] ?? null),
         ':deposit_percent' => $r['type'] === 'blocked' ? null : ($r['deposit_percent'] ?? null),
         ':active'          => !empty($r['active']) ? 1 : 0,
         ':updated_at'      => $r['updated_at'],
@@ -163,15 +164,16 @@ function pricing_save_rule(PDO $pdo, array $rule, string $user, array $knownSlug
         if ($before === null) {
             $pdo->prepare(
                 'INSERT INTO pricing_rules (id, label, type, package_ids, start_date, end_date, weekdays,
-                    price_cents, deposit_percent, active, updated_at, updated_by)
+                    price_cents, adjust_percent, deposit_percent, active, updated_at, updated_by)
                  VALUES (:id, :label, :type, :package_ids, :start_date, :end_date, :weekdays,
-                    :price_cents, :deposit_percent, :active, :updated_at, :updated_by)'
+                    :price_cents, :adjust_percent, :deposit_percent, :active, :updated_at, :updated_by)'
             )->execute($row);
         } else {
             $pdo->prepare(
                 'UPDATE pricing_rules SET label = :label, type = :type, package_ids = :package_ids,
                     start_date = :start_date, end_date = :end_date, weekdays = :weekdays,
-                    price_cents = :price_cents, deposit_percent = :deposit_percent, active = :active,
+                    price_cents = :price_cents, adjust_percent = :adjust_percent,
+                    deposit_percent = :deposit_percent, active = :active,
                     updated_at = :updated_at, updated_by = :updated_by
                  WHERE id = :id'
             )->execute($row);
