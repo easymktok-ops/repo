@@ -3,7 +3,7 @@
 Sistema de prospección orgánica y ética para Easy Marketing (easymarketing.mx).
 Descubre empresas, audita su sitio, genera una muestra personalizada (mini-reporte PDF + mockup demo) y prepara mensajes que pasan por aprobación humana antes de enviarse.
 
-Estado: **borrador para aprobación**. No se escribe código hasta recibir "continúa".
+Estado: **aprobado con decisiones (sección 4)**. Fase 0 arranca al recibir "continúa".
 
 ---
 
@@ -14,7 +14,7 @@ easy-outreach-agent/
 ├── PLAN.md
 ├── README.md                      # arranque, checklist DNS (SPF/DKIM/DMARC), operación diaria
 ├── pyproject.toml                 # Python 3.12, uv; deps y config de pytest/ruff
-├── .env.example                   # ANTHROPIC_API_KEY, GOOGLE_PLACES_KEY, PAGESPEED_KEY, DENUE_TOKEN, SMTP/Gmail, DRY_RUN=true
+├── .env.example                   # ANTHROPIC_API_KEY, PAGESPEED_KEY, DENUE_TOKEN, GOOGLE_PLACES_KEY (opcional), SMTP_*/IMAP_*, DRY_RUN=true
 ├── alembic.ini
 ├── migrations/                    # Alembic (SQLite hoy, Postgres después)
 ├── config/
@@ -44,8 +44,7 @@ easy-outreach-agent/
 │   ├── sources/
 │   │   ├── base.py                # interfaz Source
 │   │   ├── denue.py               # INEGI DENUE API
-│   │   ├── places.py              # Google Places API (oficial)
-│   │   └── siem.py                # SIEM (solo si su robots.txt/términos lo permiten)
+│   │   └── places.py              # Google Places API (oficial, apagado por defecto)
 │   ├── enrich/
 │   │   ├── contacts.py            # correo público, formulario, WhatsApp, con URL fuente
 │   │   ├── stack.py               # WordPress/Wix/Shopify/a la medida, CRM, agenda
@@ -58,18 +57,19 @@ easy-outreach-agent/
 │   ├── scoring.py
 │   ├── samples/
 │   │   ├── report_pdf.py          # render A4 con Chromium (print, preferCSSPageSize, printBackground)
-│   │   └── demo.py                # genera demo HTML con marca del prospecto, antes/después
+│   │   ├── demo.py                # genera demo HTML con marca del prospecto, antes/después
+│   │   └── publish.py             # sube demos a Cloudflare Pages (demo.easymarketing.mx)
 │   ├── messaging/
 │   │   ├── writer.py              # Claude: correo 90-120 palabras + variante formulario
 │   │   └── validator.py           # bloquea cifras sin evidencia, promesas, falta de identificación/baja
 │   ├── sending/
 │   │   ├── suppression.py         # lista global, consultada antes de cualquier envío
 │   │   ├── scheduler.py           # horario laboral MX, warmup, límites diarios, pausa por rebote/queja
-│   │   ├── email_smtp.py          # SMTP / Gmail API, List-Unsubscribe
+│   │   ├── email_smtp.py          # SMTP, List-Unsubscribe (mailto)
 │   │   ├── forms.py               # Playwright, solo sin CAPTCHA, captura del envío
 │   │   └── sequence.py            # día 0 / 4 / 10, se detiene al primer reply
 │   ├── replies/
-│   │   ├── reader.py              # lectura del buzón (IMAP / Gmail API)
+│   │   ├── reader.py              # lectura del buzón por IMAP (respuestas y bajas)
 │   │   └── classify.py            # interesado / no ahora / baja / rebote / otro + notificación
 │   ├── web/
 │   │   ├── app.py                 # FastAPI: cola de aprobación, embudo, página de baja
@@ -116,18 +116,27 @@ Todas las tablas llevan `id` (PK), `created_at`, `updated_at`. Fechas en UTC.
 
 Cada fase termina con pruebas, resumen de 5 líneas y espera de "continúa".
 
-## 4. Supuestos a confirmar
+## 4. Decisiones (confirmadas el 14-oct-2026)
 
-1. **Ubicación del código.** Este repositorio (`easymktok-ops/repo`) contiene otro proyecto (markitdown-cli + imágenes). Propongo mantener el agente en la carpeta `easy-outreach-agent/` de este repo, o moverlo a un repo propio. ¿Cuál prefieres?
-2. **Proveedor del buzón `norman@hola.easymarketing.mx`.** ¿Google Workspace (Gmail API + OAuth) o SMTP de otro proveedor (Zoho, Amazon SES, Postmark)? Define el módulo de envío y de lectura de replies.
-3. **DENUE.** Requiere token gratuito de INEGI; ¿lo tramitas tú? Google Places y PageSpeed requieren un proyecto de Google Cloud con facturación activa.
-4. **SIEM.** Su sitio no ofrece API pública documentada; propongo dejarlo fuera del MVP y usar solo DENUE + Places, salvo que confirmes una vía permitida.
-5. **Hosting de demos y página de baja.** Opciones: subruta en easymarketing.mx (p. ej. `/d/<token>` y `/baja`) o un subdominio estático (`demo.easymarketing.mx`) con `noindex`. ¿Quién administra el WordPress/hosting de easymarketing.mx?
-6. **Aviso de privacidad.** ¿Ya existe URL publicada? El pie del correo la enlaza.
-7. **Dashboard.** Corre local (`localhost`) en el MVP. Si se quiere acceso remoto, se agrega autenticación básica y despliegue (Railway/Fly/VPS).
-8. **Modelo de Claude.** Uso el modelo más reciente disponible para auditoría y redacción, con un modelo ligero para clasificación de replies y control de costo; configurable en `settings.yaml`.
-9. **Giros iniciales por plaza.** Propuesta: Querétaro — clínicas dentales y estéticas; CDMX — despachos profesionales y desarrolladoras inmobiliarias; Monterrey — manufactura y servicios industriales B2B.
-10. **Ejecución diaria.** Cron local o tarea programada en un servidor; ¿dónde va a correr?
+Principio rector: **priorizar siempre plataformas sin costo**; solo se paga lo inevitable (API de Claude, centavos por prospecto).
+
+| # | Tema | Decisión |
+|---|---|---|
+| 1 | Ubicación del código | Repo independiente y privado `easy-outreach-agent`. |
+| 2 | Envío | **SMTP** + **IMAP** para leer respuestas. Buzón `norman@hola.easymarketing.mx` en el hosting de correo que ya tiene easymarketing.mx (costo ya cubierto). No se usan Brevo, SES, Mailgun ni similares: sus términos prohíben correo frío y pueden cerrar la cuenta. Respaldo de bajo costo: Zoho Mail Lite (el plan gratuito de Zoho no da SMTP/IMAP). |
+| 3 | Descubrimiento | **DENUE** (gratis, token de INEGI) es la fuente principal. **Google Places** queda implementado pero **apagado por defecto** (pide tarjeta; tiene uso gratuito mensual); se enciende solo si DENUE no alcanza el 60% de contacto. SIEM fuera del MVP. |
+| 3 | Auditoría | **PageSpeed Insights API** (gratis, solo llave de Google Cloud, sin facturación), Playwright y axe-core (open source). |
+| 3 | Claude | Se usa solo donde aporta: resumen de hallazgos y redacción para prospectos que ya pasaron el score; la clasificación de respuestas va con un modelo ligero. Las heurísticas hacen el trabajo pesado. Tope de gasto diario configurable. |
+| 3 | Base de datos y ejecución | SQLite local. Corre en tu computadora con cron (gratis). Más adelante, opcional: GitHub Actions (2,000 min/mes gratis en repos privados). |
+| 3 | Entregabilidad | mail-tester.com (gratis, 3 pruebas/día), Google Postmaster Tools (gratis), reportes DMARC con un lector gratuito. |
+| 4 | Demos | **Cloudflare Pages (gratis)** en `demo.easymarketing.mx` (un CNAME en el DNS actual). URL privada por prospecto (`/d/<token-aleatorio>/`), `noindex` en meta y en cabecera `X-Robots-Tag`, sin listado. Se borran a los 60 días. |
+| 4 | Landing | **https://easymarketing.mx/demand/ se queda como único destino de CTA**, no como alojamiento del demo. Cada botón del PDF, del demo y del correo apunta ahí con UTM (`?utm_source=outreach&utm_medium=email&utm_content=<token>`) para atribuir cada reunión al prospecto. |
+| 4 | Baja | Sin servidor: `List-Unsubscribe` por mailto (`baja@hola.easymarketing.mx`) + texto "responde BAJA" + página `easymarketing.mx/baja` con formulario simple que manda a ese buzón. El lector IMAP da de alta la supresión automáticamente. |
+
+Pendientes menores (se resuelven con el default si no dices otra cosa):
+- Aviso de privacidad: se enlaza `https://easymarketing.mx/aviso-de-privacidad/` (ajustar si la URL es otra).
+- Dashboard local en `localhost`, sin autenticación en el MVP.
+- Giros iniciales: Querétaro — clínicas dentales y estéticas; CDMX — despachos profesionales y desarrolladoras inmobiliarias; Monterrey — manufactura y servicios industriales B2B.
 
 ## 5. Reglas duras (recordatorio)
 
@@ -135,4 +144,4 @@ Sin evasión de CAPTCHA; sin scraping de LinkedIn ni de Google Maps fuera de su 
 
 ---
 
-**Siguiente paso:** responde a los supuestos de la sección 4 (o di "continúa con los defaults") para arrancar la Fase 0.
+**Siguiente paso:** "continúa" para arrancar la Fase 0 en el repo `easy-outreach-agent`.
