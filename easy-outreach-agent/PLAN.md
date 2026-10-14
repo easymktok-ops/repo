@@ -122,7 +122,7 @@ Principio rector: **priorizar siempre plataformas sin costo**; solo se paga lo i
 
 | # | Tema | Decisión |
 |---|---|---|
-| 1 | Ubicación del código | Repo independiente y privado `easy-outreach-agent`. |
+| 1 | Ubicación del código | Carpeta `easy-outreach-agent/` dentro de `easymktok-ops/repo` (la integración no puede crear repos). Se puede mover a un repo propio más adelante sin cambios de código. |
 | 2 | Envío | **SMTP** + **IMAP** para leer respuestas. Buzón `norman@hola.easymarketing.mx` en el hosting de correo que ya tiene easymarketing.mx (costo ya cubierto). No se usan Brevo, SES, Mailgun ni similares: sus términos prohíben correo frío y pueden cerrar la cuenta. Respaldo de bajo costo: Zoho Mail Lite (el plan gratuito de Zoho no da SMTP/IMAP). |
 | 3 | Descubrimiento | **DENUE** (gratis, token de INEGI) es la fuente principal. **Google Places** queda implementado pero **apagado por defecto** (pide tarjeta; tiene uso gratuito mensual); se enciende solo si DENUE no alcanza el 60% de contacto. SIEM fuera del MVP. |
 | 3 | Auditoría | **PageSpeed Insights API** (gratis, solo llave de Google Cloud, sin facturación), Playwright y axe-core (open source). |
@@ -144,4 +144,4 @@ Sin evasión de CAPTCHA; sin scraping de LinkedIn ni de Google Maps fuera de su 
 
 ---
 
-**Siguiente paso:** "continúa" para arrancar la Fase 0 en el repo `easy-outreach-agent`.
+**Siguiente paso:** "continúa" para arrancar la Fase 0.
