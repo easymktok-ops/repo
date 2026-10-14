@@ -25,6 +25,7 @@ require __DIR__ . '/../../lib/panel_auth.php';
 require __DIR__ . '/../../lib/pricing.php';
 require __DIR__ . '/../../lib/panel_pricing.php';
 require __DIR__ . '/../../lib/attribution.php';
+require __DIR__ . '/../../lib/csv.php';
 
 $config = load_config();
 $panel = $config['panel'] ?? ['enabled' => false];
@@ -247,7 +248,7 @@ if ($do === 'export') {
         'referrer', 'landing_page', 'idioma', 'first_touch_at',
     ]);
     while ($r = $stmt->fetch()) {
-        fputcsv($out, [
+        fputcsv($out, csv_safe_row([
             $r['reference'],
             $r['created_at'],
             $r['status'],
@@ -278,7 +279,7 @@ if ($do === 'export') {
             $r['landing_page'] ?? '',
             $r['idioma'] ?? '',
             $r['first_touch_at'] ?? '',
-        ]);
+        ]));
     }
     fclose($out);
     exit;
@@ -437,7 +438,7 @@ function render_list(array $rows, int $total, int $page, int $pages, array $f): 
     <script>
       // "Mostrar origen": columna discreta, oculta por defecto; la eleccion se recuerda por usuario.
       (function () {
-        var key = 'aero-panel:origen:' + <?= json_encode((string) ($_SESSION['panel_user'] ?? '')) ?>;
+        var key = 'aero-panel:origen:' + <?= json_encode((string) ($_SESSION['panel_user'] ?? ''), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
         var box = document.querySelector('[data-origin-toggle]');
         var wrap = document.querySelector('[data-origin-wrap]');
         if (!box || !wrap) return;

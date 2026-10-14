@@ -738,7 +738,7 @@ function panel_pricing_rule_form(array $v, array $errors, array $ctx, bool $bloc
         var start = f.elements['start_date'], end = f.elements['end_date'];
         function type() { var t = f.querySelector('input[name=type]:checked'); return t ? t.value : ''; }
         // Vista previa de la regla en %: mismo calculo que pricing_apply_percent() (redondeo a $50).
-        var bases = <?= json_encode($bases, JSON_UNESCAPED_UNICODE) ?>;
+        var bases = <?= json_encode($bases, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
         var adjBox = document.getElementById('adjust-box'), priceBox = document.getElementById('price-box');
         var prev = document.getElementById('pct-preview');
         function money(c) { return '$' + Math.round(c / 100).toLocaleString('es-MX'); }
@@ -1137,7 +1137,7 @@ function panel_tours_script(string $section): string
         $page = 'reservas';
     }
     return '<script src="/ui/tour.js" defer></script>'
-        . '<script>window.PANEL_TOUR_PAGE=' . json_encode($page) . ';</script>'
+        . '<script>window.PANEL_TOUR_PAGE=' . json_encode($page, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';</script>'
         . <<<'HTML'
     <script>
     window.addEventListener('DOMContentLoaded',function(){
