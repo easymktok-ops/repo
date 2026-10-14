@@ -5,6 +5,7 @@ import { getLocaleFromUrl, hreflangAlternates } from "@i18n/utils";
 import { useTranslations } from "@i18n/ui";
 import { siteGraph } from "@lib/seo/schema";
 import Analytics from "@components/analytics/Analytics.astro";
+import AttributionCapture from "@components/analytics/AttributionCapture.astro";
 
 /**
  * Layout base: cabeza SEO/OG/hreflang dominio-agnostica. Todo lo absoluto se
@@ -98,5 +99,6 @@ const fullTitle = title === site.name ? title : `${title} · ${site.name}`;
     </main>
     <slot name="chrome-end" />
     {analytics && <Analytics locale={locale} />}
+    {analytics && site.analytics.attribution && <AttributionCapture />}
   </body>
 </html>

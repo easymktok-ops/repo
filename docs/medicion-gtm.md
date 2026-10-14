@@ -55,3 +55,20 @@ Se guardan al llegar desde un anuncio (cualquier página, `sessionStorage`; 90 d
 Viajan con la reserva al backend (columnas `gclid`, `gbraid`, `wbraid` en `bookings`) y salen en el
 CSV del panel. Sirven para importar conversiones offline en Google Ads (por ejemplo, saldo pagado
 en sitio).
+
+## Atribución de primer contacto ("Origen" en el panel)
+
+- Navegador (`src/lib/attribution.ts`, cargado por `AttributionCapture.astro` en todas las páginas):
+  UTM, gclid/gbraid/wbraid, referrer (sin Stripe ni nuestro dominio), página de entrada, idioma y
+  `first_touch_at` (UTC-6). Cookie propia `aero_ft` (90 días, SameSite=Lax, Secure) + localStorage
+  `aero:ft`. Primer contacto gana; un click ID nuevo se guarda como `last_click_id`.
+- Servidor: viaja en la misma llamada de `create-checkout-session.php` (antes de ir a Stripe),
+  `lib/attribution.php` limpia y recorta a 255; columnas NULL en `bookings` (migración automática
+  en `lib/schema.php`, no toca filas existentes).
+- Panel: columna "Origen" oculta por defecto ("Mostrar origen", se recuerda por usuario), tooltip y
+  tarjeta "Origen" en el detalle con los campos crudos. El CSV siempre incluye todo.
+
+Apagar si algo falla:
+- Servidor (inmediato): en `server/config.php` agregar `'attribution' => ['enabled' => false],`.
+  Las reservas se crean igual, sin estos datos.
+- Navegador: build con `PUBLIC_ATTRIBUTION="off"` (o revertir el commit) y redeploy.

@@ -156,6 +156,16 @@ function ensure_admin_columns(PDO $pdo): void
         'gclid'           => 'ALTER TABLE bookings ADD COLUMN gclid TEXT',
         'gbraid'          => 'ALTER TABLE bookings ADD COLUMN gbraid TEXT',
         'wbraid'          => 'ALTER TABLE bookings ADD COLUMN wbraid TEXT',
+        // Atribucion de primer contacto (lib/attribution.php). Todas NULL: no tocan filas existentes.
+        'utm_source'      => 'ALTER TABLE bookings ADD COLUMN utm_source TEXT',
+        'utm_medium'      => 'ALTER TABLE bookings ADD COLUMN utm_medium TEXT',
+        'utm_campaign'    => 'ALTER TABLE bookings ADD COLUMN utm_campaign TEXT',
+        'utm_term'        => 'ALTER TABLE bookings ADD COLUMN utm_term TEXT',
+        'utm_content'     => 'ALTER TABLE bookings ADD COLUMN utm_content TEXT',
+        'referrer'        => 'ALTER TABLE bookings ADD COLUMN referrer TEXT',
+        'landing_page'    => 'ALTER TABLE bookings ADD COLUMN landing_page TEXT',
+        'idioma'          => 'ALTER TABLE bookings ADD COLUMN idioma TEXT',
+        'first_touch_at'  => 'ALTER TABLE bookings ADD COLUMN first_touch_at TEXT',
     ];
     foreach ($wanted as $name => $sql) {
         if (!isset($have[$name])) {
