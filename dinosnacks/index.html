@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Dino Snacks · Pide y recoge</title>
+<meta name="description" content="Botanas, fresas especiales y bebidas de Dino Snacks en Ciudad de Libres. Pide desde tu celular, elige tu hora y recoge sin fila.">
+<meta name="theme-color" content="#b9e34c">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 52 L80 36 A34 34 0 1 0 80 68Z' fill='%23f2e53a' stroke='%23111' stroke-width='6'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600;700;800&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#menu">Saltar al menú</a>
+
+<header class="topbar" id="top">
+  <a href="#top" class="wordmark" aria-label="Dino Snacks, inicio">
+    <span class="wordmark-dino" data-dino="mini" aria-hidden="true"></span>
+    <span>DINO SNACKS</span>
+  </a>
+  <nav class="topnav" aria-label="Secciones">
+    <a href="#menu">Menú</a>
+    <a href="#vaso">Arma tu vaso</a>
+    <a href="#juego">Dino-Chomp</a>
+    <a href="#recoger">Recoger</a>
+  </nav>
+  <button class="cart-btn" id="cartBtn" type="button" aria-label="Ver tu pedido">
+    <span class="cart-dino" data-dino="cart" aria-hidden="true"></span>
+    <span class="cart-label">Pedido</span>
+    <span class="cart-count" id="cartCount">0</span>
+  </button>
+</header>
+
+<div class="order-banner" id="orderBanner" hidden>
+  <span class="order-banner-dot" aria-hidden="true"></span>
+  <span id="orderBannerText">Tu pedido está en preparación</span>
+  <button type="button" class="link-btn" id="orderBannerOpen">Ver código</button>
+</div>
+
+<main>
+  <!-- HERO -->
+  <section class="hero" aria-labelledby="heroTitle">
+    <div class="hero-grid">
+      <div class="hero-copy">
+        <p class="status" id="openStatus"><span class="status-dot"></span><span>Revisando horario…</span></p>
+        <h1 id="heroTitle" class="hero-title">Pide tu antojo.<br>Recógelo sin fila.</h1>
+        <p class="hero-sub">Escoge en el menú, aparta tu hora y llega por él con tu código. Dorilocos, fresas Dubai, perlas explosivas y todo lo que el dino no se ha comido.</p>
+        <div class="hero-ctas">
+          <a href="#menu" class="btn btn-ink">Ver el menú</a>
+          <a href="#vaso" class="btn btn-ghost">Armar mi Dino-vaso</a>
+        </div>
+      </div>
+      <figure class="hero-photo">
+        <img src="img/fresas-dubai.webp" alt="Vaso de fresas Dubai con chocolate y pistache, con el sticker del dino de lentes" width="640" height="640" fetchpriority="high">
+        <figcaption><strong>Fresas Dubai</strong> <span>$135</span></figcaption>
+        <button type="button" class="hero-photo-add" data-quick="fresas-dubai">Agregar al pedido</button>
+      </figure>
+    </div>
+    <div class="lane lane-hero" id="heroLane" aria-hidden="true"></div>
+  </section>
+
+  <!-- HOW -->
+  <section class="how" aria-labelledby="howTitle">
+    <h2 id="howTitle" class="h2">Así funciona el pickup</h2>
+    <ol class="how-steps">
+      <li><span class="how-n">1</span><div><h3>Arma tu pedido</h3><p>Del menú, de tu Dino-vaso o de los dos. Ajusta sabores y tamaños.</p></div></li>
+      <li><span class="how-n">2</span><div><h3>Aparta tu hora</h3><p>Ves qué tan lleno está cada horario y escoges el que te late.</p></div></li>
+      <li><span class="how-n">3</span><div><h3>Muestra tu código</h3><p>Te damos un QR y un casillero. Llegas, escaneas y te vas.</p></div></li>
+    </ol>
+  </section>
+
+  <!-- MENU -->
+  <section class="menu" id="menu" aria-labelledby="menuTitle">
+    <div class="menu-head">
+      <h2 id="menuTitle" class="h2">El menú</h2>
+      <label class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="search" type="search" placeholder="Busca: fresas, chamoy, frappé…" autocomplete="off" aria-label="Buscar en el menú">
+      </label>
+    </div>
+    <div class="tabs" role="tablist" aria-label="Categorías" id="tabs"></div>
+    <div class="grid" id="grid" aria-live="polite"></div>
+  </section>
+
+  <div class="lane lane-scroll" data-scroll-lane aria-hidden="true"></div>
+
+  <!-- BUILDER -->
+  <section class="builder" id="vaso" aria-labelledby="vasoTitle">
+    <div class="builder-stage">
+      <div class="builder-dino" id="builderDino" data-dino="builder" aria-hidden="true"></div>
+      <svg class="cup" viewBox="0 0 200 240" aria-hidden="true">
+        <defs><clipPath id="cupClip"><path d="M20 20 H180 L160 228 Q158 236 150 236 H50 Q42 236 40 228 Z"/></clipPath></defs>
+        <g clip-path="url(#cupClip)"><g id="cupLayers"></g></g>
+        <path class="cup-outline" d="M20 20 H180 L160 228 Q158 236 150 236 H50 Q42 236 40 228 Z"/>
+        <rect class="cup-rim" x="12" y="10" width="176" height="14" rx="7"/>
+        <g class="cup-sticker" transform="translate(100 150)"><circle r="30"/><text y="6" text-anchor="middle">DINO</text></g>
+      </svg>
+      <p class="builder-name" id="vasoName">Tu Dino-vaso</p>
+    </div>
+    <div class="builder-panel">
+      <h2 id="vasoTitle" class="h2 h2-light">Arma tu Dino-vaso</h2>
+      <p class="builder-lede">Cada cosa que eliges cae al vaso y el dino se la quiere robar. Tres toppings van incluidos, desde el cuarto son $5.</p>
+      <form id="vasoForm" class="builder-form">
+        <fieldset><legend>Tamaño</legend><div class="chips" data-group="size"></div></fieldset>
+        <fieldset><legend>Base</legend><div class="chips" data-group="base"></div></fieldset>
+        <fieldset><legend>Toppings</legend><div class="chips" data-group="tops"></div></fieldset>
+        <fieldset><legend>Salsas</legend><div class="chips" data-group="sauce"></div></fieldset>
+        <div class="builder-foot">
+          <p class="builder-price"><span>Total</span> <strong id="vasoPrice">$40</strong></p>
+          <button type="submit" class="btn btn-yolk">Agregar mi Dino-vaso</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- GAME -->
+  <section class="game" id="juego" aria-labelledby="gameTitle">
+    <div class="game-copy">
+      <h2 id="gameTitle" class="h2 h2-light">Dino-Chomp</h2>
+      <p>Cómete todas las gomitas del laberinto y esquiva a los chiles. Si muerdes una fresa, los chiles se asustan y te los puedes comer. Cada 10 puntos del juego son 1 Dino-punto, y con 100 Dino-puntos tienes $10 de descuento.</p>
+      <dl class="wallet">
+        <div><dt>Tus Dino-puntos</dt><dd id="walletPts">0</dd></div>
+        <div><dt>Récord</dt><dd id="walletBest">0</dd></div>
+      </dl>
+      <div class="wallet-bar" aria-hidden="true"><span id="walletFill"></span></div>
+      <p class="wallet-hint" id="walletHint">Te faltan 100 para tu primer cupón.</p>
+      <p class="keys-hint">Flechas o WASD en computadora. En celular, desliza sobre el laberinto o usa los botones.</p>
+    </div>
+    <div class="game-box">
+      <div class="game-hud"><span>PUNTOS <b id="hudScore">0</b></span><span id="hudLives" aria-label="Vidas">♥♥♥</span></div>
+      <div class="game-canvas-wrap">
+        <canvas id="gameCanvas" width="456" height="504" aria-label="Laberinto de Dino-Chomp" role="img"></canvas>
+        <div class="game-overlay" id="gameOverlay">
+          <p class="game-overlay-title" id="overlayTitle">¿Listo para comer?</p>
+          <p class="game-overlay-sub" id="overlaySub">3 vidas · gomitas 10 · fresas 50 · chiles 200</p>
+          <button type="button" class="btn btn-yolk" id="gameStart">Jugar</button>
+        </div>
+      </div>
+      <div class="pad" aria-label="Controles">
+        <button type="button" data-dir="up" aria-label="Arriba">▲</button>
+        <button type="button" data-dir="left" aria-label="Izquierda">◀</button>
+        <button type="button" data-dir="down" aria-label="Abajo">▼</button>
+        <button type="button" data-dir="right" aria-label="Derecha">▶</button>
+      </div>
+    </div>
+  </section>
+
+  <div class="lane lane-scroll lane-light" data-scroll-lane aria-hidden="true"></div>
+
+  <!-- PICKUP INFO -->
+  <section class="pickup" id="recoger" aria-labelledby="pickupTitle">
+    <div class="pickup-main">
+      <h2 id="pickupTitle" class="h2">Dónde recoger</h2>
+      <p class="pickup-addr">Galeana y Av. 16 de Septiembre, Tetela,<br>Ciudad de Libres, Puebla</p>
+      <p class="pickup-hours"><strong>Lunes a domingo</strong> 2:00 pm a 10:00 pm</p>
+      <div class="pickup-actions">
+        <a class="btn btn-ink" href="https://www.google.com.mx/maps/place/Dino+Snacks/@19.4582731,-97.6894887,17z" target="_blank" rel="noopener">Abrir en Google Maps</a>
+        <a class="btn btn-ghost" href="https://wa.me/522761028871" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+      </div>
+    </div>
+    <ul class="pickup-perks">
+      <li><h3>Casillero Dino</h3><p>Tu pedido te espera en un casillero numerado. Escaneas tu QR y se abre.</p></li>
+      <li><h3>Botón "Voy en camino"</h3><p>Avísale a la cocina cuando sales y tus papas salen calientitas justo cuando llegas.</p></li>
+      <li><h3>Horarios con semáforo</h3><p>Ves qué horas están tranquilas y cuáles se llenan antes de apartar.</p></li>
+    </ul>
+    <nav class="social" aria-label="Redes sociales">
+      <a href="https://www.instagram.com/snacksdino/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.tiktok.com/@snacks.dino" target="_blank" rel="noopener">TikTok</a>
+      <a href="https://www.facebook.com/snacksdino/" target="_blank" rel="noopener">Facebook</a>
+    </nav>
+  </section>
+</main>
+
+<footer class="foot">
+  <p>Versión demo: los pedidos, pagos, casilleros y puntos son simulados y se guardan solo en tu navegador. El envío por WhatsApp sí abre un chat real con Dino Snacks.</p>
+</footer>
+
+<!-- Dock móvil -->
+<div class="dock" id="dock" hidden>
+  <button type="button" class="dock-btn" id="dockBtn"><span id="dockCount">0 cosas</span><strong>Ver pedido · <span id="dockTotal">$0</span></strong></button>
+</div>
+
+<!-- Product dialog -->
+<dialog class="sheet" id="productDialog" aria-labelledby="pdName">
+  <form method="dialog" class="sheet-inner" id="productForm">
+    <button class="sheet-close" value="cancel" aria-label="Cerrar">✕</button>
+    <img id="pdImg" class="pd-img" alt="" width="640" height="640">
+    <div class="pd-body">
+      <h2 id="pdName" class="pd-name"></h2>
+      <p id="pdDesc" class="pd-desc"></p>
+      <div id="pdOptions"></div>
+      <label class="field"><span>Nota para la cocina (opcional)</span><input id="pdNote" maxlength="80" placeholder="Sin cacahuate, extra chamoy…"></label>
+    </div>
+    <div class="sheet-foot">
+      <div class="qty" role="group" aria-label="Cantidad">
+        <button type="button" data-qty="-1" aria-label="Quitar uno">−</button>
+        <output id="pdQty">1</output>
+        <button type="button" data-qty="1" aria-label="Agregar uno">+</button>
+      </div>
+      <button type="submit" class="btn btn-ink btn-wide" value="add" id="pdAdd">Agregar · $0</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Cart dialog -->
+<dialog class="sheet sheet-side" id="cartDialog" aria-labelledby="cartTitle">
+  <div class="sheet-inner">
+    <button class="sheet-close" type="button" data-close aria-label="Cerrar">✕</button>
+    <h2 id="cartTitle" class="cart-title">Tu pedido</h2>
+    <div id="cartBody"></div>
+  </div>
+</dialog>
+
+<!-- Ticket dialog -->
+<dialog class="sheet ticket" id="ticketDialog" aria-labelledby="ticketTitle">
+  <div class="sheet-inner">
+    <button class="sheet-close" type="button" data-close aria-label="Cerrar">✕</button>
+    <div id="ticketBody"></div>
+  </div>
+</dialog>
+
+<div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" defer></script>
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
