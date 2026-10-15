@@ -1,0 +1,23 @@
+[
+  {"CLEE": "22014621211000011", "Id": "1001", "Nombre": "CLINICA DENTAL SONRISA",
+   "Razon_social": "SONRISA DENTAL SA DE CV", "Clase_actividad": "Consultorios dentales del sector privado",
+   "Estrato": "6 a 10 personas", "Tipo_vialidad": "AVENIDA", "Calle": "ZARAGOZA", "Num_Exterior": "120",
+   "Num_Interior": "3", "Colonia": "CENTRO", "CP": "76000",
+   "Ubicacion": "SANTIAGO DE QUERÉTARO, Querétaro, QUERÉTARO", "Telefono": "4421234567",
+   "Correo_e": "CONTACTO@SONRISAQRO.MX", "Sitio_internet": "WWW.SONRISAQRO.MX", "Tipo": "Fijo",
+   "Longitud": "-100.39", "Latitud": "20.59", "CLASE_ACTIVIDAD_ID": "621211", "Fecha_Alta": "2019-11"},
+  {"CLEE": "22014621211000022", "Id": "1002", "Nombre": "CONSULTORIO DENTAL DRA LOPEZ",
+   "Razon_social": "", "Clase_actividad": "Consultorios dentales del sector privado",
+   "Estrato": "0 a 5 personas", "Tipo_vialidad": "CALLE", "Calle": "HIDALGO", "Num_Exterior": "5",
+   "Num_Interior": "", "Colonia": "CENTRO", "CP": "76000",
+   "Ubicacion": "SANTIAGO DE QUERÉTARO, Querétaro, QUERÉTARO", "Telefono": "",
+   "Correo_e": "DRALOPEZ@GMAIL.COM", "Sitio_internet": "", "Tipo": "Fijo",
+   "Longitud": "-100.39", "Latitud": "20.59", "CLASE_ACTIVIDAD_ID": "621211"},
+  {"CLEE": "22014621211000033", "Id": "1003", "Nombre": "ESTETICA BELLA",
+   "Razon_social": "", "Clase_actividad": "Salones y clínicas de belleza y peluquerías",
+   "Estrato": "0 a 5 personas", "Tipo_vialidad": "CALLE", "Calle": "JUAREZ", "Num_Exterior": "10",
+   "Num_Interior": "", "Colonia": "CENTRO", "CP": "76000",
+   "Ubicacion": "SANTIAGO DE QUERÉTARO, Querétaro, QUERÉTARO", "Telefono": "",
+   "Correo_e": "INFO@ESTETICABELLA.COM.MX", "Sitio_internet": "WWW.FACEBOOK.COM/ESTETICABELLA", "Tipo": "Fijo",
+   "Longitud": "-100.39", "Latitud": "20.59", "CLASE_ACTIVIDAD_ID": "812110"}
+]

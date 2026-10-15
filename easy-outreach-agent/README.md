@@ -9,7 +9,7 @@ Plan completo, esquema de base de datos y decisiones: [PLAN.md](PLAN.md).
 | Fase | Estado |
 |---|---|
 | 0. Esqueleto (config, logging, modelos, migraciones, tests) | Lista |
-| 1. Descubrimiento y enriquecimiento | Pendiente |
+| 1. Descubrimiento y enriquecimiento | Lista (falta la corrida real con DENUE_TOKEN) |
 | 2. Auditoría y scoring | Pendiente |
 | 3. Muestra y mensaje | Pendiente |
 | 4. Cola, envío y seguimiento | Pendiente |
@@ -25,9 +25,28 @@ uv venv && source .venv/bin/activate
 uv pip install -e ".[dev]"
 cp .env.example .env          # llena las claves que tengas; DRY_RUN=true se queda así
 outreach config-check         # valida config/*.yaml y dice qué claves faltan por fase
-outreach init-db              # crea data/outreach.db con las migraciones
+outreach init-db              # crea data/outreach.db (los demás comandos también migran solos)
 pytest                        # pruebas
 ```
+
+## Fase 1: descubrir y enriquecer
+
+Necesita `DENUE_TOKEN` en `.env` (gratis: registro en https://www.inegi.org.mx/servicios/api_denue.html).
+
+```bash
+outreach discover -s qro-salud --limit 200   # DENUE -> empresas nuevas con sitio propio, sin duplicados
+outreach enrich -s qro-salud                 # visita cada sitio: contactos, formulario, stack, idioma
+outreach stats -s qro-salud                  # % con sitio válido y canal de contacto (meta >= 60%)
+outreach enrich --retry                      # revisita las que estaban caídas
+```
+
+- **discover** lee DENUE (`BuscarAreaActEstr`) con las claves de entidad, municipio, SCIAN y estrato de `segments.yaml`. Solo guarda empresas con sitio propio (o correo corporativo del que se deduce el dominio); `--include-no-site` guarda también las demás. Deduplica por dominio normalizado y salta dominios en la lista de supresión. El correo y teléfono registrados en DENUE se guardan con la ficha del DENUE como URL fuente.
+- **enrich** visita el inicio y hasta 3 páginas de contacto por sitio, siempre con robots.txt, `EasyOutreachBot/1.0` y 1 petición por segundo por dominio (o el `Crawl-delay` del sitio si es mayor). No sigue redirecciones hacia redes sociales. Resultado por empresa:
+  - `enriched`: sitio válido y correo o formulario sin CAPTCHA.
+  - `manual`: sitio válido, pero solo WhatsApp, teléfono o formulario con CAPTCHA (no se evade).
+  - `discarded`: sitio caído, estacionado, en construcción, bloqueado por robots.txt o que redirige a una red social (el motivo queda en `site_status`).
+- **Google Places** está implementado y apagado. Para encenderlo: `sources.places.enabled: true` en `settings.yaml`, `GOOGLE_PLACES_KEY` en `.env` y `outreach discover -s qro-salud --source places`. Sus términos solo permiten guardar el `place_id` de forma permanente; por eso los datos que se usan después salen del sitio de la empresa.
+- Las claves SCIAN y de municipio de `segments.yaml` se pueden ajustar; están comentadas en el archivo.
 
 ## Configuración
 

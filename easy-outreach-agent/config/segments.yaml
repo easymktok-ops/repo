@@ -1,5 +1,67 @@
 # Segmentos del piloto. auto_send es false por defecto: todo pasa por la cola.
+#
+# denue: consulta BuscarAreaActEstr del DENUE (INEGI).
+#   entidad: clave de 2 dígitos (09 CDMX, 19 Nuevo León, 22 Querétaro).
+#   municipios: claves de 3 dígitos, o "0" para todos.
+#   actividades: claves SCIAN 2018 de 2, 3, 4 o 6 dígitos.
+#   estratos: 0 todos; 1 = 0-5 personas, 2 = 6-10, 3 = 11-30, 4 = 31-50, 5 = 51-100, 6 = 101-250, 7 = 251+.
+# places: textos de búsqueda para Google Places (solo si sources.places.enabled = true).
+
 segments:
-  - {name: qro-salud, country: MX, city: Querétaro, giro: "clínicas dentales y estéticas", auto_send: false, daily_cap: 40, active: true}
-  - {name: cdmx-servicios, country: MX, city: CDMX, giro: "despachos profesionales y desarrolladoras inmobiliarias", auto_send: false, daily_cap: 40, active: false}
-  - {name: mty-industrial, country: MX, city: Monterrey, giro: "manufactura y servicios industriales B2B", auto_send: false, daily_cap: 40, active: false}
+  - name: qro-salud
+    country: MX
+    city: Querétaro
+    giro: clínicas dentales y estéticas
+    auto_send: false
+    daily_cap: 40
+    active: true
+    denue:
+      entidad: "22"
+      municipios: ["014", "006", "011"]      # Querétaro, Corregidora, El Marqués
+      actividades:
+        - "621211"                           # consultorios dentales del sector privado
+        - "621113"                           # consultorios de medicina especializada (estética, cirugía plástica)
+        - "812110"                           # salones y clínicas de belleza
+      estratos: [0]
+    places:
+      queries: [clínica dental en Querétaro, clínica de medicina estética en Querétaro]
+
+  - name: cdmx-servicios
+    country: MX
+    city: CDMX
+    giro: despachos profesionales y desarrolladoras inmobiliarias
+    auto_send: false
+    daily_cap: 40
+    active: false
+    denue:
+      entidad: "09"
+      municipios: ["0"]
+      actividades:
+        - "541110"                           # bufetes jurídicos
+        - "541211"                           # servicios de contabilidad y auditoría
+        - "541310"                           # servicios de arquitectura
+        - "531210"                           # inmobiliarias y corredores de bienes raíces
+        - "236111"                           # edificación de vivienda unifamiliar
+        - "236112"                           # edificación de vivienda multifamiliar
+      estratos: [2, 3, 4, 5]
+    places:
+      queries: [despacho contable en CDMX, desarrolladora inmobiliaria en CDMX]
+
+  - name: mty-industrial
+    country: MX
+    city: Monterrey
+    giro: manufactura y servicios industriales B2B
+    auto_send: false
+    daily_cap: 40
+    active: false
+    denue:
+      entidad: "19"
+      municipios: ["039", "019", "026", "046", "006", "048"]   # Monterrey, San Pedro, Guadalupe, San Nicolás, Apodaca, Santa Catarina
+      actividades:
+        - "332"                              # fabricación de productos metálicos
+        - "333"                              # fabricación de maquinaria y equipo
+        - "326"                              # industria del plástico y del hule
+        - "8113"                             # reparación y mantenimiento de maquinaria industrial y comercial
+      estratos: [3, 4, 5, 6]
+    places:
+      queries: [maquinado industrial en Monterrey, mantenimiento industrial en Monterrey]

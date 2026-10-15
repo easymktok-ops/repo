@@ -44,9 +44,13 @@ crawler:
   user_agent: "EasyOutreachBot/1.0 (+https://easymarketing.mx)"
   max_requests_per_second_per_domain: 1
   timeout_seconds: 15
+  retries: 2
+  max_pages_per_site: 4                                # inicio + páginas de contacto
+  max_page_bytes: 2000000
+  workers: 8                                           # sitios distintos en paralelo; cada dominio sigue a 1 req/seg
 
 sources:
-  denue: {enabled: true}
+  denue: {enabled: true, page_size: 500}
   places: {enabled: false}                             # pide tarjeta; encender solo si DENUE no alcanza
 
 llm:

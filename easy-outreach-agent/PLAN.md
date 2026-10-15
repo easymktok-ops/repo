@@ -3,7 +3,7 @@
 Sistema de prospección orgánica y ética para Easy Marketing (easymarketing.mx).
 Descubre empresas, audita su sitio, genera una muestra personalizada (mini-reporte PDF + mockup demo) y prepara mensajes que pasan por aprobación humana antes de enviarse.
 
-Estado: **Fase 0 lista** (15-oct-2026). Siguiente: Fase 1 al recibir "continúa".
+Estado: **Fase 1 lista** (15-oct-2026), pendiente de la corrida real con `DENUE_TOKEN` para medir el criterio. Siguiente: Fase 2 al recibir "continúa".
 
 ---
 
@@ -144,4 +144,12 @@ Sin evasión de CAPTCHA; sin scraping de LinkedIn ni de Google Maps fuera de su 
 
 ---
 
-**Siguiente paso:** "continúa" para arrancar la Fase 1 (necesita DENUE_TOKEN en .env).
+## 6. Notas de Fase 1
+
+- Migración `0002`: `companies.site_status` (ok / unreachable / http_error / parked / robots / not_html / no_site) y `companies.enriched_at`.
+- La extracción de marca (logo, colores) para el demo se movió a la Fase 3, que es donde se usa.
+- Los correos de terceros que aparecen en un sitio (la agencia que lo hizo, plantillas) se descartan; solo se aceptan correos del dominio de la empresa o de proveedores gratuitos.
+
+---
+
+**Siguiente paso:** correr `outreach discover -s qro-salud --limit 200`, `outreach enrich` y `outreach stats` con el `DENUE_TOKEN` real para validar el 60%; luego "continúa" para la Fase 2 (necesita PAGESPEED_KEY y ANTHROPIC_API_KEY).

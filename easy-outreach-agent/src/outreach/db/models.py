@@ -27,6 +27,10 @@ from outreach.db.base import Base, TimestampMixin, utcnow
 COMPANY_STATUSES = (
     "new", "enriched", "audited", "scored", "queued", "contacted", "manual", "discarded",
 )
+# Resultado de la visita al sitio en `enrich`. Solo "ok" sigue a auditoría.
+SITE_STATUSES = (
+    "ok", "unreachable", "http_error", "parked", "robots", "not_html", "no_site",
+)
 CONTACT_TYPES = ("email", "form", "whatsapp", "phone")
 FINDING_CATEGORIES = ("seo", "ux", "microapp")
 EVIDENCE_TYPES = ("api", "screenshot", "html")
@@ -76,6 +80,9 @@ class Company(TimestampMixin, Base):
     __table_args__ = (
         CheckConstraint(_in("status", COMPANY_STATUSES), name="status"),
         CheckConstraint("score IS NULL OR (score >= 0 AND score <= 100)", name="score_range"),
+        CheckConstraint(
+            f"site_status IS NULL OR {_in('site_status', SITE_STATUSES)}", name="site_status"
+        ),
         Index("ix_companies_status_score", "status", "score"),
     )
 
@@ -99,6 +106,8 @@ class Company(TimestampMixin, Base):
     language: Mapped[str | None] = mapped_column(String(10))
     has_whatsapp: Mapped[bool | None] = mapped_column(Boolean)
     status: Mapped[str] = mapped_column(String(20), default="new")
+    site_status: Mapped[str | None] = mapped_column(String(20))
+    enriched_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
     score: Mapped[int | None] = mapped_column(Integer)
     segment_id: Mapped[int | None] = mapped_column(ForeignKey("segments.id"))
     run_id: Mapped[int | None] = mapped_column(ForeignKey("runs.id"))

@@ -37,3 +37,18 @@ def normalize_email(value: str | None) -> str | None:
     if not local or not domain:
         return None
     return f"{local}@{domain}"
+
+
+# Redes y directorios: una "página web" ahí no es un sitio propio que se pueda auditar.
+PLATFORM_DOMAINS = frozenset({
+    "facebook.com", "fb.com", "instagram.com", "twitter.com", "x.com", "tiktok.com",
+    "linkedin.com", "youtube.com", "wa.me", "whatsapp.com", "linktr.ee", "google.com",
+    "goo.gl", "maps.app.goo.gl", "business.site", "sites.google.com", "doctoralia.com.mx",
+    "doctoralia.com", "mercadolibre.com.mx", "blogspot.com", "seccionamarilla.com.mx",
+})
+
+
+def is_platform_domain(domain: str | None) -> bool:
+    if not domain:
+        return False
+    return any(domain == p or domain.endswith("." + p) for p in PLATFORM_DOMAINS)

@@ -19,8 +19,9 @@ def configure_logging(level: str = "INFO", pretty: bool = False) -> None:
             renderer,
         ],
         wrapper_class=structlog.make_filtering_bound_logger(logging.getLevelName(level)),
-        logger_factory=structlog.PrintLoggerFactory(file=sys.stderr),
-        cache_logger_on_first_use=True,
+        # sys.stderr se resuelve en cada uso (no al configurar): sobrevive a redirecciones.
+        logger_factory=lambda *_args: structlog.PrintLogger(sys.stderr),
+        cache_logger_on_first_use=False,
     )
 
 

@@ -98,10 +98,15 @@ class Crawler(BaseModel):
     user_agent: str
     max_requests_per_second_per_domain: float = Field(gt=0, le=1)
     timeout_seconds: float
+    retries: int = Field(default=2, ge=0, le=5)
+    max_pages_per_site: int = Field(default=4, ge=1, le=10)
+    max_page_bytes: int = 2_000_000
+    workers: int = Field(default=8, ge=1, le=32)
 
 
 class SourceToggle(BaseModel):
     enabled: bool
+    page_size: int = Field(default=500, ge=1, le=1000)
 
 
 class Sources(BaseModel):
@@ -158,6 +163,33 @@ class ScoringWeights(BaseModel):
         return self
 
 
+class DenueQuery(BaseModel):
+    """Consulta BuscarAreaActEstr de DENUE. Claves INEGI (entidad, municipio) y SCIAN."""
+
+    entidad: str = Field(pattern=r"^\d{2}$")
+    municipios: list[str] = ["0"]
+    # Clave SCIAN de 2 (sector), 3 (subsector), 4 (rama) o 6 dígitos (clase).
+    actividades: list[str] = Field(min_length=1)
+    # 0 = todos; 1 = 0-5 personas, 2 = 6-10, 3 = 11-30, 4 = 31-50, 5 = 51-100, 6 = 101-250, 7 = 251+
+    estratos: list[int] = [0]
+
+    @model_validator(mode="after")
+    def _valid_codes(self) -> DenueQuery:
+        for code in self.actividades:
+            if not code.isdigit() or len(code) not in (2, 3, 4, 6):
+                raise ValueError(f"clave SCIAN inválida: {code!r} (usa 2, 3, 4 o 6 dígitos)")
+        for m in self.municipios:
+            if m != "0" and not (m.isdigit() and len(m) == 3):
+                raise ValueError(f"clave de municipio inválida: {m!r} (3 dígitos o 0)")
+        if any(e not in range(8) for e in self.estratos):
+            raise ValueError("los estratos van de 0 a 7")
+        return self
+
+
+class PlacesQuery(BaseModel):
+    queries: list[str] = Field(min_length=1)
+
+
 class SegmentConfig(BaseModel):
     name: str
     country: str
@@ -166,6 +198,8 @@ class SegmentConfig(BaseModel):
     auto_send: bool = False
     daily_cap: int = 40
     active: bool = True
+    denue: DenueQuery | None = None
+    places: PlacesQuery | None = None
 
 
 class CountryConfig(BaseModel):
@@ -193,6 +227,13 @@ def load_scoring(config_dir: Path = CONFIG_DIR) -> ScoringWeights:
 def load_segments(config_dir: Path = CONFIG_DIR) -> list[SegmentConfig]:
     data = _load_yaml(config_dir / "segments.yaml")
     return [SegmentConfig.model_validate(s) for s in data.get("segments", [])]
+
+
+def get_segment(name: str, config_dir: Path = CONFIG_DIR) -> SegmentConfig:
+    for segment in load_segments(config_dir):
+        if segment.name == name:
+            return segment
+    raise KeyError(f"no existe el segmento {name!r} en segments.yaml")
 
 
 def load_country(code: str, config_dir: Path = CONFIG_DIR) -> CountryConfig:
