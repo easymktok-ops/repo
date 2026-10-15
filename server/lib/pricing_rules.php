@@ -66,6 +66,21 @@ function pricing_deposit_cents(int $priceCents, int $percent): int
     return intdiv($priceCents * $percent + 50, 100);
 }
 
+/** Los precios por % se redondean a multiplos de $50 (5000 centavos), como los precios de lista. */
+const PRICING_ROUND_CENTS = 5000;
+const PRICING_MAX_ADJUST = 200;
+
+/**
+ * Precio de lista + $percent %, redondeado al multiplo de $50 mas cercano y nunca por debajo
+ * del precio de lista. Ej.: 220000 (+20 %) -> 264000 -> 265000.
+ */
+function pricing_apply_percent(int $baseCents, int $percent): int
+{
+    $raw = intdiv($baseCents * (100 + $percent) + 50, 100);
+    $rounded = intdiv($raw + intdiv(PRICING_ROUND_CENTS, 2), PRICING_ROUND_CENTS) * PRICING_ROUND_CENTS;
+    return max($rounded, $baseCents);
+}
+
 /**
  * Normaliza una fila de pricing_rules (package_ids y weekdays vienen como JSON
  * desde la BD) al formato que usan las funciones puras.
@@ -95,6 +110,7 @@ function pricing_normalize_rule(array $row): array
         'end_date'        => (string) $row['end_date'],
         'weekdays'        => $wd,
         'price_cents'     => isset($row['price_cents']) ? (int) $row['price_cents'] : null,
+        'adjust_percent'  => isset($row['adjust_percent']) ? (int) $row['adjust_percent'] : null,
         'deposit_percent' => isset($row['deposit_percent']) ? (int) $row['deposit_percent'] : null,
         'active'          => !empty($row['active']),
         'updated_at'      => (string) ($row['updated_at'] ?? ''),
@@ -186,9 +202,14 @@ function resolve_price(string $date, array $pkg, array $rules): array
     }
 
     $base = (int) $pkg['base_price_cents'];
-    $price = $rule !== null && $rule['price_cents'] !== null
-        ? max((int) $rule['price_cents'], $base)
-        : $base;
+    if ($rule !== null && ($rule['adjust_percent'] ?? null) !== null) {
+        // Regla en %: sobre el precio de lista de CADA paquete (sigue al precio de lista si cambia).
+        $price = pricing_apply_percent($base, (int) $rule['adjust_percent']);
+    } else {
+        $price = $rule !== null && $rule['price_cents'] !== null
+            ? max((int) $rule['price_cents'], $base)
+            : $base;
+    }
 
     $pct = $rule !== null && $rule['deposit_percent'] !== null
         ? (int) $rule['deposit_percent']
@@ -349,7 +370,14 @@ function pricing_validate_rule(array $r, array $known, array $basePrices = []): 
             $e['weekdays'] = 'Elige al menos un día.';
         }
     }
-    if ($type !== 'blocked' && $type !== '') {
+    $adjust = $r['adjust_percent'] ?? null;
+    if ($type !== 'blocked' && $type !== '' && $adjust !== null) {
+        // Regla en %: solo aumentos (el precio de lista es el minimo).
+        if (!is_int($adjust) || $adjust < 1 || $adjust > PRICING_MAX_ADJUST) {
+            $e['adjust_percent'] = 'El aumento debe estar entre 1 y ' . PRICING_MAX_ADJUST . ' %. '
+                . 'Para una oferta, baja el precio en Contenido › Paquetes.';
+        }
+    } elseif ($type !== 'blocked' && $type !== '') {
         $price = $r['price_cents'] ?? null;
         if (!is_int($price) || $price <= 0) {
             $e['price_cents'] = 'El precio debe ser mayor a 0.';

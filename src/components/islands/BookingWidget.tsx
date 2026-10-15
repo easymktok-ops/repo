@@ -6,6 +6,7 @@ import { clearPriceCache, getMonthPrices } from "@lib/pricing/api";
 import { addDaysYmd, longDate, monthOf, todayMx } from "@lib/pricing/calendar";
 import { chargeCents } from "@lib/pricing/charge";
 import { readClickIds } from "@lib/clickIds";
+import { attributionPayload } from "@lib/attribution";
 import PriceCalendar, { type DayQuote } from "./PriceCalendar";
 import "./BookingWidget.css";
 
@@ -401,6 +402,7 @@ export default function BookingWidget({ locale, packages, whatsappUrl, advisors 
           notes: notes.trim(),
           locale,
           ...readClickIds(),
+          ...attributionPayload(),
         }),
       });
 

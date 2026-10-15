@@ -334,6 +334,8 @@ function panel_pricing_read_form(bool $blocked): array
         'weekdays'        => $weekdays,
         'packages_mode'   => $g('packages_mode') === 'some' ? 'some' : 'all',
         'packages'        => $pk,
+        'price_mode'      => $g('price_mode') === 'fixed' ? 'fixed' : 'percent',
+        'adjust'          => $g('adjust'),
         'price'           => $g('price'),
         'deposit_percent' => $g('deposit_percent'),
     ];
@@ -346,7 +348,12 @@ function panel_pricing_form_to_rule(array $v, bool $blocked): array
         $end = $v['start_date'];
     }
     $price = null;
-    if (!$blocked) {
+    $adjust = null;
+    if (!$blocked && ($v['price_mode'] ?? 'fixed') === 'percent') {
+        // "20", "20 %", "+20%": solo el numero entero. Algo invalido queda en 0 y la validacion avisa.
+        $raw = preg_replace('/[\s%+]/', '', (string) ($v['adjust'] ?? ''));
+        $adjust = preg_match('/^\d{1,3}\z/', $raw) ? (int) $raw : 0;
+    } elseif (!$blocked) {
         $price = panel_parse_pesos($v['price']) ?? 0;
     }
     $pct = null;
@@ -361,6 +368,7 @@ function panel_pricing_form_to_rule(array $v, bool $blocked): array
         'end_date'        => $end,
         'weekdays'        => $v['type'] === 'weekday' ? $v['weekdays'] : null,
         'price_cents'     => $price,
+        'adjust_percent'  => $adjust,
         'deposit_percent' => $pct,
     ];
     if ($v['id'] !== '') {
@@ -381,6 +389,8 @@ function panel_pricing_rule_to_form(array $r): array
         'weekdays'        => (array) $r['weekdays'],
         'packages_mode'   => $r['package_ids'] === 'all' ? 'all' : 'some',
         'packages'        => $r['package_ids'] === 'all' ? [] : (array) $r['package_ids'],
+        'price_mode'      => ($r['adjust_percent'] ?? null) !== null ? 'percent' : 'fixed',
+        'adjust'          => ($r['adjust_percent'] ?? null) !== null ? (string) $r['adjust_percent'] : '',
         'price'           => $cents === null ? '' : (string) ($cents % 100 === 0 ? intdiv($cents, 100) : $cents / 100),
         'deposit_percent' => $r['deposit_percent'] === null ? '' : (string) $r['deposit_percent'],
     ];
@@ -591,7 +601,7 @@ function panel_pricing_render_seasons(array $ctx, array $state): string
             . '<td class="hide-sm">' . h(PANEL_TIPOS[$r['type']] ?? $r['type']) . '</td>'
             . '<td class="dates">' . $dates . '</td>'
             . '<td class="hide-md">' . h(panel_pricing_pkg_label($r, $ctx)) . '</td>'
-            . '<td class="num">' . h(panel_pesos((int) $r['price_cents'])) . ' por persona</td>'
+            . '<td class="num">' . h(panel_rule_price_text($r)) . '</td>'
             . '<td class="hide-sm">' . ($r['deposit_percent'] === null ? 'El del paquete' : (int) $r['deposit_percent'] . ' %') . '</td>'
             . '<td><span class="badge ' . ($active ? 'ok' : 'warn') . '">' . ($active ? 'Activa' : 'Pausada') . '</span></td>'
             . '<td><div class="actions">'
@@ -610,12 +620,26 @@ function panel_pricing_render_seasons(array $ctx, array $state): string
     return $out . '</tbody></table></div>';
 }
 
+/** Columna "Precio" de la lista de tarifas. */
+function panel_rule_price_text(array $r): string
+{
+    if (($r['adjust_percent'] ?? null) !== null) {
+        return '+' . (int) $r['adjust_percent'] . ' % sobre lista';
+    }
+    return panel_pesos((int) $r['price_cents']) . ' por persona';
+}
+
 function panel_pricing_rule_form(array $v, array $errors, array $ctx, bool $blocked): string
 {
     $v += [
         'id' => '', 'label' => '', 'type' => 'season', 'start_date' => '', 'end_date' => '', 'weekdays' => [],
-        'packages_mode' => 'all', 'packages' => [], 'price' => '', 'deposit_percent' => '',
+        'packages_mode' => 'all', 'packages' => [], 'price_mode' => 'percent', 'adjust' => '', 'price' => '',
+        'deposit_percent' => '',
     ];
+    $bases = [];
+    foreach ($ctx['packages'] as $slug => $p) {
+        $bases[$slug] = ['name' => panel_pkg_name($p), 'base' => (int) $p['base_price_cents']];
+    }
     $tab = $blocked ? 'sin-vuelo' : 'temporadas';
     $isEdit = $v['id'] !== '';
     ob_start();
@@ -671,8 +695,16 @@ function panel_pricing_rule_form(array $v, array $errors, array $ctx, bool $bloc
       </fieldset>
 
       <?php if (!$blocked): ?>
+      <fieldset class="fld"><legend>Cómo cambia el precio</legend>
+        <label class="opt"><input type="radio" name="price_mode" value="percent" <?= $v['price_mode'] === 'percent' ? 'checked' : '' ?> /> Subir un % sobre el precio de lista</label>
+        <label class="opt"><input type="radio" name="price_mode" value="fixed" <?= $v['price_mode'] === 'fixed' ? 'checked' : '' ?> /> Precio fijo por persona</label>
+      </fieldset>
       <div class="row2">
-        <label class="fld"><span>Precio por persona (pesos)</span>
+        <label class="fld" id="adjust-box"><span>Aumento %</span>
+          <input type="text" inputmode="numeric" name="adjust" value="<?= h($v['adjust']) ?>" placeholder="Ej. 20" />
+          <?= panel_field_err($errors, 'adjust_percent') ?>
+        </label>
+        <label class="fld" id="price-box"><span>Precio por persona (pesos)</span>
           <input type="text" inputmode="numeric" name="price" value="<?= h($v['price']) ?>" placeholder="Ej. 2,650" />
           <?= panel_field_err($errors, 'price_cents') ?>
         </label>
@@ -681,6 +713,7 @@ function panel_pricing_rule_form(array $v, array $errors, array $ctx, bool $bloc
           <?= panel_field_err($errors, 'deposit_percent') ?>
         </label>
       </div>
+      <div class="pct-preview" id="pct-preview" aria-live="polite" hidden></div>
       <?php endif; ?>
 
       <?php
@@ -704,12 +737,40 @@ function panel_pricing_rule_form(array $v, array $errors, array $ctx, bool $bloc
         var pk = document.getElementById('pkgs-box');
         var start = f.elements['start_date'], end = f.elements['end_date'];
         function type() { var t = f.querySelector('input[name=type]:checked'); return t ? t.value : ''; }
+        // Vista previa de la regla en %: mismo calculo que pricing_apply_percent() (redondeo a $50).
+        var bases = <?= json_encode($bases, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+        var adjBox = document.getElementById('adjust-box'), priceBox = document.getElementById('price-box');
+        var prev = document.getElementById('pct-preview');
+        function money(c) { return '$' + Math.round(c / 100).toLocaleString('es-MX'); }
+        function applyPct(base, pct) {
+          var raw = Math.floor((base * (100 + pct) + 50) / 100);
+          return Math.max(Math.floor((raw + 2500) / 5000) * 5000, base);
+        }
+        function preview() {
+          if (!prev) return;
+          var mode = f.querySelector('input[name=price_mode]:checked');
+          var pct = parseInt(String(f.elements['adjust'].value).replace(/[\s%+]/g, ''), 10);
+          if (!mode || mode.value !== 'percent' || !(pct >= 1 && pct <= 200)) { prev.hidden = true; return; }
+          var some = f.querySelector('input[name=packages_mode]:checked').value === 'some';
+          var picked = some ? Array.prototype.map.call(f.querySelectorAll('input[name="packages[]"]:checked'), function (i) { return i.value; }) : Object.keys(bases);
+          if (!picked.length) { prev.hidden = true; return; }
+          prev.innerHTML = '<span class="muted sm">Así queda por persona (redondeado a $50):</span><ul>' + picked.map(function (slug) {
+            var b = bases[slug]; if (!b) return '';
+            var name = String(b.name).replace(/[&<>]/g, function (ch) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[ch]; });
+            return '<li>' + name + ': <span class="muted">' + money(b.base) + '</span> → <strong>' + money(applyPct(b.base, pct)) + '</strong></li>';
+          }).join('') + '</ul>';
+          prev.hidden = false;
+        }
         function sync() {
           if (wd) { wd.hidden = type() !== 'weekday'; }
           var some = f.querySelector('input[name=packages_mode]:checked').value === 'some';
           pk.hidden = !some;
+          var mode = f.querySelector('input[name=price_mode]:checked');
+          if (adjBox && priceBox && mode) { adjBox.hidden = mode.value !== 'percent'; priceBox.hidden = mode.value === 'percent'; }
+          preview();
         }
         f.addEventListener('change', sync);
+        if (f.elements['adjust']) f.elements['adjust'].addEventListener('input', preview);
         var lastStart = start.value;
         start.addEventListener('change', function () {
           var t = type();
@@ -795,8 +856,12 @@ function panel_audit_summary(array $row, array $ctx): string
         if ($oldLabel !== $label) {
             $changes[] = "Renombró '{$oldLabel}' a '{$label}'";
         }
-        if ($b['price_cents'] !== $a['price_cents']) {
-            $changes[] = "Cambió el precio de '{$label}' de " . panel_pesos((int) $b['price_cents']) . ' a ' . panel_pesos((int) $a['price_cents']);
+        $bAdj = $b['adjust_percent'] ?? null;
+        $aAdj = $a['adjust_percent'] ?? null;
+        if ($bAdj !== $aAdj || $b['price_cents'] !== $a['price_cents']) {
+            $was = $bAdj !== null ? '+' . (int) $bAdj . ' %' : panel_pesos((int) $b['price_cents']);
+            $now = $aAdj !== null ? '+' . (int) $aAdj . ' %' : panel_pesos((int) $a['price_cents']);
+            $changes[] = "Cambió el precio de '{$label}' de {$was} a {$now}";
         }
         if ($b['deposit_percent'] !== $a['deposit_percent']) {
             if ($b['deposit_percent'] === null) {
@@ -928,6 +993,8 @@ function panel_pricing_css(): string
       .inl{display:inline;margin:0}
       .pct{width:5.2rem;font:inherit;background:var(--bg2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:.45rem .6rem}
       .pform{display:grid;gap:.9rem;margin:0 0 1.1rem;max-width:720px}
+      .pct-preview{border:1px solid var(--line-soft);border-radius:10px;padding:.6rem .8rem;background:var(--bg2)}
+      .pct-preview ul{margin:.35rem 0 0;padding-left:1.1rem;display:grid;gap:.15rem;font-size:.88rem}
       .fld{display:grid;gap:.3rem;border:0;padding:0;min-width:0;align-content:start}
       fieldset.fld{display:block}
       fieldset.fld>legend{margin-bottom:.3rem}
@@ -937,7 +1004,7 @@ function panel_pricing_css(): string
       .fld input:focus,.pct:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
       .opt{display:inline-flex;align-items:center;gap:.4rem;margin:.15rem 1rem .15rem 0;color:var(--ink-soft)}
       .pkgs{margin-top:.3rem}
-      .pkgs[hidden],#weekdays-box[hidden]{display:none}
+      .pkgs[hidden],#weekdays-box[hidden],#adjust-box[hidden],#price-box[hidden],.pct-preview[hidden]{display:none}
       .row2{display:grid;gap:.9rem}
       @media(min-width:640px){.row2{grid-template-columns:1fr 1fr}}
       .ferr{color:var(--bad);font-size:.82rem}
@@ -1070,7 +1137,7 @@ function panel_tours_script(string $section): string
         $page = 'reservas';
     }
     return '<script src="/ui/tour.js" defer></script>'
-        . '<script>window.PANEL_TOUR_PAGE=' . json_encode($page) . ';</script>'
+        . '<script>window.PANEL_TOUR_PAGE=' . json_encode($page, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) . ';</script>'
         . <<<'HTML'
     <script>
     window.addEventListener('DOMContentLoaded',function(){
@@ -1113,7 +1180,7 @@ function panel_tours_script(string $section): string
           {sel:'#rule-form .row2',title:'Desde y Hasta',body:'Haz clic en la fecha para abrir el calendario. Los dos días cuentan.'},
           {sel:'#weekdays-box',title:'Días',body:'Solo para el tipo <b>Días de la semana</b>: marca cuáles aplican.'},
           {sel:'#rule-form fieldset.fld:has(input[name=packages_mode])||#pkgs-box',title:'Paquetes',body:'<b>Todos</b> o <b>Solo algunos</b>, si el precio no aplica a todos los vuelos.'},
-          {sel:'#rule-form .row2:has(input[name=price])||#rule-form input[name=price]',title:'Precio y anticipo',body:'Precio <b>por persona</b> en pesos (2650 o 2,650). No puede ser menor al precio de lista del paquete. El anticipo es opcional: vacío usa el del paquete.'},
+          {sel:'#rule-form .row2:has(input[name=price])||#rule-form input[name=price]',title:'Precio y anticipo',body:'Lo más fácil: <b>subir un %</b> sobre el precio de lista (por ejemplo 20) y todos los paquetes elegidos suben parejo, redondeado a $50; abajo ves cómo queda cada uno. También puedes poner un <b>precio fijo</b> por persona, que no puede ser menor al precio de lista. El anticipo es opcional: vacío usa el del paquete.'},
           {sel:'#rule-form .actions||#rule-form button[type=submit]',title:'Guardar',body:'Si se cruza con otra regla, el panel te avisa en amarillo cuál precio se cobrará.'}
         ]:[
           {sel:'a.btn.primary[href*="new"]||.subtabs + * a.btn.primary',title:'Nueva temporada o fecha',body:'Crea un precio para un rango de fechas, una fecha especial (14 de febrero) o ciertos días de la semana.'},

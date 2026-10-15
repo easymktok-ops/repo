@@ -21,6 +21,7 @@ require __DIR__ . '/../../lib/bootstrap.php';
 require __DIR__ . '/../../lib/db.php';
 require __DIR__ . '/../../lib/pricing.php';
 require __DIR__ . '/../../lib/stripe.php';
+require __DIR__ . '/../../lib/attribution.php';
 
 $config = load_config();
 
@@ -69,6 +70,11 @@ foreach (['gclid', 'gbraid', 'wbraid'] as $k) {
     $v = trim((string) ($body[$k] ?? ''));
     $clickIds[$k] = preg_match('/^[A-Za-z0-9_\-.]{4,255}$/', $v) ? $v : null;
 }
+// Atribucion de primer contacto (UTM, referrer, pagina de entrada...). Opcional: sin datos, o con
+// $config['attribution']['enabled'] = false, la reserva se crea igual con estas columnas en NULL.
+$attribution = ($config['attribution']['enabled'] ?? true)
+    ? attribution_clean($body)
+    : array_fill_keys(ATTRIBUTION_FIELDS, null);
 
 $errors = [];
 if ($slug === '') {
@@ -135,11 +141,11 @@ try {
             (reference, status, locale, package_slug, package_title, passengers,
              flight_date, mode, currency, price_per_person, amount_now_cents,
              total_full_cents, balance_cents, customer_name, customer_email,
-             customer_phone, notes, created_at, gclid, gbraid, wbraid' . $pricingCols . ')
+             customer_phone, notes, created_at, gclid, gbraid, wbraid, ' . implode(', ', ATTRIBUTION_FIELDS) . $pricingCols . ')
          VALUES
             (:ref, \'pending\', :locale, :slug, :title, :pax, :fdate, :mode, :cur,
              :ppp, :now, :full, :bal, :name, :email, :phone, :notes, :created_at,
-             :gclid, :gbraid, :wbraid' . $pricingVals . ')'
+             :gclid, :gbraid, :wbraid, :' . implode(', :', ATTRIBUTION_FIELDS) . $pricingVals . ')'
     );
     $stmt->execute([
         ':ref' => $reference,
@@ -162,7 +168,12 @@ try {
         ':gclid' => $clickIds['gclid'],
         ':gbraid' => $clickIds['gbraid'],
         ':wbraid' => $clickIds['wbraid'],
-    ] + $pricingParams);
+    ] + array_combine(
+        array_map(static function (string $k): string {
+            return ':' . $k;
+        }, ATTRIBUTION_FIELDS),
+        array_values($attribution)
+    ) + $pricingParams);
     $bookingId = (int) $pdo->lastInsertId();
 } catch (Throwable $e) {
     log_line('checkout', 'error al guardar reserva', ['msg' => $e->getMessage()]);

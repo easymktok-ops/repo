@@ -61,6 +61,8 @@ export const site = {
     googleAdsId: import.meta.env.PUBLIC_GOOGLE_ADS_ID ?? "AW-18320918955",
     metaPixelId: import.meta.env.PUBLIC_META_PIXEL_ID ?? "141551953168954",
     plausibleDomain: import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN ?? "",
+    /** Atribucion de primer contacto (cookie aero_ft). PUBLIC_ATTRIBUTION="off" la apaga. */
+    attribution: import.meta.env.PUBLIC_ATTRIBUTION !== "off",
   },
 } as const;
 

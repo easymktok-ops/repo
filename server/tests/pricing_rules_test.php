@@ -354,3 +354,56 @@ function test_validacion_no_permite_tarifas_bajo_el_precio_de_lista(): void
     // Sin precios de lista (compatibilidad) no se valida el minimo.
     assert_same([], pricing_validate_rule(['price_cents' => 100000] + $ok, $known));
 }
+
+function test_regla_en_porcentaje_sobre_precio_de_lista(): void
+{
+    // 220000 * 1.20 = 264000 -> se redondea a 265000 (multiplos de $50).
+    assert_same(265000, pricing_apply_percent(220000, 20));
+    assert_same(240000, pricing_apply_percent(200000, 20));
+    assert_same(385000, pricing_apply_percent(350000, 10));
+    // 475000 * 1.07 = 508250 -> 510000
+    assert_same(510000, pricing_apply_percent(475000, 7));
+    // Nunca por debajo del precio de lista aunque el redondeo baje (1 % de 220000 = 222200 -> 220000).
+    assert_same(220000, pricing_apply_percent(220000, 1));
+
+    $rules = [t_rule(['type' => 'season', 'start_date' => '2026-12-15', 'end_date' => '2027-01-06', 'price_cents' => null, 'adjust_percent' => 20])];
+    $r = resolve_price('2026-12-24', t_pkg(), $rules);
+    assert_same('available', $r['status']);
+    assert_same(265000, $r['price']);
+    // El anticipo sale del precio ya ajustado (45 % del paquete de prueba).
+    assert_same(pricing_deposit_cents(265000, 45), $r['deposit']);
+    // Fuera de la regla: precio de lista.
+    assert_same(220000, resolve_price('2026-12-01', t_pkg(), $rules)['price']);
+}
+
+function test_regla_en_porcentaje_sigue_al_precio_de_lista(): void
+{
+    $rules = [t_rule(['start_date' => '2026-12-15', 'end_date' => '2026-12-31', 'price_cents' => null, 'adjust_percent' => 10])];
+    assert_same(240000, resolve_price('2026-12-20', t_pkg(['base_price_cents' => 220000]), $rules)['price']); // 242000 -> $2,400
+    assert_same(275000, resolve_price('2026-12-20', t_pkg(['base_price_cents' => 250000]), $rules)['price']);
+}
+
+function test_reglas_en_porcentaje_no_se_acumulan(): void
+{
+    // Navidad +20 % y fines de semana +10 %: gana la mas especifica (dia de la semana), no se suman.
+    $rules = [
+        t_rule(['id' => 'navidad', 'type' => 'season', 'start_date' => '2026-12-15', 'end_date' => '2027-01-06', 'price_cents' => null, 'adjust_percent' => 20]),
+        t_rule(['id' => 'finde', 'type' => 'weekday', 'start_date' => '2026-01-01', 'end_date' => '2027-12-31', 'weekdays' => [0, 6], 'price_cents' => null, 'adjust_percent' => 10]),
+    ];
+    $r = resolve_price('2026-12-19', t_pkg(), $rules); // sabado
+    assert_same('finde', $r['rule_id']);
+    assert_same(240000, $r['price']); // 220000 * 1.10 = 242000 -> 240000
+}
+
+function test_validacion_de_regla_en_porcentaje(): void
+{
+    $base = ['label' => 'Navidad', 'type' => 'season', 'start_date' => '2026-12-15', 'end_date' => '2027-01-06', 'package_ids' => 'all', 'price_cents' => null];
+    assert_same([], pricing_validate_rule($base + ['adjust_percent' => 20], ['vuelo-compartido'], ['vuelo-compartido' => 220000]));
+    $e = pricing_validate_rule($base + ['adjust_percent' => 0], ['vuelo-compartido']);
+    assert_true(isset($e['adjust_percent']), 'el 0 % no es valido');
+    $e = pricing_validate_rule($base + ['adjust_percent' => 250], ['vuelo-compartido']);
+    assert_true(isset($e['adjust_percent']), 'mas de 200 % no es valido');
+    // Sin % sigue exigiendo precio fijo.
+    $e = pricing_validate_rule($base, ['vuelo-compartido']);
+    assert_true(isset($e['price_cents']), 'sin % hace falta precio');
+}

@@ -24,6 +24,8 @@ require __DIR__ . '/../../lib/db.php';
 require __DIR__ . '/../../lib/panel_auth.php';
 require __DIR__ . '/../../lib/pricing.php';
 require __DIR__ . '/../../lib/panel_pricing.php';
+require __DIR__ . '/../../lib/attribution.php';
+require __DIR__ . '/../../lib/csv.php';
 
 $config = load_config();
 $panel = $config['panel'] ?? ['enabled' => false];
@@ -242,9 +244,11 @@ if ($do === 'export') {
         'Pasajeros', 'Fecha vuelo', 'Modo', 'Pagado ahora', 'Total vuelo',
         'Saldo en sitio', 'Saldo pagado', 'Completado', 'Cancelada', 'Notas',
         'gclid', 'gbraid', 'wbraid',
+        'Origen', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content',
+        'referrer', 'landing_page', 'idioma', 'first_touch_at',
     ]);
     while ($r = $stmt->fetch()) {
-        fputcsv($out, [
+        fputcsv($out, csv_safe_row([
             $r['reference'],
             $r['created_at'],
             $r['status'],
@@ -265,7 +269,17 @@ if ($do === 'export') {
             $r['gclid'] ?? '',
             $r['gbraid'] ?? '',
             $r['wbraid'] ?? '',
-        ]);
+            attribution_origin($r),
+            $r['utm_source'] ?? '',
+            $r['utm_medium'] ?? '',
+            $r['utm_campaign'] ?? '',
+            $r['utm_term'] ?? '',
+            $r['utm_content'] ?? '',
+            $r['referrer'] ?? '',
+            $r['landing_page'] ?? '',
+            $r['idioma'] ?? '',
+            $r['first_touch_at'] ?? '',
+        ]));
     }
     fclose($out);
     exit;
@@ -348,6 +362,18 @@ function status_badge(array $b): array
     return ['Pagado', 'ok'];
 }
 
+/** Tooltip del "Origen": todos los campos crudos, uno por linea. */
+function panel_origin_title(array $r): string
+{
+    $lines = [];
+    foreach (attribution_raw($r) as $k => $v) {
+        if ($v !== '') {
+            $lines[] = $k . ': ' . $v;
+        }
+    }
+    return $lines ? implode("\n", $lines) : 'Sin datos de origen (reserva anterior a la captura)';
+}
+
 function render_list(array $rows, int $total, int $page, int $pages, array $f): string
 {
     ob_start();
@@ -368,20 +394,24 @@ function render_list(array $rows, int $total, int $page, int $pages, array $f): 
       <a class="btn ghost" href="<?= h(self_url(['do' => 'export', 'q' => $f['q'], 'status' => $f['fStatus'], 'from' => $f['fFrom'], 'to' => $f['fTo']])) ?>">Exportar CSV</a>
     </form>
 
-    <p class="count"><?= (int) $total ?> reserva<?= $total === 1 ? '' : 's' ?><?= $f['q'] !== '' || $f['fStatus'] !== '' || $f['fFrom'] !== '' || $f['fTo'] !== '' ? ' (con filtros)' : '' ?></p>
+    <div class="countrow">
+      <p class="count"><?= (int) $total ?> reserva<?= $total === 1 ? '' : 's' ?><?= $f['q'] !== '' || $f['fStatus'] !== '' || $f['fFrom'] !== '' || $f['fTo'] !== '' ? ' (con filtros)' : '' ?></p>
+      <label class="origin-toggle"><input type="checkbox" data-origin-toggle /> Mostrar origen</label>
+    </div>
 
-    <div class="tablewrap">
+    <div class="tablewrap" data-origin-wrap>
       <table>
         <thead>
           <tr>
             <th>Folio</th><th class="hide-sm">Creada</th><th>Cliente</th><th class="hide-md">Vuelo</th>
             <th class="num hide-sm">Pax</th><th class="hide-md">Fecha vuelo</th><th class="hide-sm">Modo</th>
             <th class="num">Pagado</th><th class="num hide-md">Saldo en sitio</th><th>Estado</th>
+            <th class="col-origin">Origen</th>
           </tr>
         </thead>
         <tbody>
         <?php if (!$rows): ?>
-          <tr><td colspan="10" class="empty">Sin reservas todavia.</td></tr>
+          <tr><td colspan="11" class="empty">Sin reservas todavia.</td></tr>
         <?php endif; ?>
         <?php foreach ($rows as $r): [$label, $cls] = status_badge($r); ?>
           <tr onclick="location.href='<?= h(self_url(['view' => 'booking', 'id' => $r['id']])) ?>'">
@@ -398,11 +428,31 @@ function render_list(array $rows, int $total, int $page, int $pages, array $f): 
             <td class="num"><?= money_cents((int) $r['amount_now_cents'], $r['currency']) ?></td>
             <td class="num hide-md"><?= ($r['mode'] === 'deposit' && empty($r['balance_paid_at']) && empty($r['cancelled_at']) && $r['status'] === 'paid') ? money_cents((int) $r['balance_cents'], $r['currency']) : '—' ?></td>
             <td><span class="badge <?= $cls ?>"><?= h($label) ?></span></td>
+            <td class="col-origin"><span class="origin" title="<?= h(panel_origin_title($r)) ?>"><?= h(attribution_origin($r)) ?></span></td>
           </tr>
         <?php endforeach; ?>
         </tbody>
       </table>
     </div>
+
+    <script>
+      // "Mostrar origen": columna discreta, oculta por defecto; la eleccion se recuerda por usuario.
+      (function () {
+        var key = 'aero-panel:origen:' + <?= json_encode((string) ($_SESSION['panel_user'] ?? ''), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+        var box = document.querySelector('[data-origin-toggle]');
+        var wrap = document.querySelector('[data-origin-wrap]');
+        if (!box || !wrap) return;
+        var on = false;
+        try { on = localStorage.getItem(key) === '1'; } catch (e) {}
+        function apply() { wrap.classList.toggle('show-origin', on); box.checked = on; }
+        apply();
+        box.addEventListener('change', function () {
+          on = box.checked;
+          try { localStorage.setItem(key, on ? '1' : '0'); } catch (e) {}
+          apply();
+        });
+      })();
+    </script>
 
     <?php if ($pages > 1): ?>
       <nav class="pager">
@@ -450,6 +500,15 @@ function render_detail(array $b, array $ntf): string
           <?php if (!empty($b['notes'])): ?>
             <div class="clientnote"><span class="muted sm">Nota del cliente</span><p><?= nl2br(h($b['notes'])) ?></p></div>
           <?php endif; ?>
+        </div>
+
+        <div class="card origin-card">
+          <h3>Origen <span class="origin"><?= h(attribution_origin($b)) ?></span></h3>
+          <dl class="kv sm">
+            <?php foreach (attribution_raw($b) as $k => $v): ?>
+              <div><dt><?= h($k) ?></dt><dd class="break"><?= $v !== '' ? h($v) : '<span class="faint">—</span>' ?></dd></div>
+            <?php endforeach; ?>
+          </dl>
         </div>
 
         <div class="card">
@@ -693,6 +752,11 @@ function panel_css(): string
       .filters .date{display:inline-flex;align-items:center;gap:.4rem;color:var(--muted);font-size:.85rem}
       .filters input:focus,.filters select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
       .count{color:var(--muted);font-size:.85rem;margin-bottom:.6rem}
+      .countrow{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem}
+      .origin-toggle{display:inline-flex;align-items:center;gap:.35rem;color:var(--faint);font-size:.78rem;cursor:pointer}
+      .col-origin{display:none} .show-origin .col-origin{display:table-cell}
+      .origin{color:var(--faint);font-size:.76rem;font-weight:400;white-space:nowrap}
+      .origin-card h3 .origin{margin-left:.4rem}
       .tablewrap{overflow-x:auto;border:1px solid var(--line-soft);border-radius:14px;background:var(--surface)}
       table{width:100%;border-collapse:collapse;font-size:.9rem}
       td.cust{min-width:150px} td .break{overflow-wrap:anywhere}

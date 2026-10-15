@@ -32,6 +32,11 @@ Dials fijados: `DESIGN_VARIANCE 8`, `MOTION_INTENSITY 7`, `VISUAL_DENSITY 4`
 - **Contenido**: no inventar datos de negocio (precios, políticas, direcciones).
   Los carga el negocio vía `/admin`.
 - **Sin em-dash** en texto visible.
+- **Revisión de seguridad en CADA entrega** (pedido del negocio): antes de entregar, revisar el diff
+  buscando XSS (todo dato del cliente sale con `h()`; JSON dentro de `<script>` con `JSON_HEX_*`),
+  SQL (solo consultas preparadas), CSRF en formularios del panel, inyección de fórmulas en CSV
+  (`lib/csv.php`), validación y longitud en el servidor, y secretos fuera del código y del chat.
+  Reportar al usuario qué se revisó y qué se corrigió.
 
 ## Dominios y DNS (operación, aprendido en campo)
 
