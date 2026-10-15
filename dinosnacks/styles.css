@@ -91,11 +91,12 @@ p { text-wrap: pretty; }
 
 /* ---------- barra superior ---------- */
 .topbar {
-  position: sticky; top: 0; z-index: var(--z-sticky);
+  position: sticky; top: env(safe-area-inset-top, 0px); z-index: var(--z-sticky);
   display: flex; align-items: center; gap: 1rem;
   padding: .6rem var(--gutter); background: var(--lime);
   border-bottom: 2px solid var(--ink);
 }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: var(--z-sticky); background: var(--lime); }
 .wordmark { display: inline-flex; align-items: center; gap: .55rem; text-decoration: none; font: 800 1.35rem/1 var(--font-display); letter-spacing: -0.01em; }
 .wordmark-dino { width: 38px; height: 34px; display: inline-block; }
 .topnav { display: none; gap: .25rem; margin-left: auto; }

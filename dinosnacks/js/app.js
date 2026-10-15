@@ -233,9 +233,9 @@ function renderCart() {
     <p class="form-error" id="cartError" role="alert" hidden></p>
     <div class="cart-actions">
       <button type="button" class="btn btn-ink btn-wide" id="confirmOrder">Apartar mi pedido · ${money(total)}</button>
-      <button type="button" class="btn btn-wa btn-wide" id="waOrder">
+      <a class="btn btn-wa btn-wide" id="waOrder" href="${waLink()}" target="_blank" rel="noopener">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0-7.8 13.5L3 21l4.6-1.2A9 9 0 1 0 12 3Z"/></svg>
-        Enviar por WhatsApp</button>
+        Enviar por WhatsApp</a>
     </div>`;
 }
 
@@ -243,7 +243,7 @@ function waLink(order) {
   const lines = (order?.items || S.cart).map((c) => `• ${c.qty}x ${c.name}${c.opts && Object.keys(c.opts).length ? ` (${optsText(c.opts)})` : ""}${c.note ? ` “${c.note}”` : ""}: ${money(c.price * c.qty)}`);
   const slot = order?.slotLabel || slotLabel(S.slot);
   const total = order?.total ?? Math.max(0, subtotal() - discount());
-  const name = order?.name || ($("#cartName")?.value || "").trim();
+  const name = order?.name || ($("#cartName")?.value ?? S.name).trim();
   const notes = order?.notes ?? ($("#cartNotes")?.value || "").trim();
   const text = [
     `Hola Dino Snacks 🦖 quiero pedir para recoger${order ? ` (código ${order.code})` : ""}:`,
@@ -574,11 +574,11 @@ function bind() {
     if (e.target.closest("#waOrder")) {
       const name = $("#cartName").value.trim();
       if (name) { S.name = name; save(); }
-      window.open(waLink(), "_blank", "noopener");
     }
   });
+  cd.addEventListener("input", () => { const wa = $("#waOrder"); if (wa) wa.href = waLink(); });
   cd.addEventListener("change", (e) => {
-    if (e.target.name === "slot") S.slot = e.target.value;
+    if (e.target.name === "slot") { S.slot = e.target.value; $("#waOrder").href = waLink(); }
     if (e.target.id === "usePoints") { S.usePoints = e.target.checked; const n = $("#cartName").value; renderCart(); $("#cartName").value = n; }
   });
 
