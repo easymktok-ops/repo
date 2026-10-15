@@ -1,0 +1,11 @@
+code: MX
+name: México
+language: es-MX
+timezone: America/Mexico_City
+sources: [denue, places]
+legal:
+  framework: LFPDPPP
+  footer: >-
+    Te escribe Easy Marketing (easymarketing.mx). Encontramos este correo publicado en {source_url}.
+    Si no quieres recibir más mensajes, responde BAJA o entra a {unsubscribe_url} y no volveremos a escribirte.
+    Aviso de privacidad: {privacy_url}

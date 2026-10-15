@@ -1,0 +1,5 @@
+# Segmentos del piloto. auto_send es false por defecto: todo pasa por la cola.
+segments:
+  - {name: qro-salud, country: MX, city: Querétaro, giro: "clínicas dentales y estéticas", auto_send: false, daily_cap: 40, active: true}
+  - {name: cdmx-servicios, country: MX, city: CDMX, giro: "despachos profesionales y desarrolladoras inmobiliarias", auto_send: false, daily_cap: 40, active: false}
+  - {name: mty-industrial, country: MX, city: Monterrey, giro: "manufactura y servicios industriales B2B", auto_send: false, daily_cap: 40, active: false}

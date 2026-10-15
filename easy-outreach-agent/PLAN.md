@@ -3,7 +3,7 @@
 Sistema de prospección orgánica y ética para Easy Marketing (easymarketing.mx).
 Descubre empresas, audita su sitio, genera una muestra personalizada (mini-reporte PDF + mockup demo) y prepara mensajes que pasan por aprobación humana antes de enviarse.
 
-Estado: **aprobado con decisiones (sección 4)**. Fase 0 arranca al recibir "continúa".
+Estado: **Fase 0 lista** (15-oct-2026). Siguiente: Fase 1 al recibir "continúa".
 
 ---
 
@@ -144,4 +144,4 @@ Sin evasión de CAPTCHA; sin scraping de LinkedIn ni de Google Maps fuera de su 
 
 ---
 
-**Siguiente paso:** "continúa" para arrancar la Fase 0.
+**Siguiente paso:** "continúa" para arrancar la Fase 1 (necesita DENUE_TOKEN en .env).

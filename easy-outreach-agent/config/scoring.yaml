@@ -1,0 +1,6 @@
+# Pesos del score 0-100. Deben sumar 100.
+weights:
+  size: 25          # tamaño probable (estrato DENUE, señales del sitio)
+  severity: 35      # gravedad de los hallazgos con evidencia
+  contactability: 20  # correo público o formulario sin CAPTCHA
+  fit: 20           # encaje con SEO, UX/UI y micro apps

@@ -1,0 +1,68 @@
+# Configuración general de Easy Outreach Agent.
+# Las claves y contraseñas van en .env, nunca aquí.
+
+company:
+  name: Easy Marketing
+  website: https://easymarketing.mx
+  landing_url: https://easymarketing.mx/demand/        # único destino de todo CTA
+  privacy_url: https://easymarketing.mx/aviso-de-privacidad/
+  unsubscribe_url: https://easymarketing.mx/baja
+
+pilot:
+  country: MX
+  cities: [Querétaro, CDMX, Monterrey]
+
+people:
+  approver: norman@easymarketing.mx                   # aprueba la cola
+  interested_notify: norman@easymarketing.mx           # recibe aviso de replies interesados
+  public_contact: info@easymarketing.mx
+
+sending:
+  domain: hola.easymarketing.mx                        # nunca enviar volumen frío desde la raíz
+  from_name: Norman de Easy Marketing
+  from_address: norman@hola.easymarketing.mx
+  reply_to: info@easymarketing.mx
+  unsubscribe_mailto: baja@hola.easymarketing.mx
+  max_per_day_per_mailbox: 40
+  pause_bounce_rate: 0.03
+  pause_complaint_rate: 0.001
+  sequence_days: [0, 4, 10]
+  business_hours: {start: "09:00", end: "18:00", days: [mon, tue, wed, thu, fri]}
+  warmup:
+    weeks:
+      - {week: 1, min: 5, max: 10}
+      - {week: 2, min: 15, max: 20}
+      - {week: 3, min: 25, max: 30}
+
+dns_required:
+  spf: true
+  dkim: true
+  dmarc_policy_initial: none
+  dmarc_policy_after_4_clean_weeks: quarantine
+
+crawler:
+  user_agent: "EasyOutreachBot/1.0 (+https://easymarketing.mx)"
+  max_requests_per_second_per_domain: 1
+  timeout_seconds: 15
+
+sources:
+  denue: {enabled: true}
+  places: {enabled: false}                             # pide tarjeta; encender solo si DENUE no alcanza
+
+llm:
+  analysis_model: claude-sonnet-5-5
+  light_model: claude-haiku-5-5
+  max_daily_cost_usd: 2.0
+
+demos:
+  base_url: https://demo.easymarketing.mx/d/
+  retention_days: 60
+
+score:
+  threshold: 60                                        # solo >= umbral generan muestra
+
+messaging:
+  language: es-MX
+  min_words: 90
+  max_words: 120
+  positioning: Soluciones personalizables para cualquier negocio, sin nichar.
