@@ -328,7 +328,7 @@ function openTicket() {
     <p class="ticket-note">Demo: el seguimiento va acelerado y el casillero es simulado.${o.earned ? ` Ganaste ${o.earned} Dino-puntos.` : ""}</p>`;
   mountDinos();
   const qr = $("#ticketQr");
-  if (window.QRCode) new window.QRCode(qr, { text: `https://dinosnacks.mx/pickup/${o.code}`, width: 148, height: 148, colorDark: "#111111", colorLight: "#ffffff" });
+  if (window.QRCode) new window.QRCode(qr, { text: `DINO SNACKS PICKUP ${o.code} CASILLERO ${o.locker}`, width: 148, height: 148, colorDark: "#111111", colorLight: "#ffffff" });
   else qr.innerHTML = `<span class="qr-fallback">${o.code}</span>`;
   if (!$("#ticketDialog").open) $("#ticketDialog").showModal();
   tickTicket();
