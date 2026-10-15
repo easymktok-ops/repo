@@ -28,7 +28,10 @@ if grep -rqE "GTM-|G-DD2R37C1V9|141551953168954|AW-18320918955" . ; then
 fi
 mkdir -p server/data server/lib server/public/api
 cp "$ROOT"/server/lib/*.php server/lib/
-cp "$ROOT"/server/public/api/{create-checkout-session,panel,prices,webhook}.php server/public/api/
+# Todo /api salvo lo que pruebas NO debe tener: deploy-extract (publicacion de produccion) y oauth (CMS).
+for f in "$ROOT"/server/public/api/*.php; do
+  case "$(basename "$f")" in deploy-extract.php) ;; *) cp "$f" server/public/api/ ;; esac
+done
 cp "$ROOT"/server/config.example.php server/
 HOST="$(printf '%s' "$URL" | sed -E 's#^https?://##; s#/.*$##')"
 HOST_RE="$(printf '%s' "$HOST" | sed 's/\./\\\\./g')"
