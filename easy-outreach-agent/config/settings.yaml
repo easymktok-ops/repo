@@ -19,9 +19,9 @@ people:
 
 sending:
   domain: hola.easymarketing.mx                        # nunca enviar volumen frío desde la raíz
-  from_name: Norman de Easy Marketing
-  from_address: norman@hola.easymarketing.mx
-  reply_to: norman@hola.easymarketing.mx               # las respuestas llegan al buzón que lee el agente
+  from_name: Easy Marketing
+  from_address: contacto@hola.easymarketing.mx
+  reply_to: contacto@hola.easymarketing.mx               # las respuestas llegan al buzón que lee el agente
   unsubscribe_mailto: baja@hola.easymarketing.mx
   max_per_day_per_mailbox: 40
   pause_bounce_rate: 0.03

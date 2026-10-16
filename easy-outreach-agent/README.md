@@ -67,7 +67,7 @@ outreach enrich --retry                      # revisita las que estaban caídas
 
 ## Checklist de dominio: hola.easymarketing.mx
 
-1. **Buzón**: crear `norman@hola.easymarketing.mx` en el hosting de correo actual con acceso SMTP (envío) e IMAP (lectura de respuestas). Crear también `baja@hola.easymarketing.mx` o un alias que llegue al mismo buzón.
+1. **Buzón**: crear `contacto@hola.easymarketing.mx` en el hosting de correo actual con acceso SMTP (envío) e IMAP (lectura de respuestas). Crear también `baja@hola.easymarketing.mx` o un alias que llegue al mismo buzón.
 2. **SPF** (registro TXT en `hola.easymarketing.mx`), con el include que indique tu proveedor:
    `v=spf1 include:<proveedor> -all`
 3. **DKIM**: generar la llave en el panel del proveedor y publicarla como TXT en `<selector>._domainkey.hola.easymarketing.mx`.

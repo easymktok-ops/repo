@@ -19,8 +19,8 @@ from outreach.config import (
 def test_settings_load_with_pilot_decisions():
     s = load_settings()
     assert s.company.landing_url == "https://easymarketing.mx/demand/"
-    assert s.sending.from_address == "norman@hola.easymarketing.mx"
-    assert s.sending.reply_to == "norman@hola.easymarketing.mx"
+    assert s.sending.from_address == "contacto@hola.easymarketing.mx"
+    assert s.sending.reply_to == "contacto@hola.easymarketing.mx"
     assert s.people.approver == "info@easymarketing.mx"
     assert s.sending.max_per_day_per_mailbox <= 40
     assert s.pilot.cities == ["Querétaro", "CDMX", "Monterrey"]
@@ -62,7 +62,7 @@ def _write_settings(tmp_path, mutate):
 
 def test_rejects_sending_from_root_domain(tmp_path):
     cfg = _write_settings(
-        tmp_path, lambda d: d["sending"].update(from_address="norman@easymarketing.mx")
+        tmp_path, lambda d: d["sending"].update(from_address="contacto@easymarketing.mx")
     )
     with pytest.raises(ValidationError, match="subdominio"):
         load_settings(cfg)
