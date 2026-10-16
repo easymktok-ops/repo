@@ -20,8 +20,8 @@ def test_settings_load_with_pilot_decisions():
     s = load_settings()
     assert s.company.landing_url == "https://easymarketing.mx/demand/"
     assert s.sending.from_address == "norman@hola.easymarketing.mx"
-    assert s.sending.reply_to == "info@easymarketing.mx"
-    assert s.people.approver == "norman@easymarketing.mx"
+    assert s.sending.reply_to == "norman@hola.easymarketing.mx"
+    assert s.people.approver == "info@easymarketing.mx"
     assert s.sending.max_per_day_per_mailbox <= 40
     assert s.pilot.cities == ["Querétaro", "CDMX", "Monterrey"]
     assert s.sources.places.enabled is False

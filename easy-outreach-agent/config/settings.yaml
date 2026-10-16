@@ -13,15 +13,15 @@ pilot:
   cities: [Querétaro, CDMX, Monterrey]
 
 people:
-  approver: norman@easymarketing.mx                   # aprueba la cola
-  interested_notify: norman@easymarketing.mx           # recibe aviso de replies interesados
+  approver: info@easymarketing.mx                      # aprueba la cola (buzón existente)
+  interested_notify: info@easymarketing.mx             # recibe aviso de replies interesados
   public_contact: info@easymarketing.mx
 
 sending:
   domain: hola.easymarketing.mx                        # nunca enviar volumen frío desde la raíz
   from_name: Norman de Easy Marketing
   from_address: norman@hola.easymarketing.mx
-  reply_to: info@easymarketing.mx
+  reply_to: norman@hola.easymarketing.mx               # las respuestas llegan al buzón que lee el agente
   unsubscribe_mailto: baja@hola.easymarketing.mx
   max_per_day_per_mailbox: 40
   pause_bounce_rate: 0.03
