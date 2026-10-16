@@ -13,7 +13,12 @@ from urllib.parse import parse_qs, unquote, urljoin, urlsplit
 
 from bs4 import BeautifulSoup, Tag
 
-from outreach.domains import FREE_MAIL_DOMAINS, normalize_domain, normalize_email
+from outreach.domains import (
+    FREE_MAIL_DOMAINS,
+    looks_like_free_mail,
+    normalize_domain,
+    normalize_email,
+)
 
 EMAIL_RE = re.compile(r"[a-z0-9][a-z0-9._%+-]{0,63}@(?:[a-z0-9-]+\.)+[a-z]{2,24}", re.I)
 FILE_SUFFIXES = (".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg", ".css", ".js")
@@ -71,7 +76,12 @@ def accept_email(raw: str, site_domain: str) -> str | None:
         return None
     if local in PLACEHOLDER_LOCALS:
         return None
-    if _same_site(domain, site_domain) or domain in FREE_MAIL_DOMAINS:
+    if domain in FREE_MAIL_DOMAINS:
+        return email
+    # gmail.mx, hotlmail.com: errores de captura que rebotarían.
+    if looks_like_free_mail(domain):
+        return None
+    if _same_site(domain, site_domain):
         return email
     return None
 

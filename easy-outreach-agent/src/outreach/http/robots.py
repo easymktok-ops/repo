@@ -1,7 +1,8 @@
 """Cache de robots.txt por dominio (regla 3).
 
-Criterio (RFC 9309): 2xx se respeta tal cual; 4xx significa que no hay reglas (todo permitido);
-5xx o error de red significa que el sitio no está disponible y no se rastrea nada.
+Criterio (RFC 9309): 2xx se respeta tal cual (después de seguir redirecciones); 4xx significa
+que no hay reglas (todo permitido); 5xx o error de red significa que el sitio no está disponible
+y no se rastrea nada. Ese último caso se reporta como "unreachable", no como bloqueo por robots.
 """
 
 from __future__ import annotations
@@ -16,9 +17,12 @@ RobotsFetcher = Callable[[str], tuple[int | None, str]]
 
 
 class _Rules:
-    def __init__(self, parser: RobotFileParser | None, allow_all: bool) -> None:
+    def __init__(
+        self, parser: RobotFileParser | None, allow_all: bool, unreachable: bool = False
+    ) -> None:
         self.parser = parser
         self.allow_all = allow_all
+        self.unreachable = unreachable
 
 
 class RobotsCache:
@@ -52,17 +56,23 @@ class RobotsCache:
         elif status is not None and 400 <= status < 500:
             rules = _Rules(None, allow_all=True)
         else:
-            rules = _Rules(None, allow_all=False)
+            rules = _Rules(None, allow_all=False, unreachable=True)
 
         with self._lock:
             self._cache.setdefault(origin, rules)
         return rules
 
-    def allowed(self, url: str) -> bool:
+    def check(self, url: str) -> str:
+        """allow / deny / unreachable (el sitio no respondió robots.txt: no se rastrea)."""
         rules = self._rules(url)
+        if rules.unreachable:
+            return "unreachable"
         if rules.parser is None:
-            return rules.allow_all
-        return rules.parser.can_fetch(self.user_agent, url)
+            return "allow" if rules.allow_all else "deny"
+        return "allow" if rules.parser.can_fetch(self.user_agent, url) else "deny"
+
+    def allowed(self, url: str) -> bool:
+        return self.check(url) == "allow"
 
     def crawl_delay(self, url: str) -> float | None:
         rules = self._rules(url)

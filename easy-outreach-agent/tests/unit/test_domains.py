@@ -40,3 +40,19 @@ def test_same_company_dedupes_to_one_domain():
 )
 def test_normalize_email(raw, expected):
     assert normalize_email(raw) == expected
+
+
+def test_domain_without_tld_is_invalid():
+    from outreach.domains import normalize_domain
+
+    assert normalize_domain("https://www.dentnuvo") is None
+    assert normalize_domain("www.dentnuvo.com") == "dentnuvo.com"
+
+
+def test_looks_like_free_mail():
+    from outreach.domains import looks_like_free_mail
+
+    for d in ("gmail.com", "gmail.mx", "yahoo.co.uk", "hotlmail.com", "outlook.es", "live.com.mx"):
+        assert looks_like_free_mail(d), d
+    for d in ("sonrisaqro.mx", "mail.sonrisaqro.mx", "livecare.mx", "clinicayahualica.mx"):
+        assert not looks_like_free_mail(d), d

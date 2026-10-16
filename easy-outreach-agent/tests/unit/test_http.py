@@ -123,6 +123,21 @@ def test_fetch_page_checks_robots_on_each_redirect(web, client):
     assert page.final_url == "https://b.mx/admin/"
 
 
+def test_robots_redirect_is_followed(web, client):
+    web.redirect("https://a.mx/robots.txt", "https://www.a.mx/robots.txt")
+    web.add("https://www.a.mx/robots.txt", ROBOTS, content_type="text/plain")
+    web.add("https://a.mx/contacto/", "<p>hola</p>")
+    assert client.fetch_page("https://a.mx/contacto/").ok
+    assert client.fetch_page("https://a.mx/admin/").error == "robots"
+
+
+def test_unreachable_robots_is_network_error(web, client):
+    web.add("https://caido.mx/robots.txt", httpx.ConnectError("502"))
+    assert client.fetch_page("https://caido.mx/").error == "network"
+    web.add("https://roto.mx/robots.txt", status=503)
+    assert client.fetch_page("https://roto.mx/").error == "network"
+
+
 def test_fetch_page_follows_redirects(web, client):
     web.redirect("http://a.mx/", "https://www.a.mx/")
     web.add("https://www.a.mx/", "<p>ok</p>")

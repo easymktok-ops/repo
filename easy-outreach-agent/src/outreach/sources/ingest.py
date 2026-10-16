@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 from collections import Counter
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from outreach.config import SegmentConfig
 from outreach.db.models import Company, Contact, Run, Segment
-from outreach.domains import FREE_MAIL_DOMAINS, is_platform_domain, normalize_domain
+from outreach.domains import is_platform_domain, looks_like_free_mail, normalize_domain
 from outreach.enrich.contacts import accept_email, normalize_phone
 from outreach.sending.suppression import is_suppressed
 from outreach.sources.base import RawCompany
@@ -39,10 +39,10 @@ def sync_segments(session: Session, configs: Iterable[SegmentConfig]) -> dict[st
 def site_of(raw: RawCompany) -> tuple[str | None, str | None]:
     """Dominio y URL del sitio propio. Si no hay sitio, se deduce del correo corporativo."""
     domain = normalize_domain(raw.website_url)
-    if domain and not is_platform_domain(domain):
+    if domain and not is_platform_domain(domain) and not looks_like_free_mail(domain):
         return domain, raw.website_url
     email_domain = normalize_domain(raw.email) if raw.email else None
-    if email_domain and email_domain not in FREE_MAIL_DOMAINS and not is_platform_domain(
+    if email_domain and not looks_like_free_mail(email_domain) and not is_platform_domain(
         email_domain
     ):
         return email_domain, f"https://{email_domain}"
@@ -50,9 +50,11 @@ def site_of(raw: RawCompany) -> tuple[str | None, str | None]:
 
 
 def ingest(
-    session: Session, raw: RawCompany, segment: Segment, run: Run, *, require_site: bool = True
+    session: Session, raw: RawCompany, segment: Segment, run: Run, *, require_site: bool = True,
+    site_exists: Callable[[str], bool] | None = None,
 ) -> str:
-    """Guarda una empresa. Devuelve: nueva / duplicada / sin_sitio / suprimida."""
+    """Guarda una empresa. Devuelve: nueva / duplicada / sin_sitio / dominio_inexistente /
+    suprimida."""
     domain, website = site_of(raw)
     if domain is None and require_site:
         return "sin_sitio"
@@ -70,6 +72,11 @@ def ingest(
             if getattr(existing, name) is None and getattr(raw, name) is not None:
                 setattr(existing, name, getattr(raw, name))
         return "duplicada"
+
+    if domain and site_exists is not None and not site_exists(domain):
+        if require_site:
+            return "dominio_inexistente"
+        domain, website = None, None
 
     company = Company(
         name=raw.name, legal_name=raw.legal_name, domain=domain, website_url=website,
@@ -93,6 +100,7 @@ def ingest(
 def ingest_many(
     session: Session, raws: Iterable[RawCompany], segment: Segment, run: Run, limit: int,
     *, require_site: bool = True, commit_every: int = 50,
+    site_exists: Callable[[str], bool] | None = None,
 ) -> Counter[str]:
     """Ingiere hasta tener `limit` empresas nuevas. Devuelve el conteo por resultado.
 
@@ -101,7 +109,8 @@ def ingest_many(
     stats: Counter[str] = Counter()
     for raw in raws:
         stats["leidas"] += 1
-        stats[ingest(session, raw, segment, run, require_site=require_site)] += 1
+        stats[ingest(session, raw, segment, run, require_site=require_site,
+                     site_exists=site_exists)] += 1
         if stats["leidas"] % commit_every == 0:
             session.commit()
         if stats["nueva"] >= limit:

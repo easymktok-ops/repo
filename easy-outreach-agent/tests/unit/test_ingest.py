@@ -36,6 +36,12 @@ def test_site_of():
     assert site_of(_raw(website_url="https://facebook.com/x", email="info@bella.com.mx")) == (
         "bella.com.mx", "https://bella.com.mx")
     assert site_of(_raw(email="dra@gmail.com")) == (None, None)
+    # Sitio capturado sin TLD: se usa el dominio del correo.
+    assert site_of(_raw(website_url="https://www.dentnuvo", email="dra@dentnuvo.com")) == (
+        "dentnuvo.com", "https://dentnuvo.com")
+    # "Sitios" que en realidad son correos gratuitos mal escritos.
+    assert site_of(_raw(website_url="https://gmail.mx")) == (None, None)
+    assert site_of(_raw(email="x@hotlmail.com")) == (None, None)
 
 
 def test_ingest_dedupes_by_domain_and_merges(session):
@@ -81,3 +87,12 @@ def test_ingest_many_counts_and_limit(session):
     raws.insert(1, _raw("x"))  # sin sitio
     stats = ingest_many(session, iter(raws), segment, run, limit=3, commit_every=2)
     assert stats["nueva"] == 3 and stats["sin_sitio"] == 1 and stats["leidas"] == 4
+
+
+def test_ingest_skips_domains_that_do_not_exist(session):
+    segment, run = _setup(session)
+    alive = {"vive.mx"}
+    raws = [_raw("1", website_url="https://www.vive.mx"), _raw("2", website_url="https://murio.mx")]
+    stats = ingest_many(session, iter(raws), segment, run, limit=10,
+                        site_exists=lambda d: d in alive)
+    assert stats["nueva"] == 1 and stats["dominio_inexistente"] == 1

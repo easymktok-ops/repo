@@ -59,9 +59,18 @@ def test_accept_email_rules():
     assert accept_email("citas@mail.sonrisaqro.mx", "sonrisaqro.mx") == "citas@mail.sonrisaqro.mx"
     assert accept_email("dra.lopez@gmail.com", "sonrisaqro.mx") == "dra.lopez@gmail.com"
     assert accept_email("hola@otraempresa.mx", "sonrisaqro.mx") is None
+    assert accept_email("dra@hotlmail.com", "sonrisaqro.mx") is None  # rebotaría
     assert accept_email("logo@2x.png", "2x.png") is None
     assert accept_email("nombre@sonrisaqro.mx", "sonrisaqro.mx") is None
     assert accept_email("sin-arroba", "sonrisaqro.mx") is None
+
+
+def test_home_candidates():
+    from outreach.enrich.site import home_candidates
+
+    assert home_candidates("https://www.clinica.mx") == [
+        "https://www.clinica.mx", "http://www.clinica.mx/", "https://clinica.mx/",
+    ]
 
 
 def test_normalize_phone():

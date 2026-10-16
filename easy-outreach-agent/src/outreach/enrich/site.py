@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from urllib.parse import urlsplit
 
 from bs4 import BeautifulSoup
 
@@ -65,15 +66,31 @@ def _status_for_error(page: Page) -> str:
     return "http_error"
 
 
+def home_candidates(website_url: str) -> list[str]:
+    """Variantes a probar si la URL registrada no responde.
+
+    Muchos registros traen "www.dominio.mx" aunque el certificado solo cubra "dominio.mx",
+    o el sitio solo sirva http.
+    """
+    parts = urlsplit(website_url)
+    host = parts.hostname or ""
+    bare = host.removeprefix("www.")
+    path = parts.path or "/"
+    candidates = [website_url]
+    seen = {(parts.scheme, host, path)}
+    for scheme, h in (("http", host), ("https", bare), ("https", "www." + bare)):
+        if (scheme, h, path) not in seen:
+            seen.add((scheme, h, path))
+            candidates.append(f"{scheme}://{h}{path}")
+    return candidates
+
+
 def _fetch_home(client: PoliteClient, website_url: str) -> Page:
-    page = client.fetch_page(website_url, follow=_own_site)
-    # Muchos registros traen solo "www.dominio.mx"; si https no responde, se intenta http.
-    if page.error in ("network", "timeout") and website_url.startswith("https://"):
-        fallback = client.fetch_page(
-            "http://" + website_url.removeprefix("https://"), follow=_own_site
-        )
-        if fallback.ok or fallback.error not in ("network", "timeout"):
-            return fallback
+    page = Page(url=website_url, final_url=website_url, error="network")
+    for url in home_candidates(website_url):
+        page = client.fetch_page(url, follow=_own_site)
+        if page.error not in ("network", "timeout"):
+            return page
     return page
 
 

@@ -22,6 +22,7 @@ from outreach.db.base import make_engine, make_session_factory
 from outreach.db.models import Company, Segment
 from outreach.enrich.pipeline import apply_result, enrich_site
 from outreach.http.client import PoliteClient
+from outreach.http.dns import domain_resolves
 from outreach.jobs.runs import track_run
 from outreach.logging import configure_logging, get_logger
 from outreach.sources.base import Source, SourceError
@@ -136,7 +137,7 @@ def discover(
             with track_run(session, "discover", params) as run:
                 stats = ingest_many(
                     session, src.search(seg_cfg, limit=max_scan), segments[segment], run,
-                    limit, require_site=not include_no_site,
+                    limit, require_site=not include_no_site, site_exists=domain_resolves,
                 )
                 run.stats = dict(stats)
         except SourceError as exc:
@@ -146,7 +147,7 @@ def discover(
     typer.echo(
         f"{segment} · leídas {stats['leidas']} · nuevas {stats['nueva']} · "
         f"duplicadas {stats['duplicada']} · sin sitio {stats['sin_sitio']} · "
-        f"suprimidas {stats['suprimida']}"
+        f"dominio inexistente {stats['dominio_inexistente']} · suprimidas {stats['suprimida']}"
     )
 
 

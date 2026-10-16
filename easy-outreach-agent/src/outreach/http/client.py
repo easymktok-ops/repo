@@ -139,8 +139,15 @@ class PoliteClient:
             self._sleep(2.0**attempt)
 
     def _fetch_robots(self, url: str) -> tuple[int | None, str]:
-        raw = self._send("GET", url, max_bytes=500_000)
-        return raw.status, raw.text()
+        # RFC 9309: se siguen al menos 5 redirecciones (http -> https, sin www -> www).
+        current = url
+        for _ in range(6):
+            raw = self._send("GET", current, max_bytes=500_000)
+            if raw.status in REDIRECT_STATUSES and "location" in raw.headers:
+                current = urljoin(current, raw.headers["location"])
+                continue
+            return raw.status, raw.text()
+        return None, ""
 
     # -- sitios de empresas -----------------------------------------------------------------
 
@@ -158,7 +165,10 @@ class PoliteClient:
         """
         current = url
         for _ in range(max_redirects + 1):
-            if not self.robots.allowed(current):
+            verdict = self.robots.check(current)
+            if verdict == "unreachable":
+                return Page(url=url, final_url=current, error="network")
+            if verdict == "deny":
                 return Page(url=url, final_url=current, error="robots")
             try:
                 raw = self._send(

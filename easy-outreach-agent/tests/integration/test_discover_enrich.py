@@ -95,7 +95,24 @@ def test_https_failure_falls_back_to_http(session, web, client):
     company = _company(session, "viejo.mx", "https://viejo.mx")
     assert apply_result(session, company, enrich_site(client, company.id, company.website_url)) \
         == "enriched"
-    assert company.website_url == "http://viejo.mx"
+    assert company.website_url == "http://viejo.mx/"
+
+
+def test_www_certificate_mismatch_falls_back_to_bare_domain(session, web, client):
+    web.add("https://www.clinica.mx", httpx.ConnectError("certificado no cubre www"))
+    web.add("http://www.clinica.mx", httpx.ConnectError("sin http"))
+    web.page("https://clinica.mx/", "simple_form.html")
+    company = _company(session, "clinica.mx", "https://www.clinica.mx")
+    assert apply_result(session, company, enrich_site(client, company.id, company.website_url)) \
+        == "enriched"
+
+
+def test_dead_site_is_unreachable_not_robots(session, web, client):
+    for url in ("https://muerto.mx", "http://muerto.mx", "https://www.muerto.mx"):
+        web.add(url + "/robots.txt", httpx.ConnectError("502"))
+    company = _company(session, "muerto.mx")
+    apply_result(session, company, enrich_site(client, company.id, company.website_url))
+    assert company.site_status == "unreachable"
 
 
 def test_redirect_to_another_known_company_is_duplicate(session, web, client):
@@ -119,6 +136,7 @@ def cli_env(monkeypatch, db_url, web):
     monkeypatch.setenv("DENUE_TOKEN", "T")
     get_secrets.cache_clear()
     # Cada comando abre y cierra su propio cliente, como en producción.
+    monkeypatch.setattr(cli, "domain_resolves", lambda _d: True)
     monkeypatch.setattr(cli, "_client", lambda: PoliteClient(
         user_agent="EasyOutreachBot/1.0", transport=httpx.MockTransport(web.handler),
         sleep=lambda _s: None,
